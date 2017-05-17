@@ -1,0 +1,169 @@
+encoding=utf8
+
+if ($Flag_crypt$ = "on") or ($MasterFlag$ = "on")
+	Message "testing crypt functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing crypt functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "HexStrToDecStr"
+	set $ConstTest$ = "1031"
+	set $tmp$ = "0x0407"
+	set $CompValue$ = HexStrToDecStr($tmp$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "HexStrToDecStr"
+	set $ConstTest$ = "1031"
+	set $tmp$ = "$0407"
+	set $CompValue$ = HexStrToDecStr($tmp$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "HexStrToDecStr"
+	set $ConstTest$ = "1031"
+	set $tmp$ = "0407"
+	set $CompValue$ = HexStrToDecStr($tmp$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "DecStrToHexStr"
+	set $ConstTest$ = "0407"
+	set $tmp$ = "1031"
+	set $CompValue$ = DecStrToHexStr($tmp$,"4")
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "DecStrToHexStr"
+	set $ConstTest$ = "407"
+	set $tmp$ = "1031"
+	set $CompValue$ = DecStrToHexStr($tmp$,"2")
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "LangCodeByHex"
+	set $ConstTest$ = "de-DE"
+	set $tmp$ = "0407"
+	set $CompValue$ = LangCodeByHex($tmp$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "base64EncodeStr"
+	set $ConstTest$ = "YWJjZGVm"
+	set $tmp$ = "abcdef"
+	set $CompValue$ = base64EncodeStr($tmp$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "base64DecodeStr"
+	set $ConstTest$ = "abcdef"
+	set $tmp$ = "YWJjZGVm"
+	set $CompValue$ = base64DecodeStr($tmp$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.0") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "crypt "
+
+		set $ConstTest$ = md5sumFromFile("%ScriptPath%\test-files\crypt\dummy.msi")
+		set $CompValue$ = strLoadTextFile("%ScriptPath%\test-files\crypt\dummy.msi.md5")
+		if ($ConstTest$ = $CompValue$)
+			comment "md5sumFromFile passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing md5sumFromFile failed"
+		endif
+		
+		set $ConstTest$ = "12345"
+		set $ConstTest$ = encryptStringBlow("FFFF",$ConstTest$)
+		set $ConstTest$ = decryptStringBlow("FFFF",$ConstTest$)
+		set $CompValue$ = "12345"
+		if ($ConstTest$ = $CompValue$)
+			comment "cryptStringBlow passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing cryptStringBlow failed"
+		endif
+
+		set $ConstTest$ = "This string is very secret"
+		set $ConstTest$ = encryptStringBlow("linux123",$ConstTest$)
+		set $ConstTest$ = decryptStringBlow("linux123",$ConstTest$)
+		set $CompValue$ = "This string is very secret"
+		if ($ConstTest$ = $CompValue$)
+			comment "cryptStringBlow passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing cryptStringBlow failed"
+		endif
+
+	endif ; 4.11.6
+	sub_compareResult
+	set $winst_crypt$ = $SubResult$
+
+endif
+
+

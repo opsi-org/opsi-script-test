@@ -1,0 +1,35 @@
+set $TestResult$ = ""
+;common sub call
+sub_testsub1
+;external sub call
+sub "%scriptpath%\test-files\sub\testsubext.ins"
+
+;sub in loop through String list
+Set $list$ = SplitString("a-b-c","-")
+for %letter% in $list$ do sub_giveString
+
+;external sub script for looping
+;does not work:
+;for %letter% in $list$ do sub "%scriptpath%\testsubext_loop.ins"
+;use instead (building loop in sub routine):
+sub "%scriptpath%\test-files\sub\testsubext_loop_ok.ins"
+
+;final proof
+if $TestResult$ = "1234125556abc"
+	set $TestResult$ = "o.k."
+else
+	set $TestResult$ = "not o.k."
+endif
+
+[sub_testsub1]
+comment "testsub1 running"
+set $TestResult$=$TestResult$+"1"
+sub_testsub2
+
+[sub_testsub2]
+comment "testsub2 running"
+set $TestResult$=$TestResult$+"2"
+
+[sub_giveString]
+comment "test sub_giveString " + "%letter%"
+set $TestResult$=$TestResult$+"5"

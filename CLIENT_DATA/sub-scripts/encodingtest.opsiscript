@@ -1,0 +1,427 @@
+encoding=utf8
+
+if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
+	Message "testing encoding functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing encoding functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.6.4")
+		set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-cp1251.txt"
+		comment "load with encoding"
+		set $list$ = loadTextFileWithEncoding($string1$, "cp1251")
+		comment "save with encoding"
+		if not(savetextfilewithencoding($list$, "%opsiTmpDir%\CyrillicText-cp1251.txt","cp1251"))
+			set $TestResult$ = "not o.k."
+			LogWarning "savetextfilewithencoding failed"
+		endif
+		comment "reload with encoding"
+		set $list1$ = loadTextFileWithEncoding("%opsiTmpDir%\CyrillicText-cp1251.txt", "cp1251")
+		comment " compare ..."
+		set $list2$ = getListContainingList($list$,$list1$)
+		if count($list$) = count($list2$)
+			comment "savetextfilewithencoding passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing savetextfilewithencoding failed"
+		endif
+		
+	endif ; 4.11.6.4
+
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.2") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "encoding: includelog"
+		
+		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf16.txt"
+		set $string2$ = "5"
+		comment "With no encoding parameter "
+		includelog $string1$ $string2$
+		comment "With encoding parameter: auto"
+		includelog $string1$ $string2$ "auto"
+		comment "With encoding parameter: UCS-2BE"
+		includelog $string1$ $string2$ "UCS-2BE"
+
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "ucs2be", "system")
+		if $OS$="Windows_NT"
+			set $list$ = loadUnicodeTextFile($string1$)
+		endif
+		
+		set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-cp1251.txt"
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "cp1251", "system")
+		
+		set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-koi8.txt"
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "koi8", "system")
+		
+		set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-utf8.txt"
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "utf8", "system")
+		
+		set $string1$ = "%Scriptpath%\test-files\encoding\SpanishText-cp1252.txt"
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "cp1252", "system")
+		
+		set $string1$ = "%Scriptpath%\test-files\encoding\SpanishText-iso8859-1.txt"
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "iso8859-1", "system")
+		
+		set $string1$ = "%Scriptpath%\test-files\encoding\SpanishText-utf8.txt"
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "utf8", "system")
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5") >= "0"
+			comment "LoadTextFileWithEncoding"
+			set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-cp1251.txt"
+			set $list$ = loadTextFileWithEncoding($string1$, "cp1251")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-koi8.txt"
+			set $list$ = loadTextFileWithEncoding($string1$, "koi8")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-utf8.txt"
+			set $list$ = loadTextFileWithEncoding($string1$, "utf8")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\SpanishText-cp1252.txt"
+			set $list$ = loadTextFileWithEncoding($string1$, "cp1252")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\SpanishText-iso8859-1.txt"
+			set $list$ = loadTextFileWithEncoding($string1$, "iso8859-1")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\SpanishText-utf8.txt"
+			set $list$ = loadTextFileWithEncoding($string1$, "utf8")
+			
+			comment "strLoadTextFileWithEncoding"
+			set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-cp1251.txt"
+			set $string2$ = strLoadTextFileWithEncoding($string1$, "cp1251")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-koi8.txt"
+			set $string2$ = strLoadTextFileWithEncoding($string1$, "koi8")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-utf8.txt"
+			set $string2$ = strLoadTextFileWithEncoding($string1$, "utf8")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\SpanishText-cp1252.txt"
+			set $string2$ = strLoadTextFileWithEncoding($string1$, "cp1252")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\SpanishText-iso8859-1.txt"
+			set $string2$ = strLoadTextFileWithEncoding($string1$, "iso8859-1")
+			
+			set $string1$ = "%Scriptpath%\test-files\encoding\SpanishText-utf8.txt"
+			set $string2$ = strLoadTextFileWithEncoding($string1$, "utf8")
+		endif
+				
+		; no way right now for utf32
+		;set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf32.txt"
+		;set $string2$ = "5"
+		;includelog $string1$ $string2$
+		;includelog $string1$ $string2$ "auto"
+		;includelog $string1$ $string2$ "ucs2be"
+		;includelog $string1$ $string2$ "utf32"
+	endif ; 4.11.4.2
+	message "testing getproductproperty dummyumlaut"
+	set $ConstTest$ = "Test umlaut from prop: üöäÜÖÄß"
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+		set $CompValue$ = getProductProperty("dummyumlaut","Test umlaut from prop: üöäÜÖÄß")
+	else
+		set $CompValue$ = reencodestr(getProductProperty("dummyumlaut","Test umlaut from prop: üöäÜÖÄß"), "utf8", "system")
+	endif
+	if ($ConstTest$ = $CompValue$)
+		comment "dummyumlaut passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "dummyumlaut failed"
+	endif
+	
+	if $OS$ = "WINDOWS_NT"
+		comment "importing umlaut to registry"
+		; does not work because shellcall is sysnative:
+		;set $string1$ = shellCall('regedit /s %scriptpath%\testfiles\encoding\umlautinreg.reg')
+		DosInAnIcon_import_umlautinreg
+		message "testing read umlaut from registry"
+		set $ConstTest$ = "üöäßÜÖÄ"
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] keyumlautplain")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] keyumlautpläin")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		set $ConstTest$ = "شسيبلاتنمكط"
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] 16bitumlaut_arabisch")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		set $ConstTest$ = "初めて増していく"
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] 16bitumlaut_japanisch")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		Registry_deleteKey_winst_test
+		
+		Registry loadUnicodeTextFile("%scriptpath%\test-files\encoding\umlautinreg.reg") /regedit
+		message "testing read umlaut from registry"
+		set $ConstTest$ = "üöäßÜÖÄ"
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] keyumlautplain")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] keyumlautpläin")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		set $ConstTest$ = "شسيبلاتنمكط"
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] 16bitumlaut_arabisch")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		set $ConstTest$ = "初めて増していく"
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] 16bitumlaut_japanisch")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		Registry_deleteKey_winst_test
+		
+		Registry_umlautinreg
+		message "testing read umlaut from registry"
+		set $ConstTest$ = "üöäßÜÖÄ"
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] keyumlautplain")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] keyumlautpläin")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		set $ConstTest$ = "شسيبلاتنمكط"
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] 16bitumlaut_arabisch")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		set $ConstTest$ = "初めて増していく"
+		set $CompValue$ = GetRegistryStringvalue("[HKLM\SOFTWARE\opsi.org\winst-test] 16bitumlaut_japanisch")
+		if ($ConstTest$ = $CompValue$)
+			comment "umlaut from registry passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "umlaut from registry failed"
+		endif
+		Registry_deleteKey_winst_test
+	endif ; windows
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: umlaut patches ini"
+	comment " set"
+
+	
+	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
+	if (FileExists($HometestFiles$+"\dummy.ini"))
+		message "set"
+		set $ConstTest$ = "[secdüöä]"
+		set $ConstTest2$ = "dümmy7=üöäßÜÖÄ"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+		Set $CompValue$ = Trim(takeFirstStringContaining($list1$, "secdüöä"))
+		Set $CompValue2$ = Trim(takeFirstStringContaining($list1$, "üöäßÜÖÄ"))
+		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			comment "set passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "set failed"
+		endif
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GetValueFromInifile"
+		;GetValueFromInifile
+		set $ConstTest$ = "üöäßÜÖÄ"
+		Set $CompValue$ = GetValueFromInifile($HometestFiles$+"\dummy.ini", "secdüöä", "dümmy7", "failed")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetValueFromInifile passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetValueFromInifile failed"
+		endif
+	else
+		set $TestResult$ = "not o.k."
+		logError "Fatal: could not create .ini file"
+		isFatalError
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: umlaut patchtextfile"
+	comment " set"
+	if $OS$ = "Linux"
+		set $list$ = shellCall("ls -l %ScriptPath%/test-files/encoding")
+	else
+		set $list$ = shellCall("dir %ScriptPath%\test-files\encoding")
+	endif
+	if fileExists("%ScriptPath%\test-files\encoding\dümmy_cp1252.txt")
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	Files_copy_patchtextfile_umlaut
+	if fileExists($HomeTestFiles$ + "\dümmy_cp1252.txt")
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if LineExistsIn ("Line containing umlaut: üöäßÜÖÄ.", $HomeTestFiles$ + "\dümmy_cp1252.txt")
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "AppendLine"
+	PatchTextFile_AppendLine_umlaut $HomeTestFiles$ + "\dümmy_cp1252.txt"
+	if LineExistsIn ("Line appended by opsi-script with umlaut: üöäßÜÖÄ", $HomeTestFiles$ + "\dümmy_cp1252.txt")
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	set $ConstTest$ = "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
+	set $list1$ = loadTextFile($HomeTestFiles$ + "\dümmy_cp1252.txt")
+	Set $CompValue$ = takeFirstStringContaining($list1$, $ConstTest$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "FindLine, DeleteTheLine"
+	PatchTextFile_findLine_umlaut $HomeTestFiles$ + "\dümmy_cp1252.txt"
+	set $ConstTest$ = ""
+	set $list1$ = loadTextFile($HomeTestFiles$ + "\dümmy_cp1252.txt")
+	Set $CompValue$ = takeFirstStringContaining($list1$,"Line containing umlaut: üöäßÜÖÄ.")
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if not(LineExistsIn ("Line containing umlaut: üöäßÜÖÄ.", $HomeTestFiles$ + "\dümmy_cp1252.txt"))
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	if $OS$ = "WINDOWS_NT"
+		ChangeDirectory $HomeTestFiles$
+		Files_copy_exe_umlaut
+		message "processCall umlaut exitcode"
+		set $ConstTest$ = "42"
+		set $CompValue$ = processCall($HomeTestFiles$+"\owth_üäöß.exe")
+		if ($ConstTest$ = $CompValue$)
+			comment "processCall exitcode passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "processCall exitcode failed"
+		endif
+		
+		message "shellCall umlaut exitcode"
+		set $ConstTest$ = "42"
+		set $CompValue$ = shellCall($HomeTestFiles$+"\owth_üäöß.exe")
+		if ($ConstTest$ = $CompValue$)
+			comment "shellCall exitcode passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "shellCall exitcode failed"
+		endif
+	endif ; windows
+
+	Files_empty_testfolder
+	sub_compareResult
+	set $winst_encoding$ = $SubResult$
+endif
+
+[DosInAnIcon_import_umlautinreg]
+regedit /s "%scriptpath%\test-files\encoding\umlautinreg.reg"
+exit %ERRORLEVEL%
+
+[Registry_umlautinreg]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\winst-test]
+set "keyumlautplain"="üöäßÜÖÄ"
+set "keyumlautpläin"="üöäßÜÖÄ"
+set "16bitumlaut_arabisch"="شسيبلاتنمكط"
+set "16bitumlaut_japanisch"="初めて増していく"
+
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\winst-test\keywithümlaut]
+set "keyumlautpläin"="üöäßÜÖÄ"
+
+[Registry_deleteKey_winst_test]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\winst-test]
+
+
+[PatchTextFile_AppendLine_umlaut]
+GoToBottom
+AppendLine "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
+
+[PatchTextFile_findLine_umlaut]
+FindLine "Line containing umlaut: üöäßÜÖÄ."
+DeleteTheLine
+
+[Files_copy_patchtextfile_umlaut]
+copy "%ScriptPath%\test-files\encoding\dümmy_cp1252.txt" $HomeTestFiles$
+
+[Files_copy_exe_umlaut]
+copy "%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" $HomeTestFiles$
+;rename "$HomeTestFiles$\opsiwinsttesthelper.exe" "$HomeTestFiles$\owth_üäöß.exe"
+rename "opsiwinsttesthelper.exe" "owth_üäöß.exe"
+
+[Files_empty_testfolder]
+Delete -s -f $HomeTestFiles$
+

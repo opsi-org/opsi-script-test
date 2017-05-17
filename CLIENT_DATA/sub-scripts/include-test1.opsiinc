@@ -1,0 +1,44 @@
+encoding=utf8
+DefVar $inctestvar$
+set $inctestvar$ = "inctest"
+comment "The section Files_del_tmp_dummy is really missing"
+Files_del_tmp_dummy
+include_append "section_Files_copy_inctest.opsiinc"
+if $OS$ = "Windows_NT"
+	Files_copy_inctest_win
+	if fileExists("c:\opsi.org\tmp\dummy.txt") 
+		comment "passed"
+	else
+		comment "failed"
+		set $TestResult$ = "not o.k."
+		LogWarning "include test failed"
+	endif
+	
+	if fileExists("%scriptpath%\test-files\dummy.txt") 
+		comment "passed"
+	else
+		comment "failed"
+		set $TestResult$ = "not o.k."
+		LogWarning "include test failed"
+	endif
+	Files_del_tmp_dummy_win
+else
+	Files_copy_inctest_lin
+	if fileExists("/tmp/opsi-winst-test/dummy.txt") 
+		comment "passed"
+	else
+		comment "failed"
+		set $TestResult$ = "not o.k."
+		LogWarning "include test failed"
+	endif
+	
+	if fileExists("%scriptpath%\test-files\dummy.txt") 
+		comment "passed"
+	else
+		comment "failed"
+		set $TestResult$ = "not o.k."
+		LogWarning "include test failed"
+	endif
+	Files_del_tmp_dummy_lin
+endif
+

@@ -1,0 +1,35 @@
+[Initial]
+Message=testing subs
+requiredWinstVersion   >= 4.0
+LogLevel=3
+;ExitOnError=false
+;ScriptErrorMessages=on
+;TraceMode=off
+
+
+[Aktionen]
+;common sub call
+sub_testsub1
+;external sub call
+sub "%scriptpath%\testsubext.ins"
+
+;sub in loop through String list
+DefStringList list
+Set $list$ = SplitString("a-b-c","-")
+for %letter% in $list$ do sub_giveString
+
+;external sub script for looping
+;does not work:
+;for %letter% in $list$ do sub "%scriptpath%\testsubext_loop.ins"
+;use instead (building loop in sub routine):
+sub "%scriptpath%\testsubext_loop_ok.ins"
+
+[sub_testsub1]
+pause "testsub1 running"
+sub_testsub2
+
+[sub_testsub2]
+pause "testsub2 running"
+
+[sub_giveString]
+pause "test sub_giveString " + "%letter%"

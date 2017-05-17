@@ -1,0 +1,787 @@
+[Actions]
+encoding=utf8
+comment "Actions section"
+
+[ProfileActions]
+comment "Profile Actions section"
+;setloglevel = 8
+defvar $mystr$
+DefVar $ConstTest$
+Defvar $ConstTest2$
+DefVar $CompValue$
+DefVar $CompValue2$
+DefVar $INST_SystemType$
+DefVar $TestResult$
+DefVar $regWriteValue$
+DefVar $MsVersion$
+DefVar $tmp$
+DefVar $ScriptLoglevel$
+
+DefStringList $mylist$
+DefStringList $list1$
+DefStringList $productonclientHashlist$
+
+set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
+setLoglevel=$ScriptLoglevel$
+
+Set $INST_SystemType$ = GetSystemType
+set $MsVersion$ = GetMsVersionInfo
+if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") < "0"
+	message "Higher winstversion required (min 4.11.2.1) - aborting"
+else
+	if not(isLoginScript) 
+		message "is not running as userLoginScript - aborting"
+	else
+		
+		message "opsi-winst-test user login script: %installingProdName%-%installingProdVersion%"
+		message "opsi-winst-test user login script running in mode: " + GetScriptMode
+		
+		set $mystr$ = GetScriptMode
+		set $mystr$ = GetUsercontext
+		set $mystr$ = "%UsercontextSID%"
+		set $mystr$ = "%UsercontextAppdataDir%"
+		set $mystr$ = "%AppdataDir%"
+		set $mystr$ = "%CurrentAppdataDir%"
+		set $mystr$ = "%CurrentStartmenuDir%"
+		set $mystr$ = "%CurrentDesktopDir%"
+		set $mystr$ = "%CurrentStartupDir%"
+		set $mystr$ = "%CurrentProgramsDir%"
+		set $mystr$ = "%CurrentSendToDir%"
+		set $mystr$ = "%CurrentProfileDir%"
+		set $mylist$ = getProductMap
+		
+		saveVersionToProfile
+		set $mystr$ = readVersionFromProfile
+	
+    comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "scriptWasExecutedBefore"
+		
+		if scriptWasExecutedBefore 
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		if readVersionFromProfile = "%installingProdVersion%"
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "createkeys"
+		Registry_createkeys
+		set $CompValue$ = GetRegistrystringvalue("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]") 
+		if $CompValue$ = "C:\Program files\test\test.exe -a"
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	
+	
+	
+	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "deleteKey"
+		;cleaning up
+		Registry_deleteKey
+		set $CompValue$ = GetRegistrystringvalue("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]") 
+		if $CompValue$ = ""
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed" 
+		endif
+	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Add"
+		Registry_opsi_org_delete_test
+		Registry_Add
+		set $ConstTest$ = "value"
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test] test")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "HKLM in login"
+		Registry_createkeys_HKLM
+		set $CompValue$ = GetRegistrystringvalue("[HKLM\SOFTWARE\opsi.org\opsi-winst-test\.a\b]") 
+		if $CompValue$ = "C:\Program files\test\test.exe -a"
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		Registry_opsi_org_delete_test_hklm
+
+	
+		if ($INST_SystemType$ = "64 Bit System")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "Write / Read 64 Bit Registry"
+			set $ConstTest$ = ""
+			set $regWriteValue$ = "64"
+			set $CompValue$ = $regWriteValue$
+			Registry_opsi_org_test /64Bit 
+			ExecWith_opsi_org_test "%systemroot%\cmd64.exe" /c
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Registry_opsi_org_test /SysNative
+			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $regWriteValue$ = "32"
+			set $CompValue$ = $regWriteValue$
+			Registry_opsi_org_test
+			ExecWith_opsi_org_test "cmd.exe" /c
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Registry_opsi_org_test /32Bit
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Registry_opsi_org_delete_test
+			set $CompValue$ = ""
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Registry_opsi_org_delete_test /64bit
+			set $CompValue$ = ""
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValueSysnative("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		else
+			if $MsVersion$ <= "5.0"
+			comment "not tested at win2k  because tasklist is needed"
+			else
+				set $regWriteValue$ = "32"
+				set $CompValue$ = $regWriteValue$
+				Registry_opsi_org_test /64Bit
+				ExecWith_opsi_org_test "cmd.exe" /c
+				set $ConstTest$ = GetRegistryStringValue64("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				set $ConstTest$ = GetRegistryStringValue64("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
+		endif
+		
+		comment "examples from/for the manual"
+		comment "example 1"
+			Message "Example Profile Patch ...."
+			Files_profile_copy
+			Registry_currentuser_set
+		
+		comment "example 2"
+			Message "Firefox Profile Patch ...."
+			DefVar $akt_profile_ini$
+			DefVar $rel_prefs_path$
+			comment "check for existing profile ..."
+			Set $akt_profile_ini$ = "%CurrentAppdataDir%\Mozilla\Firefox\profiles.ini"
+			if FileExists($akt_profile_ini$)
+				Set $rel_prefs_path$ = GetValueFromInifile($akt_profile_ini$,"Profile0","Path","")
+				if FileExists("%CurrentAppdataDir%\Mozilla\Firefox\\"+$rel_prefs_path$)
+					comment "We found the profile and will now patch it ....."
+				endif
+			else
+				comment "no firefox profile found for user"
+			endif
+			
+		comment "example 3"
+			if getValue("installationstate", getProductMap) = "installed"
+				comment "Product is installed"
+				Files_profile_copy
+				Registry_currentuser_set
+			endif
+			
+			if getValue("lastactionrequest", getProductMap) = "uninstall"
+				comment "Product was uninstalled"
+				Files_profile_del
+				Registry_currentuser_del
+			endif
+				
+		comment "example 5"
+			comment "Did we run this script before ?"
+			if not (scriptWasExecutedBefore)
+				comment "loginscript was not run yet "	
+				Files_profile_copy
+				Registry_currentuser_set
+			endif
+			
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "Patches "
+			Patches_profile_ini "%userprofiledir%\opsi-winst-test.ini"
+			set $ConstTest$ = "add1"
+			Set $CompValue$ = GetValueFromInifile("%CurrentProfileDir%\opsi-winst-test.ini", "secdummy", "dummy1", "failed")
+			if ($ConstTest$ = $CompValue$)
+				comment "GetValueFromInifile passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "Patches /AllNTUserProfiles"
+			endif
+			Files_profile_del 
+			
+			comment "example 1"
+				Message "Example Profile Patch ...."
+				Files_profile_copy
+				Registry_currentuser_set
+				Patches_profile_ini "%userprofiledir%\opsi-winst-test.ini"
+			
+				
+			comment "example 3"
+				if getValue("installationstate", getProductMap) = "installed"
+					comment "Product is installed"
+					Files_profile_copy
+					Registry_currentuser_set
+					Patches_profile_ini "%userprofiledir%\opsi-winst-test.ini"
+				endif
+				
+					
+			comment "example 5"
+				comment "Did we run this script before ?"
+				if not (scriptWasExecutedBefore)
+					comment "loginscript was not run yet "	
+					Files_profile_copy
+					Registry_currentuser_set
+					Patches_profile_ini "%userprofiledir%\opsi-winst-test.ini"
+				endif
+				
+			Files_profile_del
+		endif ; 4.11.3.2
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.4") >= "0"
+			Files_copy_helper_2_c
+			winbatch_start_helper_c /RunAsLoggedOnUser
+			includelog "c:\tmp\testFiles\opsi-winst-test-helper\admin.log" "100"
+			winbatch_start_helper /RunAsLoggedOnUser
+			includelog "c:\tmp\testFiles\opsi-winst-test-helper\admin.log" "100"
+			Files_clean_from_c
+			
+			Files_profile_copy
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "DeleteTheLine / AdvanceLine"
+			PatchTextFile_AdvanceLine_DeleteTheLine "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line containing dummy1."
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(0, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "FindLine"
+			PatchTextFile_findLine "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line1 with no sense"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(0, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "FindLine_StartingWith"
+			PatchTextFile_FindLine_StartingWith "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line3 with no sense"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(3, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "FindLine_Containing"
+			PatchTextFile_FindLine_Containing "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line2 with no sense"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(1, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GoToTop"
+			PatchTextFile_GoToTop "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line2 with no sense"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(0, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GoToBottom"
+			PatchTextFile_GoToBottom "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line2 with no sense"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(0, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "AddLine"
+			PatchTextFile_AddLine "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line added by winst"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(1, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "InsertLine"
+			PatchTextFile_InsertLine "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line inserted by winst"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(1, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "AppendLine"
+			PatchTextFile_AppendLine "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line appended by winst"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(3, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "Append_File"
+			PatchTextFile_Append_File "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line3appendbyFile"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(6, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "Subtract_File"
+			PatchTextFile_Subtract_File "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line1appendbyFile"
+			set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\dummy.txt")
+			Set $CompValue$ = takeString(0, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "SaveToFile"
+			PatchTextFile_SaveToFile "%userprofiledir%\opsi-winst-test\dummy.txt"
+			set $ConstTest$ = "Line1appendbyFile"
+			if (fileExists("%CurrentProfileDir%\opsi-winst-test\savetofile.txt"))
+				set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\savetofile.txt")
+				Set $CompValue$ = takeString(0, $list1$)
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Files_profile_del
+			
+		endif ; 4.11.3.4
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.5") >= "0"
+
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			comment "linkFolder @ desktop, sendto, startmenu, startup, programs, desktopdirectory"
+		
+			set $list1$ = createStringList ('desktop', 'sendto', 'startmenu', 'programs', 'startup', 'desktopdirectory')
+			message "startup"
+			for $var$ in $list1$ do LinkFolder_Dummy
+		
+			message "desktop"
+			if (FileExists("%CurrentDesktopDir%\Dummy\Dummy.LNK"))
+				comment "desktop passed"
+				set $tmp$ = "desktop"
+				LinkFolder_Dummy_delete
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "desktop failed"
+			endif
+		
+			message "sendto"
+			if (FileExists("%CurrentSendToDir%\Dummy\Dummy.LNK"))
+				comment "sendto passed"
+				set $tmp$ = "sendto"
+				LinkFolder_Dummy_delete
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "sendto failed"
+			endif
+		
+		
+			message "startmenu"
+			if (FileExists("%CurrentStartmenuDir%\Dummy\Dummy.LNK"))
+				comment "startmenu passed"
+				set $tmp$ = "startmenu"
+				LinkFolder_Dummy_delete
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "startmenu failed"
+			endif
+		
+			message "startup"
+			if (FileExists("%CurrentStartupDir%\Dummy\Dummy.LNK"))
+				comment "startup passed"
+				set $tmp$ = "startup"
+				LinkFolder_Dummy_delete
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "startup failed"
+			endif
+		
+			message "programs"
+			if (FileExists("%CurrentProgramsDir%\Dummy\Dummy.LNK"))
+				comment "programs passed"
+				set $tmp$ = "programs"
+				LinkFolder_Dummy_delete
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "programs failed"
+			endif
+		
+		endif ; 4.11.3.5
+
+
+      if ("%opsiServer%" = "bonifax.uib.local") or ("%opsiServer%" = "192.168.1.14")
+        comment " we are at uib office opsi service - write back results to dummy product opsi-loginscripts"
+				set $productonclientHashlist$ = addtolist($productonclientHashlist$, "[newmap]")
+				set $productonclientHashlist$ = addtolist($productonclientHashlist$, "productId=opsi-loginscripttest")
+				set $productonclientHashlist$ = addtolist($productonclientHashlist$, "actionProgress=")
+				set $productonclientHashlist$ = addtolist($productonclientHashlist$, "clientId=%opsiserviceUser%")
+				set $productonclientHashlist$ = addtolist($productonclientHashlist$, "type=ProductOnClient")
+				set $productonclientHashlist$ = addtolist($productonclientHashlist$, "productType=LocalbootProduct")
+				set $productonclientHashlist$ = addtolist($productonclientHashlist$, "actionRequest=none")
+				set $productonclientHashlist$ = addtolist($productonclientHashlist$, "lastAction=setup")
+				if $TestResult$ = "not o.k."
+					set $productonclientHashlist$ = addtolist($productonclientHashlist$, "installationStatus=unknown")
+					set $productonclientHashlist$ = addtolist($productonclientHashlist$, "actionResult=failed")
+				else
+					set $productonclientHashlist$ = addtolist($productonclientHashlist$, "installationStatus=installed")
+					set $productonclientHashlist$ = addtolist($productonclientHashlist$, "actionResult=successful")
+				endif
+      	
+				OpsiServiceHashList_productOnClient_createObject
+			endif
+	endif ; Loginscript
+endif ; 4.11.2.1
+
+			
+
+[Registry_createkeys]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+set ""="C:\Program files\test\test.exe -a"
+
+[Registry_deleteKey]
+deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a]
+
+[Registry_Add]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test]
+Add "test"=REG_EXPAND_SZ:"value"
+
+
+[Registry_opsi_org_test]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0]
+set ""="standard entry"
+set "bitByWinst"="$regWriteValue$"
+set "str_bywinst"=REG_SZ:"my string"
+set "strexpand_bywinst"=REG_EXPAND_SZ:"%programfiles%"
+set "dword_test1"= REG_DWORD:10
+set "dword_test2"= REG_DWORD:0xA
+set "dword_test3"= REG_DWORD:0x0A
+set "dword_test4"= REG_DWORD:$0A
+set "binary_bywinst"=REG_BINARY:00 FF
+set "binary_empty_bywinst"=REG_BINARY:
+set "multi_sz_bywinst" = REG_MULTI_SZ:"A|BC|de"
+
+[Registry_opsi_org_delete_test]
+deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test]
+
+[Registry_createkeys_HKLM]
+openkey [HKLM\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+set ""="C:\Program files\test\test.exe -a"
+
+[Registry_opsi_org_delete_test_hklm]
+deletekey [HKLM\SOFTWARE\opsi.org\opsi-winst-test]
+
+
+[ExecWith_opsi_org_test]
+rem "HKEY_CURRENT_USER will not work here"
+reg add "HKEY_USERS\%UsercontextSID%\SOFTWARE\opsi.org\opsi-winst-test\test-4.0" /v "bitByReg" /t REG_SZ /d "$regWriteValue$" /f
+
+; examples from/for the manual
+[Files_profile_copy]
+copy "%Scriptpath%\profiles\*.*" "%CurrentAppdataDir%\ACME"
+copy "%ScriptPath%\test-files\PatchTextFile\*.*" "%userprofiledir%\opsi-winst-test"
+
+[Files_profile_del]
+del -s -f "%CurrentAppdataDir%\ACME"
+del "%userprofiledir%\opsi-winst-test.ini"
+del -s -f "%userprofiledir%\opsi-winst-test"
+
+[Patches_profile_ini]
+add [secdummy] dummy1=add1
+
+
+[Registry_currentuser_set]
+openkey [HKCU\Software\ACME]
+set "show_greeting_window" = "no"
+
+[Registry_currentuser_del]
+deletekey [HKCU\Software\ACME]
+
+[OpsiServiceHashList_productOnClient_createObject]
+"method": "productOnClient_createObjects"
+"HashList": "$productonclientHashlist$"
+"params": [
+          ]
+
+[Files_copy_helper_2_c]
+copy "%ScriptPath%\opsi-winst-test-helper\*.exe" "c:\tmp\testFiles\opsi-winst-test-helper"
+
+[Files_clean_from_c]
+del -s -f "c:\tmp\testFiles"
+
+[winbatch_start_helper_c]
+"c:\tmp\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+
+[winbatch_start_helper]
+"%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+
+;---------------- start sections for patch textfile test ---------------------------
+
+
+[PatchTextFile_AdvanceLine_DeleteTheLine]
+AdvanceLine 1
+DeleteTheLine
+
+[PatchTextFile_findLine]
+FindLine "Line containing dummy1."
+DeleteTheLine
+
+[PatchTextFile_FindLine_StartingWith]
+FindLine_StartingWith "Additional"
+DeleteTheLine
+
+[PatchTextFile_FindLine_Containing]
+FindLine_Containing "dummy2"
+DeleteTheLine
+
+[PatchTextFile_GoToTop]
+GoToTop
+AdvanceLine 1
+DeleteTheLine
+
+[PatchTextFile_GoToBottom]
+GoToBottom
+DeleteTheLine
+
+[PatchTextFile_AddLine]
+GoToBottom
+AddLine "Line added by winst"
+
+[PatchTextFile_InsertLine]
+GoToBottom
+InsertLine "Line inserted by winst"
+
+[PatchTextFile_AppendLine]
+GoToBottom
+AppendLine "Line appended by winst"
+
+[PatchTextFile_Append_File]
+Append_File "%userprofiledir%\opsi-winst-test\fileappend.txt"
+
+[PatchTextFile_Subtract_File]
+Subtract_File "%userprofiledir%\opsi-winst-test\filesubstract.txt"
+
+[PatchTextFile_SaveToFile]
+SaveToFile "%userprofiledir%\opsi-winst-test\savetofile.txt"
+
+;----------------  end  sections for patch textfile test ---------------------------------
+
+[LinkFolder_Dummy]
+set_basefolder $var$
+set_subfolder "Dummy"
+set_link
+	name: Dummy
+	target: %Programfiles32Dir%\PuTTY\1234567890.exe
+	parameters:
+	working_dir: %Programfiles32Dir%\PuTTY
+	icon_file:
+	icon_index:
+end_link
+
+[LinkFolder_Dummy_delete]
+set_basefolder $tmp$
+delete_subfolder "Dummy"
+
+[Files_delete_linkFolder]
+Delete -s -f $tmp$
+
+

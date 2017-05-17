@@ -1,0 +1,5 @@
+- exit-code
+- time output
+- fork other process and stop
+- show window for n sec
+

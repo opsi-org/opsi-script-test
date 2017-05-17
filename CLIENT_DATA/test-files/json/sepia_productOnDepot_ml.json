@@ -1,0 +1,652 @@
+[
+    {
+    "ident" : "acroread;LocalbootProduct;10.1.4;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "10.1.4",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "acroread"
+    },
+    {
+    "ident" : "acroread11;LocalbootProduct;11.0.14;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "11.0.14",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "acroread11"
+    },
+    {
+    "ident" : "acroread9;LocalbootProduct;9.5.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "9.5.2",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "acroread9"
+    },
+    {
+    "ident" : "adobe.reader.dc.classic;LocalbootProduct;20151500630119;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "20151500630119",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "adobe.reader.dc.classic"
+    },
+    {
+    "ident" : "citrix_c;LocalbootProduct;10.00.52110;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "10.00.52110",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "citrix_c"
+    },
+    {
+    "ident" : "config-win-base;LocalbootProduct;4.0.1;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.1",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "config-win-base"
+    },
+    {
+    "ident" : "config-win10;LocalbootProduct;4.0.6;5;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "5",
+    "productId" : "config-win10"
+    },
+    {
+    "ident" : "firefox;LocalbootProduct;38.6.1esror44.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "38.6.1esror44.0.2",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "firefox"
+    },
+    {
+    "ident" : "flashplayer;LocalbootProduct;18.0.0.329;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "18.0.0.329",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "flashplayer"
+    },
+    {
+    "ident" : "gnupg;LocalbootProduct;1.4.9;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "1.4.9",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "gnupg"
+    },
+    {
+    "ident" : "google-chrome-for-business;LocalbootProduct;48.0.2564.116;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "48.0.2564.116",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "google-chrome-for-business"
+    },
+    {
+    "ident" : "hwaudit;LocalbootProduct;4.0.6.1;4;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.1",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "4",
+    "productId" : "hwaudit"
+    },
+    {
+    "ident" : "hwinvent;NetbootProduct;4.0;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "hwinvent"
+    },
+    {
+    "ident" : "javavm;LocalbootProduct;1.8.0.73or1.8.0.74;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "1.8.0.73or1.8.0.74",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "javavm"
+    },
+    {
+    "ident" : "jedit;LocalbootProduct;5.2.0;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "5.2.0",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "jedit"
+    },
+    {
+    "ident" : "libreoffice;LocalbootProduct;5.0.5or5.1.0;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "5.0.5or5.1.0",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "libreoffice"
+    },
+    {
+    "ident" : "memtest86;NetbootProduct;5.01;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "5.01",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "memtest86"
+    },
+    {
+    "ident" : "mshotfix;LocalbootProduct;201210;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "201210",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "mshotfix"
+    },
+    {
+    "ident" : "mshotfix-vista-win2008-x64-glb;LocalbootProduct;201210;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "201210",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "mshotfix-vista-win2008-x64-glb"
+    },
+    {
+    "ident" : "mshotfix-vista-win2008-x86-glb;LocalbootProduct;201210;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "201210",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "mshotfix-vista-win2008-x86-glb"
+    },
+    {
+    "ident" : "mshotfix-win2003-winxp-x64-deu;LocalbootProduct;201210;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "201210",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "mshotfix-win2003-winxp-x64-deu"
+    },
+    {
+    "ident" : "mshotfix-win2003-x86-deu;LocalbootProduct;201210;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "201210",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "mshotfix-win2003-x86-deu"
+    },
+    {
+    "ident" : "mshotfix-win7-win2008r2-x64-glb;LocalbootProduct;201210;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "201210",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "mshotfix-win7-win2008r2-x64-glb"
+    },
+    {
+    "ident" : "mshotfix-win7-x86-glb;LocalbootProduct;201210;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "201210",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "mshotfix-win7-x86-glb"
+    },
+    {
+    "ident" : "mshotfix-winxp-x86-deu;LocalbootProduct;201210;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "201210",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "mshotfix-winxp-x86-deu"
+    },
+    {
+    "ident" : "msservicepack;LocalbootProduct;xpsp3;5;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "xpsp3",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "5",
+    "productId" : "msservicepack"
+    },
+    {
+    "ident" : "ntfs-restore-image;NetbootProduct;4.0;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "ntfs-restore-image"
+    },
+    {
+    "ident" : "ntfs-write-image;NetbootProduct;4.0;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "ntfs-write-image"
+    },
+    {
+    "ident" : "ooffice;LocalbootProduct;4.1.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.1.2",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "ooffice"
+    },
+    {
+    "ident" : "ooffice3;LocalbootProduct;3.4.1;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "3.4.1",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "ooffice3"
+    },
+    {
+    "ident" : "opsi-adminutils;LocalbootProduct;4.0.2.1;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2.1",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "opsi-adminutils"
+    },
+    {
+    "ident" : "opsi-client-agent;LocalbootProduct;4.0.6.3;7;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.3",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "7",
+    "productId" : "opsi-client-agent"
+    },
+    {
+    "ident" : "opsi-clonezilla;NetbootProduct;4.0.6.1;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.1",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "opsi-clonezilla"
+    },
+    {
+    "ident" : "opsi-configed;LocalbootProduct;4.0.6.3.5.1;3;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.3.5.1",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "3",
+    "productId" : "opsi-configed"
+    },
+    {
+    "ident" : "opsi-logviewer;LocalbootProduct;1.5;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "1.5",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "opsi-logviewer"
+    },
+    {
+    "ident" : "opsi-set-win-uac;LocalbootProduct;1.0;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "1.0",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "opsi-set-win-uac"
+    },
+    {
+    "ident" : "opsi-setup-detector;LocalbootProduct;4.0.6.132;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.132",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "opsi-setup-detector"
+    },
+    {
+    "ident" : "opsi-template;LocalbootProduct;4.0.6;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "opsi-template"
+    },
+    {
+    "ident" : "opsi-template-with-admin;LocalbootProduct;4.0.6;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "opsi-template-with-admin"
+    },
+    {
+    "ident" : "opsi-uefi-netboot;LocalbootProduct;4.0.5;3;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.5",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "3",
+    "productId" : "opsi-uefi-netboot"
+    },
+    {
+    "ident" : "opsi-winst;LocalbootProduct;4.11.5.16;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.11.5.16",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "opsi-winst"
+    },
+    {
+    "ident" : "opsi-winst-test;LocalbootProduct;4.11.5.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.11.5.2",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "opsi-winst-test"
+    },
+    {
+    "ident" : "shutdownwanted;LocalbootProduct;1.0;4;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "1.0",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "4",
+    "productId" : "shutdownwanted"
+    },
+    {
+    "ident" : "swaudit;LocalbootProduct;4.0.6;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "swaudit"
+    },
+    {
+    "ident" : "thunderbird;LocalbootProduct;38.6.0;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "38.6.0",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "thunderbird"
+    },
+    {
+    "ident" : "win10;NetbootProduct;4.0.6.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "win10"
+    },
+    {
+    "ident" : "win10-x64;NetbootProduct;4.0.6.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "win10-x64"
+    },
+    {
+    "ident" : "win2003-r2-x64;NetbootProduct;4.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "win2003-r2-x64"
+    },
+    {
+    "ident" : "win2003;NetbootProduct;4.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "win2003"
+    },
+    {
+    "ident" : "win2008-r2;NetbootProduct;4.0.6.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "win2008-r2"
+    },
+    {
+    "ident" : "win2008;NetbootProduct;4.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "win2008"
+    },
+    {
+    "ident" : "win2008-x64;NetbootProduct;4.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "win2008-x64"
+    },
+    {
+    "ident" : "win2012-r2;NetbootProduct;4.0.6.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "win2012-r2"
+    },
+    {
+    "ident" : "win2012;NetbootProduct;4.0.6.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "win2012"
+    },
+    {
+    "ident" : "win2k;NetbootProduct;4.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "win2k"
+    },
+    {
+    "ident" : "win7;NetbootProduct;4.0.6.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "win7"
+    },
+    {
+    "ident" : "win7-x64;NetbootProduct;4.0.6.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "win7-x64"
+    },
+    {
+    "ident" : "win81;NetbootProduct;4.0.6.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "win81"
+    },
+    {
+    "ident" : "win81-x64;NetbootProduct;4.0.6.2;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.6.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "win81-x64"
+    },
+    {
+    "ident" : "winvista;NetbootProduct;4.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "winvista"
+    },
+    {
+    "ident" : "winvista-x64;NetbootProduct;4.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "winvista-x64"
+    },
+    {
+    "ident" : "winxppro;NetbootProduct;4.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "winxppro"
+    },
+    {
+    "ident" : "winxppro-x64;NetbootProduct;4.0.2;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "4.0.2",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "winxppro-x64"
+    },
+    {
+    "ident" : "wipedisk;NetbootProduct;1.0;2;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "1.0",
+    "productType" : "NetbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "2",
+    "productId" : "wipedisk"
+    },
+    {
+    "ident" : "xpconfig;LocalbootProduct;2.6;1;sepia.vmnat.local",
+    "locked" : null,
+    "productVersion" : "2.6",
+    "productType" : "LocalbootProduct",
+    "depotId" : "sepia.vmnat.local",
+    "type" : "ProductOnDepot",
+    "packageVersion" : "1",
+    "productId" : "xpconfig"
+    }
+]

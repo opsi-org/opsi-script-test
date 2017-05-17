@@ -1,0 +1,8 @@
+comment "textsubext_loop_ok running"
+set $TestResult$=$TestResult$+"6"
+for %letter% in $list$ do sub_show_letter
+
+[sub_show_letter]
+comment "testsub external with loop running " + "%letter%"
+set $TestResult$=$TestResult$+"%letter%"
+

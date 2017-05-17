@@ -1,0 +1,11 @@
+[Actions]
+setloglevel=9
+DefVar $MozInstallDir$
+set $MozInstallDir$ = ""
+
+Files_test
+
+[Files_test]
+delete -sf "$MozInstallDir$"
+
+

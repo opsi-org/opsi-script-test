@@ -1,0 +1,6 @@
+[actions]
+DefVar $myError$
+set $myError$ = "test error"
+;hallo
+isFatalError $myerror$
+

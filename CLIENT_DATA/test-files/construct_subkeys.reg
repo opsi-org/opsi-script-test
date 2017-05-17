@@ -1,0 +1,22 @@
+Windows Registry Editor Version 5.00
+;צהü encoding win 1252
+
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a]
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+@="C:\\Program Files\\test\\test.exe -a"
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\c]
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\c\d1]
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\c\d2]
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\c\d2\e1]
+@=hex:43,00,3a,00,5c,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,6d,00,65,\ 
+00,5c,00,53,00,6c,00,6f,00,77,00,56,00,69,00,65,00,77,00,5c,00,53,00,6c,00,\ 
+6f,00,77,00,56,00,69,00,65,00,77,00,2e,00,65,00,78,00,65,00,20,00,2d,00,70,\ 
+00,20,00,22,00,25,00,31,00,22,00,00,00
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\c\d2\e2]
+@=hex:43,00,3a,00,5c,00,50,00,72,00,6f,00,67,00,72,00,61,00,6d,00,6d,00,65,\ 
+00,5c,00,53,00,6c,00,6f,00,77,00,56,00,69,00,65,00,77,00,5c,00,53,00,6c,00,\ 
+6f,00,77,00,56,00,69,00,65,00,77,00,2e,00,65,00,78,00,65,00,20,00,2d,00,70,\ 
+00,20,00,22,00,25,00,31,00,22,00,00,00
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\c\d3]
+

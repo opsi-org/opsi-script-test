@@ -1,0 +1,13 @@
+[actions]
+DefVar $tmp$
+setloglevel=9
+
+set $tmp$ = '"this is a string in double quotes"'
+Registry_set_quoted_string
+
+[Registry_set_quoted_string]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\quoted]
+set "quoted"="$tmp$"
+
+[halt]
+

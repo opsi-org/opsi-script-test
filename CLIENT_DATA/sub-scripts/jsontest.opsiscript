@@ -1,0 +1,369 @@
+encoding=utf8
+
+
+if ($Flag_jsonfunctions$ = "on") or ($MasterFlag$ = "on")
+	Message "testing json functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing json functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+;    * jsonIsValid(<jsonstr>) : boolean
+;    * jsonIsArray(<jsonstr>) : boolean
+;    * jsonIsObject(<jsonstr>) : boolean
+;    * jsonAsObjectHasKey(<jsonstr>,<keystr>) : boolean
+;    * jsonAsArrayCountElements(<jsonstr>) : intstr
+;    * jsonAsObjectCountElements(<jsonstr>) : intstr
+;    * jsonAsArrayGetElementByIndex(<jsonstr>, <indexstr>) : jsonstring
+;    * jsonAsObjectGetValueByKey(<jsonstr>, <keystr>) : valuestring
+;    * jsonAsObjectSetValueByKey(<jsonstr>, <keystr>,<valuestring>) : jsonstring 
+;    * jsonAsArrayPutObjectByIndex(<jsonstr>, <indexstr>, <objectstr>) : jsonstring
+;    * jsonAsArrayToStringList(<jsonstr>) : stringlist
+;    * jsonAsObjectGetKeyList(<jsonstr>) : stringlist
+;    * jsonStringListToJsonArray(<strlist>) : jsonstr
+
+
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Convert2JsonStr"
+	set $ConstTest$ = '{"uninstallstring":"c:\\programme\\myprod\\uninst.exe"}'
+	set $tmp$ = '{uninstallstring: c:\programme\myprod\uninst.exe}'
+	set $tmp$ = RegString($tmp$)
+	set $CompValue$ = Convert2JsonStr($tmp$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	if $OS$ = "Windows_NT"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Convert2JsonStr"
+		set $ConstTest$ = '{"\u00fc\u00f6\u00e4\u00df ":"bla bla bla"}'
+		comment " should be umlaut ue oe ue ss"
+		set $tmp$ = '{üöäß : bla bla bla}'
+		set $CompValue$ = Convert2JsonStr($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; windows
+
+	comment "the following string could be converted"
+	set $tmp$ = '{"7-Zip": {"displayName": "7-Zip 4.65","uninstallString": "","softwareId": "7-Zip","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"KB953155": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB953155)","uninstallString": "","softwareId": "KB953155","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"{30FD286C-1EE1-49D3-9956-63DFD6BDFF33}": {"displayName": "","uninstallString": "","softwareId": "{30FD286C-1EE1-49D3-9956-63DFD6BDFF33}","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "2.14.0.7","binaryName": ""}}'
+	set $CompValue$ = Convert2JsonStr($tmp$)
+	comment "the following string could not be converted - (it is to long)"
+	set $tmp$ = '{"7-Zip": {"displayName": "7-Zip 4.65","uninstallString": "","softwareId": "7-Zip","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"AddressBook": {"displayName": "","uninstallString": "","softwareId": "AddressBook","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"AG": {"displayName": "Haufe Recht Handbuch - Die Aktiengesellschaft","uninstallString": "","softwareId": "AG","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"AutoHotkey": {"displayName": "AutoHotkey 1.0.47.06","uninstallString": "","softwareId": "AutoHotkey","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1.0.47.06","binaryName": ""},"Branding": {"displayName": "","uninstallString": "","softwareId": "Branding","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"Connection Manager": {"displayName": "","uninstallString": "","softwareId": "Connection Manager","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"DirectAnimation": {"displayName": "","uninstallString": "","softwareId": "DirectAnimation","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"DirectDrawEx": {"displayName": "","uninstallString": "","softwareId": "DirectDrawEx","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"DXM_Runtime": {"displayName": "","uninstallString": "","softwareId": "DXM_Runtime","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"EH_CrashcursBWL": {"displayName": "Crashkurs BWL","uninstallString": "","softwareId": "EH_CrashcursBWL","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"Fontcore": {"displayName": "","uninstallString": "","softwareId": "Fontcore","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"GMBH": {"displayName": "Die GmbH","uninstallString": "","softwareId": "GMBH","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"ICW": {"displayName": "","uninstallString": "","softwareId": "ICW","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"IE40": {"displayName": "","uninstallString": "","softwareId": "IE40","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"IE4Data": {"displayName": "","uninstallString": "","softwareId": "IE4Data","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"IE5BAKEX": {"displayName": "","uninstallString": "","softwareId": "IE5BAKEX","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"IEData": {"displayName": "","uninstallString": "","softwareId": "IEData","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"KB2229593": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB2229593)","uninstallString": "","softwareId": "KB2229593","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB2286198": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB2286198)","uninstallString": "","softwareId": "KB2286198","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB923561": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB923561)","uninstallString": "","softwareId": "KB923561","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB923789": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB923789)","uninstallString": "","softwareId": "KB923789","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"KB938464-v2": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB938464-v2)","uninstallString": "","softwareId": "KB938464-v2","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "2","binaryName": ""},"KB946648": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB946648)","uninstallString": "","softwareId": "KB946648","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB950762": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB950762)","uninstallString": "","softwareId": "KB950762","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB950974": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB950974)","uninstallString": "","softwareId": "KB950974","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB951376-v2": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB951376-v2)","uninstallString": "","softwareId": "KB951376-v2","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "2","binaryName": ""},"KB951748": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB951748)","uninstallString": "","softwareId": "KB951748","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB952069_WM9": {"displayName": "Sicherheitsupdate fï¿½r Windows Media Player (KB952069)","uninstallString": "","softwareId": "KB952069_WM9","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"KB952954": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB952954)","uninstallString": "","softwareId": "KB952954","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB953155": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB953155)","uninstallString": "","softwareId": "KB953155","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB954155_WM9": {"displayName": "Sicherheitsupdate fï¿½r Windows Media Player (KB954155)","uninstallString": "","softwareId": "KB954155_WM9","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"KB954459": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB954459)","uninstallString": "","softwareId": "KB954459","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB955069": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB955069)","uninstallString": "","softwareId": "KB955069","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB956572": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB956572)","uninstallString": "","softwareId": "KB956572","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB956744": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB956744)","uninstallString": "","softwareId": "KB956744","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB956802": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB956802)","uninstallString": "","softwareId": "KB956802","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB956803": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB956803)","uninstallString": "","softwareId": "KB956803","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB956844": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB956844)","uninstallString": "","softwareId": "KB956844","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB958215": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB958215)","uninstallString": "","softwareId": "KB958215","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB958644": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB958644)","uninstallString": "","softwareId": "KB958644","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB960225": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB960225)","uninstallString": "","softwareId": "KB960225","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB960803": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB960803)","uninstallString": "","softwareId": "KB960803","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB960859": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB960859)","uninstallString": "","softwareId": "KB960859","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB961371-v2": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB961371-v2)","uninstallString": "","softwareId": "KB961371-v2","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "2","binaryName": ""},"KB961373": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB961373)","uninstallString": "","softwareId": "KB961373","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB969059": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB969059)","uninstallString": "","softwareId": "KB969059","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB970238": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB970238)","uninstallString": "","softwareId": "KB970238","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB970483": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB970483)","uninstallString": "","softwareId": "KB970483","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB971468": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB971468)","uninstallString": "","softwareId": "KB971468","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB971486": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB971486)","uninstallString": "","softwareId": "KB971486","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB971657": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB971657)","uninstallString": "","softwareId": "KB971657","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB971961": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB971961)","uninstallString": "","softwareId": "KB971961","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB972187_WM9": {"displayName": "Sicherheitsupdate fï¿½r Windows Media Player (KB972187)","uninstallString": "","softwareId": "KB972187_WM9","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"KB972260": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB972260)","uninstallString": "","softwareId": "KB972260","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB972270": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB972270)","uninstallString": "","softwareId": "KB972270","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB973354": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB973354)","uninstallString": "","softwareId": "KB973354","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB973507": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB973507)","uninstallString": "","softwareId": "KB973507","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB973540_WM9": {"displayName": "Sicherheitsupdate fï¿½r Windows Media Player (KB973540)","uninstallString": "","softwareId": "KB973540_WM9","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"KB973815": {"displayName": "Update fï¿½r Windows XP (KB973815)","uninstallString": "","softwareId": "KB973815","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB973869": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB973869)","uninstallString": "","softwareId": "KB973869","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB973904": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB973904)","uninstallString": "","softwareId": "KB973904","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB974112": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB974112)","uninstallString": "","softwareId": "KB974112","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB974318": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB974318)","uninstallString": "","softwareId": "KB974318","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB974392": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB974392)","uninstallString": "","softwareId": "KB974392","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB974455": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB974455)","uninstallString": "","softwareId": "KB974455","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB974571": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB974571)","uninstallString": "","softwareId": "KB974571","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB975254": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB975254)","uninstallString": "","softwareId": "KB975254","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB975467": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB975467)","uninstallString": "","softwareId": "KB975467","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB975560": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB975560)","uninstallString": "","softwareId": "KB975560","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB975561": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB975561)","uninstallString": "","softwareId": "KB975561","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB975562": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB975562)","uninstallString": "","softwareId": "KB975562","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB975713": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB975713)","uninstallString": "","softwareId": "KB975713","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB976323": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB976323)","uninstallString": "","softwareId": "KB976323","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB977816": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB977816)","uninstallString": "","softwareId": "KB977816","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB977914": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB977914)","uninstallString": "","softwareId": "KB977914","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB978037": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB978037)","uninstallString": "","softwareId": "KB978037","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB978542": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB978542)","uninstallString": "","softwareId": "KB978542","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB978601": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB978601)","uninstallString": "","softwareId": "KB978601","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB978695_WM9": {"displayName": "Sicherheitsupdate fï¿½r Windows Media Player (KB978695)","uninstallString": "","softwareId": "KB978695_WM9","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"KB979309": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB979309)","uninstallString": "","softwareId": "KB979309","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB979402_WM9": {"displayName": "Sicherheitsupdate fï¿½r Windows Media Player (KB979402)","uninstallString": "","softwareId": "KB979402_WM9","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"KB979482": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB979482)","uninstallString": "","softwareId": "KB979482","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB979559": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB979559)","uninstallString": "","softwareId": "KB979559","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB979683": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB979683)","uninstallString": "","softwareId": "KB979683","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB980195": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB980195)","uninstallString": "","softwareId": "KB980195","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB980218": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB980218)","uninstallString": "","softwareId": "KB980218","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB980232": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB980232)","uninstallString": "","softwareId": "KB980232","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB981349": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB981349)","uninstallString": "","softwareId": "KB981349","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"KB982381": {"displayName": "Sicherheitsupdate fï¿½r Windows XP (KB982381)","uninstallString": "","softwareId": "KB982381","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": ""},"Microsoft .NET Framework 3.5 Language Pack SP1 - deu": {"displayName": "Microsoft .NET Framework 3.5 Language Pack SP1 - DEU","uninstallString": "","softwareId": "Microsoft .NET Framework 3.5 Language Pack SP1 - deu","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "","binaryName": "c:\WINDOWS\Microsoft.NET\Framework\v3.5\Microsoft .NET Framework 3.5 Language Pack SP1 - deu\RebootStub.exe"},"Microsoft .NET Framework 3.5 SP1": {"displayName": "Microsoft .NET Framework 3.5 SP1","uninstallString": "","softwareId": "Microsoft .NET Framework 3.5 SP1","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "","binaryName": "C:\WINDOWS\Microsoft.NET\Framework\v3.5\Microsoft .NET Framework 3.5 Language Pack SP1 - deu\RebootStub.exe"},"MobileOptionPack": {"displayName": "","uninstallString": "","softwareId": "MobileOptionPack","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"MPlayer2": {"displayName": "","uninstallString": "","softwareId": "MPlayer2","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"NetMeeting": {"displayName": "","uninstallString": "","softwareId": "NetMeeting","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"OpenSSL-0.9.8h-1_is1": {"displayName": "GnuWin32: OpenSSL-0.9.8h-1","uninstallString": "","softwareId": "OpenSSL-0.9.8h-1_is1","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "0.9.8h-1","binaryName": "C:\Programme\OpenSSL\bin\ssltest.exe"},"OutlookExpress": {"displayName": "","uninstallString": "","softwareId": "OutlookExpress","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"PCHealth": {"displayName": "","uninstallString": "","softwareId": "PCHealth","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"PuTTY_is1": {"displayName": "PuTTY version 0.60","uninstallString": "","softwareId": "PuTTY_is1","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "0.60","binaryName": ""},"SchedulingAgent": {"displayName": "","uninstallString": "","softwareId": "SchedulingAgent","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"Ultravnc2_is1": {"displayName": "UltraVNC 1.0.8.2","uninstallString": "","softwareId": "Ultravnc2_is1","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "1.0.8.2","binaryName": "C:\Programme\ultravnc\uvnc_settings.exe"},"Wdf01000": {"displayName": "","uninstallString": "","softwareId": "Wdf01000","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"Wdf01001": {"displayName": "","uninstallString": "","softwareId": "Wdf01001","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"Wdf01005": {"displayName": "","uninstallString": "","softwareId": "Wdf01005","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"Wdf01007": {"displayName": "","uninstallString": "","softwareId": "Wdf01007","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"Wdf01009": {"displayName": "Microsoft Kernel-Mode Driver Framework Feature Pack 1.9","uninstallString": "","softwareId": "Wdf01009","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"WIC": {"displayName": "","uninstallString": "","softwareId": "WIC","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"WinMerge_is1": {"displayName": "WinMerge 2.12.2","uninstallString": "","softwareId": "WinMerge_is1","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "2.12.2","binaryName": ""},"winscp3_is1": {"displayName": "WinSCP 4.1.9","uninstallString": "","softwareId": "winscp3_is1","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "4.1.9","binaryName": ""},"XPSEPSCLP": {"displayName": "XML Paper Specification Shared Components Language Pack 1.0","uninstallString": "","softwareId": "XPSEPSCLP","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "","binaryName": ""},"{052FDD78-A6EA-3187-8386-C82F4CA3A929}": {"displayName": "Microsoft .NET Framework 3.5 Language Pack SP1 - deu","uninstallString": "","softwareId": "{052FDD78-A6EA-3187-8386-C82F4CA3A929}","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "3.5.30729","binaryName": ""},"{0A869A65-8C94-4F7C-A5C7-972D3C8CED9E}": {"displayName": "MSXML 6.0 Parser (KB933579)","uninstallString": "","softwareId": "{0A869A65-8C94-4F7C-A5C7-972D3C8CED9E}","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "6.10.1200.0","binaryName": "NULL"},"{1C871D7C-29E8-4727-B0EB-05FF067584C5}": {"displayName": "DOXiS4 PDF & TIFF Producer","uninstallString": "","softwareId": "{1C871D7C-29E8-4727-B0EB-05FF067584C5}","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "02.14.0000","binaryName": ""},"{30FD286C-1EE1-49D3-9956-63DFD6BDFF33}": {"displayName": "","uninstallString": "","softwareId": "{30FD286C-1EE1-49D3-9956-63DFD6BDFF33}","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "2.14.0.7","binaryName": ""},"{350C97B3-3D7C-4EE8-BAA9-00BCB3D54227}": {"displayName": "WebFldrs XP","uninstallString": "","softwareId": "{350C97B3-3D7C-4EE8-BAA9-00BCB3D54227}","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "9.50.7523","binaryName": ""},"{7299052b-02a4-4627-81f2-1818da5d550d}": {"displayName": "Microsoft Visual C++ 2005 Redistributable","uninstallString": "","softwareId": "{7299052b-02a4-4627-81f2-1818da5d550d}","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "8.0.56336","binaryName": ""},"{7E265513-8CDA-4631-B696-F40D983F3B07}_is1": {"displayName": "CDBurnerXP","uninstallString": "","softwareId": "{7E265513-8CDA-4631-B696-F40D983F3B07}_is1","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "4.3.2.2212","binaryName": ""},"{91252C0A-59F9-42F9-9181-B9CC74F592C0}": {"displayName": "Vodafone Mobile Connect","uninstallString": "","softwareId": "{91252C0A-59F9-42F9-9181-B9CC74F592C0}","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "9.4.10.24647","binaryName": ""},"{A3051CD0-2F64-3813-A88D-B8DCCDE8F8C7}": {"displayName": "Microsoft .NET Framework 3.0 Service Pack 2","uninstallString": "","softwareId": "{A3051CD0-2F64-3813-A88D-B8DCCDE8F8C7}","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "3.2.30729","binaryName": "NULL"},"{C09FB3CD-3D0C-3F2D-899A-6A1D67F2073F}": {"displayName": "Microsoft .NET Framework 2.0 Service Pack 2","uninstallString": "","softwareId": "{C09FB3CD-3D0C-3F2D-899A-6A1D67F2073F}","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "2.2.30729","binaryName": "NULL"},"{C2C284D2-6BD7-3B34-B0C5-B2CAED168DF7}": {"displayName": "Microsoft .NET Framework 3.0 Service Pack 2 Language Pack - DEU","uninstallString": "","softwareId": "{C2C284D2-6BD7-3B34-B0C5-B2CAED168DF7}","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "3.2.30729","binaryName": "NULL"},"{C314CE45-3392-3B73-B4E1-139CD41CA933}": {"displayName": "Microsoft .NET Framework 2.0 Service Pack 2 Language Pack - DEU","uninstallString": "","softwareId": "{C314CE45-3392-3B73-B4E1-139CD41CA933}","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "2.2.30729","binaryName": "NULL"},"{CB2F7EDD-9D1F-43C1-90FC-4F52EAE172A1}": {"displayName": "Microsoft .NET Framework 1.1","uninstallString": "","softwareId": "{CB2F7EDD-9D1F-43C1-90FC-4F52EAE172A1}","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "1.1.4322","binaryName": "NULL"},"{CE2CDD62-0124-36CA-84D3-9F4DCF5C5BD9}": {"displayName": "Microsoft .NET Framework 3.5 SP1","uninstallString": "","softwareId": "{CE2CDD62-0124-36CA-84D3-9F4DCF5C5BD9}","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "3.5.30729","binaryName": ""},"{CE2CDD62-0124-36CA-84D3-9F4DCF5C5BD9}.KB953595": {"displayName": "Hotfix for Microsoft .NET Framework 3.5 SP1 (KB953595)","uninstallString": "","softwareId": "{CE2CDD62-0124-36CA-84D3-9F4DCF5C5BD9}.KB953595","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "1","binaryName": "NULL"},"{FA439D01-32E5-48BF-BB0D-60FB2C736C23}": {"displayName": "ITARecognitionComponents","uninstallString": "","softwareId": "{FA439D01-32E5-48BF-BB0D-60FB2C736C23}","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "04.02.0004","binaryName": ""},"{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}": {"displayName": "Microsoft Visual C++ 2008 Redistributable - x86 9.0.21022","uninstallString": "","softwareId": "{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}","usageFrequency": "2","installSize": -1,"lastUsed": "","displayVersion": "9.0.21022","binaryName": "NULL"},"ms_windows_55375-337": {"displayName": "Microsoft Windows XP (Service Pack 3)","uninstallString": "","softwareId": "ms_windows_55375-337","usageFrequency": -1,"installSize": -1,"lastUsed": "","displayVersion": "5.1","binaryName": ""}}'
+	set $CompValue$ = Convert2JsonStr($tmp$)
+
+
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.0") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "json "
+		set $list1$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_host_ml.json","utf8")
+		set $list2$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_host_r.json","utf8")
+		set $string1$ = composeString($list1$,"")
+		set $string2$ = takeString(0,$list2$)
+		if jsonIsValid($string1$)
+			comment "jsonIsValid passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsValid failed"
+		endif
+		if jsonIsValid($string2$)
+			comment "jsonIsValid passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsValid failed"
+		endif
+		
+		if jsonIsArray($string1$)
+			comment "jsonIsArray passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsArray failed"
+		endif
+		if jsonIsArray($string2$)
+			comment "jsonIsArray passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsArray failed"
+		endif
+
+		if not(jsonIsObject($string1$))
+			comment "jsonIsObject passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsObject failed"
+		endif
+		if not(jsonIsObject($string2$))
+			comment "jsonIsObject passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsObject failed"
+		endif
+
+		set $ConstTest$ = jsonAsArrayCountElements($string1$)
+		set $CompValue$ = jsonAsArrayCountElements($string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "jsonAsArrayCountElements passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonAsArrayCountElements failed"
+		endif
+		
+		set $ConstTest$ = jsonAsObjectCountElements($string1$)
+		set $CompValue$ = jsonAsObjectCountElements($string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "jsonAsObjectCountElements passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonAsObjectCountElements failed"
+		endif
+		
+		set $ConstTest$ = jsonAsArrayGetElementByIndex($string1$,"1")
+		set $CompValue$ = jsonAsArrayGetElementByIndex($string2$,"1")
+		if ($ConstTest$ = $CompValue$)
+			comment "jsonAsArrayGetElementByIndex passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonAsArrayGetElementByIndex failed"
+		endif
+		
+		set $list3$ = jsonAsArrayToStringList($string1$)
+		set $ConstTest$ = jsonAsObjectCountElements($string1$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "jsonAsObjectCountElements passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonAsObjectCountElements failed"
+		endif
+		
+		for %obj% = "0" to calculate(count($list3$)+"-1") do sub_compare_obj
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.6.4")
+			set $ConstTest$ = jsonAsObjectCountElements($string1$)
+			set $string1$ = jsonAsArrayDeleteObjectByIndex($string1$,"1")
+			set $CompValue$ = jsonAsObjectCountElements($string1$)
+			if ($ConstTest$ = calculate($CompValue$+"+1"))
+				comment "jsonAsObjectCountElements passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "testing jsonAsObjectCountElements failed"
+			endif
+			
+			set $ConstTest$ = jsonAsArrayGetElementByIndex($string1$,"1")
+			set $CompValue$ = jsonAsArrayGetElementByIndex($string2$,"1")
+			if not($ConstTest$ = $CompValue$)
+				comment "jsonAsArrayGetElementByIndex passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "testing jsonAsArrayGetElementByIndex failed"
+			endif
+			
+			set $list3$ = jsonAsArrayToStringList($string1$)
+			set $ConstTest$ = jsonAsObjectCountElements($string1$)
+			set $CompValue$ = count($list3$)
+			if ($ConstTest$ = $CompValue$)
+				comment "jsonAsObjectCountElements passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "testing jsonAsObjectCountElements failed"
+			endif
+			
+			set $tmp1$ = jsonAsArrayGetElementByIndex($string1$,"1")
+			if not(jsonAsObjectHasKey($tmp1$,"ident"))
+				set $TestResult$ = "not o.k."
+				LogWarning "testing json failed"
+			endif
+			set $tmp2$ = jsonAsObjectDeleteByKey($tmp1$,"ident")
+			if (jsonAsObjectHasKey($tmp2$,"ident"))
+				set $TestResult$ = "not o.k."
+				LogWarning "testing json failed"
+			endif
+		endif ; 4.11.6.4
+		
+		
+		set $list1$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_productOnClient_ml.json","utf8")
+		set $list2$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_productOnClient_r.json","utf8")
+		set $string1$ = composeString($list1$,"")
+		set $string2$ = takeString(0,$list2$)
+		if jsonIsValid($string1$)
+			comment "jsonIsValid passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsValid failed"
+		endif
+		if jsonIsValid($string2$)
+			comment "jsonIsValid passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsValid failed"
+		endif
+		
+		if jsonIsArray($string1$)
+			comment "jsonIsArray passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsArray failed"
+		endif
+		if jsonIsArray($string2$)
+			comment "jsonIsArray passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsArray failed"
+		endif
+
+		if not(jsonIsObject($string1$))
+			comment "jsonIsObject passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsObject failed"
+		endif
+		if not(jsonIsObject($string2$))
+			comment "jsonIsObject passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonIsObject failed"
+		endif
+
+		set $ConstTest$ = jsonAsArrayCountElements($string1$)
+		set $CompValue$ = jsonAsArrayCountElements($string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "jsonAsArrayCountElements passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonAsArrayCountElements failed"
+		endif
+		
+		set $ConstTest$ = jsonAsObjectCountElements($string1$)
+		set $CompValue$ = jsonAsObjectCountElements($string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "jsonAsObjectCountElements passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonAsObjectCountElements failed"
+		endif
+		
+		set $ConstTest$ = jsonAsArrayGetElementByIndex($string1$,"1")
+		set $CompValue$ = jsonAsArrayGetElementByIndex($string2$,"1")
+		if ($ConstTest$ = $CompValue$)
+			comment "jsonAsArrayGetElementByIndex passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonAsArrayGetElementByIndex failed"
+		endif
+		
+		set $list3$ = jsonAsArrayToStringList($string1$)
+		set $ConstTest$ = jsonAsObjectCountElements($string1$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "jsonAsObjectCountElements passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonAsObjectCountElements failed"
+		endif
+		
+		for %obj% = "0" to calculate(count($list3$)+"-1") do sub_compare_obj
+		
+		;set $ConstTest$ = "Line containing dummy1."
+		;set $CompValue$ = getLastExitCode
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "Winbatch_testing /Create1 passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "testing /Create1 failed"
+		;endif
+
+	endif ; 4.11.6
+	sub_compareResult
+	set $winst_jsonfunctions$ = $SubResult$
+
+endif
+
+
+[sub_compare_obj]
+set $tmp1$ = takeString("%obj%",$list3$)
+set $tmp2$ = jsonAsArrayGetElementByIndex($string1$,"%obj%")
+set $tmp3$ = jsonAsArrayGetElementByIndex($string2$,"%obj%")
+set $ConstTest$ = $tmp1$ 
+set $CompValue$ = $tmp2$  
+if ($ConstTest$ = $CompValue$)
+	comment "jsonAsArrayGetElementByIndex passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "testing jsonAsArrayGetElementByIndex failed"
+endif
+set $CompValue$ = jsonAsArrayGetElementByIndex($string2$,"%obj%")
+if ($ConstTest$ = $CompValue$)
+	comment "jsonAsArrayGetElementByIndex passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "testing jsonAsArrayGetElementByIndex failed"
+endif
+if jsonAsObjectHasKey($tmp1$,"opsiHostKey")
+	set $ConstTest$ = jsonAsObjectGetValueByKey($tmp1$,"opsiHostKey")
+	set $CompValue$ = jsonAsObjectGetValueByKey($tmp2$,"opsiHostKey")
+	if ($ConstTest$ = $CompValue$)
+		comment "jsonAsObjectGetValueByKey passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing jsonAsObjectGetValueByKey failed"
+	endif
+	set $ConstTest$ = jsonAsObjectGetValueByKey($tmp1$,"opsiHostKey")
+	set $CompValue$ = jsonAsObjectGetValueByKey($tmp3$,"opsiHostKey")
+	if ($ConstTest$ = $CompValue$)
+		comment "jsonAsObjectGetValueByKey passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing jsonAsObjectGetValueByKey failed"
+	endif
+	set $ConstTest$ = "1234567890"
+	set $tmp4$ = jsonAsObjectSetStringtypeValueByKey($tmp1$,"opsiHostKey",$ConstTest$)
+	set $CompValue$ = jsonAsObjectGetValueByKey($tmp4$,"opsiHostKey")
+	if ($ConstTest$ = $CompValue$)
+		comment "jsonAsObjectGetValueByKey passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing jsonAsObjectGetValueByKey failed"
+	endif
+	if jsonAsObjectHasKey($tmp4$,"isMasterDepot")
+		set $ConstTest$ = "false"
+		set $tmp4$ = jsonAsObjectSetValueByKey($tmp4$,"isMasterDepot",$ConstTest$)
+		set $CompValue$ = jsonAsObjectGetValueByKey($tmp4$,"isMasterDepot")
+		if ($ConstTest$ = $CompValue$)
+			comment "jsonAsObjectGetValueByKey passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing jsonAsObjectGetValueByKey failed"
+		endif
+	endif
+	set $list4$ = setStringInListAtIndex($tmp4$,$list3$,"%obj%")
+	set $tmp1$ = takeString("%obj%",$list4$)
+	set $string3$ = jsonAsArrayPutObjectByIndex($string1$, "%obj%",$tmp4$)
+	set $tmp2$ = jsonAsArrayGetElementByIndex($string3$,"%obj%")
+	set $ConstTest$ = $tmp1$ 
+	set $CompValue$ = $tmp2$  
+	if ($ConstTest$ = $CompValue$)
+		comment "jsonAsArrayPutObjectByIndex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing jsonAsArrayPutObjectByIndex failed"
+	endif
+endif
+
+

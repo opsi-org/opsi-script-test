@@ -1,0 +1,41 @@
+[Aktionen]
+; this should be the depricated 'Aktionen' to test the backward compatibility
+encoding=utf8
+
+DefStringList $INST_Resultlist$
+DefVar $string1$
+DefVar $string2$
+DefVar $string3$
+DefVar $ConstTest$
+DefVar $CompValue$
+setloglevel=7
+message "this is the update script"
+
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+		if not ("%installingProdName%" = "")
+			comment "we are in opsi service mode"
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "getProductMap"
+			comment "get value by winst function"
+			set $INST_Resultlist$ = getProductMap
+			set $string1$ = getValue("id", $INST_Resultlist$)
+			set $string2$ = getValue("productVersion", $INST_Resultlist$)
+			set $string3$ = getValue("packageVersion", $INST_Resultlist$)
+			set $CompValue$ = $string1$+"_"+$string2$+"-"+$string3$
+			comment "get value by alternate way"
+			set $ConstTest$ = "%installingProdName%_%installingProdVersion%"
+			comment "compare values"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				;set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			;for %line% in $INST_Resultlist$ do sub_showEntry
+		endif	
+		
+	endif
+
+

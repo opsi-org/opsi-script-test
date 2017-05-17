@@ -1,0 +1,37 @@
+
+
+#opsi:
+
+172.16.166.1 sepiolina.vmnat.local sepiolina
+172.16.166.101 sles.vmnat.local sles
+172.16.166.102 win7client.vmnat.local win7client
+172.16.166.103 win7x64.vmnat.local win7x64
+172.16.166.104 wanclient.vmnat.local wanclient
+172.16.166.105 depotclient.vmnat.local depotclient
+172.16.166.106 local-image.vmnat.local local-image
+172.16.166.107 win10x32.vmnat.local win10x32
+172.16.166.108 win10x64.vmnat.local win10x64
+172.16.166.109 ubuntu.vmnat.local ubuntu
+172.16.166.110 debian.vmnat.local debian
+172.16.166.111 ucs-master.vmnat.local ucs-master
+172.16.166.112 opensuse.vmnat.local opensuse
+172.16.166.114 centos.vmnat.local centos
+172.16.166.115 fedora.vmnat.local fedora
+172.16.166.116 redhat.vmnat.local redhat
+172.16.166.117 ucs-slave.vmnat.local ucs-slave
+172.16.166.118 ucs-member.vmnat.local ucs-member
+172.16.166.119 win7x64cap.vmnat.local win7x64cap
+#172.16.166.120 win81x64cap.vmnat.local win81x64cap
+172.16.166.121 win10x64cap.vmnat.local win10x64cap
+172.16.166.150 depotserver.vmnat.local depotserver
+
+#cebit:
+10.3.1.10       sepiolina
+10.3.1.12       messe2
+10.3.1.13       messe3
+10.3.1.14       messe4
+10.3.1.15       lenovotwist.vmnat.local lenovotwist
+10.3.1.16       lenovotablet2.vmnat.local lenovotablet2
+
+
+localhost	127.0.0.1

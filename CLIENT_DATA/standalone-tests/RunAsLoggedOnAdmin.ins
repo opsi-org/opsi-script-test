@@ -1,0 +1,32 @@
+[actions]
+setloglevel=8
+DefVar $ConstTest$
+Defvar $ConstTest2$
+DefVar $CompValue$
+DefVar $CompValue2$
+DefVar $tmp$
+DefVar $TestResult$
+DefVar $INST_error$
+
+DefStringList $INST_ResultList$
+
+  if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+  
+  	message "Winbatch_testing /RunAsLoggedOnAdmin"
+		Winbatch_exitcode_42_noquote /RunAsLoggedOnAdmin
+		set $ConstTest$ = "42"
+		set $CompValue$ = getLastExitCode
+		if ($ConstTest$ = $CompValue$)
+			comment "Winbatch_testing exitcode passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Winbatch_testing /RunAsLoggedOnAdmin failed"
+		endif
+		;killtask "helperchild.exe"
+		;killtask "opsiwinsttesthelper.exe"
+		
+	endif
+	
+[Winbatch_exitcode_42_noquote]
+%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe
+

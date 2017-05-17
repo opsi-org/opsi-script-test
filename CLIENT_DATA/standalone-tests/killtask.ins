@@ -1,0 +1,8 @@
+[actions]
+setloglevel = 8
+defStringlist $myprocesses$
+
+set $myprocesses$ = getprocesslist
+killtask "notepad.exe"
+killtask "NokiaMServer.exe"
+

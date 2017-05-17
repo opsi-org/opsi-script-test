@@ -1,0 +1,228 @@
+[actions]
+Defvar $ConstTest$
+DefVar $CompValue$
+DefVar $TestResult$
+DefVar $HomeTestFiles$
+
+
+DefStringlist $list1$
+DefStringlist $counter$
+
+Set $HomeTestFiles$ = "C:\tmp\testFiles"
+setloglevel = 8
+;Files_copy_dummy
+;set $counter$ = createStringList ('0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')
+;for %s% in $counter$ do sub_run
+
+;[sub_run]
+;Files_copy_dummy
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "createStringList"
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a','b', 'c', 'd')
+	Set $CompValue$ = takeString(2, $list1$)
+	
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "splitString"
+	set $ConstTest$ = "server"
+	set $list1$ = splitString ("\\server\share\directory", "\")
+	Set $CompValue$ = takeString(2, $list1$)
+	
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "splitStringOnWhiteSpace"
+	set $ConstTest$ = "Remote"
+	set $list1$ = splitStringOnWhiteSpace ("Status Lokal	Remote Netzwerk")
+	Set $CompValue$ = takeString(2, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	; Chapter 6.4.3 Loading the Lines of a Text File into a String List
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "loadTextFile"
+	Files_copy_dummy
+	set $ConstTest$ = "line2"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeString(2, $list1$)
+	
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "loadUnicodeTextFile"
+	set $ConstTest$ = "line2"
+	set $list1$ = loadUnicodeTextFile($HomeTestFiles$+"\dummyUnicode.txt")
+	Set $CompValue$ = takeString(2, $list1$)
+	
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+
+	
+	; Chapter 6.4.4 Simple String Values generated from String Lists
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "composeString"
+	set $ConstTest$ = "a | b | c | d | e"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	Set $CompValue$ = composeString ($list1$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "takeString"
+	set $ConstTest$ = "element1"
+	set $list1$ = createStringList ('element0', 'element1', 'element2')
+	set $CompValue$ = takeString(1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "positive index passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "positive index failed"
+	endif
+	
+	set $ConstTest$ = "element2"
+	set $list1$ = createStringList ('element0', 'element1', 'element2')
+	set $CompValue$ = takeString(-1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "negative index passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "negative index failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "takeFirstStringContaining"
+	set $list1$ = createStringList ('element0', 'element1', 'element2')
+	set $ConstTest$ = "element1"
+	set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "element2"
+	set $CompValue$ = takeFirstStringContaining($list1$,'MENT2')
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = ""
+	set $CompValue$ = takeFirstStringContaining($list1$,'other string')
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "getValue"
+	set $ConstTest$ = "element1"
+	set $list1$ = createStringList ('key0=element0', 'key1=element1', 'key2=element2')
+	set $CompValue$ = getValue("key1",$list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	; Chapter 6.4.5 Producing String Lists from wInst Sections
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "retrieveSection"
+	set $ConstTest$ = "c:"
+	set $list1$ = retrieveSection ('DosInAnIcon_dummy_receivesection')
+	set $CompValue$ = takeString(1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "getOutStreamFromSection"
+		set $ConstTest$ = "Microsoft Corporation"
+		set $list1$ = getOutStreamFromSection ('DosInAnIcon_dummy_getOutStreamFromSection')
+		set $CompValue$ = trim(takeString(2, $list1$))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	
+	
+[DosInAnIcon_dummy_getOutStreamFromSection]
+@echo off
+wmic os get manufacturer
+
+[Files_copy_dummy]
+copy "%ScriptPath%\test-files\string\dummy.txt" $HomeTestFiles$
+copy "%ScriptPath%\test-files\string\dummyUnicode.txt" $HomeTestFiles$
+
+[DosInAnIcon_dummy_receivesection]
+@echo off
+c:
+

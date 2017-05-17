@@ -1,0 +1,7 @@
+
+[Files_copy_inctest_win]
+copy "%scriptpath%\test-files\dummy.txt" "c:\opsi.org\tmp"
+
+[Files_copy_inctest_lin]
+copy "%scriptpath%\test-files\dummy.txt" "/tmp/opsi-winst-test"
+

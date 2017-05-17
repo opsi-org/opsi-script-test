@@ -1,0 +1,20 @@
+Windows Registry Editor Version 5.00
+;צהü encoding win-1252
+
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a]
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+@="C:\\Program Files\\test\\test.exe -a"
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\multiline]
+"multi"="
+"
+"1234"="
+5678
+
+"
+"multi2"="C:\\PROGRAM FILES (X86)\\MIKTEX 2.9\\MIKTEX\\BIN\\YAP.EXE
+-1 -s %l\"%Wc\" \"%bm.dvi\""
+"DDECmd"="
+System
+
+"
