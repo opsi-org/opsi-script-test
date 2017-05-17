@@ -1,0 +1,342 @@
+encoding=utf8
+
+if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
+	Message "testing XML2Patch functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing XML2Patch functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+
+	; start testing
+	set $TestResult$ = "o.k."
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.7.0")
+		Files_copy_xml2
+		
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "XML2 Sections"
+		set $testfile$ = $HomeTestFiles$+"\unattend_win10_x64.xml"
+		set $xmlnodepath$ ='settings pass="windowsPE" // component name="Microsoft-Windows-Setup" // DiskConfiguration // Disk wcm:action="add" // ModifyPartitions'
+		markErrorNumber
+		xml2_w10una_test $testfile$
+		if errorsOccuredSinceMark = 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+
+  	
+;		comment ""
+;		comment "-------------------------------------"
+;		comment "Testing: "
+;		message "XMLAddNamespace"
+;		if not(XMLAddNamespace($HomeTestFiles$+"\dummy.xml", 'rootnode', 'xmlns:xml="http://www.w3.org/XML/1998/namespace"'))
+;			comment "XMLAddNamespace returned false"
+;		endif
+;		set $ConstTest$ = '<rootnode xmlns:xml="http://www.w3.org/XML/1998/namespace">'
+;		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+;		set $CompValue$ = takeString(1, $list1$)
+;		if ($ConstTest$ = $CompValue$)
+;			comment "passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "failed"
+;		endif
+;  	
+;		comment ""
+;		comment "-------------------------------------"
+;		comment "Testing: "
+;		message "XMLRemoveNamespace"
+;		if not(XMLRemoveNamespace($HomeTestFiles$+"\dummy.xml", 'rootnode', 'xmlns:xml="http://www.w3.org/XML/1998/namespace"'))
+;			comment "XMLRemoveNamespace returned false"
+;		endif
+;		set $ConstTest$ = '<rootnode>'
+;		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+;		set $CompValue$ = takeString(1, $list1$)
+;		if ($ConstTest$ = $CompValue$)
+;			comment "passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "failed"
+;		endif
+;  	
+;		; 6.4.5 Producing String Lists from wInst Sections
+;  	
+;		comment ""
+;		comment "-------------------------------------"
+;		comment "Testing: "
+;		message "return"
+;		set $list1$ = getReturnListFromSection ('XML2_return_elements "c:\tmp\testfiles\dummy.xml"')
+;		set $ConstTest$ = 'node_level-2_A color="blue"'
+;		set $tmp$ = takeString(0, $list1$)
+;		set $CompValue$ = Trim($tmp$)
+;		if ($ConstTest$ = $CompValue$)
+;			comment "XML2_return_elements passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "XML2_return_elements failed"
+;		endif
+;  	
+;		set $list1$ = getReturnListFromSection ('XML2_return_attributes "c:\tmp\testfiles\dummy.xml"')
+;		set $ConstTest$ = 'color="green"'
+;		set $ConstTest2$ = 'count="65"'
+;		set $tmp$ = takeString(0, $list1$)
+;		set $CompValue$ = Trim($tmp$)
+;		set $tmp$ = takeString(1, $list1$)
+;		set $CompValue2$ = Trim($tmp$)
+;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+;			comment "XML2_return_attributes passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "XML2_return_attributes failed"
+;		endif
+;  	
+;		set $list1$ = getReturnListFromSection ('XML2_return_elementnames "c:\tmp\testfiles\dummy.xml"')
+;		set $ConstTest$ = "node_level-2_A"
+;		set $tmp$ = takeString(0, $list1$)
+;		set $CompValue$ = Trim($tmp$)
+;		if ($ConstTest$ = $CompValue$)
+;			comment "XML2_return_elementnames passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "XML2_return_elementnames failed"
+;		endif
+;  	
+;		set $list1$ = getReturnListFromSection ('XML2_return_attributenames "c:\tmp\testfiles\dummy.xml"')
+;		set $ConstTest$ = "color"
+;		set $ConstTest2$ = "count"
+;		set $tmp$ = takeString(0, $list1$)
+;		set $CompValue$ = Trim($tmp$)
+;		set $tmp$ = takeString(1, $list1$)
+;		set $CompValue2$ = Trim($tmp$)
+;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+;			comment "XML2_return_attributenames passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "XML2_return_attributenames failed"
+;		endif
+;  	
+;		set $list1$ = getReturnListFromSection ('XML2_return_text "c:\tmp\testfiles\dummy.xml"')
+;		set $ConstTest$ = "Hello World"
+;		set $tmp$ = takeString(0, $list1$)
+;		set $CompValue$ = Trim($tmp$)
+;		if ($ConstTest$ = $CompValue$)
+;			comment "XML2_return_text passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "XML2_return_text failed"
+;		endif
+;  	
+;		set $list1$ = getReturnListFromSection ('XML2_return_counting "c:\tmp\testfiles\dummy.xml"')
+;		set $ConstTest$ = "1"
+;		set $ConstTest2$ = "2"
+;		set $tmp$ = takeString(0, $list1$)
+;		set $CompValue$ = Trim($tmp$)
+;		set $tmp$ = takeString(1, $list1$)
+;		set $CompValue2$ = Trim($tmp$)
+;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+;			comment "XML2_return_counting passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "XML2_return_counting failed"
+;		endif
+;  	
+
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "SetAttribute"
+		XML2_SetAttribute $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = "yellow"
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(4, $list1$)
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "AddAttribute"
+		XML2_AddAttribute $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = "OpenOfficeWriter"
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(3, $list1$)
+		set $CompValue$ = takeString(3, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DeleteAttribute"
+		XML2_DeleteAttribute $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = '<node_level-2_B count="65">'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(4, $list1$)
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DeleteElement"
+		XML2_DeleteElement $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = '<node_level-2_C>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(4, $list1$)
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "SetText / AddText"
+		XML2_SetText $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = '<node_level-2_A color="blue" name="OpenOfficeWriter">node_level-2_A</node_level-2_A>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(3, $list1$)
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "SetText passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "SetText failed"
+		endif
+		XML2_AddText $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = '<node_level-2_C>node_level-2_C</node_level-2_C>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(4, $list1$)
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "AddText passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "AddText failed"
+		endif
+  	
+		XML2_SetText_dummy2 $HomeTestFiles$+"\dummy2.xml"
+		set $ConstTest$ = '<VALUE>K1S120</VALUE>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy2.xml")
+		set $tmp$ = takeFirstStringContaining($list1$,"<VALUE>K1S120</VALUE>")
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "SetText passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "SetText failed"
+		endif
+  	
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "OpenNodeSet"
+		if ($TestResult$ = "o.k.")
+			comment "not explicit tested | assumed passed"
+		else
+			comment "status is unknown"
+		endif
+
+		Files_cleanup_xml2
+	endif ; 4.11.7
+	
+	sub_compareResult
+	
+	set $winst_xml2$ = $SubResult$
+
+endif
+
+[Files_copy_xml2]
+copy "%scriptpath%\test-files\xmlpatch2\*" "$HomeTestFiles$"
+
+[Files_cleanup_xml2]
+del -s "$HomeTestFiles$"
+
+[xml2_w10una_test]
+opennode [$xmlnodepath$]
+setNodeText '***new node text***'
+SetAttribute 'name1' 'value1'
+AddAttribute 'name2' 'value2'
+AddAttribute 'name2' 'value1'
+AddAttribute 'name3' 'value3'
+delAttribute 'name3'
+
+[XML2_SetAttribute]
+openNode [node_level-1_number-1 // node_level-2_B color="green" count="65"]
+SetAttribute "color" "yellow"
+
+[XML2_AddAttribute]
+;openNodeSet
+;	documentroot
+;	all_childelements_with:
+;	elementname:"node_level-1_number-1"
+;		all_childelements_with:
+;		elementname:"node_level-2_A"
+;		attribute: "color" value="blue"
+;end
+;AddAttribute "name" value="OpenOfficeWriter"
+openNode [node_level-1_number-1 // node_level-2_A color="blue"]
+AddAttribute "name" "OpenOfficeWriter"
+
+[XML2_DeleteAttribute]
+openNode [node_level-1_number-1 // node_level-2_B ]
+DeleteAttribute "color"
+
+[XML2_DeleteElement]
+DeleteNode [node_level-1_number-1 // node_level-2_B  ]
+
+[XML2_SetText]
+openNode [node_level-1_number-1 // node_level-2_A ]
+setNodeText "node_level-2_A"
+
+[XML2_AddText]
+openNode [node_level-1_number-1 // node_level-2_C ]
+setNodeText "node_level-2_C"
+
+[XML2_SetText_dummy2]
+openNode [PROFIL // VALUE] "K1S114"
+setNodeText "K1S120"
+
+;OpenNodeSet
+;- error_when_no_node_existing false
+;- warning_when_no_node_existing true
+;- error_when_nodecount_greater_1 false
+;- warning_when_nodecount_greater_1 true
+;- create_when_node_not_existing false
+;- attributes_strict false
+;documentroot
+;all_childelements_with:
+;elementname: "PROFIL"
+;all_childelements_with:
+;elementname: "VALUE"
+;text:"K1S114"
+;end
+;SetText "K1S120"
+
+
+

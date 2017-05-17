@@ -1,0 +1,275 @@
+; This code is part of the opsi.org project
+;
+; Copyright (c) uib gmbh (www.uib.de)
+; This sourcecode is owned by the uib gmbh, D55118 Mainz, Germany
+; and published under the Terms of the GNU Affero General Public License.
+; Text of the AGPL: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+; credits: http://www.opsi.org/credits/
+
+
+
+
+[Actions]
+requiredWinstVersion >= "4.11.4.1"
+ScriptErrorMessages = false
+encoding=utf8
+setOutputLevel = 3
+DefVar $ProductId$
+
+DefVar $MasterFlag$
+DefVar $FinalResult$
+DefVar $AktTestSubScript$
+DefVar $ExpectedResult$
+DefVar $TestResult$
+DefVar $SubResult$
+DefVar $HomeTestFiles$
+DefVar $ConstTest$
+Defvar $ConstTest2$
+DefVar $CompValue$
+DefVar $CompValue2$
+DefVar $tmp$
+DefVar $tmp1$
+DefVar $tmp2$
+DefVar $tmp3$
+DefVar $tmp4$
+DefVar $MsVersion$
+DefVar $string1$
+DefVar $string2$
+DefVar $string3$
+DefVar $xmlnodepath$
+DefVar $ScriptLoglevel$
+
+DefVar $winst_constants$
+DefVar $winst_parametrizing$
+DefVar $winst_string$
+DefVar $infostest$
+DefVar $winst_string_list$
+DefVar $winst_controls$
+DefVar $subtestsub$
+DefVar $winst_file$
+DefVar $winst_patches$
+DefVar $winst_patch_hosts$
+DefVar $winst_patch_text_file$
+DefVar $winst_link_folder$
+DefVar $subregistry$
+DefVar $winst_xml$
+DefVar $winst_dos$
+DefVar $winst_winbatch$
+DefVar $execwith_test$
+DefVar $compare_to_python$
+DefVar $winst_ldap_search$
+DefVar $winst_opsiServiceCall$
+DefVar $winst_licensemanagement$
+DefVar $winst_internalundocumented$
+DefVar $winst_RunAsLoggedOnAdmin$
+DefVar $winst_ProfileActions$
+DefVar $winst_calculate$
+DefVar $winst_encoding$
+DefVar $winst_jsonfunctions$
+DefVar $winst_crypt$
+DefVar $winst_xml2$
+
+DefVar $InterestingFile$
+DefVar $key$
+DefVar $value$
+DefVar $example$
+DefVar $testfilepath$
+DefVar $testfile$
+DefVar $testfilesize$
+DefVar $ErrorClientId$
+DefVar $LdapSearchDn$
+DefVar $LdapSearchAttributes$
+DefVar $LdapHost$
+DefVar $LdapPort$
+DefVar $LdapUser$
+DefVar $LdapPassword$
+DefVar $LdapResultType$
+DefVar $LdapFilter$
+DefVar $SectionName$
+DefVar $link_extension$
+DefVar $link_subfolder$
+DefVar $target$
+DefVar $workdir$
+DefVar $systemroot$
+
+
+DefVar $Flag_winst_constants$
+DefVar $Flag_winst_parametrizing$
+DefVar $Flag_winst_string$
+DefVar $Flag_infostest$
+DefVar $Flag_winst_string_list$
+DefVar $Flag_winst_controls$
+DefVar $Flag_subtestsub$
+DefVar $Flag_winst_file$
+DefVar $Flag_winst_patches$
+DefVar $Flag_winst_patch_hosts$
+DefVar $Flag_winst_patch_text_file$
+DefVar $Flag_winst_link_folder$
+DefVar $Flag_subregistry$
+DefVar $Flag_winst_xml$
+DefVar $Flag_winst_xml2$
+DefVar $Flag_winst_dos$
+DefVar $Flag_winst_winbatch$
+DefVar $Flag_execwith_test$
+DefVar $Flag_compare_to_python$
+DefVar $Flag_winst_ldap_search$
+DefVar $Flag_winst_opsiServiceCall$
+DefVar $Flag_licensemanagement$
+;DefVar $Flag_winst_idapiconfig$
+DefVar $Flag_internalundocumented$
+DefVar $Flag_RunAsLoggedOnAdmin$
+DefVar $Flag_ProfileActions$
+DefVar $Flag_calculate$
+DefVar $Flag_encoding$
+DefVar $Flag_jsonfunctions$
+DefVar $Flag_crypt$
+
+DefStringList $list$
+DefStringList $list1$
+DefStringList $list2$
+DefStringList $list3$
+DefStringList $list4$
+DefStringList $INST_ResultList$
+DefStringList $INST_ResultList2$
+DefStringList $INST_ResultList3$
+DefStringList $languageInfo$
+
+DefVar $INST_SearchKey$
+DefVar $INST_SearchValue$
+DefVar $INST_SearchResult$
+DefVar $INST_SystemType$
+DefVar $INST_error$
+DefVar $language$
+DefVar $OS$
+DefVar $NTVersion$
+DefVar $opsi_message_title$
+
+DefVar $regWriteValue$
+
+;File
+DefVar $FileCopyTest$
+DefVar $FileCopyTestSubDirectory$
+DefVar $DirectorySubDirectory
+
+; comapre_to_python
+DefVar $result$
+
+; LicenseManagement
+DefVar $Lic_ProductId$
+DefVar $LicensePool$
+DefVar $licensekey$
+
+
+set $ScriptLoglevel$ = GetProductProperty ("loglevel", "9")
+setLoglevel=$ScriptLoglevel$
+
+; retrieve OS and NT Version
+
+Set $OS$ = GetOS
+; retrieve current language
+set $languageInfo$ = getLocaleInfoMap
+set $language$ = getValue("language_id_2chars", $languageInfo$)
+
+
+if $OS$ = "Windows_NT"
+	Set $NTVersion$ = GetNTVersion
+	set $MsVersion$ = GetMsVersionInfo
+	Set $HomeTestFiles$ = "C:\tmp\testFiles"
+endif
+set $ProductId$ = "opsi-winst-test"
+if $OS$ = "LINUX"
+	comment "We are running on Linux"
+	Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+	set $ProductId$ = "opsi-script-test"
+endif
+
+Set $INST_SystemType$ = GetSystemType
+
+Files_testFiles
+set $FinalResult$ = "passed"
+
+
+set $Lic_ProductId$ = "opsi-winst-test"
+set $LicensePool$ = "opsi-winst-test-pool"
+
+
+
+; Message at install time:
+Message "Testing opsi-script ..."
+;show product picture
+ShowBitmap "%scriptpath%\opsi.png" $ProductId$
+
+;if $MsVersion$ <= "5.0"
+;	LogError "win2k is not supported because wmic is needed"
+;	isFatalError
+;endif
+
+if "True" = GetProductProperty ("setfailed","False")
+	LogError "set to fatal by property"
+;isFatalError
+endif
+
+set $MasterFlag$                   = GetProductProperty ("alltest", "off")
+set $Flag_winst_xml2$               = GetProductProperty ("XML2", "on")
+
+
+
+
+if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.7") >= "0"
+	AutoActivityDisplay = true
+endif
+
+
+sub "%scriptpath%\..\sub-scripts\xml2test.opsiscript"
+
+comment ""
+comment ""
+comment ""
+comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+comment "All sub results:"
+comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+comment "$winst_xml2$                  --> " + $winst_xml2$
+
+; at the end set the return value
+comment ""
+comment "======================================"
+if $FinalResult$="failed"
+	comment "Fatal: one ore more tests failed"
+	Message "Fatal: one ore more tests failed"
+	logError "Fatal: one ore more tests failed"
+	isFatalError
+else
+	Message "All tests are passsed"
+	comment "All tests are passsed"
+endif
+comment "======================================"
+comment ""
+
+
+[sub_compareResult]
+comment ""
+comment "-------------------------------------"
+comment "expectedResult is >" +  $ExpectedResult$ + "<"
+comment "TestResult is >" +  $TestResult$ + "<"
+if $ExpectedResult$ = $TestResult$
+	set $SubResult$ ="passed"
+	comment "OK: Subtest passed"
+else
+	if $TestResult$ = "not implemented"
+		set $SubResult$ = $TestResult$
+	else
+		set $SubResult$ ="failed"
+		logError "Fatal: Subtest failed"
+		set $FinalResult$="failed"
+	endif
+endif
+comment ""
+comment ""
+
+;----------------   start   general helpers ---------------------------------
+
+[Files_testFiles]
+checkTargetPath = "$HomeTestFiles$"
+
+;----------------   end   general helpers ---------------------------------
+
