@@ -9,7 +9,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.11.6.12
+version: 4.11.7.0
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -339,9 +339,24 @@ description: jsonfunctions
 values: ["off", "on"]
 default: ["off"]
 
+[ProductProperty]
+type: unicode
+name: xml2
+multivalue: False
+editable: False
+description: xml2 section and functions
+values: ["off", "on"]
+default: ["off"]
 
 
 [Changelog]
+opsi-script-test (4.11.7.0-1) stable; urgency=low
+
+  * xml2 test
+
+-- detlef oertel <d.oertel@uib.de>  Wed,  17 May 2017 15:00:00 +0200
+
+
 opsi-script-test (4.11.6.12-1) stable; urgency=low
 
   * migrated from opsi-winst-test
