@@ -11,6 +11,43 @@ set $str1$ = 'ha'
 set $str2$ = 'hi'
 set $mystr$ = $str1$ + $str2$
 
+DefFunc myFunc6(ref $str1$ : string) : string
+	DefVar $locstr1$
+	set $locstr1$ = '123'
+	set $str1$ = 'setinlocal'
+	set $result$ = $locstr1$ + $str1$
+endfunc
+
+set $mystr$ = myFunc6($str2$)
+set $mystr$ = $str1$ + $str2$
+
+
+
+;DefFunc myFunc4($str1$ : string) : string
+;	DefVar $locstr1$
+;	
+;	DefFunc myFunc5($str1$ : string) : string
+;		set $result$ = 'inner' + $str1$
+;	endfunc
+;
+;	set $locstr1$ = '123'
+;	set $result$ = $str1$ + myFunc5($locstr1$)
+;endfunc
+;
+;set $mystr$ = myFunc4("outer")
+
+
+DefFunc myFunc3($str1$ : string) : string
+	DefVar $locstr1$
+	set $locstr1$ = '123'
+	set $result$ = $locstr1$ + $str1$
+endfunc
+
+set $mystr$ = myFunc3("he")
+
+; this should give a sytax error because $locstr1$ is global not known
+;set $mystr$ = $locstr1$
+
 DefFunc myFunc(val $str1$ : string, $str2$ : string) : string
 	set $result$ = $str1$ + $str2$
 endfunc
@@ -19,8 +56,8 @@ DefFunc myFunc1(val $str1$ : string, $list1$ : stringlist) : stringlist
 	set $result$ = createStringlist($str1$ , takeString(2,$list1$))
 endfunc
 
-DefFunc myFunc2($str1$ : string) : boolean
-	set $result$ = ($str1$ = "true")
+DefFunc myFunc2($str1$ : string) : string
+	set $result$ = booltostring($str1$)
 endfunc
 
 
@@ -29,7 +66,7 @@ set $list2$ = splitstring("/etc/opsi/huhu","/")
 set $mystr$ = myFunc("he",timeStampAsFloatStr)
 set $list1$ = myFunc1("hi",$list2$)
 
-if myfunc2('true')
+if stringtobool(myfunc2('true'))
 	comment "truu"
 else
  	comment "phalse"
