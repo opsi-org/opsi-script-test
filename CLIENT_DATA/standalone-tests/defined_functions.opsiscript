@@ -4,6 +4,8 @@
 setloglevel=8
 ScriptErrorMessages = false
 
+importFunc "functionlib.opsiscript"
+
 DefVar $mystr$
 DefVar $str1$
 DefVar $str2$
@@ -15,15 +17,15 @@ set $mystr$ = $str1$ + $str2$
 
 set $list2$ = splitstring("/etc/opsi/huhu","/")
 
-DefFunc myFunc8($str1$ : string) : stringlist
-	DefStringlist $loclist1$
-	set $loclist1$ = getoutstreamfromsection("shellInAnIcon_test")
-	set $result$ = $loclist1$
-	
-	[shellinanicon_test]
-	set -x
-	$str1$
-endfunc
+;DefFunc myFunc8($str1$ : string) : stringlist
+;	DefStringlist $loclist1$
+;	set $loclist1$ = getoutstreamfromsection("shellInAnIcon_test")
+;	set $result$ = $loclist1$
+;	
+;	[shellinanicon_test]
+;	set -x
+;	$str1$
+;endfunc
 
 set $list1$ = myFunc8('pwd')
 
