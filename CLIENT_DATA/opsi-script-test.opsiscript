@@ -212,14 +212,14 @@ if "True" = GetProductProperty ("setfailed","False")
 ;isFatalError
 endif
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "off")
+set $MasterFlag$                   = GetProductProperty ("alltest", "on")
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
 set $Flag_encoding$                = GetProductProperty ("encoding", "off")
 set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "off")
-set $Flag_winst_file$              = GetProductProperty ("files", "on")
+set $Flag_winst_file$              = GetProductProperty ("files", "off")
 set $Flag_infostest$               = GetProductProperty ("infoFunctions", "off")
 set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
 set $Flag_winst_ldap_search$       = GetProductProperty ("LdapSearch", "off")
@@ -10064,11 +10064,11 @@ if $Flag_RunAsLoggedOnAdmin$ = "on"
 	set $winst_RunAsLoggedOnAdmin$ = $SubResult$
 endif
 
-sub "%scriptpath%\sub-scrpts\encodingtest.opsiscript"
+sub "%scriptpath%\sub-scripts\encodingtest.opsiscript"
 
-sub "%scriptpath%\sub-scrpts\jsontest.opsiscript"
+sub "%scriptpath%\sub-scripts\jsontest.opsiscript"
 
-sub "%scriptpath%\sub-scrpts\crypttest.opsiscript"
+sub "%scriptpath%\sub-scripts\crypttest.opsiscript"
 
 comment ""
 comment ""

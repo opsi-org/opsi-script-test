@@ -1,3 +1,5 @@
+
+
 [actions]
 setloglevel=8
 ScriptErrorMessages = false
@@ -11,6 +13,33 @@ set $str1$ = 'ha'
 set $str2$ = 'hi'
 set $mystr$ = $str1$ + $str2$
 
+set $list2$ = splitstring("/etc/opsi/huhu","/")
+
+DefFunc myFunc8($str1$ : string) : stringlist
+	DefStringlist $loclist1$
+	set $loclist1$ = getoutstreamfromsection("shellInAnIcon_test")
+	set $result$ = $loclist1$
+	
+	[shellinanicon_test]
+	set -x
+	$str1$
+endfunc
+
+set $list1$ = myFunc8('pwd')
+
+
+DefFunc myFunc7(ref $list1$ : stringlist) : stringlist
+	DefStringlist $loclist1$
+	set $loclist1$ = splitstring("/a/b/c","/")
+	set $list1$ = createStringList('setinlocal')
+	set $loclist1$ = addListToList($loclist1$,$list1$)
+	set $result$ = $loclist1$
+endfunc
+
+set $list1$ = myFunc7($list2$)
+comment "$list2$ index 0: " + takestring(0,$list2$)
+
+
 DefFunc myFunc6(ref $str1$ : string) : string
 	DefVar $locstr1$
 	set $locstr1$ = '123'
@@ -23,18 +52,18 @@ set $mystr$ = $str1$ + $str2$
 
 
 
-;DefFunc myFunc4($str1$ : string) : string
-;	DefVar $locstr1$
-;	
-;	DefFunc myFunc5($str1$ : string) : string
-;		set $result$ = 'inner' + $str1$
-;	endfunc
-;
-;	set $locstr1$ = '123'
-;	set $result$ = $str1$ + myFunc5($locstr1$)
-;endfunc
-;
-;set $mystr$ = myFunc4("outer")
+DefFunc myFunc4($str1$ : string) : string
+	DefVar $locstr1$
+	
+	DefFunc myFunc5($str1$ : string) : string
+		set $result$ = 'inner' + $str1$
+	endfunc
+
+	set $locstr1$ = '123'
+	set $result$ = $str1$ + myFunc5($locstr1$)
+endfunc
+
+set $mystr$ = myFunc4("outer")
 
 
 DefFunc myFunc3($str1$ : string) : string
