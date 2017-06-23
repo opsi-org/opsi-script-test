@@ -12,6 +12,8 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.7.0")
+		DefVar $xml2strictMode$
+		set $xml2strictMode$ = 'false'
 		Files_copy_xml2
 		
 		
@@ -172,7 +174,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = "OpenOfficeWriter"
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
 		set $tmp$ = takeString(3, $list1$)
-		set $CompValue$ = takeString(3, splitString ($tmp$, '"'))
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -185,7 +187,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "DeleteAttribute"
 		XML2_DeleteAttribute $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_B count="65">'
+		set $ConstTest$ = '<node_level-2_B count="65"/>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
 		set $tmp$ = takeString(4, $list1$)
 		set $CompValue$ = Trim($tmp$)
@@ -201,7 +203,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "DeleteElement"
 		XML2_DeleteElement $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_C>'
+		set $ConstTest$ = '<node_level-2_C/>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
 		set $tmp$ = takeString(4, $list1$)
 		set $CompValue$ = Trim($tmp$)
@@ -217,7 +219,144 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "SetText / AddText"
 		XML2_SetText $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_A color="blue" name="OpenOfficeWriter">node_level-2_A</node_level-2_A>'
+		set $ConstTest$ = '<node_level-2_A name="OpenOfficeWriter" color="blue">node_level-2_A</node_level-2_A>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(3, $list1$)
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "SetText passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "SetText failed"
+		endif
+		XML2_AddText $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = '<node_level-2_C>node_level-2_C</node_level-2_C>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(4, $list1$)
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "AddText passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "AddText failed"
+		endif
+  	
+		XML2_SetText_dummy2 $HomeTestFiles$+"\dummy2.xml"
+		set $ConstTest$ = '<VALUE>K1S120</VALUE>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy2.xml")
+		set $tmp$ = takeFirstStringContaining($list1$,"<VALUE>K1S120</VALUE>")
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "SetText passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "SetText failed"
+		endif
+  	
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "OpenNodeSet"
+		if ($TestResult$ = "o.k.")
+			comment "not explicit tested | assumed passed"
+		else
+			comment "status is unknown"
+		endif
+
+		Files_cleanup_xml2
+		
+		comment "-------------------------------------"
+		comment "Starting strictMode = true tests: "
+		set $xml2strictMode$ = 'true'
+		Files_copy_xml2
+		
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "XML2 Sections"
+		set $testfile$ = $HomeTestFiles$+"\unattend_win10_x64.xml"
+		set $xmlnodepath$ ='settings pass="windowsPE" // component name="Microsoft-Windows-Setup" // DiskConfiguration // Disk wcm:action="add" // ModifyPartitions'
+		markErrorNumber
+		xml2_w10una_test $testfile$
+		if errorsOccuredSinceMark = 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "SetAttribute"
+		XML2_strict_SetAttribute $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = "yellow"
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(4, $list1$)
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "AddAttribute"
+		XML2_AddAttribute $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = "OpenOfficeWriter"
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(3, $list1$)
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DeleteAttribute"
+		XML2_DeleteAttribute $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = '<node_level-2_B count="65"/>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(4, $list1$)
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DeleteElement"
+		XML2_DeleteElement $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = '<node_level-2_C/>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeString(4, $list1$)
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "SetText / AddText"
+		XML2_SetText $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = '<node_level-2_A name="OpenOfficeWriter" color="blue">node_level-2_A</node_level-2_A>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
 		set $tmp$ = takeString(3, $list1$)
 		set $CompValue$ = Trim($tmp$)
@@ -272,12 +411,17 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 endif
 
 [Files_copy_xml2]
+; sub test:
 copy "%scriptpath%\test-files\xmlpatch2\*" "$HomeTestFiles$"
+; standalone test:
+copy "%scriptpath%\..\test-files\xmlpatch2\*" "$HomeTestFiles$"
+
 
 [Files_cleanup_xml2]
 del -s "$HomeTestFiles$"
 
 [xml2_w10una_test]
+strictMode = $xml2strictMode$
 opennode [$xmlnodepath$]
 setNodeText '***new node text***'
 SetAttribute 'name1' 'value1'
@@ -287,8 +431,19 @@ AddAttribute 'name3' 'value3'
 delAttribute 'name3'
 
 [XML2_SetAttribute]
-openNode [node_level-1_number-1 // node_level-2_B color="green" count="65"]
+strictMode = false
+; in not strict mode only one attribute is allowed
+;openNode [node_level-1_number-1 // node_level-2_B color="green" count="65"]
+openNode [node_level-1_number-1 // node_level-2_B color="green"]
 SetAttribute "color" "yellow"
+
+[XML2_strict_SetAttribute]
+strictMode = true
+; in  strict mode more than one attribute is allowed
+openNode [node_level-1_number-1 // node_level-2_B color="green" count="65"]
+;openNode [node_level-1_number-1 // node_level-2_B color="green"]
+SetAttribute "color" "yellow"
+
 
 [XML2_AddAttribute]
 ;openNodeSet
@@ -300,25 +455,31 @@ SetAttribute "color" "yellow"
 ;		attribute: "color" value="blue"
 ;end
 ;AddAttribute "name" value="OpenOfficeWriter"
+strictMode = $xml2strictMode$
 openNode [node_level-1_number-1 // node_level-2_A color="blue"]
 AddAttribute "name" "OpenOfficeWriter"
 
 [XML2_DeleteAttribute]
-openNode [node_level-1_number-1 // node_level-2_B ]
+strictMode = $xml2strictMode$
+openNode [node_level-1_number-1 // node_level-2_B]
 DeleteAttribute "color"
 
 [XML2_DeleteElement]
+strictMode = $xml2strictMode$
 DeleteNode [node_level-1_number-1 // node_level-2_B  ]
 
 [XML2_SetText]
+strictMode = $xml2strictMode$
 openNode [node_level-1_number-1 // node_level-2_A ]
 setNodeText "node_level-2_A"
 
 [XML2_AddText]
+strictMode = $xml2strictMode$
 openNode [node_level-1_number-1 // node_level-2_C ]
 setNodeText "node_level-2_C"
 
 [XML2_SetText_dummy2]
+strictMode = $xml2strictMode$
 openNode [PROFIL // VALUE] "K1S114"
 setNodeText "K1S120"
 
