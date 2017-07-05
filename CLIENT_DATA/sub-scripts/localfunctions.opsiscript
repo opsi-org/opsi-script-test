@@ -1,0 +1,192 @@
+encoding=utf8
+
+if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
+
+	Message "testing local functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing local functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12")
+	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Local Functions"
+		
+		DefFunc myFunc(val $str1$ : string, $str2$ : string) : string
+			set $result$ = $str1$ + $str2$
+		endfunc
+		
+		set $ConstTest$ = "heho"
+		set $CompValue$ = myFunc("he","ho")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "he" +  timeStampAsFloatStr
+		set $CompValue$ = myFunc("he",timeStampAsFloatStr)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = 'ha'
+		set $ConstTest$ = "heha"
+		set $CompValue$ = myFunc("he",$tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+				
+		DefFunc myFunc1(val $str1$ : string, $list1$ : stringlist) : stringlist
+			set $result$ = createStringlist($str1$ , takeString(2,$list1$))
+		endfunc
+		
+		set $list2$ = splitstring("/etc/opsi/huhu","/")
+		set $list1$ = myFunc1("hi",$list2$)
+		set $ConstTest$ = "hi+opsi"
+		set $CompValue$ = composestring($list1$,'+')
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefFunc myFunc2($str1$ : string) : string
+			set $result$ = booltostring($str1$)
+		endfunc
+		
+		set $ConstTest$ = "true"
+		set $CompValue$ = myFunc2("true")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefFunc myFunc3($str1$ : string) : string
+			DefVar $locstr1$
+			set $locstr1$ = '123'
+			set $result$ = $locstr1$ + $str1$
+		endfunc
+		
+		set $ConstTest$ = "123he"
+		set $CompValue$ = myFunc3("he")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+
+
+		DefFunc myFunc4($str1$ : string) : string
+			DefVar $locstr1$
+			
+			DefFunc myFunc5($str1$ : string) : string
+				set $result$ = 'inner' + $str1$
+			endfunc
+		
+			set $locstr1$ = '123'
+			set $result$ = $str1$ + myFunc5($locstr1$)
+		endfunc
+		
+		set $ConstTest$ = "outerinner123"
+		set $CompValue$ = myFunc4("outer")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+
+
+		DefFunc myFunc6(ref $str1$ : string) : string
+			DefVar $locstr1$
+			set $locstr1$ = '123'
+			set $str1$ = 'setinlocal'
+			set $result$ = $locstr1$ + $str1$
+		endfunc
+		
+		set $tmp$ = 'hi'
+		set $ConstTest$ = "123setinlocal"
+		set $CompValue$ = myFunc6($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "setinlocal"
+		set $CompValue$ = $tmp$
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		
+		DefFunc myFunc7(ref $list1$ : stringlist) : stringlist
+			DefStringlist $loclist1$
+			set $loclist1$ = splitstring("/a/b/c","/")
+			set $list1$ = createStringList('setinlocal')
+			set $loclist1$ = addListToList($loclist1$,$list1$)
+			set $result$ = $loclist1$
+		endfunc
+		
+		set $list2$ = splitstring("/etc/opsi/huhu","/")
+		set $list1$ = myFunc7($list2$)
+		set $ConstTest$ = "+a+b+c+setinlocal"
+		set $CompValue$ = composestring($list1$,'+')
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "setinlocal"
+		set $CompValue$ = takestring(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+
+
+		DefFunc myFunc8($str1$ : string) : stringlist
+			DefStringlist $loclist1$
+			set $loclist1$ = getoutstreamfromsection("shellInAnIcon_test")
+			set $result$ = $loclist1$
+			
+			[shellinanicon_test]
+			set -x
+			$str1$
+		endfunc
+		
+		set $list1$ = myFunc8('pwd')
+
+	else
+		set $TestResult$ = "not tested"
+	endif ; 4.12
+	sub_compareResult
+	set $winst_local_function$ = $SubResult$
+
+endif
+
+
