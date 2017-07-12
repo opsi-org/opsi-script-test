@@ -31,6 +31,17 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
+		set $ConstTest$ = "value1"
+		
+		;set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		;set $tmp$ = takeString(4, $list1$)
+		;set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
 
   	
 ;		comment ""
@@ -266,142 +277,142 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 
 		Files_cleanup_xml2
 		
-		comment "-------------------------------------"
-		comment "Starting strictMode = true tests: "
-		set $xml2strictMode$ = 'true'
-		Files_copy_xml2
-		
-		
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "XML2 Sections"
-		set $testfile$ = $HomeTestFiles$+"\unattend_win10_x64.xml"
-		set $xmlnodepath$ ='settings pass="windowsPE" // component name="Microsoft-Windows-Setup" // DiskConfiguration // Disk wcm:action="add" // ModifyPartitions'
-		markErrorNumber
-		xml2_w10una_test $testfile$
-		if errorsOccuredSinceMark = 0
-			comment "passed"
-		else
-			LogWarning "failed"
-			set $TestResult$ = "not o.k."
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "SetAttribute"
-		XML2_strict_SetAttribute $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = "yellow"
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "AddAttribute"
-		XML2_AddAttribute $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = "OpenOfficeWriter"
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(3, $list1$)
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "DeleteAttribute"
-		XML2_DeleteAttribute $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_B count="65"/>'
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
-		set $CompValue$ = Trim($tmp$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "DeleteElement"
-		XML2_DeleteElement $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_C/>'
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
-		set $CompValue$ = Trim($tmp$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "SetText / AddText"
-		XML2_SetText $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_A name="OpenOfficeWriter" color="blue">node_level-2_A</node_level-2_A>'
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(3, $list1$)
-		set $CompValue$ = Trim($tmp$)
-		if ($ConstTest$ = $CompValue$)
-			comment "SetText passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "SetText failed"
-		endif
-		XML2_AddText $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_C>node_level-2_C</node_level-2_C>'
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
-		set $CompValue$ = Trim($tmp$)
-		if ($ConstTest$ = $CompValue$)
-			comment "AddText passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "AddText failed"
-		endif
-  	
-		XML2_SetText_dummy2 $HomeTestFiles$+"\dummy2.xml"
-		set $ConstTest$ = '<VALUE>K1S120</VALUE>'
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy2.xml")
-		set $tmp$ = takeFirstStringContaining($list1$,"<VALUE>K1S120</VALUE>")
-		set $CompValue$ = Trim($tmp$)
-		if ($ConstTest$ = $CompValue$)
-			comment "SetText passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "SetText failed"
-		endif
-  	
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "OpenNodeSet"
-		if ($TestResult$ = "o.k.")
-			comment "not explicit tested | assumed passed"
-		else
-			comment "status is unknown"
-		endif
-
-		Files_cleanup_xml2
+		;comment "-------------------------------------"
+		;comment "Starting strictMode = true tests: "
+		;set $xml2strictMode$ = 'true'
+		;Files_copy_xml2
+		;
+		;
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "XML2 Sections"
+		;set $testfile$ = $HomeTestFiles$+"\unattend_win10_x64.xml"
+		;set $xmlnodepath$ ='settings pass="windowsPE" // component name="Microsoft-Windows-Setup" // DiskConfiguration // Disk wcm:action="add" // ModifyPartitions'
+		;markErrorNumber
+		;xml2_w10una_test $testfile$
+		;if errorsOccuredSinceMark = 0
+		;	comment "passed"
+		;else
+		;	LogWarning "failed"
+		;	set $TestResult$ = "not o.k."
+		;endif
+  	    ;
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "SetAttribute"
+		;XML2_strict_SetAttribute $HomeTestFiles$+"\dummy.xml"
+		;set $ConstTest$ = "yellow"
+		;set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		;set $tmp$ = takeString(4, $list1$)
+		;set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+  	    ;
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "AddAttribute"
+		;XML2_AddAttribute $HomeTestFiles$+"\dummy.xml"
+		;set $ConstTest$ = "OpenOfficeWriter"
+		;set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		;set $tmp$ = takeString(3, $list1$)
+		;set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+  	    ;
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "DeleteAttribute"
+		;XML2_DeleteAttribute $HomeTestFiles$+"\dummy.xml"
+		;set $ConstTest$ = '<node_level-2_B count="65"/>'
+		;set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		;set $tmp$ = takeString(4, $list1$)
+		;set $CompValue$ = Trim($tmp$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+  	    ;
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "DeleteElement"
+		;XML2_DeleteElement $HomeTestFiles$+"\dummy.xml"
+		;set $ConstTest$ = '<node_level-2_C/>'
+		;set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		;set $tmp$ = takeString(4, $list1$)
+		;set $CompValue$ = Trim($tmp$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+  	    ;
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "SetText / AddText"
+		;XML2_SetText $HomeTestFiles$+"\dummy.xml"
+		;set $ConstTest$ = '<node_level-2_A name="OpenOfficeWriter" color="blue">node_level-2_A</node_level-2_A>'
+		;set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		;set $tmp$ = takeString(3, $list1$)
+		;set $CompValue$ = Trim($tmp$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "SetText passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "SetText failed"
+		;endif
+		;XML2_AddText $HomeTestFiles$+"\dummy.xml"
+		;set $ConstTest$ = '<node_level-2_C>node_level-2_C</node_level-2_C>'
+		;set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		;set $tmp$ = takeString(4, $list1$)
+		;set $CompValue$ = Trim($tmp$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "AddText passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "AddText failed"
+		;endif
+  	    ;
+		;XML2_SetText_dummy2 $HomeTestFiles$+"\dummy2.xml"
+		;set $ConstTest$ = '<VALUE>K1S120</VALUE>'
+		;set $list1$ = loadTextFile($HomeTestFiles$+"\dummy2.xml")
+		;set $tmp$ = takeFirstStringContaining($list1$,"<VALUE>K1S120</VALUE>")
+		;set $CompValue$ = Trim($tmp$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "SetText passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "SetText failed"
+		;endif
+  	    ;
+  	    ;
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "OpenNodeSet"
+		;if ($TestResult$ = "o.k.")
+		;	comment "not explicit tested | assumed passed"
+		;else
+		;	comment "status is unknown"
+		;endif
+        ;
+		;Files_cleanup_xml2
 	endif ; 4.11.7
 	
 	sub_compareResult
