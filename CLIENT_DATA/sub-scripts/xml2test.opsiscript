@@ -31,17 +31,18 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		set $ConstTest$ = "value1"
-		
-		;set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		;set $tmp$ = takeString(4, $list1$)
-		;set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-		;if ($ConstTest$ = $CompValue$)
-		;	comment "passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "failed"
-		;endif
+		set $ConstTest$ = "value1"		
+		;set $list1$ = loadTextFile($HomeTestFiles$+"\unattend_win10_x64.xml")
+		;set $list1$ = getXml2Document($list1$)
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\unattend_win10_x64.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"ModifyPartitions")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"name1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 
   	
 ;		comment ""
@@ -176,6 +177,17 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
+		set $ConstTest$ = "yellow"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"color")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+
   	
 		comment ""
 		comment "-------------------------------------"
@@ -186,6 +198,16 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
 		set $tmp$ = takeString(3, $list1$)
 		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "OpenOfficeWriter"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_A")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"name")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -208,6 +230,16 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
+		set $ConstTest$ = ""		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"color")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
   	
 		comment ""
 		comment "-------------------------------------"
@@ -218,6 +250,16 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
 		set $tmp$ = takeString(4, $list1$)
 		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = ""		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		set $CompValue$ = composestring($list2$,"")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -240,6 +282,17 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "SetText failed"
 		endif
+		set $ConstTest$ = "node_level-2_A"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_A")
+		set $CompValue$ = getXml2Text($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
 		XML2_AddText $HomeTestFiles$+"\dummy.xml"
 		set $ConstTest$ = '<node_level-2_C>node_level-2_C</node_level-2_C>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
@@ -250,6 +303,16 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "AddText failed"
+		endif
+		set $ConstTest$ = "node_level-2_C"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_C")
+		set $CompValue$ = getXml2Text($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
 		endif
   	
 		XML2_SetText_dummy2 $HomeTestFiles$+"\dummy2.xml"
@@ -262,6 +325,16 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "SetText failed"
+		endif
+		set $ConstTest$ = "K1S120"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy2.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"VALUE")
+		set $CompValue$ = getXml2Text($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
 		endif
   	
   	
