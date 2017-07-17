@@ -1,0 +1,8 @@
+
+[Files_del_tmp_dummy_win]
+del -f "c:\opsi.org\tmp\dummyt.txt"
+
+[Files_del_tmp_dummy_lin]
+del -f "/tmp/opsi-winst-test/dummyt.txt"
+
+

@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 #
 # preinst script for opsi-winst-test
 # This script executes before that package will be unpacked from its archive file.

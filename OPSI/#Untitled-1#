@@ -1,8 +1,0 @@
-[ProductProperty]
-type: unicode
-name: xml2
-multivalue: False
-editable: False
-description: xml2 section and functions
-values: ["off", "on"]
-default: ["off"]

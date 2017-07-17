@@ -47,9 +47,66 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		includelog $string1$ $string2$ "auto"
 		comment "With encoding parameter: UCS-2BE"
 		includelog $string1$ $string2$ "UCS-2BE"
-
+		comment "With encoding parameter: UCS-2LE"
+		includelog $string1$ $string2$ "UCS-2LE"
+		comment "With encoding parameter: unicode"
+		includelog $string1$ $string2$ "unicode"
+		
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "utf16", "system")
+		if $OS$="Windows_NT"
+			set $list$ = loadUnicodeTextFile($string1$)
+		endif
+		
+		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-ucs2be.txt"
+		set $string2$ = "5"
+		comment "With encoding parameter: auto"
+		includelog $string1$ $string2$ "auto"
+		comment "With encoding parameter: UCS-2BE"
+		includelog $string1$ $string2$ "UCS-2BE"
+		comment "With encoding parameter: UCS-2LE"
+		includelog $string1$ $string2$ "UCS-2LE"
+		comment "With encoding parameter: unicode"
+		includelog $string1$ $string2$ "unicode"
+		
 		set $list$ = loadTextFile($string1$)
 		set $list1$ = reencodestrlist($list$, "ucs2be", "system")
+		if $OS$="Windows_NT"
+			set $list$ = loadUnicodeTextFile($string1$)
+		endif
+		
+		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-ucs2le.txt"
+		set $string2$ = "5"
+		comment "With encoding parameter: auto"
+		includelog $string1$ $string2$ "auto"
+		comment "With encoding parameter: UCS-2BE"
+		includelog $string1$ $string2$ "UCS-2BE"
+		comment "With encoding parameter: UCS-2LE"
+		includelog $string1$ $string2$ "UCS-2LE"
+		comment "With encoding parameter: unicode"
+		includelog $string1$ $string2$ "unicode""
+		
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "ucs2le", "system")
+		if $OS$="Windows_NT"
+			set $list$ = loadUnicodeTextFile($string1$)
+		endif
+		
+
+		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf8.txt"
+		set $string2$ = "5"
+		comment "With encoding parameter: auto"
+		includelog $string1$ $string2$ "auto"
+		comment "With encoding parameter: UCS-2BE"
+		includelog $string1$ $string2$ "utf8"
+		comment "With encoding parameter: UCS-2LE"
+		includelog $string1$ $string2$ "UCS-2LE"
+		comment "With encoding parameter: unicode"
+		includelog $string1$ $string2$ "unicode"
+
+
+		set $list$ = loadTextFile($string1$)
+		set $list1$ = reencodestrlist($list$, "utf8", "system")
 		if $OS$="Windows_NT"
 			set $list$ = loadUnicodeTextFile($string1$)
 		endif

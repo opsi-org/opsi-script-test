@@ -3,7 +3,7 @@ DefVar $inctestvar$
 set $inctestvar$ = "inctest"
 comment "The section Files_del_tmp_dummy is really missing"
 Files_del_tmp_dummy
-include_append "section_Files_copy_inctest.opsiinc"
+include_append "sub-scripts\section_Files_copy_inctest.opsiinc"
 if $OS$ = "Windows_NT"
 	Files_copy_inctest_win
 	if fileExists("c:\opsi.org\tmp\dummy.txt") 

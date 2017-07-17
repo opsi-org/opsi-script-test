@@ -1,0 +1,4 @@
+; opsi include file
+
+[DosInAnIcon_echo]
+echo "included section"

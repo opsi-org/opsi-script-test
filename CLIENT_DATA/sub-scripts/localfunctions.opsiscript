@@ -185,7 +185,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not tested"
 	endif ; 4.12
 	sub_compareResult
-	set $winst_local_function$ = $SubResult$
+	set $winst_local_functions$ = $SubResult$
 
 endif
 
