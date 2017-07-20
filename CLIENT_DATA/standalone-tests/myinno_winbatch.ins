@@ -3,16 +3,16 @@ setloglevel = 8
 winbatch_myinno
 
 [Winbatch_msi_shellexecute]
-"%ScriptPath%\test-files\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+"%ScriptPath%\..\test-files\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard]
-msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+msiexec /i "%ScriptPath%\..\test-files\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard_from_c]
 msiexec /i "c:\tmp\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [winbatch_myinno]
-"%ScriptPath%\test-files\testFiles\myinnosetup.exe" /silent
+"%ScriptPath%\..\test-files\testFiles\myinnosetup.exe" /silent
 
 [winbatch_myinno_from_c]
 "c:\tmp\testFiles\myinnosetup.exe" /silent
