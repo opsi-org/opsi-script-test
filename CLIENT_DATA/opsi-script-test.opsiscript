@@ -11654,7 +11654,7 @@ msiexec /i "c:\tmp\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! 
 "%ProgramFiles32Dir%\myinnosetup\unins000.exe" /silent
 
 [winbatch_wow_myinno]
-"%winstdir%\winst32.exe" "%scriptpath%\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+"%winstdir%\winst32.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 
 [Winbatch_regedit_s_64]
 "%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
