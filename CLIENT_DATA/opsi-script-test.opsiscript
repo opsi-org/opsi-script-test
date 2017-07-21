@@ -164,6 +164,12 @@ DefVar $Lic_ProductId$
 DefVar $LicensePool$
 DefVar $licensekey$
 
+defvar $captureproduct$
+defvar $imagename$
+defvar $depotid$
+defvar $valuesListStr$
+
+
 
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "9")
 setLoglevel=$ScriptLoglevel$
@@ -227,9 +233,9 @@ set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
 set $Flag_winst_ldap_search$       = GetProductProperty ("LdapSearch", "off")
 set $Flag_licensemanagement$       = GetProductProperty ("licensemanagement", "off")
 set $Flag_winst_link_folder$       = GetProductProperty ("LinkFolder", "off")
-set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "on")
+set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
-set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
+set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "on")
 set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
@@ -4796,7 +4802,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			Files_hardlink
 			
 			;if GetMsVersionInfo INT>= "6"
-			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 				Files_symlinklink
 				if FileExists($HomeTestFiles$+"\files\symlink.txt")
 					comment "passed"
@@ -4825,11 +4831,14 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 			Files_move
-			if FileExists($HomeTestFiles$+"\files\symlink.txt")
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
+				;comment "symlink command is only available in NT6 and up" 
+				if FileExists($HomeTestFiles$+"\files\symlink.txt")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
 			endif
 			Files_empty_folder
 		else
@@ -8592,6 +8601,14 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		Set $ExpectedResult$ = "o.k."
 		set $TestResult$ = "o.k."
+		
+		;set $depotid$ = "bonifax.uib.local"
+		;set $captureproduct$ = "win10-x64-1607-captured"
+		;set $imagename$ = "imagename"
+		;set $valuesListStr$ = '["Windows 10 Pro N","Windows 10 Home N","capture","capture1703"]'
+		;
+		;opsiServiceCall_set_imagelist
+
 
 		markErrorNumber
 		opsiservicecall_authenticated
@@ -11879,6 +11896,16 @@ echo Hello $1
 					"opsi-winst-test-followup",
 					"%opsiserviceUser%"
 					]
+					
+[opsiServiceCall_set_imagelist]
+"method": "productPropertyState_create"
+"params": [
+					"$captureproduct$",
+					"imagename",
+					"$depotid$",
+					'$valuesListStr$'
+					]
+
 
 ;----------------   stop   sections for opsiservicecall tests ---------------------------------
 
