@@ -9,7 +9,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.12.0.0
+version: 4.12.0.6
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -349,6 +349,12 @@ values: ["off", "on"]
 default: ["off"]
 
 [Changelog]
+opsi-script-test (4.12.0.6-1) stable; urgency=low
+
+  * test localfunctions: do not see Variables in Param string as local vars
+
+-- detlef oertel <d.oertel@uib.de>  Wed,  04 Oct 2017 15:00:00 +0200
+
 opsi-script-test (4.12.0.0-1) stable; urgency=low
 
   * local functions

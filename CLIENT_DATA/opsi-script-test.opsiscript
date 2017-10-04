@@ -39,6 +39,11 @@ DefVar $tmp1$
 DefVar $tmp2$
 DefVar $tmp3$
 DefVar $tmp4$
+DefVar $str$
+DefVar $str1$
+DefVar $str2$
+DefVar $str3$
+DefVar $str4$
 DefVar $MsVersion$
 DefVar $string1$
 DefVar $string2$
@@ -95,6 +100,7 @@ DefVar $link_extension$
 DefVar $link_subfolder$
 DefVar $target$
 DefVar $workdir$
+DefVar $workfile$
 DefVar $systemroot$
 
 

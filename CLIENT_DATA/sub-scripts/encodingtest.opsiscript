@@ -362,13 +362,18 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	Files_copy_patchtextfile_umlaut
-	if fileExists($HomeTestFiles$ + "\dümmy_cp1252.txt")
+	if $OS$ = "Linux"
+		set $workfile$ = "\dümmy_utf8.txt"
+	else
+		set $workfile$ = "\dümmy_cp1252.txt"
+	endif
+	if fileExists($HomeTestFiles$ + $workfile$)
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-	if LineExistsIn ("Line containing umlaut: üöäßÜÖÄ.", $HomeTestFiles$ + "\dümmy_cp1252.txt")
+	if LineExistsIn ("Line containing umlaut: üöäßÜÖÄ.", $HomeTestFiles$ + $workfile$)
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
@@ -378,15 +383,15 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "AppendLine"
-	PatchTextFile_AppendLine_umlaut $HomeTestFiles$ + "\dümmy_cp1252.txt"
-	if LineExistsIn ("Line appended by opsi-script with umlaut: üöäßÜÖÄ", $HomeTestFiles$ + "\dümmy_cp1252.txt")
+	PatchTextFile_AppendLine_umlaut $HomeTestFiles$ + $workfile$
+	if LineExistsIn ("Line appended by opsi-script with umlaut: üöäßÜÖÄ", $HomeTestFiles$ + $workfile$)
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
 	set $ConstTest$ = "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
-	set $list1$ = loadTextFile($HomeTestFiles$ + "\dümmy_cp1252.txt")
+	set $list1$ = loadTextFile($HomeTestFiles$ + $workfile$)
 	Set $CompValue$ = takeFirstStringContaining($list1$, $ConstTest$)
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
@@ -399,9 +404,9 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "FindLine, DeleteTheLine"
-	PatchTextFile_findLine_umlaut $HomeTestFiles$ + "\dümmy_cp1252.txt"
+	PatchTextFile_findLine_umlaut $HomeTestFiles$ + $workfile$
 	set $ConstTest$ = ""
-	set $list1$ = loadTextFile($HomeTestFiles$ + "\dümmy_cp1252.txt")
+	set $list1$ = loadTextFile($HomeTestFiles$ + $workfile$)
 	Set $CompValue$ = takeFirstStringContaining($list1$,"Line containing umlaut: üöäßÜÖÄ.")
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
@@ -409,7 +414,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-	if not(LineExistsIn ("Line containing umlaut: üöäßÜÖÄ.", $HomeTestFiles$ + "\dümmy_cp1252.txt"))
+	if not(LineExistsIn ("Line containing umlaut: üöäßÜÖÄ.", $HomeTestFiles$ + $workfile$))
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
@@ -473,6 +478,7 @@ DeleteTheLine
 
 [Files_copy_patchtextfile_umlaut]
 copy "%ScriptPath%\test-files\encoding\dümmy_cp1252.txt" $HomeTestFiles$
+copy "%ScriptPath%\test-files\encoding\dümmy_utf8.txt" $HomeTestFiles$
 
 [Files_copy_exe_umlaut]
 copy "%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" $HomeTestFiles$
