@@ -3670,6 +3670,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
+				includelog "%opsiLogDir%\au3.log"
 			endif
 			Killtask "autoit3.exe"
 		endif
@@ -10557,13 +10558,45 @@ send ("!e")
 exit
 
 [Execwith_autoit_close_showmessage]
-WinWait("SystemInfo","")
+Func opsiwinwait($title, $text, $maxseconds, $logname)
+	Local $exists = 0
+	Local $seconds = 0
+	Local $mylog
+	$mylog = FileOpen($logname, 1)
+	While ($seconds <= $maxseconds) and ($exists = 0)
+		$exists = WinExists($title , $text)
+		FileWriteLine($mylog,"win: " & $title & " ; " & $text & " exists result (1=exists): " & $exists )
+		$seconds = $seconds + 1
+		sleep(1000)
+	WEnd
+	FileClose($mylog)
+EndFunc
+
+
+Func opsiControlClick($title, $text, $id, $maxseconds, $logname)
+	Local $result = 0
+	Local $seconds = 0
+	Local $mylog
+	$mylog = FileOpen($logname, 1)
+	While ($seconds <= $maxseconds) and ($result = 0)
+		$result = ControlClick($title , $text,$id)
+		FileWriteLine($mylog,"answer for " & $title & " ; " & $text & " id: " & $id & " sended: result (1=success) : " & $result)
+		$seconds = $seconds + 1
+		sleep(500)
+	WEnd
+	FileClose($mylog)
+EndFunc
+
+; exact title match
+Opt("WinTitleMatchMode", 3)
+$mylog = FileOpen("%opsiLogDir%\au3.log", 2)
+FileWriteLine($mylog,"auto-it started - waiting for the window")
+FileClose($mylog)
+opsiwinwait("Systeminfo" , "", 200, "%opsiLogDir%\au3.log")
+opsiControlClick("Systeminfo" , "", "[CLASS:Button; INSTANCE:1]", 10, "%opsiLogDir%\au3.log")
 Sleep(500)
-; activating
-WinActivate("SystemInfo","")
-send ("{TAB}")
-send ("{ENTER}")
-exit
+;and good bye
+Exit
 
 [DosInAnIcon_getTask_autoit3]
 @echo off

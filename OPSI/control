@@ -352,6 +352,7 @@ default: ["off"]
 opsi-script-test (4.12.0.6-1) stable; urgency=low
 
   * test localfunctions: do not see Variables in Param string as local vars
+  * controlfunctions: Execwith_autoit_close_showmessage: use better autoit functions
 
 -- detlef oertel <d.oertel@uib.de>  Wed,  04 Oct 2017 15:00:00 +0200
 
