@@ -185,11 +185,60 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			set $result$ = $loclist1$
 			
 			[shellinanicon_test]
-			set -x
 			$str1$
 		endfunc
 		
-		set $list1$ = myFunc8('pwd')
+		if GetOS = 'Linux'
+			set $list1$ = myFunc8('pwd')
+		else
+			set $list1$ = myFunc8('echo %cd%')
+		endif
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.10")
+			comment " Testing repeated function call with local variables ..."
+			comment "should give no syntax error here"
+			if GetOS = 'Linux'
+				set $list1$ = myFunc8('pwd')
+			else
+				set $list1$ = myFunc8('echo %cd%')
+			endif
+			
+			if GetOS = 'Linux'
+				set $list1$ = myFunc8('pwd')
+			else
+				set $list1$ = myFunc8('echo %cd%')
+			endif
+			
+			comment " Testing fuction call while if ..."
+			
+			DefFunc function-test($VarSub1$ : string) : string
+				set $result$ = $VarSub1$
+				
+				if ($result$ = "1")
+				   comment "Result ist okay"
+				else
+				   comment "Result ist nicht okay"
+				endif
+			endfunc
+			
+			set $ConstTest$ = "1"
+			if $ConstTest$ = "1"
+				set $CompValue$ = function-test($ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				set $ConstTest$ = "2"
+				if $ConstTest$ = "2"
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
+		endif ;4.12.10
 
 	else
 		set $TestResult$ = "not tested"

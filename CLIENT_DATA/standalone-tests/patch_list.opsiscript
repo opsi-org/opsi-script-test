@@ -1,0 +1,11 @@
+[actions]
+setloglevel=8
+
+defstringlist $list$
+set $list$ = loadTextFile("%scriptpath%\..\test-files\ini\test.ini")
+
+patches_modify $list$
+
+[patches_modify]
+set [section1] key1=val3
+set [section1] nam1=val4

@@ -1,0 +1,22 @@
+[actions]
+
+setloglevel = 8
+
+importLib "uib_exitcode::isNsisExitcodeFatal"
+
+defVar $ec$
+defVar $estr$
+defVar $reboot$
+defVar $fatal$
+
+set $reboot$ = "false"
+set $estr$ = ""
+set $ec$ = "1"
+set $fatal$ = isNsisExitcodeFatal($ec$,$reboot$,$estr$)
+comment "1ES: "+$estr$
+comment "2ES: "+$estr$
+comment "3ES: "+$estr$
+comment "4ES: "+$estr$
+comment "5ES: "+$estr$
+
+[stop]

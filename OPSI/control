@@ -9,7 +9,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.12.0.6
+version: 4.12.0.10
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -349,6 +349,24 @@ values: ["off", "on"]
 default: ["off"]
 
 [Changelog]
+opsi-script-test (4.12.0.10-1) stable; urgency=low
+
+  * test local functions:
+    * Testing repeated function call with local variables
+    * Testing fuction call while if
+  * registry:
+    * Support brackets '[]' in Registry keys ; fixes #2825
+    * osparser: doRegistryHack: openkey, deletekey in Registry sections
+    * osparser: evaluatestring: GetRegistryStringValue*
+
+-- detlef oertel <d.oertel@uib.de>  Mon,  06 Dec 2017 15:00:00 +0200
+
+opsi-script-test (4.12.0.8-1) stable; urgency=low
+
+  * test encoding:Patches /encoding "ucs2be"
+
+-- detlef oertel <d.oertel@uib.de>  Mon,  23 Oct 2017 15:00:00 +0200
+
 opsi-script-test (4.12.0.6-1) stable; urgency=low
 
   * test localfunctions: do not see Variables in Param string as local vars
