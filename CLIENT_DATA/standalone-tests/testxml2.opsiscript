@@ -36,7 +36,14 @@ DefVar $MsVersion$
 DefVar $string1$
 DefVar $string2$
 DefVar $string3$
-DefVar $xmlnodepath$
+DefVar $xml2nodepath$
+DefVar $xml2nodetext$
+DefVar $xml2changeValue$
+DefVar $xml2cmdLine1$
+DefVar $xml2cmdLine2$
+DefVar $xml2cmdLine3$
+DefVar $xml2cmdLine4$
+DefVar $xml2cmdLine5$
 DefVar $ScriptLoglevel$
 
 DefVar $winst_constants$
