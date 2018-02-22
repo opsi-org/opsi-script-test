@@ -1,0 +1,103 @@
+DefFunc function-exitcode_check($exitcode$ : string, ref $act_reboot_counter$ : string, $max_reboot_counter$ : string, $Reboot$ : string, $RebootMode$ : string, $ProductId$ : string) : string
+   Message "Teste Erfolg der Installation via exitcode "+$exitcode$
+
+   ; --- Workflow ---
+   ; informations to exit codes see
+   ; http://msdn.microsoft.com/en-us/library/aa372835(VS.85).aspx
+   ; http://msdn.microsoft.com/en-us/library/aa368542.aspx
+   Switch $exitcode$
+           Case "0"
+                   comment "Looks good: setup program gives exitcode zero"
+           EndCase
+           Case "2"
+                   logError "Fatal: The system cannot find the file specified: " + $exitcode$
+                   isFatalError "Exit Code: "+ $exitcode$
+           EndCase
+           Case "3"
+                   logError "Fatal: The system cannot find the path specified: " + $exitcode$
+                   isFatalError "Exit Code: "+ $exitcode$
+           EndCase
+           Case "1605"
+                   comment "ERROR_UNKNOWN_PRODUCT  1605"
+                   comment "This action is only valid for products that are currently installed."
+                   comment "Uninstall of a not installed product failed - no problem"
+           EndCase
+           Case "1641"
+                   comment "looks good: setup program gives exitcode 1641"
+                   comment "ERROR_SUCCESS_REBOOT_INITIATED 1641"
+                   comment "The installer has initiated a restart."
+                   comment "This message is indicative of a success."
+                   if ($Reboot$ = "true")
+                      set $act_reboot_counter$ = calculate($act_reboot_counter$+"+1")
+                      Registry_SaveRebootCounter
+                      opsiServiceCall_set_prop_act_reboot_counter /preloginservice
+                      if ($RebootMode$ = "ImmediateReboot")
+                         ExitWindows /ImmediateReboot
+                      else
+                         ExitWindows /Reboot
+                      endif
+                   endif
+           EndCase
+           Case "3010"
+                   comment "looks good: setup program gives exitcode 3010"
+                   comment "ERROR_SUCCESS_REBOOT_REQUIRED 3010"
+                   comment "A restart is required to complete the install."
+                   comment "This message is indicative of a success."
+                   if ($Reboot$ = "true")
+                      set $act_reboot_counter$ = calculate($act_reboot_counter$+"+1")
+                      Registry_SaveRebootCounter
+                      opsiServiceCall_set_prop_act_reboot_counter /preloginservice
+                      if ($RebootMode$ = "ImmediateReboot")
+                         ExitWindows /ImmediateReboot
+                      else
+                         ExitWindows /Reboot
+                      endif
+                   endif
+           EndCase
+           Case "3011"
+                   comment "looks good: setup program gives exitcode 3011"
+                   comment "ERROR_SUCCESS_REBOOT_REQUIRED 3011"
+                   comment "A restart is required to complete the install."
+                   comment "This message is indicative of a success."
+                   if ($Reboot$ = "true")
+                      set $act_reboot_counter$ = calculate($act_reboot_counter$+"+1")
+                      Registry_SaveRebootCounter
+                      opsiServiceCall_set_prop_act_reboot_counter /preloginservice
+                      if ($RebootMode$ = "ImmediateReboot")
+                         ExitWindows /ImmediateReboot
+                      else
+                         ExitWindows /Reboot
+                      endif
+                   endif
+           EndCase
+           Case "5100"
+                   logError "Fatal: The user's computer does not meet system requirements: " + $exitcode$
+                   isFatalError "Exit Code: "+ $exitcode$
+           EndCase
+           Case "14098"
+                   logError "Fatal: The Component Store has been corrupted: " + $exitcode$
+                   isFatalError "Exit Code: "+ $exitcode$
+           EndCase
+           Case "2359302"
+                   comment "SUS_S_ALREADY_INSTALLED  240006"
+                   comment "The update to be installed is already installed - no problem"
+           EndCase
+           DefaultCase
+                   logError "Fatal: Setup gibt einen unbekannten exitcode ungleich 0: " + $exitcode$
+                   isFatalError "Exit Code: "+ $exitcode$
+           EndCase
+   EndSwitch
+
+   [Registry_SaveRebootCounter]
+   openKey [HKLM\SOFTWARE\opsi.org\winst]
+   set "RebootFlag" = "$act_reboot_counter$"
+
+   [opsiServiceCall_set_prop_act_reboot_counter]
+   "method": "setProductProperty"
+   "params": [
+   "$ProductId$",
+   "act_reboot_counter",
+   "$act_reboot_counter$",
+   "%hostid%"
+   ]
+endfunc

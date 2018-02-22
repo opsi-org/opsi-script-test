@@ -1,0 +1,21 @@
+encoding=UTF-8
+[Actions]
+ 
+DefVar $Var1$
+DefVar $Var2$
+DefVar $act_reboot_counter$
+DefVar $exitcode$
+
+set $Var1$ = "1"
+set $Var2$ = "2"
+
+importLib "lib-defined_functions13.opsiscript"
+
+if ($Var1$ = "1")
+   set $exitcode$ = function-exitcode_check("2359302",$act_reboot_counter$,"15","true","ImmediateReboot","test")
+   comment $exitcode$
+
+   if ($Var2$ = "2")
+      comment $Var2$
+   endif
+endif

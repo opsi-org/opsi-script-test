@@ -1,7 +1,6 @@
 [Package]
 version: 1
 depends: 
-incremental: False
 
 [Product]
 type: localboot
@@ -9,7 +8,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.12.0.10
+version: 4.12.0.13
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -349,6 +348,37 @@ values: ["off", "on"]
 default: ["off"]
 
 [Changelog]
+
+opsi-script-test (4.12.0.13-2) stable; urgency=low
+
+  * ShellInAnIcon_exitcode42: use of 'if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%'
+
+-- detlef oertel <d.oertel@uib.de>  Wed,  25 Jan 2018 15:00:00 +0200
+
+opsi-script-test (4.12.0.13-1) stable; urgency=low
+
+  * localfunctions: test call from a local function an other local function
+      using a local variable as call by value parameter
+  * localfunctions: more complex if then else through localfunctions and sub
+
+-- detlef oertel <d.oertel@uib.de>  Tue,  15 Jan 2018 15:00:00 +0200
+
+opsi-script-test (4.12.0.12-1) stable; urgency=low
+
+  * remove c:\tmp from scripts and replace with %opsitmpdir%
+  * code cleanup
+
+-- detlef oertel <d.oertel@uib.de>  Thu,  14 Dec 2017 15:00:00 +0200
+
+opsi-script-test (4.12.0.11-1) stable; urgency=low
+
+  * registry:
+    * fix for Support brackets '[]' in Registry keys ; fixes #2825
+    * osparser: doRegistryHack: openkey, deletekey in Registry sections
+    * osparser: evaluatestring: GetRegistryStringValue*
+
+-- detlef oertel <d.oertel@uib.de>  Tue,  12 Dec 2017 15:00:00 +0200
+
 opsi-script-test (4.12.0.10-1) stable; urgency=low
 
   * test local functions:

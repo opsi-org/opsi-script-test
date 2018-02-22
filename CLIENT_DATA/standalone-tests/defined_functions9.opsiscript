@@ -4,7 +4,7 @@
 setloglevel=9
 ScriptErrorMessages = false
 
-importLib "functionlib.opsiscript"
+importLib "functionlib.opsiscript::myFunc8"
 
 DefVar $mystr$
 DefVar $str1$

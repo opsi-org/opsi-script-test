@@ -195,6 +195,17 @@ if ($Flag_jsonfunctions$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "testing json failed"
 			endif
+			
+			set $string1$ = '["A","B","C"]'
+			set $list3$ = jsonAsArrayToStringList($string1$)
+			set $ConstTest$ = jsonAsObjectCountElements($string1$)
+			set $CompValue$ = count($list3$)
+			if ($ConstTest$ = $CompValue$)
+				comment "jsonAsObjectCountElements passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "testing jsonAsObjectCountElements failed"
+			endif
 		endif ; 4.11.6.4
 		
 		

@@ -194,7 +194,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			set $list1$ = myFunc8('echo %cd%')
 		endif
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.10")
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.10")
 			comment " Testing repeated function call with local variables ..."
 			comment "should give no syntax error here"
 			if GetOS = 'Linux'
@@ -239,6 +239,30 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 				endif
 			endif
 		endif ;4.12.10
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.13")
+			importLib "%scriptpath%\standalone-tests\functionlib.opsiscript"
+			if GetOS = 'Linux'
+				set $list1$ = myFunc10('pwd')
+			else
+				set $list1$ = myFunc10('echo %cd%')
+			endif
+			if count($list1$) int= "9"
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+			sub "%scriptpath%\standalone-tests\sub_defined_functions12.opsiscript"
+			if count($list1$) int= "9"
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+
+		endif
 
 	else
 		set $TestResult$ = "not tested"

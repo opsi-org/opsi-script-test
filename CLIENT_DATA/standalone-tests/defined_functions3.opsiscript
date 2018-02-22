@@ -5,15 +5,6 @@ setloglevel=8
 ScriptErrorMessages = false
 
 DefVar $mystr$
-DefVar $str1$
-DefVar $str2$
-DefStringlist $list1$
-DefStringlist $list2$
-set $str1$ = 'ha'
-set $str2$ = 'hi'
-set $mystr$ = $str1$ + $str2$
-
-set $list2$ = splitstring("/etc/opsi/huhu","/")
 
 DefFunc myFunc3($str1$ : string) : string
 	DefVar $locstr1$
@@ -22,8 +13,5 @@ DefFunc myFunc3($str1$ : string) : string
 endfunc
 
 set $mystr$ = myFunc3("he")
-
-; this should give a sytax error because $locstr1$ is global not known
-set $mystr$ = $locstr1$
 
 

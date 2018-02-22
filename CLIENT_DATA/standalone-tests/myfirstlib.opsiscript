@@ -1,0 +1,4 @@
+
+DefFunc myFunc(val $str1$ : string, $str2$ : string) : string
+	set $result$ = $str1$ + $str2$
+endfunc

@@ -215,7 +215,7 @@ if "True" = GetProductProperty ("setfailed","False")
 ;isFatalError
 endif
 
-set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
+set $ScriptLoglevel$ = GetProductProperty ("loglevel", "8")
 setLoglevel=$ScriptLoglevel$
 
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
@@ -238,7 +238,7 @@ set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
 set $Flag_ProfileActions$          = GetProductProperty ("ProfileActions", "off")
-set $Flag_subregistry$             = GetProductProperty ("Registry", "on")
+set $Flag_subregistry$             = GetProductProperty ("Registry", "off")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
 set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
@@ -5036,38 +5036,40 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	
 	set $SectionName$ ="[secdummy]"
 	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-	if (FileExists($HometestFiles$+"\dummy.ini"))
-		set $ConstTest$ = "[secdüöä]"
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+		if (FileExists($HometestFiles$+"\dummy.ini"))
+			set $ConstTest$ = "[secdüöä]"
+			Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+			Set $CompValue$ = Trim(takeString(0, $list1$))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+			logError "Fatal: could not find .ini file"
+			isFatalError
 		endif
-	else
-		set $TestResult$ = "not o.k."
-		logError "Fatal: could not find .ini file"
-		isFatalError
-	endif
-	set $SectionName$ ="[secdüöä]"
-	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-	if (FileExists($HometestFiles$+"\dummy.ini"))
-		set $ConstTest$ = ""
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
+		set $SectionName$ ="[secdüöä]"
+		Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
+		if (FileExists($HometestFiles$+"\dummy.ini"))
+			set $ConstTest$ = ""
+			Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+			Set $CompValue$ = Trim(takeString(0, $list1$))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+			logError "Fatal: could not find .ini file"
+			isFatalError
 		endif
-	else
-		set $TestResult$ = "not o.k."
-		logError "Fatal: could not find .ini file"
-		isFatalError
-	endif
+	endif ; 4.12.1.0
 
 	;Files_remove_folder
 	
@@ -6818,7 +6820,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				
 				Registry_del_environment /sysnative
 				UpdateEnvironment
-				sub_check_environment
+				for %index% = "1" to "2" do sub_check_environment
 				if not (Contains($CompValue$, "deleteme"))
 					comment "passed"
 				else
@@ -6830,7 +6832,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				Registry_set_quoted_string
 			endif ; NT6
 		endif ; 4.11.5
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.10")
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.10")
 			Registry_createkeys_with_brackets
 			set $ConstTest$ = "myentry1"
 			set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
@@ -6840,6 +6842,16 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
+			set $ConstTest$ = "myentry1"
+			set $tmp1$ = "[brackets]"
+			set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
 			Registry_deletekeys_with_brackets
 			
 			Registry_createkeys_with_brackets /64bit
@@ -6851,8 +6863,18 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
+						set $ConstTest$ = "myentry1"
+			set $tmp1$ = "[brackets]"
+			set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+
 			Registry_deletekeys_with_brackets /64bit
-		endif ; 4.12.10
+		endif ; 4.12.0.10
 		
 		Registry_opsi_org_delete_test
 		Registry_opsi_org_delete_test /64bit
@@ -6924,7 +6946,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "return"
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_elements "'+$HomeTestFiles$+'\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_elements "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = 'node_level-2_A color="blue"'
 		set $tmp$ = takeString(0, $list1$)
 		set $CompValue$ = Trim($tmp$)
@@ -6935,7 +6957,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_elements failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributes "'+$HomeTestFiles$+'\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributes "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = 'color="green"'
 		set $ConstTest2$ = 'count="65"'
 		set $tmp$ = takeString(0, $list1$)
@@ -6949,7 +6971,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_attributes failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_elementnames "'+$HomeTestFiles$+'\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_elementnames "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "node_level-2_A"
 		set $tmp$ = takeString(0, $list1$)
 		set $CompValue$ = Trim($tmp$)
@@ -6960,7 +6982,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_elementnames failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributenames "'+$HomeTestFiles$+'\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributenames "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "color"
 		set $ConstTest2$ = "count"
 		set $tmp$ = takeString(0, $list1$)
@@ -6974,7 +6996,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_attributenames failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_text "'+$HomeTestFiles$+'\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_text "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "Hello World"
 		set $tmp$ = takeString(0, $list1$)
 		set $CompValue$ = Trim($tmp$)
@@ -6985,7 +7007,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_text failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_counting "'+$HomeTestFiles$+'\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_counting "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "1"
 		set $ConstTest2$ = "2"
 		set $tmp$ = takeString(0, $list1$)
@@ -8088,6 +8110,16 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			endif
 			DosInAnIcon_exit1
 			set $ConstTest$ = "1"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "DosBatch / DosInAnIcon  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "DosBatch / DosInAnIcon  exitcode failed"
+			endif
+			
+			ShellInAnIcon_exitcode42
+			set $ConstTest$ = "42"
 			set $CompValue$ = getLastExitCode
 			if ($ConstTest$ = $CompValue$)
 				comment "DosBatch / DosInAnIcon  exitcode passed"
@@ -11828,6 +11860,16 @@ rem create an errolevel= 1
 VERIFY OTHER 2> NUL
 echo %ERRORLEVEL%
 exit %ERRORLEVEL%
+
+[ShellInAnIcon_exitcode42]
+set exitcode=0
+VERIFY OTHER 2> NUL
+if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
+echo %exitcode%
+"%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe"
+if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
+exit %exitcode%
+
 
 [DosBatchUseradd]
 net user "$opsiadminuser$" "$opsiadminpwd$" /add
