@@ -1,0 +1,13 @@
+
+
+[actions]
+setloglevel=7
+ScriptErrorMessages = false
+
+markErrorNumber
+logError "test error"
+if errorsOccurredSinceMark > 0
+    comment "error occured"
+else
+    comment "no error occured"
+endif

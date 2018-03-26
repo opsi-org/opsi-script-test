@@ -1,0 +1,11 @@
+[actions]
+
+DefStringlist $mymap$
+
+set $mymap$ = loadTextFileWithEncoding("%scriptpath%\keyvalue.txt","utf8")
+
+set $mymap$ = editmap($mymap$)
+
+if not (saveTextFileWithEncoding($mymap$, "%scriptpath%\keyvalue1.txt", "utf8"))
+	logError "savetextfile failed"
+endif

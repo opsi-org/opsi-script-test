@@ -1,0 +1,31 @@
+
+
+[actions]
+setloglevel=7
+ScriptErrorMessages = false
+
+DefVar $exitcode$
+
+if GetOS = 'Windows_NT'
+	ShellInAnIcon_win_exit1
+else
+	ShellInAnIcon_lin_exit1
+endif
+set $exitcode$ = getlastexitcode
+comment "exitcode is: "+$exitcode$
+
+[ShellInAnIcon_win_exit1]
+rem create an errorlevel= 1
+echo huhu | findstr ha
+rem create an errorlevel= 0
+echo huhu | findstr hu
+exit %ERRORLEVEL%
+
+
+[ShellInAnIcon_lin_exit1]
+set -x
+# create an exit code= 1
+echo huhu | grep ha
+# create an exit code= 0
+echo huhu | grep hu
+exit $?
