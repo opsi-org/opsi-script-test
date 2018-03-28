@@ -1,0 +1,12 @@
+encoding=UTF-8
+[actions]
+
+defVar $str$
+
+importlib "functionlib_with_err.opsiscript"
+;----------
+; MAIN
+;----------
+Set $str$ = funcwithsyntaxerr2("huhu")
+
+

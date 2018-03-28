@@ -8,7 +8,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.12.0.13
+version: 4.12.0.16
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -348,6 +348,12 @@ values: ["off", "on"]
 default: ["off"]
 
 [Changelog]
+opsi-script-test (4.12.0.16-1) stable; urgency=low
+
+  * ExecWith_powershell: added trap { write-output $_ ; exit 1 }
+  * ExecWith_powershell: added exit $LASTEXITCODE
+
+-- detlef oertel <d.oertel@uib.de>  Tue,  27 Mar 2018 15:00:00 +0200
 
 opsi-script-test (4.12.0.13-2) stable; urgency=low
 

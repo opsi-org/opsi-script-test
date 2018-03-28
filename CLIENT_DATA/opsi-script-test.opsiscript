@@ -95,6 +95,8 @@ DefVar $target$
 DefVar $workdir$
 DefVar $workfile$
 DefVar $systemroot$
+DefVar $pspolicy$
+DefVar $architecture$
 
 
 DefVar $Flag_winst_constants$
@@ -147,6 +149,7 @@ DefVar $language$
 DefVar $OS$
 DefVar $NTVersion$
 DefVar $opsi_message_title$
+DefVar $exitcode$
 
 DefVar $regWriteValue$
 
@@ -190,6 +193,12 @@ if $OS$ = "LINUX"
 endif
 
 Set $INST_SystemType$ = GetSystemType
+
+if $INST_SystemType$ = "64 Bit System"
+	set $architecture$ = "64"
+else
+	set $architecture$ = "32"
+endif
 
 Files_testFiles
 set $FinalResult$ = "passed"
@@ -8419,38 +8428,54 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 		set $list1$ = getOutStreamFromSection ('Execwith_Autoit_param2 "%ScriptPath%\autoit3.exe" PASS $UserPassWord$ $UserName$ $UserGroup$')
 		killtask "autoit3.exe"
   	
-		if ((CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0") and (CompareDotSeparatedNumbers(GetMsVersionInfo,"6.1") >= "0"))
-			set $list1$ = getOutStreamFromSection ('ExecWith_powershell "%SYSTEM%\\WindowsPowerShell\v1.0\powershell.exe"')
-			comment "check if the script was executed..."
-			set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
-			if ("" = $CompValue$)
-				comment "check if the script was not executed because powershell is not activated..."
-				set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
-			endif
-			if not ("" = $CompValue$)
-				comment "Execwith assumed passed"
-			else
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.1")
+			comment "backup old powershell executionpolicy (sysnative)"
+			set $list$ = shellCall('powershell.exe get-executionpolicy')
+			if not (getlastexitcode = "0")
 				set $TestResult$ = "not o.k."
 				LogWarning "Execwith assumed failed"
 			endif
-		endif
-			
-		if ((CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.5") >= "0") and (CompareDotSeparatedNumbers(GetMsVersionInfo,"6.1") >= "0"))
-			set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "%System%\WindowsPowerShell\v1.0\powershell.exe" winst /32bit')
-			comment "check if the script was executed..."
-			set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
-			if ("" = $CompValue$)
-				comment "check if the script was not executed because powershell is not activated..."
-				set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
-			endif
-			if not ("" = $CompValue$)
-				comment "Execwith assumed passed"
-			else
+			set $pspolicy$ = takestring(0,$list$)
+			comment "set new powershell executionpolicy (sysnative)"
+			set $exitcode$ = shellCall('powershell.exe set-executionpolicy RemoteSigned')
+			if not ($exitcode$ = "0")
 				set $TestResult$ = "not o.k."
 				LogWarning "Execwith assumed failed"
 			endif
 			
-			set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "%System%\WindowsPowerShell\v1.0\powershell.exe" winst /64bit')
+			set $list1$ = getOutStreamFromSection ('ExecWith_powershell "powershell.exe" winst /sysnative')
+			if not (getlastexitcode = "0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Execwith assumed failed"
+			endif
+			comment "check if the script was executed..."
+			set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
+			if ("" = $CompValue$)
+				comment "check if the script was not executed because powershell is not activated..."
+				set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
+				set $TestResult$ = "not o.k."
+				LogWarning "Execwith assumed failed"
+			else
+				comment "Execwith assumed passed"
+			endif
+			
+			if $architecture$ = "32"
+				set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "powershell.exe" winst /32bit')
+				comment "check if the script was executed..."
+				set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
+				if ("" = $CompValue$)
+					comment "check if the script was not executed because powershell is not activated..."
+					set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
+				endif
+				if not ("" = $CompValue$)
+					comment "Execwith assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+			endif
+			
+			set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "powershell.exe" winst /sysnative')
 			comment "check if the script was executed..."
 			set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
 			if ("" = $CompValue$)
@@ -8463,7 +8488,16 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "Execwith assumed failed"
 			endif
+			
+			comment "restore old powershell executionpolicy"
+			set $exitcode$ = shellCall('powershell.exe set-executionpolicy '+$pspolicy$)
+			if not ($exitcode$ = "0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Execwith assumed failed"
+			endif
+
 		endif
+		
 		
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
 			comment "Testing parameters for ExecWith"
@@ -11667,10 +11701,13 @@ $Password = "$UserName$"
 $UserGroup = "$UserGroup$"
 
 [ExecWith_powershell]
+trap { write-output $_ ; exit 1 }
 set-executionpolicy RemoteSigned
 echo "powershell opsi-winst-test"
+exit $LASTEXITCODE
 
 [execwith_powershell_architecture]
+trap { write-output $_ ; exit 1 }
 set-executionpolicy RemoteSigned
 echo "powershell opsi-winst-test"
 $psversion
@@ -11682,6 +11719,7 @@ $env:Processor_Architecture
 [IntPtr]::Size
 $is64BitSystem
 $is64BitPowerShell
+exit $LASTEXITCODE
 
 ;----------------   stop   sections for execwith tests ---------------------------------
 ;----------------   start   sections for dosbatch/winbatch tests ---------------------------------
