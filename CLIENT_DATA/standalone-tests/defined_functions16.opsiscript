@@ -1,0 +1,16 @@
+
+
+[actions]
+ScriptErrorMessages = false
+
+DefVar $str1$
+
+set $str1$ = 'haha'
+
+DefFunc myNoResultFunc(ref $str1$ : string) : void
+	set $str1$ = "huhu"
+endfunc
+
+comment "$str1$ is: "+$str1$ 
+
+

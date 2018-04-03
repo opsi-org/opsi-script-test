@@ -352,6 +352,28 @@ opsi-script-test (4.12.0.16-1) stable; urgency=low
 
   * ExecWith_powershell: added trap { write-output $_ ; exit 1 }
   * ExecWith_powershell: added exit $LASTEXITCODE
+  * fuction with no parameters
+  * fuction with no (void) result
+  * using isConfidential to test:
+    ** SetConfidential
+    ** asConfidential
+    ** splitStringOnWhiteSpace
+    ** splitString
+  * asConfidential
+  * upper(<str>)
+  * lower(str)
+  * RegKeyExists
+  * RegVarExists
+  * %opsiapplog%
+  * %opsidata%
+  * getIndexFromListByContaining
+  * new function : getSubListByMatch(<search string>, <target list>) :stringlist
+  * new function : getSubListByMatch(<search list>, <target list>) :stringlist
+  * new function : getSubListByContaining(<search string>, <target list>) :stringlist
+  * new function : getSubListByContaining(<search list>, <target list>) :stringlist
+  * new function : getSubListByKey(<search string>, <target list>) :stringlist
+  * new function : getSubListByKey(<search list>, <target list>) :stringlist
+  * new function : getKeyList(<list>) :stringlist
 
 -- detlef oertel <d.oertel@uib.de>  Tue,  27 Mar 2018 15:00:00 +0200
 

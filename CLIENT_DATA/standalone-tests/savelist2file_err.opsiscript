@@ -1,0 +1,14 @@
+[actions]
+defstringlist $list$
+
+set $list$ = createstringlist("this","is","a","list")
+
+if saveTextFileWithEncoding($list$, "this is a bad filname :?\!><", "utf8")
+	comment "not failed - not correct"
+else
+	comment "failed - correct"
+endif
+
+
+
+

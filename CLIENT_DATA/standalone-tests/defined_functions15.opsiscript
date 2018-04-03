@@ -1,0 +1,14 @@
+
+
+[actions]
+ScriptErrorMessages = false
+
+DefVar $str1$
+
+DefFunc myNoParamFunc() : string
+	set $result$ = "huhu"
+endfunc
+
+set $str1$ = myNoParamFunc()
+
+
