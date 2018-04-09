@@ -374,6 +374,8 @@ opsi-script-test (4.12.0.16-1) stable; urgency=low
   * new function : getSubListByKey(<search string>, <target list>) :stringlist
   * new function : getSubListByKey(<search list>, <target list>) :stringlist
   * new function : getKeyList(<list>) :stringlist
+  * getregistryvalue(<keystr>, <varstr> [, <access str>]) : string
+  * powershellCall
 
 -- detlef oertel <d.oertel@uib.de>  Tue,  27 Mar 2018 15:00:00 +0200
 

@@ -11,6 +11,8 @@ DefFunc myNoResultFunc(ref $str1$ : string) : void
 	set $str1$ = "huhu"
 endfunc
 
+myNoResultFunc($str1$)
+
 comment "$str1$ is: "+$str1$ 
 
 

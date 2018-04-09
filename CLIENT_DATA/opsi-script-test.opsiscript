@@ -72,6 +72,7 @@ DefVar $winst_encoding$
 DefVar $winst_jsonfunctions$
 DefVar $winst_crypt$
 DefVar $winst_local_functions$
+DefVar $winst_powershell$
 DefVar $InterestingFile$
 DefVar $key$
 DefVar $value$
@@ -129,6 +130,7 @@ DefVar $Flag_calculate$
 DefVar $Flag_encoding$
 DefVar $Flag_jsonfunctions$
 DefVar $Flag_crypt$
+DefVar $Flag_powershell$
 
 DefStringList $list$
 DefStringList $list1$
@@ -246,6 +248,7 @@ set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
 set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
+set $Flag_powershell$              = GetProductProperty ("powershell", "off")
 set $Flag_ProfileActions$          = GetProductProperty ("ProfileActions", "off")
 set $Flag_subregistry$             = GetProductProperty ("Registry", "on")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
@@ -3035,9 +3038,9 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "splitStringOnWhiteSpace Confidential"
-		SetConfidential "  secret4  secret5	secret6  "
+		SetConfidential "secret4  secret5	secret6  "
 		set $ConstTest$ = "secret6"
-		set $list1$ = splitStringOnWhiteSpace ("  secret4  secret5	secret6  ")
+		set $list1$ = splitStringOnWhiteSpace ("secret4  secret5	secret6  ")
 		Set $CompValue$ = takeString(2, $list1$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -6694,7 +6697,6 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
   	
-		; 7.12 Registry Sections
   	
 		comment ""
 		comment "-------------------------------------"
@@ -6768,7 +6770,82 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue (default)"
+			set $ConstTest$ = "Explorer.exe"
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon","Shell")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue (32)"
+			set $ConstTest$ = "Explorer.exe"
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon","Shell","32bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue  (32) standard entry"
+			Registry_opsi_org_test
+			set $ConstTest$ = "standard entry"
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0","","32bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue (64)"
+			Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+			Set $INST_SearchValue$ = "AutoRestartShell"
+			sub_retrieve_registry_data
+			set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
+			set $CompValue$ = GetRegistryValue ("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "AutoRestartShell","64bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue  (sysnative)"
+			Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+			Set $INST_SearchValue$ = "AutoRestartShell"
+			sub_retrieve_registry_data
+			set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
+			set $CompValue$ = GetRegistryValue("HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "AutoRestartShell","sysnative")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; 4.12.0.16
+
   	
 		comment ""
 		comment "-------------------------------------"
@@ -9049,75 +9126,6 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 		set $list1$ = getOutStreamFromSection ('Execwith_Autoit_param2 "%ScriptPath%\autoit3.exe" PASS $UserPassWord$ $UserName$ $UserGroup$')
 		killtask "autoit3.exe"
   	
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.1")
-			comment "backup old powershell executionpolicy (sysnative)"
-			set $list$ = shellCall('powershell.exe get-executionpolicy')
-			if not (getlastexitcode = "0")
-				set $TestResult$ = "not o.k."
-				LogWarning "Execwith assumed failed"
-			endif
-			set $pspolicy$ = takestring(0,$list$)
-			comment "set new powershell executionpolicy (sysnative)"
-			set $exitcode$ = shellCall('powershell.exe set-executionpolicy RemoteSigned')
-			if not ($exitcode$ = "0")
-				set $TestResult$ = "not o.k."
-				LogWarning "Execwith assumed failed"
-			endif
-			
-			set $list1$ = getOutStreamFromSection ('ExecWith_powershell "powershell.exe" winst /sysnative')
-			if not (getlastexitcode = "0")
-				set $TestResult$ = "not o.k."
-				LogWarning "Execwith assumed failed"
-			endif
-			comment "check if the script was executed..."
-			set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
-			if ("" = $CompValue$)
-				comment "check if the script was not executed because powershell is not activated..."
-				set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
-				set $TestResult$ = "not o.k."
-				LogWarning "Execwith assumed failed"
-			else
-				comment "Execwith assumed passed"
-			endif
-			
-			if $architecture$ = "32"
-				set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "powershell.exe" winst /32bit')
-				comment "check if the script was executed..."
-				set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
-				if ("" = $CompValue$)
-					comment "check if the script was not executed because powershell is not activated..."
-					set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
-				endif
-				if not ("" = $CompValue$)
-					comment "Execwith assumed passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "Execwith assumed failed"
-				endif
-			endif
-			
-			set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "powershell.exe" winst /sysnative')
-			comment "check if the script was executed..."
-			set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
-			if ("" = $CompValue$)
-				comment "check if the script was not executed because powershell is not activated..."
-				set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
-			endif
-			if not ("" = $CompValue$)
-				comment "Execwith assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "Execwith assumed failed"
-			endif
-			
-			comment "restore old powershell executionpolicy"
-			set $exitcode$ = shellCall('powershell.exe set-executionpolicy '+$pspolicy$)
-			if not ($exitcode$ = "0")
-				set $TestResult$ = "not o.k."
-				LogWarning "Execwith assumed failed"
-			endif
-
-		endif
 		
 		
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
@@ -10803,6 +10811,11 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.0")
 	sub "%scriptpath%\sub-scripts\localfunctions.opsiscript"
 endif
 
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
+endif
+
+
 comment ""
 comment ""
 comment ""
@@ -10827,6 +10840,7 @@ comment "$winst_parametrizing$        --> " + $winst_parametrizing$
 comment "$winst_patches$              --> " + $winst_patches$
 comment "$winst_patch_hosts$          --> " + $winst_patch_hosts$
 comment "$winst_patch_text_file$      --> " + $winst_patch_text_file$
+comment "$winst_powershell$           --> " + $winst_powershell$
 comment "$winst_ProfileActions$       --> " + $winst_ProfileActions$
 comment "$subregistry$                --> " + $subregistry$
 comment "$winst_dos$                  --> " + $winst_dos$
@@ -12321,26 +12335,6 @@ $UserName = "$UserPassWord$"
 $Password = "$UserName$"
 $UserGroup = "$UserGroup$"
 
-[ExecWith_powershell]
-trap { write-output $_ ; exit 1 }
-set-executionpolicy RemoteSigned
-echo "powershell opsi-winst-test"
-exit $LASTEXITCODE
-
-[execwith_powershell_architecture]
-trap { write-output $_ ; exit 1 }
-set-executionpolicy RemoteSigned
-echo "powershell opsi-winst-test"
-$psversion
-$psversiontable
-#start-process -wait cmd.exe
-$is64BitSystem = ($env:Processor_Architecture -ne "x86")
-$is64BitPowerShell = [IntPtr]::Size -eq 8
-$env:Processor_Architecture
-[IntPtr]::Size
-$is64BitSystem
-$is64BitPowerShell
-exit $LASTEXITCODE
 
 ;----------------   stop   sections for execwith tests ---------------------------------
 ;----------------   start   sections for dosbatch/winbatch tests ---------------------------------
