@@ -1,0 +1,43 @@
+encoding=UTF-8
+[actions]
+DefVar $TestResult$
+DefVar $ConstTest$
+DefVar $CompValue$
+DefStringlist $list1$
+
+
+comment ""
+comment "-------------------------------------"
+comment "Testing: "
+message "powershellcall"
+
+set $list1$ = powershellCall('echo "powershell opsi-winst-test"')
+if not (getlastexitcode = "0")
+	set $TestResult$ = "not o.k."
+	LogWarning "Execwith assumed failed"
+endif
+comment "check if the script was executed..."
+set $ConstTest$ = "powershell opsi-winst-test"
+set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+if ($ConstTest$ = $CompValue$)
+	comment "powershellCall passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "testing powershellCall failed"
+endif
+
+message "powershellcall (32bit)"
+set $list1$ = powershellCall('echo "powershell opsi-winst-test"',"32bit")
+if not (getlastexitcode = "0")
+	set $TestResult$ = "not o.k."
+	LogWarning "Execwith assumed failed"
+endif
+comment "check if the script was executed..."
+set $ConstTest$ = "powershell opsi-winst-test"
+set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+if ($ConstTest$ = $CompValue$)
+	comment "powershellCall passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "testing powershellCall failed"
+endif

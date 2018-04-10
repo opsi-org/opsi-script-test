@@ -952,18 +952,18 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 	
 	
 		message "asConfidential"
-		set $ConstTest$ = asConfidential("forbidden1")
-		comment "This is a forbidden string"
+		set $ConstTest$ = asConfidential("hidden")
+		comment "This is a hidden string"
 		comment "should be in the log file: This is a ***(confidential)*** string"
-		if isConfidential("forbidden1")
+		if isConfidential("hidden")
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
 		set $ConstTest$ = asConfidential(stringReplace("this is my old secret", "old", "new"))
-		comment "This is a forbidden string"
-		comment "should be in the log file: This is a ***(confidential)*** string"
+		comment "this is my new secret"
+		comment "should be in the log file:  ***(confidential)*** "
 		if isConfidential("this is my new secret")
 			comment "passed"
 		else

@@ -347,6 +347,15 @@ description: LocalFunctions
 values: ["off", "on"]
 default: ["off"]
 
+[ProductProperty]
+type: unicode
+name: powershell
+multivalue: False
+editable: False
+description: powershell with opsi-script
+values: ["off", "on"]
+default: ["off"]
+
 [Changelog]
 opsi-script-test (4.12.0.16-1) stable; urgency=low
 
