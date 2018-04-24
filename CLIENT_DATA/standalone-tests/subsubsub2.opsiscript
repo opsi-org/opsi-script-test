@@ -1,0 +1,43 @@
+
+
+deffunc callsub2() : string
+	comment "callsub2 "
+	sub_def_func
+	
+	[sub_def_func]
+	comment "sub_def_func in level 2"
+	set $result$ = "level 2"
+endfunc
+
+set $str$ = callsub2()
+sub_subsub_sec
+sub_subsub_sec1
+sub_subsub_sec2
+sub_subsub_sec3
+sub_subsub_sec4
+sub_subsub_sec5
+sub_subsub_secself2
+
+sub "%scriptpath%\subsubsub3.opsiscript"
+
+[sub_subsub_sec]
+comment "sub_subsub_sec in level 2"
+
+;[sub_subsub_sec1]
+;comment "sub_subsub_sec2 in level 2"
+
+[sub_subsub_sec2]
+comment "sub_subsub_sec2 in level 2"
+
+[sub_subsub_sec3]
+comment "sub_subsub_sec3 in level 2"
+
+[sub_subsub_sec4]
+comment "sub_subsub_sec4 in level 2"
+
+[sub_subsub_sec5]
+comment "sub_subsub_sec5 in level 2"
+
+[sub_subsub_secself2]
+comment "sub_subsub_secself2 in level 2"
+

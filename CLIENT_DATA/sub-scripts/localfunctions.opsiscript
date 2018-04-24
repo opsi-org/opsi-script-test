@@ -299,6 +299,39 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 	else
 		set $TestResult$ = "not tested"
 	endif ; 4.16
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
+		comment " Testing fuction in loop ..."
+	
+		deffunc copy_str_to_list($srv_str$ : string, val $full_srv_list$ : stringlist, ref $dep_srv_list$ : stringlist) : void
+			comment "starting oca_check_services with: "+$srv_str$
+			if "" = takeFirstStringContaining($full_srv_list$,$srv_str$)
+				logwarning "Requested service:"+$srv_str$+" not found. - will be ignored."
+			else
+				comment "Requested service: "+$srv_str$+" found. - will be used."
+				set $dep_srv_list$ = addtolist($dep_srv_list$, $srv_str$)
+			endif
+			comment "finished oca_check_services with: "+$srv_str$
+		endfunc
+		
+		set $list1$ = createStringlist("a","b","c","d","e","f","g","h","i","j")
+		set $list2$ = createStringlist("a","e")
+		set $list3$ = emptyList($list3$)
+		
+		for %servicestr% in $list2$ do copy_str_to_list("%servicestr%", $list1$, $list3$)
+		if count($list3$) INT> "0"
+			set $CompValue$ = composeString($list3$,"|")
+		endif
+		
+		set $ConstTest$ = "a|e"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.17
+
 	sub_compareResult
 	set $winst_local_functions$ = $SubResult$
 
