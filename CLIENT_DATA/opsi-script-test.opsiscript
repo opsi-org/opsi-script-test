@@ -7449,10 +7449,11 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				Registry_set_quoted_string
 			endif ; NT6
 		endif ; 4.11.5
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.10")
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.20")
 			Registry_createkeys_with_brackets
 			set $ConstTest$ = "myentry1"
-			set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
+			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]","entry1","32bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -7461,7 +7462,8 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			endif
 			set $ConstTest$ = "myentry1"
 			set $tmp1$ = "[brackets]"
-			set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
+			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$,"entry1","32bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -7473,7 +7475,8 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			
 			Registry_createkeys_with_brackets /64bit
 			set $ConstTest$ = "myentry1"
-			set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
+			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]","entry1","64bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -7482,7 +7485,8 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			endif
 						set $ConstTest$ = "myentry1"
 			set $tmp1$ = "[brackets]"
-			set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
+			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$,"entry1","64bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
