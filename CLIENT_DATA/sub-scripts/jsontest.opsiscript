@@ -73,6 +73,47 @@ if ($Flag_jsonfunctions$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "json "
+		
+		set $tmp$ = "[true]"
+		set $ConstTest$ = "1"
+		set $CompValue$ = jsonAsArrayCountElements($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "true"
+		set $CompValue$ = jsonAsArrayGetElementByIndex($tmp$,"0")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		; Fehler #3627
+		;set $ConstTest$ = "true"
+		;set $list1$ = jsonAsArrayToStringList($tmp$)
+		;set $CompValue$ = takeString(0,$list1$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
+		set $ConstTest$ = "false"
+		Set $string1$ = '[{"ident":"software-on-demand.active;pctry4detlef.uib.local","values":[false],"configId":"software-on-demand.active","objectId":"pctry4detlef.uib.local","type":"ConfigState"}]'
+		set $string2$ = jsonAsArrayGetElementByIndex($string1$,"0")
+		Set $string1$ = jsonAsObjectGetValueByKey($string2$,"values")
+		set $CompValue$ = jsonAsArrayGetElementByIndex($string1$,"0")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
 		set $list1$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_host_ml.json","utf8")
 		set $list2$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_host_r.json","utf8")
 		set $string1$ = composeString($list1$,"")
