@@ -895,8 +895,7 @@ endif
 if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 	Message "testing string functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	comment "Chapter 6.2 Parametrizing wInst"
-	comment "testing Parametrizing wInst"
+	comment "testing Parametrizing opsi-script"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
@@ -1088,10 +1087,18 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = "This is confidential"
 		set $CompValue$ = GetConfidentialProductProperty ("confidentialstring","")
 		if ($ConstTest$ = $CompValue$)
-			comment "GetProductProperty passed"
+			comment "GetConfidentialProductProperty passed"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "GetProductProperty failed"
+			LogWarning "GetConfidentialProductProperty failed"
+		endif
+		set $ConstTest$ = "confidential test"
+		set $CompValue$ = GetConfidentialProductProperty ("not-existing-property","confidential test")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetConfidentialProductProperty passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetConfidentialProductProperty failed"
 		endif
 	endif ; 4.11.5.2
 	

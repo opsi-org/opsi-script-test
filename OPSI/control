@@ -1,5 +1,5 @@
 [Package]
-version: 1
+version: 2
 depends: 
 
 [Product]
@@ -357,6 +357,13 @@ values: ["off", "on"]
 default: ["off"]
 
 [Changelog]
+opsi-script-test (4.12.0.27-2) stable; urgency=low
+
+  * additional test for GetConfidentialProductProperty
+  * additional standalone tests for servicecall and json
+
+-- detlef oertel <d.oertel@uib.de>  Tue,  11 Sep 2018 15:00:00 +0200
+
 opsi-script-test (4.12.0.27-1) stable; urgency=low
 
   * registry: Registry_hkcu_userclasses_test /AllUsrClassDats

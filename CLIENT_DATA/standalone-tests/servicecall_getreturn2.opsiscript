@@ -1,0 +1,30 @@
+[actions]
+
+importlib "servicecall_auth_lib.opsiscript"
+
+authenticate()
+
+DefVar $myfqdn$
+set $myfqdn$ = "win10x64.vmnat.local"
+
+DefStringList $list1$
+DefVar $objstr$
+DefVar $resultstr$
+
+set $list1$ = getReturnListFromSection('opsiservicecall_myid')
+set $objstr$ = takestring(0,$list1$)
+
+if not (jsonIsValid($objstr$))
+  logError "Not a valid json string"
+else
+  if not (jsonIsObject($objstr$))
+    logError "Not a valid json object"
+  else
+    set $resultstr$ = jsonAsObjectGetValueByKey($objstr$,"addConfigStateDefaults")
+  endif
+endif
+
+[opsiservicecall_myid]
+"method":"backend_getOptions"
+"params":[
+         ]

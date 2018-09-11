@@ -1,0 +1,13 @@
+[actions]
+
+importlib "servicecall_auth_lib.opsiscript"
+
+authenticate()
+
+opsiservicecall_myid
+
+[opsiservicecall_myid]
+"method":"getProductActionRequests_listOfHashes"
+"params":[
+          "win10x64.vmnat.local"
+         ]

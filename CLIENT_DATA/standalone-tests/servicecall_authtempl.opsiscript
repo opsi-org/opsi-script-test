@@ -1,0 +1,8 @@
+[actions]
+
+importlib "servicecall_auth_lib.opsiscript"
+
+authenticate()
+
+DefVar $myfqdn$
+set $myfqdn$ = "win10x64.vmnat.local"

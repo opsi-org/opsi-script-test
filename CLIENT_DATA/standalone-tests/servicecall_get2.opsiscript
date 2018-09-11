@@ -1,0 +1,16 @@
+[actions]
+
+importlib "servicecall_auth_lib.opsiscript"
+
+authenticate()
+
+DefVar $myfqdn$
+set $myfqdn$ = "win10x64.vmnat.local"
+
+opsiservicecall_myid
+
+[opsiservicecall_myid]
+"method":"getProductActionRequests_listOfHashes"
+"params":[
+          "$myfqdn$"
+         ]

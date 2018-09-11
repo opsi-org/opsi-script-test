@@ -1,0 +1,36 @@
+[actions]
+
+importlib "servicecall_auth_lib.opsiscript"
+
+authenticate()
+
+DefVar $myfqdn$
+set $myfqdn$ = "win10x64.vmnat.local"
+
+DefStringList $list1$
+DefVar $installationStatus$
+DefVar $objstr$
+DefVar $arraystr$
+
+set $list1$ = getReturnListFromSection('opsiservicecall_myid')
+set $arraystr$ = takestring(0,$list1$)
+
+if not (jsonIsValid($arraystr$))
+  logError "Not a valid json string"
+else
+  if not (jsonIsArray($arraystr$))
+    logError "Not a valid json array"
+  else
+    set $list1$ = jsonAsArrayToStringList($arraystr$)
+    comment "take the first object"
+    set $objstr$ = takeString(0,$list1$)
+    set $installationStatus$ = jsonAsObjectGetValueByKey($objstr$,"installationStatus")
+  endif
+endif
+
+[opsiservicecall_myid]
+"method":"productOnClient_getObjects"
+"params":[
+          "[]"
+          '{"clientId":"$myfqdn$","productId":"javavm"}'
+         ]
