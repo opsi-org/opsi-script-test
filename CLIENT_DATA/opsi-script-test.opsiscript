@@ -7308,16 +7308,17 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 		endif
   	
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.12.0.27") >= "0"
+			comment "Testing create registry key with /AllUsrClassDats"
 			set $ConstTest$ = ""
 			if ($INST_SystemType$ = "64 Bit System")
 				set $regWriteValue$ = "64"
 				set $CompValue$ = $regWriteValue$
-				Registry_hkcu_userclasses_test /AllUsrClassDats
+				Registry_hkcu_userclasses_createkey /AllUsrClassDats
 				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-winst-test", "bitByWinst", "64bit")
 			else
 				set $regWriteValue$ = "32"
 				set $CompValue$ = $regWriteValue$
-				Registry_hkcu_userclasses_test /AllUsrClassDats
+				Registry_hkcu_userclasses_createkey /AllUsrClassDats
 				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-winst-test", "bitByWinst", "32bit")
 			endif
 			if ($ConstTest$ = $CompValue$)
@@ -7326,8 +7327,21 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-		endif
+			Registry_hkcu_userclasses_delete_test /AllUsrClassDats
 
+			comment "Testing delete registry key with /AllUsrClassDats"
+			Registry_hkcu_userclasses_create_test /AllUsrClassDats
+			set $ConstTest$ = ""
+			Registry_hkcu_userclasses_deletekey /AllUsrClassDats
+			set $CompValue$ = GetRegistrystringvalue("[HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Registry_hkcu_userclasses_delete_test /AllUsrClassDats
+		endif
 
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
 			Registry_createkeys
@@ -12196,13 +12210,19 @@ deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
 @echo off
 regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test
 
-[Registry_hkcu_userclasses_test]
+[Registry_hkcu_userclasses_create_test]
+openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_userclasses_delete_test]
+deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+
+[Registry_hkcu_userclasses_createkey]
 openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
 set "bitByWinst"="$regWriteValue$"
 
 [Registry_hkcu_userclasses_deletekey]
-openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\deleteme]
-deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\deleteme]
+deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a]
 
 
 [Registry_hack_forbidden_key]

@@ -361,6 +361,8 @@ opsi-script-test (4.12.0.27-2) stable; urgency=low
 
   * additional test for GetConfidentialProductProperty
   * additional standalone tests for servicecall and json
+  * additional tests for Registry_hkcu_userclasses & /AllUsrClassDats
+     from Terry Strooband
 
 -- detlef oertel <d.oertel@uib.de>  Tue,  11 Sep 2018 15:00:00 +0200
 
