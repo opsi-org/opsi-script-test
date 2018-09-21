@@ -250,6 +250,8 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "AddAttribute"
+		Files_cleanup_xml2
+		Files_copy_xml2
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green"'
 		set $xml2changeValue$ = '"name" "OpenOfficeWriter"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -433,8 +435,11 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 
 		Files_cleanup_xml2
 		
-		comment "-------------------------------------"
+		comment "####################################################"
+		comment "####################################################"
 		comment "Starting strictMode = true tests: "
+		comment "####################################################"
+		comment "####################################################"
 		set $xml2strictMode$ = 'true'
 		Files_copy_xml2
 		
@@ -530,6 +535,8 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "AddAttribute"
+		Files_cleanup_xml2
+		Files_copy_xml2
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green" count="65"'
 		set $xml2changeValue$ = '"name" "OpenOfficeWriter"'
 		XML2_AddAttribute $HomeTestFiles$+"\dummy.xml"
