@@ -625,9 +625,22 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "AddText failed"
 		endif
+		
+		; this gives an exception: is has to be tested if a list is a valid xml object
+		;set $ConstTest$ = 'new'
+		;set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		;set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-3_C")
+		;set $CompValue$ = getXml2AttributeValueByKey($list2$,"node")
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
 		set $ConstTest$ = 'new'
 		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
-		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-3_C")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_C")
 		set $CompValue$ = getXml2AttributeValueByKey($list2$,"node")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
