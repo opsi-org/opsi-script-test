@@ -13,6 +13,8 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 	DefVar $xml2cmdLine1$
 	DefVar $xml2cmdLine2$
 	DefVar $xml2cmdLine3$
+	DefVar $xml2cmdLine4$
+	DefVar $xml2cmdLine5$
 	
 	Set $ExpectedResult$ = "o.k."
 
@@ -233,7 +235,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
 		set $ConstTest$ = "yellow"
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -267,7 +269,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
 		set $ConstTest$ = "OpenOfficeWriter"
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(3, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -277,7 +279,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		endif
 		set $ConstTest$ = "OpenOfficeWriter"		
 		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
-		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_A")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
 		set $CompValue$ = getXml2AttributeValueByKey($list2$,"name")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -290,6 +292,8 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "DeleteAttribute"
+		Files_cleanup_xml2
+		Files_copy_xml2
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B'
 		set $xml2changeValue$ = '"color"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -298,7 +302,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
 		set $ConstTest$ = '<node_level-2_B count="65"/>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = Trim($tmp$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -327,9 +331,9 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $xml2cmdLine2$ = "DeleteNode '"+$xml2nodepath$+"'"
 		set $xml2cmdLine3$ = ""
 		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_C/>'
+		set $ConstTest$ = ''
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = Trim($tmp$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -352,15 +356,17 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "SetText / AddText"
+		Files_cleanup_xml2
+		Files_copy_xml2
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_A'
 		set $xml2changeValue$ = '"node_level-2_A"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
 		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
 		set $xml2cmdLine3$ = "setNodeText "+$xml2changeValue$
 		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_A name="OpenOfficeWriter" color="blue">node_level-2_A</node_level-2_A>'
+		set $ConstTest$ = '<node_level-2_A color="blue">node_level-2_A</node_level-2_A>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(3, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"<node_level-2_A")
 		set $CompValue$ = Trim($tmp$)
 		if ($ConstTest$ = $CompValue$)
 			comment "SetText passed"
@@ -387,7 +393,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
 		set $ConstTest$ = '<node_level-2_C>node_level-2_C</node_level-2_C>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"<node_level-2_C>")
 		set $CompValue$ = Trim($tmp$)
 		if ($ConstTest$ = $CompValue$)
 			comment "AddText passed"
@@ -529,8 +535,18 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		XML2_SetAttribute $HomeTestFiles$+"\dummy.xml"
 		set $ConstTest$ = "yellow"
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "yellow"
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"color")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -549,8 +565,18 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		XML2_AddAttribute $HomeTestFiles$+"\dummy.xml"
 		set $ConstTest$ = "OpenOfficeWriter"
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(3, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "OpenOfficeWriter"
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"name")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -562,12 +588,35 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "DeleteAttribute"
+		
+		comment "should give errore becaus of wrong number of attributes at strict mode"
+		markErrorNumber
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="yellow" count="65"'
+		XML2_DeleteAttribute $HomeTestFiles$+"\dummy.xml"
+		if errorsOccuredSinceMark > 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		Files_cleanup_xml2
+		Files_copy_xml2
+		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green" count="65"'
 		XML2_DeleteAttribute $HomeTestFiles$+"\dummy.xml"
 		set $ConstTest$ = '<node_level-2_B count="65"/>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = ""
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"Color")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -579,11 +628,17 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "DeleteElement"
-		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B count="65"'
-		XML2_DeleteElement $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_C/>'
+		Files_cleanup_xml2
+		Files_copy_xml2
+		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green" count="65"'
+		set $xml2changeValue$ = ''
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "DeleteNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = ""
+		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = ''
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = Trim($tmp$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -591,16 +646,33 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
+		set $ConstTest$ = ""		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		set $CompValue$ = composestring($list2$,"")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
   	    
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "SetText / AddText"
-		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_A name="OpenOfficeWriter" color="blue"'
-		XML2_SetText $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_A name="OpenOfficeWriter" color="blue">node_level-2_A</node_level-2_A>'
+		Files_cleanup_xml2
+		Files_copy_xml2
+		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_A color="blue"'
+		set $xml2changeValue$ = '"node_level-2_A"'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = "setNodeText "+$xml2changeValue$
+		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = '<node_level-2_A color="blue">node_level-2_A</node_level-2_A>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(3, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"<node_level-2_A")
 		set $CompValue$ = Trim($tmp$)
 		if ($ConstTest$ = $CompValue$)
 			comment "SetText passed"
@@ -608,12 +680,26 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "SetText failed"
 		endif
+		set $ConstTest$ = "node_level-2_A"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_A")
+		set $CompValue$ = getXml2Text($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 		
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_C'
-		XML2_AddText $HomeTestFiles$+"\dummy.xml"
+		set $xml2changeValue$ = '"node_level-2_C"'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = "setNodeText "+$xml2changeValue$
+		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
 		set $ConstTest$ = '<node_level-2_C>node_level-2_C</node_level-2_C>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"<node_level-2_C>")
 		set $CompValue$ = Trim($tmp$)
 		if ($ConstTest$ = $CompValue$)
 			comment "AddText passed"
@@ -621,25 +707,50 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "AddText failed"
 		endif
+		set $ConstTest$ = "node_level-2_C"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_C")
+		set $CompValue$ = getXml2Text($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "addNewNode"
+		Files_cleanup_xml2
+		Files_copy_xml2
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_C'
 		set $xml2changeValue$ = '"node_level-3_C"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
 		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
 		set $xml2cmdLine3$ = "addNewNode "+$xml2changeValue$
-		set $xml2cmdLine3$ = 'SetAttribute "node" "new"'
+		set $xml2cmdLine4$ = 'SetAttribute "node" "new"'
 		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_C>node_level-2_C</node_level-2_C>'
+		set $ConstTest$ = '<node_level-3_C node="new"/>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeString(4, $list1$)
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-3_C")
 		set $CompValue$ = Trim($tmp$)
 		if ($ConstTest$ = $CompValue$)
-			comment "AddText passed"
+			comment "addNewNode passed"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "AddText failed"
+			LogWarning "addNewNode failed"
 		endif
-		
+		set $ConstTest$ = "new"
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-3_C")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"node")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 		; this gives an exception: is has to be tested if a list is a valid xml object
 		;set $ConstTest$ = 'new'
 		;set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
@@ -652,17 +763,6 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		;	LogWarning "failed"
 		;endif
 		
-		set $ConstTest$ = 'new'
-		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
-		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_C")
-		set $CompValue$ = getXml2AttributeValueByKey($list2$,"node")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	    
 
   	    set $xml2nodepath$ ='PROFIL // VALUE'
 		XML2_SetText_dummy2 $HomeTestFiles$+"\dummy2.xml"
