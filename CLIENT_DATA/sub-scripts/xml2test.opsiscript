@@ -7,6 +7,13 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 	comment "testing XML2Patch functions"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	DefVar $xml2nodepath$
+	DefVar $xml2nodetext$
+	DefVar $xml2changeValue$
+	DefVar $xml2cmdLine1$
+	DefVar $xml2cmdLine2$
+	DefVar $xml2cmdLine3$
+	
 	Set $ExpectedResult$ = "o.k."
 
 	; start testing
