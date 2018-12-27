@@ -15,6 +15,10 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 	DefVar $xml2cmdLine3$
 	DefVar $xml2cmdLine4$
 	DefVar $xml2cmdLine5$
+	DefVar $xml2cmdLine6$
+	DefVar $xml2cmdLine7$
+	DefVar $xml2cmdLine8$
+	DefVar $xml2cmdLine9$
 	
 	Set $ExpectedResult$ = "o.k."
 
@@ -227,6 +231,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "SetAttribute"
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green"'
 		set $xml2changeValue$ = '"color" "yellow"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -261,6 +266,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		message "AddAttribute"
 		Files_cleanup_xml2
 		Files_copy_xml2
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green"'
 		set $xml2changeValue$ = '"name" "OpenOfficeWriter"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -294,6 +300,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		message "DeleteAttribute"
 		Files_cleanup_xml2
 		Files_copy_xml2
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B'
 		set $xml2changeValue$ = '"color"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -325,6 +332,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "DeleteElement"
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B'
 		set $xml2changeValue$ = ''
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -358,6 +366,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		message "SetText / AddText"
 		Files_cleanup_xml2
 		Files_copy_xml2
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_A'
 		set $xml2changeValue$ = '"node_level-2_A"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -385,6 +394,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_C'
 		set $xml2changeValue$ = '"node_level-2_C"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -433,6 +443,16 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
+		endif
+		set $ConstTest$ = "K1S120"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy2.xml")
+		markErrorNumber
+		set $list2$ = getXml2UniqueChildnodeByName($list1$,"VALUE")
+		if errorsOccuredSinceMark > 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
 		endif
   	
   	
@@ -630,6 +650,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		message "DeleteElement"
 		Files_cleanup_xml2
 		Files_copy_xml2
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green" count="65"'
 		set $xml2changeValue$ = ''
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -664,6 +685,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		message "SetText / AddText"
 		Files_cleanup_xml2
 		Files_copy_xml2
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_A color="blue"'
 		set $xml2changeValue$ = '"node_level-2_A"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -691,6 +713,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_C'
 		set $xml2changeValue$ = '"node_level-2_C"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -724,6 +747,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		message "addNewNode"
 		Files_cleanup_xml2
 		Files_copy_xml2
+		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_C'
 		set $xml2changeValue$ = '"node_level-3_C"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -776,17 +800,118 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "SetText failed"
 		endif
-  	    
-  	    
+		set $ConstTest$ = "K1S120"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy2.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"VALUE")
+		set $CompValue$ = getXml2Text($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy2.xml")
+		markErrorNumber
+		set $list2$ = getXml2UniqueChildnodeByName($list1$,"VALUE")
+		if errorsOccuredSinceMark > 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
-		message "OpenNodeSet"
-		if ($TestResult$ = "o.k.")
-			comment "not explicit tested | assumed passed"
+		message "win manifest"
+		set $ConstTest$ = "highestAvailable"
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\manifest.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"requestedExecutionLevel")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"level")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
 		else
-			comment "status is unknown"
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
 		endif
+		
+		set $ConstTest$ = "{e2011457-1546-43c5-a5fe-008deee3d3f0}"
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\manifest.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"supportedOS")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"Id")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "opensuse"
+		set $ConstTest$ = "true"
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\opensuse_software_start.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"image_installation")
+		set $CompValue$ = getXml2Text($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		sub_clean_xml2cmdLines
+		set $xml2nodepath$ ='software'
+		set $xml2changeValue$ = '"packages"'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = "addNewNode "+$xml2changeValue$
+		set $xml2cmdLine4$ = 'SetAttribute "config:type" "list"'
+		set $xml2cmdLine5$ = 'addNewNode "package"'
+		set $xml2cmdLine6$ = 'setNodeText "gnome"'
+		set $xml2cmdLine7$ = 'addNewNode "package"'
+		set $xml2cmdLine8$ = 'setNodeText "kde"'
+		XML2_dummy_xml $HomeTestFiles$+"\opensuse_software_start.xml"
+		set $ConstTest$ = '<packages config:type="list">'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\opensuse_software_start.xml")
+		set $tmp$ = takeFirstStringContaining($list1$,"packages")
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "addNewNode passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "addNewNode failed"
+		endif
+		set $ConstTest$ = "list"
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\opensuse_software_start.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"packages")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"config:type")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\opensuse_software_start.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"unfug")
+		markErrorNumber
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"config:type")
+		if errorsOccuredSinceMark > 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		set $list1$ = loadTextFile($HomeTestFiles$+"\opensuse_software_start.xml")
+		
+		;todo
+		; xml2GetFirstChildNodeByNameAndAttributes
+		; xml2GetChildNodesByName
+		; xml2GetFirstChildNodeByNameAndText
+		; isValidXML
+		; xml2DoesNodeExistsByPath(<xml2 path>,<strict>);
+		; goBackOneNode
         ;
 		;Files_cleanup_xml2
 	endif ; 4.11.7
@@ -829,6 +954,10 @@ $xml2cmdLine2$
 $xml2cmdLine3$
 $xml2cmdLine4$
 $xml2cmdLine5$
+$xml2cmdLine6$
+$xml2cmdLine7$
+$xml2cmdLine8$
+$xml2cmdLine9$
 
 
 [XML2_SetAttribute]
@@ -888,6 +1017,17 @@ setNodeText "K1S120"
 ;text:"K1S114"
 ;end
 ;SetText "K1S120"
+
+[sub_clean_xml2cmdLines]
+set $xml2cmdLine1$ = ''
+set $xml2cmdLine2$ = ''
+set $xml2cmdLine3$ = ''
+set $xml2cmdLine4$ = ''
+set $xml2cmdLine5$ = ''
+set $xml2cmdLine6$ = ''
+set $xml2cmdLine7$ = ''
+set $xml2cmdLine8$ = ''
+set $xml2cmdLine9$ = ''
 
 
 
