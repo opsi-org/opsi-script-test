@@ -916,6 +916,14 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
+		
+		if xml2NodeExistsByPathInXMLFile($HomeTestFiles$+"\opensuse_software_start.xml",'software // packages // package','false')
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
 		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\opensuse_software_start.xml")
 		set $list2$ = xml2GetFirstChildNodeByName($list1$,"unfug")
 		markErrorNumber
