@@ -907,7 +907,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		
 		;todo
 		; xml2GetFirstChildNodeByNameAndAttributes
-		; xml2GetChildNodesByName
+		; xml2GetChildNodesByName(<node name>) : stinglist
 		; xml2GetFirstChildNodeByNameAndText
 		; isValidXML
 		; xml2DoesNodeExistsByPath(<xml2 path>,<strict>);
