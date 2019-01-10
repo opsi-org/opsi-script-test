@@ -231,7 +231,7 @@ set $ScriptLoglevel$ = GetProductProperty ("loglevel", "8")
 setLoglevel=$ScriptLoglevel$
 
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
-set $Flag_calculate$               = GetProductProperty ("calculate", "off")
+set $Flag_calculate$               = GetProductProperty ("calculate", "on")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
@@ -243,7 +243,7 @@ set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
 set $Flag_winst_ldap_search$       = GetProductProperty ("LdapSearch", "off")
 set $Flag_licensemanagement$       = GetProductProperty ("licensemanagement", "off")
 set $Flag_winst_link_folder$       = GetProductProperty ("LinkFolder", "off")
-set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "on")
+set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
 set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
@@ -850,7 +850,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "C:\opsi.org\log"
 		else
-			set $CompValue$ = "/var/log/opsi-client-agent/opsi-script"
+			set $CompValue$ = "/var/log/opsi-script"
 		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -3313,6 +3313,106 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "getSubList(1:-1, $list1$) failed"
 	endif
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.34")
+		comment "Now with string variables ...."
+		comment "-------------------------------------"
+		
+		set $tmp1$ = "1"
+		set $tmp2$ = "3"
+		set $ConstTest$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:$tmp2$, $list1$)
+		set $CompValue$ = takeString (1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:3, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:3, $list1$) failed"
+		endif
+		set $ConstTest$ = "b"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:, $list1$)
+		set $CompValue$ = takeString (0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:, $list1$) failed"
+		endif
+		set $tmp1$ = ""
+		set $ConstTest$ = "e"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:, $list1$)
+		set $CompValue$ = takeString (4, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(:, $list1$) failed"
+		endif
+		set $tmp1$ = "1"
+		set $tmp2$ = "-1"
+		set $ConstTest$ = "d"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:$tmp2$, $list1$)
+		set $CompValue$ = takeString (2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:-1, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:-1, $list1$) failed"
+		endif
+		
+		comment "Now with string functions ...."
+		comment "-------------------------------------"
+		
+		set $list2$ = createStringList("","-1","0","1","2","3","4","5","6",)
+		set $ConstTest$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(3,$list2$):takestring(5,$list2$), $list1$)
+		set $CompValue$ = takeString (1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:3, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:3, $list1$) failed"
+		endif
+		set $ConstTest$ = "b"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(3,$list2$):takestring(0,$list2$), $list1$)
+		set $CompValue$ = takeString (0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:, $list1$) failed"
+		endif
+		set $tmp1$ = ""
+		set $ConstTest$ = "e"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(0,$list2$):takestring(0,$list2$), $list1$)
+		set $CompValue$ = takeString (4, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(:, $list1$) failed"
+		endif
+		set $tmp1$ = "1"
+		set $tmp2$ = "-1"
+		set $ConstTest$ = "d"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(3,$list2$):takestring(1,$list2$), $list1$)
+		set $CompValue$ = takeString (2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:-1, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:-1, $list1$) failed"
+		endif
+	endif ; 4.12.0.34
+
 
 	comment ""
 	comment "-------------------------------------"
