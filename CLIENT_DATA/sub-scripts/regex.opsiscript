@@ -1,0 +1,176 @@
+encoding=utf8
+
+if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
+	Message "testing regex functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing regex functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "isRegexMatch"
+	
+	set $ConstTest$ = "true"
+	set $CompValue$ = booltostring(isRegexMatch('uib gmbh', '.*uib.*'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isRegexMatch passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isRegexMatch failed"
+	endif
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "getSubListByContainingRegex"
+	set $string1$ = "\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}"
+	set $list1$ = createStringList('uib gmbh','client','example@xyz.com and example2@xyz.com')
+	comment "search with string"
+	comment "search with string variable"
+	set $ConstTest$ = "example@xyz.com and example2@xyz.com"
+	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+    if ($ConstTest$ = $CompValue$)
+        comment "getSubListByContainingRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing getSubListByContainingRegex failed"
+    endif
+       
+    comment "search with string list"
+    comment "search with string list variable"
+    
+    set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
+	set $ConstTest$ = "uib gmbh | example@xyz.com and example2@xyz.com"
+	set $list2$ = getSubListByContainingRegex($list3$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+    if ($ConstTest$ = $CompValue$)
+        comment "getSubListByContainingRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing getSubListByContainingRegex failed"
+    endif
+    
+    
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "getRegexMatchList"
+	set $string1$ = "\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}"
+	set $list1$ = createStringList('uib gmbh','client','example@xyz.com and example2@xyz.com')
+	comment "search with string"
+	comment "search with string variable"
+	set $ConstTest$ = "example@xyz.com | example2@xyz.com"
+	set $list2$ = getRegexMatchList($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+    if ($ConstTest$ = $CompValue$)
+        comment "getRegexMatchList passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing getRegexMatchList failed"
+    endif
+      
+    comment "search with string list"
+    comment "search with string list variable"
+    
+    set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
+	set $ConstTest$ = "uib | example@xyz.com | example2@xyz.com"
+	set $list2$ = getRegexMatchList($list3$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+    if ($ConstTest$ = $CompValue$)
+        comment "getRegexMatchList passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing getRegexMatchList failed"
+    endif
+    
+    
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "removeFromListByContainingRegex"
+	set $string1$ = "\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}"
+	set $list1$ = createStringList('uib gmbh','client','example@xyz.com and example2@xyz.com')
+	comment "search with string"
+	comment "search with string variable"
+	set $ConstTest$ = "uib gmbh | client"
+	set $list2$ = removeFromListByContainingRegex($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+    if ($ConstTest$ = $CompValue$)
+        comment "removeFromListByContainingRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing removeFromListByContainingRegex failed"
+    endif    
+    
+    comment "search with string list"
+    comment "search with string list variable"
+    
+    set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
+	set $ConstTest$ = "client"
+	set $list2$ = removeFromListByContainingRegex($list3$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+    if ($ConstTest$ = $CompValue$)
+        comment "removeFromListByContainingRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing removeFromListByContainingRegex failed"
+    endif 
+    
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "stringReplaceRegex"
+    
+	set $ConstTest$ = "xyz abc gmbh"
+	set $CompValue$ = stringReplaceRegex('uib gmbh','.*uib', 'xyz abc')
+	if ($ConstTest$ = $CompValue$)
+        comment "stringReplaceRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing stringReplaceRegex failed"
+    endif
+    
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "stringReplaceRegexInList"
+    
+	set $string1$ = "\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}"
+	set $string2$ = "MATCH REMOVED"
+	set $list1$ = createStringList('uib gmbh','client','example@xyz.com and example2@xyz.com')
+
+	set $ConstTest$ = 'uib gmbh | client | MATCH REMOVED and MATCH REMOVED'
+	set $list2$ = stringReplaceRegexInList($list1$, $string1$, $string2$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+    if ($ConstTest$ = $CompValue$)
+        comment "stringReplaceRegexInList passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing stringReplaceRegexInList failed"
+    endif
+  
+  
+	sub_compareResult
+	set $winst_regex$ = $SubResult$
+
+endif
+
+
+

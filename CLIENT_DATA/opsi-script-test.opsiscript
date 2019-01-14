@@ -74,6 +74,7 @@ DefVar $winst_jsonfunctions$
 DefVar $winst_crypt$
 DefVar $winst_local_functions$
 DefVar $winst_powershell$
+DefVar $winst_regex$
 DefVar $InterestingFile$
 DefVar $key$
 DefVar $value$
@@ -132,6 +133,8 @@ DefVar $Flag_encoding$
 DefVar $Flag_jsonfunctions$
 DefVar $Flag_crypt$
 DefVar $Flag_powershell$
+DefVar $Flag_subregex$
+DefVar $Flag_subnetworkcalc$
 
 DefStringList $list$
 DefStringList $list1$
@@ -231,7 +234,7 @@ set $ScriptLoglevel$ = GetProductProperty ("loglevel", "8")
 setLoglevel=$ScriptLoglevel$
 
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
-set $Flag_calculate$               = GetProductProperty ("calculate", "on")
+set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
@@ -251,7 +254,8 @@ set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
 set $Flag_powershell$              = GetProductProperty ("powershell", "off")
 set $Flag_ProfileActions$          = GetProductProperty ("ProfileActions", "off")
-set $Flag_subregistry$             = GetProductProperty ("Registry", "on")
+set $Flag_subregex$                = GetProductProperty ("Regex", "on")
+set $Flag_subregistry$             = GetProductProperty ("Registry", "off")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
 set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
@@ -10963,6 +10967,9 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
 endif
 
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	sub "%scriptpath%\sub-scripts\regex.opsiscript"
+endif
 
 comment ""
 comment ""
@@ -10990,6 +10997,7 @@ comment "$winst_patch_hosts$          --> " + $winst_patch_hosts$
 comment "$winst_patch_text_file$      --> " + $winst_patch_text_file$
 comment "$winst_powershell$           --> " + $winst_powershell$
 comment "$winst_ProfileActions$       --> " + $winst_ProfileActions$
+comment "$winst_regex$                --> " + $winst_regex$
 comment "$subregistry$                --> " + $subregistry$
 comment "$winst_dos$                  --> " + $winst_dos$
 comment "$winst_string$               --> " + $winst_string$
