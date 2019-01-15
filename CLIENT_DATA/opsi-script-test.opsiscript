@@ -3273,6 +3273,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "getSubList"
+	comment "Now with numbers (no whitespace) ...."
 	set $ConstTest$ = "c"
 	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
 	set $list1$ = getSubList(1:3, $list1$)
@@ -3313,9 +3314,50 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "getSubList(1:-1, $list1$) failed"
 	endif
+	comment "Now with numbers (with whitespace) ...."
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList(1 : 3, $list1$)
+	set $CompValue$ = takeString (1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:3, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:3, $list1$) failed"
+	endif
+	set $ConstTest$ = "b"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList( 1 :, $list1$)
+	set $CompValue$ = takeString (0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:, $list1$) failed"
+	endif
+	set $ConstTest$ = "e"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList( : , $list1$)
+	set $CompValue$ = takeString (4, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(:, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(:, $list1$) failed"
+	endif
+	set $ConstTest$ = "d"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList( 1 : -1 , $list1$)
+	set $CompValue$ = takeString (2, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:-1, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:-1, $list1$) failed"
+	endif
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.34")
-		comment "Now with string variables ...."
+		comment "Now with string variables  (no whitespace)...."
 		comment "-------------------------------------"
 		
 		set $tmp1$ = "1"
@@ -3356,6 +3398,55 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = "d"
 		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
 		set $list1$ = getSubList($tmp1$:$tmp2$, $list1$)
+		set $CompValue$ = takeString (2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:-1, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:-1, $list1$) failed"
+		endif
+		
+		comment "Now with string variables  (with whitespace)...."
+		comment "-------------------------------------"
+		
+		set $tmp1$ = "1"
+		set $tmp2$ = "3"
+		set $ConstTest$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : $tmp2$ , $list1$)
+		set $CompValue$ = takeString (1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:3, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:3, $list1$) failed"
+		endif
+		set $ConstTest$ = "b"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : , $list1$)
+		set $CompValue$ = takeString (0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:, $list1$) failed"
+		endif
+		set $tmp1$ = ""
+		set $ConstTest$ = "e"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : , $list1$)
+		set $CompValue$ = takeString (4, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(:, $list1$) failed"
+		endif
+		set $tmp1$ = "1"
+		set $tmp2$ = "-1"
+		set $ConstTest$ = "d"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : $tmp2$ , $list1$)
 		set $CompValue$ = takeString (2, $list1$)
 		if ($ConstTest$ = $CompValue$)
 			comment "getSubList(1:-1, $list1$) passed"
