@@ -194,6 +194,11 @@ if $OS$ = "LINUX"
 	Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
 	set $ProductId$ = "opsi-script-test"
 endif
+if $OS$ = "macOS"
+	comment "We are running on macOS"
+	Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+	set $ProductId$ = "opsi-script-test"
+endif
 
 Set $INST_SystemType$ = GetSystemType
 
@@ -230,7 +235,7 @@ endif
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "8")
 setLoglevel=$ScriptLoglevel$
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "off")
+set $MasterFlag$                   = GetProductProperty ("alltest", "on")
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
@@ -243,7 +248,7 @@ set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
 set $Flag_winst_ldap_search$       = GetProductProperty ("LdapSearch", "off")
 set $Flag_licensemanagement$       = GetProductProperty ("licensemanagement", "off")
 set $Flag_winst_link_folder$       = GetProductProperty ("LinkFolder", "off")
-set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "on")
+set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
 set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
@@ -624,11 +629,17 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	comment "Testing: "
 	message "Testing constants: "+"%"+"IPName" +"%"
 	set $ConstTest$="%IPName%"
-	if $OS$ = "Windows_nt"
-		set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
-	else ; -> Linux
-		set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
-	endif
+	switch $OS$
+		case "Windows_nt"
+			set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
+		endcase
+		case "Linux"
+			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
+		endcase
+		case "macos"
+			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
+		endcase
+	endswitch
 	set $tmp$ = takeString(3, $list1$)
 	set $CompValue$ = takeString(-1, splitString ($tmp$, " "))
 	comment ">>not tested"
@@ -644,11 +655,17 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	comment "Testing: "
 	message "Testing constants: "+"%"+"IPAddress" +"%"
 	set $ConstTest$="%IPAddress%"
-	if $OS$ = "Windows_nt"
-		set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
-	else ; -> Linux
-		set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
-	endif
+	switch $OS$
+		case "Windows_nt"
+			set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
+		endcase
+		case "Linux"
+			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
+		endcase
+		case "macos"
+			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
+		endcase
+	endswitch
 	set $tmp$ = takeString(34, $list1$)
 	set $CompValue$ = takeString(-1, splitString ($tmp$, " "))
 	comment ">>not tested"
@@ -664,11 +681,17 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	comment "Testing: "
 	message "Testing constants: "+"%"+"Username" +"%"
 	set $ConstTest$="%Username%"
-	if $OS$ = "Windows_NT"
-		set $CompValue$ = EnvVar("Username")
-	else
-		set $CompValue$ = EnvVar("USER")
-	endif
+	switch $OS$
+		case "Windows_nt"
+			set $CompValue$ = EnvVar("Username")
+		endcase
+		case "Linux"
+			set $CompValue$ = EnvVar("USER")
+		endcase
+		case "macos"
+			set $CompValue$ = EnvVar("USER")
+		endcase
+	endswitch
 	comment ">>not tested"
 	;if ($ConstTest$= $CompValue$)
 	;	comment "passed"
@@ -3134,12 +3157,16 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
-		Set $CompValue$ = takeString(2, $list1$)
-		if ($ConstTest$ = $CompValue$)
-			LogWarning "Unexected passed"
+		if not($OS$ = 'macos')
+			set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
+			Set $CompValue$ = takeString(2, $list1$)
+			if ($ConstTest$ = $CompValue$)
+				LogWarning "Unexected passed"
+			else
+				comment "passed"
+			endif
 		else
-			comment "passed"
+			logerror "macos todo"
 		endif
 
 
@@ -4552,36 +4579,40 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "includelog"
-		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
-		set $string2$ = "5"
-		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
-		includelog $string1$ $string2$
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
-			set $string2$ = "-5"
-			includelog $string1$ $string2$
-			includelog $string1$ $string2$ "auto"
-		endif
-		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
-		set $string2$ = "5"
-		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
-		includelog $string1$ $string2$
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
-			set $string2$ = "-5"
-			includelog $string1$ $string2$
-			includelog $string1$ $string2$ "auto"
-		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.1") >= "0"
-			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf16.txt"
+		if not($OS$ = 'macos')
+			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
 			set $string2$ = "5"
+			;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
 			includelog $string1$ $string2$
-			includelog $string1$ $string2$ "auto"
-			includelog $string1$ $string2$ "UCS-2BE"
-			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf32.txt"
+			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+				set $string2$ = "-5"
+				includelog $string1$ $string2$
+				includelog $string1$ $string2$ "auto"
+			endif
+			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
 			set $string2$ = "5"
+			;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
 			includelog $string1$ $string2$
-			includelog $string1$ $string2$ "auto"
-			includelog $string1$ $string2$ "ucs2be"
-			includelog $string1$ $string2$ "utf32"
+			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+				set $string2$ = "-5"
+				includelog $string1$ $string2$
+				includelog $string1$ $string2$ "auto"
+			endif
+			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.1") >= "0"
+				set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf16.txt"
+				set $string2$ = "5"
+				includelog $string1$ $string2$
+				includelog $string1$ $string2$ "auto"
+				includelog $string1$ $string2$ "UCS-2BE"
+				set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf32.txt"
+				set $string2$ = "5"
+				includelog $string1$ $string2$
+				includelog $string1$ $string2$ "auto"
+				includelog $string1$ $string2$ "ucs2be"
+				includelog $string1$ $string2$ "utf32"
+			endif
+		else
+			logerror "macos todo"
 		endif
 
 		comment ""
