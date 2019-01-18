@@ -1,0 +1,111 @@
+encoding=utf8
+
+if ($Flag_suburlparser$ = "on") or ($MasterFlag$ = "on")
+	Message "testing urlparser functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing urlparser functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."	
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "parseUrl"
+	
+	comment "Testing parseUrl with all fields"
+	
+	set $string1$ = "proto://usr:pwd@host:8080/path/doc?param#bookmark"
+	
+	set $list1$ = createStringList('Protocol=proto','Username=usr','Password=pwd', 'Host=host', 'Port=8080', 'Path=/path/', 'Document=doc', 'Params=param', 'Bookmark=bookmark')
+	set $ConstTest$ = composeString ($list1$, " | ")
+	
+	set $list2$ = parseUrl($string1$)	
+	set $CompValue$ = composeString ($list2$, " | ")
+	
+    if ($ConstTest$ = $CompValue$)
+        comment "parseUrl passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing parseUrl failed"
+    endif
+	
+	comment "Testing parseUrl with some fields"
+	
+	set $string1$ = "ftp://example.abc.edu/"
+	
+	set $list1$ = createStringList('Protocol=ftp','Username=','Password=', 'Host=example.abc.edu', 'Port=0', 'Path=/', 'Document=', 'Params=', 'Bookmark=')
+	set $ConstTest$ = composeString ($list1$, " | ")
+	
+	set $list2$ = parseUrl($string1$)	
+	set $CompValue$ = composeString ($list2$, " | ")
+	
+    if ($ConstTest$ = $CompValue$)
+        comment "parseUrl passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing parseUrl failed"
+    endif
+   
+   
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "createUrl"
+	
+	
+	comment "Testing createUrl with all fields"
+	
+	set $list1$ = createStringList('Protocol=proto','Username=usr','Password=pwd', 'Host=host', 'Port=8080', 'Path=/path/', 'Document=doc', 'Params=param', 'Bookmark=bookmark')
+	
+	set $ConstTest$ = "proto://usr:pwd@host:8080/path/doc?param#bookmark"
+	set $CompValue$ = createUrl($list1$)
+	
+    if ($ConstTest$ = $CompValue$)
+        comment "createUrl passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing createUrl failed"
+    endif
+	
+	comment "Testing createUrl with some fields"
+	
+	set $list1$ = createStringList('Protocol=https','Host=www.example.com', 'Path=/b-c-d-330002341216/')
+
+	set $ConstTest$ = "https://www.example.com/b-c-d-330002341216/"
+	set $CompValue$ = createUrl($list1$)
+	
+    if ($ConstTest$ = $CompValue$)
+        comment "createUrl passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing createUrl failed"
+    endif
+    
+    
+	comment "Testing createUrl with non integer port field"
+	
+	set $list1$ = createStringList('Protocol=proto', 'Host=host', 'Port=abc', 'Path=/path/', 'Document=doc', 'Params=param', 'Bookmark=bookmark')
+	
+	set $ConstTest$ = "proto://host/path/doc?param#bookmark"
+	set $CompValue$ = createUrl($list1$)
+	
+    if ($ConstTest$ = $CompValue$)
+        comment "createUrl passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing createUrl failed"
+    endif
+
+  
+	sub_compareResult
+	set $winst_urlparser$ = $SubResult$
+
+endif
+
+
+

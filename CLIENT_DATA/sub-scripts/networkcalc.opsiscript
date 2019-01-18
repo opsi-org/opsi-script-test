@@ -1,0 +1,192 @@
+encoding=utf8
+
+if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
+	Message "testing networkcalc functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing networkcalc functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "isValidIP4"
+
+	comment "Testing with valid IPv4 address"
+	
+	set $ConstTest$ = "true"
+	set $CompValue$ = booltostring(isValidIP4("255.255.0.0"))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4 passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4 failed"
+	endif
+	
+	comment "Testing with invalid IPv4 address"
+	
+	set $ConstTest$ = "false"
+	set $CompValue$ = booltostring(isValidIP4("255.256.0.0"))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4 passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4 failed"
+	endif
+
+	comment "Testing with invalid IPv4 address"
+	
+	set $ConstTest$ = "false"
+	set $CompValue$ = booltostring(isValidIP4("255..0.0"))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4 passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4 failed"
+	endif
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "getIP4NetworkByAdrAndMask"
+
+	comment "Testing with netmask in cidr notation "
+	
+	set $ConstTest$ = "198.48.0.0"
+	set $CompValue$ = getIP4NetworkByAdrAndMask('198.51.100.223', '12')
+	if ($ConstTest$ = $CompValue$)
+		comment "getIP4NetworkByAdrAndMask passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getIP4NetworkByAdrAndMask failed"
+	endif
+	
+	comment "Testing with netmask in dotted decimal notation "
+	
+	set $ConstTest$ = "198.48.0.0"
+	set $CompValue$ = getIP4NetworkByAdrAndMask('198.51.100.223', '255.240.0.0')
+	if ($ConstTest$ = $CompValue$)
+		comment "getIP4NetworkByAdrAndMask passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getIP4NetworkByAdrAndMask failed"
+	endif
+	
+	comment "Testing with invalid network prefix "
+	
+	set $ConstTest$ = "invalid inputs"
+	set $CompValue$ = getIP4NetworkByAdrAndMask('198.51.100.223', '42')
+	if ($ConstTest$ = $CompValue$)
+		comment "getIP4NetworkByAdrAndMask passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getIP4NetworkByAdrAndMask failed"
+	endif
+
+	comment "Testing with invalid ip"
+	
+	set $ConstTest$ = "invalid inputs"
+	set $CompValue$ = getIP4NetworkByAdrAndMask('298.51.100.223', '12')
+	if ($ConstTest$ = $CompValue$)
+		comment "getIP4NetworkByAdrAndMask passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getIP4NetworkByAdrAndMask failed"
+	endif
+
+
+ 	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "isValidIP4Network"
+	
+	comment "Testing with valid network address"
+	set $ConstTest$ = "true"
+	set $CompValue$ = booltostring(isValidIP4Network('192.168.0.0','24'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4Network passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4Network failed"
+	endif
+
+	comment "Testing with invalid network address"
+	set $ConstTest$ = "false"
+	set $CompValue$ = booltostring(isValidIP4Network('198.51.100.223','21'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4Network passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4Network failed"
+	endif
+	
+	comment "Testing with invalid inputs"
+	set $ConstTest$ = "false"
+	set $CompValue$ = booltostring(isValidIP4Network('198.51.100.223','41'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4Network passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4Network failed"
+	endif	
+
+
+ 	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "isValidIP4Host"
+
+	comment "Testing with valid host address, where netmask is in dotted-decimal notation"
+	
+	set $ConstTest$ = "true"
+	set $CompValue$ = booltostring(isValidIP4Host('198.51.104.254', '255.255.248.0'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4Host passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4Host failed"
+	endif
+	
+	comment "Testing with valid host address, where netmask is in cidr notation"
+	
+	set $ConstTest$ = "true"
+	set $CompValue$ = booltostring(isValidIP4Host('198.51.104.254', '21'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4Host passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4Host failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "getDefaultNetmaskByIP4adr"
+	
+	set $ConstTest$ = "255.255.0.0"
+	set $CompValue$ = getDefaultNetmaskByIP4adr("128.42.5.4")
+	if ($ConstTest$ = $CompValue$)
+		comment "getDefaultNetmaskByIP4adr passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getDefaultNetmaskByIP4adr failed"
+	endif
+
+
+
+
+	
+
+	
+	sub_compareResult
+	set $winst_networkcalc$ = $SubResult$
+
+endif
+
+
+

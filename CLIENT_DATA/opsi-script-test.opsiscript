@@ -75,6 +75,8 @@ DefVar $winst_crypt$
 DefVar $winst_local_functions$
 DefVar $winst_powershell$
 DefVar $winst_regex$
+DefVar $winst_networkcalc$
+DefVar $winst_urlparser$
 DefVar $InterestingFile$
 DefVar $key$
 DefVar $value$
@@ -135,6 +137,7 @@ DefVar $Flag_crypt$
 DefVar $Flag_powershell$
 DefVar $Flag_subregex$
 DefVar $Flag_subnetworkcalc$
+DefVar $Flag_suburlparser$
 
 DefStringList $list$
 DefStringList $list1$
@@ -230,7 +233,7 @@ if "True" = GetProductProperty ("setfailed","False")
 ;isFatalError
 endif
 
-set $ScriptLoglevel$ = GetProductProperty ("loglevel", "8")
+set $ScriptLoglevel$ = GetProductProperty ("loglevel", "6")
 setLoglevel=$ScriptLoglevel$
 
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
@@ -254,7 +257,9 @@ set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
 set $Flag_powershell$              = GetProductProperty ("powershell", "off")
 set $Flag_ProfileActions$          = GetProductProperty ("ProfileActions", "off")
-set $Flag_subregex$                = GetProductProperty ("Regex", "on")
+set $Flag_subregex$                = GetProductProperty ("Regex", "off")
+set $Flag_subnetworkcalc$          = GetProductProperty ("NetworkCalc", "on")
+set $Flag_suburlparser$            = GetProductProperty ("Urlparser", "off")
 set $Flag_subregistry$             = GetProductProperty ("Registry", "off")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
@@ -270,12 +275,9 @@ set $Flag_RunAsLoggedOnAdmin$      = GetProductProperty ("RunAsLoggedOnAdmin", "
 ;set $Flag_winst_idapiconfig$       = GetProductProperty ("idapiconfig", "off")
 
 
-
-
 if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.7") >= "0"
 	AutoActivityDisplay = true
 endif
-
 
 
 if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
@@ -10971,6 +10973,14 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\regex.opsiscript"
 endif
 
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	sub "%scriptpath%\sub-scripts\networkcalc.opsiscript"
+endif
+
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	sub "%scriptpath%\sub-scripts\urlparser.opsiscript"
+endif
+
 comment ""
 comment ""
 comment ""
@@ -10998,6 +11008,8 @@ comment "$winst_patch_text_file$      --> " + $winst_patch_text_file$
 comment "$winst_powershell$           --> " + $winst_powershell$
 comment "$winst_ProfileActions$       --> " + $winst_ProfileActions$
 comment "$winst_regex$                --> " + $winst_regex$
+comment "$winst_networkcalc$          --> " + $winst_networkcalc$
+comment "$winst_urlparser$            --> " + $winst_urlparser$
 comment "$subregistry$                --> " + $subregistry$
 comment "$winst_dos$                  --> " + $winst_dos$
 comment "$winst_string$               --> " + $winst_string$
