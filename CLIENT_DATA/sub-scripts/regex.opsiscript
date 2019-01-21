@@ -154,6 +154,8 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "stringReplaceRegex"
+	
+	comment "Testing with a matching expression"
     
 	set $ConstTest$ = "xyz abc gmbh"
 	set $CompValue$ = stringReplaceRegex('uib gmbh','.*uib', 'xyz abc')
@@ -164,7 +166,29 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
         LogWarning "testing stringReplaceRegex failed"
     endif
     
-
+	comment "Testing with a non matching expression"
+    
+	set $ConstTest$ = "uib gmbh"
+	set $CompValue$ = stringReplaceRegex('uib gmbh','.*abc', 'xyz abc')
+	if ($ConstTest$ = $CompValue$)
+        comment "stringReplaceRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing stringReplaceRegex failed"
+    endif
+    
+	comment "Replacing with empty string"
+    
+	set $ConstTest$ = " gmbh"
+	set $CompValue$ = stringReplaceRegex('uib gmbh','.*uib', '')
+	if ($ConstTest$ = $CompValue$)
+        comment "stringReplaceRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing stringReplaceRegex failed"
+    endif
+    
+    
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "

@@ -87,7 +87,7 @@ if ($Flag_suburlparser$ = "on") or ($MasterFlag$ = "on")
     endif
     
     
-	comment "Testing createUrl with non integer port field"
+	comment "Testing createUrl with non integer port field. Port should taken as zero."
 	
 	set $list1$ = createStringList('Protocol=proto', 'Host=host', 'Port=abc', 'Path=/path/', 'Document=doc', 'Params=param', 'Bookmark=bookmark')
 	

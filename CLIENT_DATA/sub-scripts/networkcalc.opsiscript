@@ -27,7 +27,7 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing isValidIP4 failed"
 	endif
 	
-	comment "Testing with invalid IPv4 address"
+	comment "Testing with invalid IPv4 address (address range issue)"
 	
 	set $ConstTest$ = "false"
 	set $CompValue$ = booltostring(isValidIP4("255.256.0.0"))
@@ -38,7 +38,7 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing isValidIP4 failed"
 	endif
 
-	comment "Testing with invalid IPv4 address"
+	comment "Testing with invalid IPv4 address (format issue)"
 	
 	set $ConstTest$ = "false"
 	set $CompValue$ = booltostring(isValidIP4("255..0.0"))
@@ -77,35 +77,13 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing getIP4NetworkByAdrAndMask failed"
 	endif
 	
-	comment "Testing with invalid network prefix "
-	
-	set $ConstTest$ = "invalid inputs"
-	set $CompValue$ = getIP4NetworkByAdrAndMask('198.51.100.223', '42')
-	if ($ConstTest$ = $CompValue$)
-		comment "getIP4NetworkByAdrAndMask passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "testing getIP4NetworkByAdrAndMask failed"
-	endif
-
-	comment "Testing with invalid ip"
-	
-	set $ConstTest$ = "invalid inputs"
-	set $CompValue$ = getIP4NetworkByAdrAndMask('298.51.100.223', '12')
-	if ($ConstTest$ = $CompValue$)
-		comment "getIP4NetworkByAdrAndMask passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "testing getIP4NetworkByAdrAndMask failed"
-	endif
-
 
  	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "isValidIP4Network"
 	
-	comment "Testing with valid network address"
+	comment "Testing with valid network address, where netmask is in cidr notation"
 	set $ConstTest$ = "true"
 	set $CompValue$ = booltostring(isValidIP4Network('192.168.0.0','24'))
 	if ($ConstTest$ = $CompValue$)
@@ -115,6 +93,16 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing isValidIP4Network failed"
 	endif
 
+	comment "Testing with valid network address, where netmask is in dotted-decimal notation"
+	set $ConstTest$ = "true"
+	set $CompValue$ = booltostring(isValidIP4Network('192.168.0.0','255.255.255.0'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4Network passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4Network failed"
+	endif
+	
 	comment "Testing with invalid network address"
 	set $ConstTest$ = "false"
 	set $CompValue$ = booltostring(isValidIP4Network('198.51.100.223','21'))
@@ -127,7 +115,7 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 	
 	comment "Testing with invalid inputs"
 	set $ConstTest$ = "false"
-	set $CompValue$ = booltostring(isValidIP4Network('198.51.100.223','41'))
+	set $CompValue$ = booltostring(isValidIP4Network('192.300.0.0','255.255.255.0'))
 	if ($ConstTest$ = $CompValue$)
 		comment "isValidIP4Network passed"
 	else
@@ -163,10 +151,35 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing isValidIP4Host failed"
 	endif
 	
+	comment "Testing with invalid host address"
+	
+	set $ConstTest$ = "false"
+	set $CompValue$ = booltostring(isValidIP4Host('198.51.104.0', '21'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4Host passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4Host failed"
+	endif
+
+	comment "Testing with invalid inputs"
+	
+	set $ConstTest$ = "false"
+	set $CompValue$ = booltostring(isValidIP4Host('198.51.104.21', '51'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isValidIP4Host passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isValidIP4Host failed"
+	endif
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "getDefaultNetmaskByIP4adr"
+
+	comment "Testing with valid IP"
 	
 	set $ConstTest$ = "255.255.0.0"
 	set $CompValue$ = getDefaultNetmaskByIP4adr("128.42.5.4")
@@ -177,12 +190,6 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing getDefaultNetmaskByIP4adr failed"
 	endif
 
-
-
-
-	
-
-	
 	sub_compareResult
 	set $winst_networkcalc$ = $SubResult$
 
