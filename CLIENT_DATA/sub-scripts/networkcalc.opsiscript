@@ -113,7 +113,7 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing isValidIP4Network failed"
 	endif
 	
-	comment "Testing with invalid ip"
+	comment "Testing with invalid inputs"
 	set $ConstTest$ = "false"
 	set $CompValue$ = booltostring(isValidIP4Network('192.200.0.0','41'))
 	if ($ConstTest$ = $CompValue$)
