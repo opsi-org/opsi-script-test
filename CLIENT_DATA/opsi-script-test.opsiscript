@@ -237,8 +237,8 @@ endif
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "8")
 setLoglevel=$ScriptLoglevel$
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "on")
-set $Flag_calculate$               = GetProductProperty ("calculate", "on")
+set $MasterFlag$                   = GetProductProperty ("alltest", "off")
+set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
@@ -249,7 +249,7 @@ set $Flag_infostest$               = GetProductProperty ("infoFunctions", "off")
 set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
 set $Flag_winst_ldap_search$       = GetProductProperty ("LdapSearch", "off")
 set $Flag_licensemanagement$       = GetProductProperty ("licensemanagement", "off")
-set $Flag_winst_link_folder$       = GetProductProperty ("LinkFolder", "off")
+set $Flag_winst_link_folder$       = GetProductProperty ("LinkFolder", "on")
 set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
@@ -6763,7 +6763,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
     	
 			
 			message "desktop"
-			if (FileExists("%CurrentDesktopDir%\"+$link_subfolder$+"\Dummy"+$link_extension$))
+			if (FileExists("%CurrentDesktopDir%\"+$link_subfolder$+"\dummy"+$link_extension$))
 				comment "desktop passed"
 				set $tmp$ = "%DesktopDir%\"+$link_subfolder$
 				Files_delete_linkFolder
@@ -6774,7 +6774,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
     	
     	
 			message "startup"
-			if (FileExists("%CurrentStartupDir%\"+$link_subfolder$+"\Dummy"+$link_extension$))
+			if (FileExists("%CurrentStartupDir%\"+$link_subfolder$+"\dummy"+$link_extension$))
 				comment "startup passed"
 				set $tmp$ = "%StartupDir%\"+$link_subfolder$
 				Files_delete_linkFolder
@@ -11151,8 +11151,10 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.0")
 	sub "%scriptpath%\sub-scripts\localfunctions.opsiscript"
 endif
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
-	sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
+if $OS$ = "Windows_NT"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+		sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
+	endif
 endif
 
 

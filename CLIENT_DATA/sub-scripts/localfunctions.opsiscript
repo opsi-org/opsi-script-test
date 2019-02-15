@@ -248,7 +248,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 					set $list1$ = myFunc10('echo %cd%')
 				endcase
 				case "Linux"
-					set $ConstTest$ = "9"
+					set $ConstTest$ = "5"
 				set $list1$ = myFunc10('pwd')
 				endcase
 				case "macos"
@@ -341,7 +341,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif ; 4.17
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
 		comment " Testing function with stringtobool ..."
 	
 		DefFunc myboolstrFunc1($str1$ : string, ref $str2$ : string, $list$: stringlist) : string
@@ -459,8 +459,99 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
 		else
 			comment "passed"
 		endif
+		
+		; ###############################
+		comment "uib_strlistutils"
+		
+		importlib "uib_strlistutils"
+		
+		set $list1$ = createStringList ("opsi-vhd-control","jedit","opsi-logviewer","classic-shell","config-win10")
+		set $list2$ = createStringList("classic-shell","config-win10","javavm","jedit","opsi-client-agent","opsi-logviewer","opsi-vhd-control","opsi-vhd-tester","opsi-winst")
+		
+		set $list3$ = getListContainingList($list1$,$list2$)
+		if stringToBool(compareLists($list3$,$list1$))
+			comment "passed"
+		else
+			LogWarning "failed"
+		endif
 
 	endif ; 4.12.0.20
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.36")
+		
+		comment "Recursive calls ...."
+		
+		DefFunc myFunc23($str1$ : string) : string
+		;defvar $mylocalvar$
+		
+			set $str1$ = $str1$+"a"
+			comment "run: "+$str1$
+			if strLength($str1$) int< "10"
+				set $str1$ = myFunc23($str1$)
+			endif
+			set $result$ = $str1$
+		endfunc
+		
+		set $ConstTest$ = "aaaaaaaaaa"
+		set $CompValue$ = myFunc23("")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefFunc myFunc23($str1$ : string) : string
+		;defvar $mylocalvar$
+		
+			set $str1$ = $str1$+"a"
+			comment "run: "+$str1$
+			if strLength($str1$) int< "10"
+				set $str1$ = myFunc23($str1$)
+			endif
+			set $result$ = $str1$
+		endfunc
+		
+		set $ConstTest$ = "aaaaaaaaaa"
+		set $CompValue$ = myFunc23("")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		; recursive call with local void function
+
+		Deffunc outerFunc25(ref $str1$ : string, val $str2$ : string) : void
+		
+			DefFunc innerFunc25(ref $str1$ : string) : void
+			defvar $mylocalvar$
+			
+				set $str1$ = $str1$+"a"
+				comment "run: "+$str1$+"  --> "+$mystr$
+				if strLength($str1$) int< "10"
+					innerFunc25($str1$)
+				endif
+			endfunc
+			
+			sub_call
+			
+			[sub_call]
+			innerFunc25($str1$)
+		endfunc
+		
+		set $CompValue$ = "go"
+		outerFunc25($CompValue$,$str2$)
+		set $ConstTest$ = "goaaaaaaaa"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+	endif ; 4.12.0.36
 
 	sub_compareResult
 	set $winst_local_functions$ = $SubResult$

@@ -1,0 +1,26 @@
+
+
+[actions]
+setloglevel=7
+ScriptErrorMessages = false
+
+DefVar $mystr$
+
+DefFunc myFunc4(ref $str1$ : string) : void
+	DefVar $locstr1$
+	
+	DefFunc myFunc5(ref $str1$ : string) : void
+		comment "str1 is : "+$str1$
+		set $str1$ = 'inner' + $str1$
+	endfunc
+
+	set $locstr1$ = '123'
+	myFunc5($locstr1$)
+	set $str1$ = $str1$ + $locstr1$
+endfunc
+
+set $mystr$ = "outer"
+myFunc4($mystr$)
+comment "mystr is : "+$mystr$
+
+

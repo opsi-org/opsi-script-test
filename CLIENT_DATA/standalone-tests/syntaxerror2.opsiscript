@@ -1,0 +1,7 @@
+[actions]
+defvar $test$
+set $test$ = 'hu'
+;set $test1$ = 'ha'
+endif
+
+[stop]
