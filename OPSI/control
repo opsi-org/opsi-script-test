@@ -8,7 +8,6 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.11.6.12
 version: 4.12.1.0
 priority: 0
 licenseRequired: False
@@ -347,6 +346,7 @@ editable: False
 description: xml2 section and functions
 values: ["off", "on"]
 default: ["off"]
+
 [ProductProperty]
 type: unicode
 name: localfunctions
@@ -365,10 +365,30 @@ description: powershell with opsi-script
 values: ["off", "on"]
 default: ["off"]
 
+[ProductProperty]
+type: unicode
+name: regex
+multivalue: False
+editable: False
+description: Regex section and functions
+values: ["off", "on"]
+default: ["off"]
 
-opsi-script-test (4.11.7.0-1) stable; urgency=low
+[ProductProperty]
+type: unicode
+name: networkcalc
+multivalue: False
+editable: False
+description: NetworkCalc section and functions
+values: ["off", "on"]
+default: ["off"]
 
-  * xml2 test
-
--- detlef oertel <d.oertel@uib.de>  Wed,  17 May 2017 15:00:00 +0200
+[ProductProperty]
+type: unicode
+name: urlparser
+multivalue: False
+editable: False
+description: Urlparser section and functions
+values: ["off", "on"]
+default: ["off"]
 

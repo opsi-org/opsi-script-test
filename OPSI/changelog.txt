@@ -5,6 +5,10 @@ opsi-script-test (4.12.1.0-1) stable; urgency=low
   * macos tests
   * recursive local functions 4.12.0.36
   * fixes for linux
+  * urlparser
+  * xml2
+  * regex
+  * netcalc
 
 -- detlef oertel <d.oertel@uib.de>  Thu,  24 Jan 2019 15:00:00 +0200
 
