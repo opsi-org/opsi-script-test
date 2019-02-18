@@ -1,0 +1,18 @@
+DefFunc function-exitcode_check($exitcode$ : string, $Reboot$ : string, $RebootMode$ : string) : string
+   Message "Teste Erfolg der Installation via exitcode "+$exitcode$
+   set $result$ = $exitcode$
+
+   Switch $exitcode$
+           Case "0"
+                   comment "Looks good: setup program gives exitcode zero"
+           EndCase
+           Case "2"
+                   logError "Fatal: The system cannot find the file specified: " + $exitcode$
+                   isFatalError "Exit Code: "+ $exitcode$
+           EndCase
+           DefaultCase
+                   logError "Fatal: Setup gibt einen unbekannten exitcode ungleich 0: " + $exitcode$
+                   isFatalError "Exit Code: "+ $exitcode$
+           EndCase
+   EndSwitch
+endfunc

@@ -42,6 +42,7 @@ DefVar $MsVersion$
 DefVar $string1$
 DefVar $string2$
 DefVar $string3$
+DefVar $xmlnodepath$
 DefVar $ScriptLoglevel$
 
 DefVar $winst_constants$
@@ -72,6 +73,8 @@ DefVar $winst_calculate$
 DefVar $winst_encoding$
 DefVar $winst_jsonfunctions$
 DefVar $winst_crypt$
+DefVar $winst_xml2$
+
 DefVar $winst_local_functions$
 DefVar $winst_powershell$
 DefVar $InterestingFile$
@@ -116,6 +119,7 @@ DefVar $Flag_winst_link_folder$
 DefVar $Flag_winst_local_functions$
 DefVar $Flag_subregistry$
 DefVar $Flag_winst_xml$
+DefVar $Flag_winst_xml2$
 DefVar $Flag_winst_dos$
 DefVar $Flag_winst_winbatch$
 DefVar $Flag_execwith_test$
@@ -265,6 +269,7 @@ set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", 
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
+set $Flag_winst_xml2$               = GetProductProperty ("XML2", "on")
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
 set $Flag_internalundocumented$    = GetProductProperty ("internalundocumented", "off")
@@ -11147,6 +11152,8 @@ sub "%scriptpath%\sub-scripts\jsontest.opsiscript"
 
 sub "%scriptpath%\sub-scripts\crypttest.opsiscript"
 
+sub "%scriptpath%\sub-scripts\xml2test.opsiscript"
+
 if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.0")
 	sub "%scriptpath%\sub-scripts\localfunctions.opsiscript"
 endif
@@ -11191,6 +11198,7 @@ comment "$winst_string_list$          --> " + $winst_string_list$
 comment "$subtestsub$                 --> " + $subtestsub$
 comment "$winst_winbatch$             --> " + $winst_winbatch$
 comment "$winst_xml$                  --> " + $winst_xml$
+comment "$winst_xml2$                  --> " + $winst_xml2$
 comment "--------------------------------"
 comment "$compare_to_python$          --> " + $compare_to_python$
 comment "$winst_internalundocumented$ --> " + $winst_internalundocumented$
@@ -12566,7 +12574,7 @@ endif
 
 ;----------------   start   sections for xml test ---------------------------------
 [Files_copy_xml]
-copy "%ScriptPath%\*.xml" $HomeTestFiles$
+copy "%ScriptPath%\test-files\xmlpatch2\*.xml" $HomeTestFiles$
 
 ;[XMLPatch_XMLAddNamespace]
 
