@@ -185,15 +185,276 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			set $result$ = $loclist1$
 			
 			[shellinanicon_test]
-			set -x
 			$str1$
 		endfunc
 		
-		set $list1$ = myFunc8('pwd')
+		if GetOS = 'Linux'
+			set $list1$ = myFunc8('pwd')
+		else
+			set $list1$ = myFunc8('echo %cd%')
+		endif
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.10")
+			comment " Testing repeated function call with local variables ..."
+			comment "should give no syntax error here"
+			if GetOS = 'Linux'
+				set $list1$ = myFunc8('pwd')
+			else
+				set $list1$ = myFunc8('echo %cd%')
+			endif
+			
+			if GetOS = 'Linux'
+				set $list1$ = myFunc8('pwd')
+			else
+				set $list1$ = myFunc8('echo %cd%')
+			endif
+			
+			comment " Testing fuction call while if ..."
+			
+			DefFunc function-test($VarSub1$ : string) : string
+				set $result$ = $VarSub1$
+				
+				if ($result$ = "1")
+				   comment "Result ist okay"
+				else
+				   comment "Result ist nicht okay"
+				endif
+			endfunc
+			
+			set $ConstTest$ = "1"
+			if $ConstTest$ = "1"
+				set $CompValue$ = function-test($ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				set $ConstTest$ = "2"
+				if $ConstTest$ = "2"
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
+		endif ;4.12.10
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.13")
+			importLib "%scriptpath%\standalone-tests\functionlib.opsiscript"
+			if GetOS = 'Linux'
+				set $list1$ = myFunc10('pwd')
+				set $tmp$ = "5"
+			else
+				set $list1$ = myFunc10('echo %cd%')
+				set $tmp$ = "9"
+			endif
+			if count($list1$) int= $tmp$
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+			sub "%scriptpath%\standalone-tests\sub_defined_functions12.opsiscript"
+			if count($list1$) int= $tmp$
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
 
+		endif
 	else
 		set $TestResult$ = "not tested"
 	endif ; 4.12
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	
+		comment " Testing fuction with no (void) result ..."
+		DefFunc myNoResultFunc(ref $str1$ : string) : void
+			set $str1$ = "huhu"
+		endfunc
+		set $CompValue$ = "haha"
+		set $ConstTest$ = "huhu"
+		myNoResultFunc($CompValue$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment " Testing fuction with no parameters ..."
+		DefFunc myNoParamFunc() : string
+			set $result$ = "huhu"
+		endfunc
+		set $ConstTest$ = "huhu"
+		set $CompValue$ = myNoParamFunc()
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+	else
+		set $TestResult$ = "not tested"
+	endif ; 4.16
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
+		comment " Testing function in loop ..."
+	
+		deffunc copy_str_to_list($srv_str$ : string, val $full_srv_list$ : stringlist, ref $dep_srv_list$ : stringlist) : void
+			comment "starting oca_check_services with: "+$srv_str$
+			if "" = takeFirstStringContaining($full_srv_list$,$srv_str$)
+				logwarning "Requested service:"+$srv_str$+" not found. - will be ignored."
+			else
+				comment "Requested service: "+$srv_str$+" found. - will be used."
+				set $dep_srv_list$ = addtolist($dep_srv_list$, $srv_str$)
+			endif
+			comment "finished oca_check_services with: "+$srv_str$
+		endfunc
+		
+		set $list1$ = createStringlist("a","b","c","d","e","f","g","h","i","j")
+		set $list2$ = createStringlist("a","e")
+		set $list3$ = emptyList($list3$)
+		
+		for %servicestr% in $list2$ do copy_str_to_list("%servicestr%", $list1$, $list3$)
+		if count($list3$) INT> "0"
+			set $CompValue$ = composeString($list3$,"|")
+		endif
+		
+		set $ConstTest$ = "a|e"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.17
+
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
+		comment " Testing function with stringtobool ..."
+	
+		DefFunc myboolstrFunc1($str1$ : string, ref $str2$ : string, $list$: stringlist) : string
+			if $str1$ > "0"
+				set $result$ = "true"
+			else
+				set $result$ = "false"
+			endif
+		endfunc
+		
+		if not(stringtobool(myboolstrFunc1("1",$refstr$,$list$)))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+		
+		
+		comment " Testing repeated call of function with local vars ..."
+	
+		DefFunc myboolstrFunc2($str1$ : string, ref $str2$ : string, $list$: stringlist) : string
+			DefVar $mystr$
+			Defstringlist $mylist$
+			set $mystr$ = $str2$
+			set $mylist$ = $list$
+			if $str1$ > "0"
+				set $result$ = "true"
+			else
+				set $result$ = "false"
+			endif
+		endfunc
+		
+		if not(stringtobool(myboolstrFunc2("1",$refstr$,$list$)))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+		if not(stringtobool(myboolstrFunc2("1",$refstr$,$list$)))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+		if not(stringtobool(myboolstrFunc2("1",$refstr$,$list$)))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+
+		DefFunc myboollistFunc2($str1$ : string, ref $str2$ : string, $list$: stringlist) : stringlist
+			DefVar $mystr$
+			Defstringlist $mylist$
+			set $mystr$ = $str2$
+			set $mylist$ = $list$
+			if $str1$ > "0"
+				set $result$ = createstringlist("true")
+			else
+				set $result$ = createstringlist("false")
+			endif
+		endfunc
+		
+		if not(stringtobool(takeString(0,myboollistFunc2("1",$refstr$,$list$))))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+		if not(stringtobool(takeString(0,myboollistFunc2("1",$refstr$,$list$))))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+		if not(stringtobool(takeString(0,myboollistFunc2("1",$refstr$,$list$))))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+
+		DefFunc myboolvoidFunc2($str1$ : string, ref $str2$ : string, $list$: stringlist) : void
+			DefVar $mystr$
+			Defstringlist $mylist$
+			set $mystr$ = $str2$
+			set $mylist$ = $list$
+			if $str1$ > "0"
+				set $str2$ = "true"
+			else
+				set $str2$ = "false"
+			endif
+		endfunc
+		
+		myboolvoidFunc2("1",$refstr$,$list$)
+		if not(stringtobool($refstr$))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+		
+		myboolvoidFunc2("1",$refstr$,$list$)
+		if not(stringtobool($refstr$))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+		
+		myboolvoidFunc2("1",$refstr$,$list$)
+		if not(stringtobool($refstr$))
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		else
+			comment "passed"
+		endif
+
+	endif ; 4.12.0.20
+
 	sub_compareResult
 	set $winst_local_functions$ = $SubResult$
 

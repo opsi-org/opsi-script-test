@@ -1,19 +1,10 @@
 
 
 [actions]
-setloglevel=8
+setloglevel=7
 ScriptErrorMessages = false
 
 DefVar $mystr$
-DefVar $str1$
-DefVar $str2$
-DefStringlist $list1$
-DefStringlist $list2$
-set $str1$ = 'ha'
-set $str2$ = 'hi'
-set $mystr$ = $str1$ + $str2$
-
-
 
 DefFunc myFunc4($str1$ : string) : string
 	DefVar $locstr1$

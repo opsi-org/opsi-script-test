@@ -1,0 +1,28 @@
+[actions]
+
+importlib "servicecall_auth_lib.opsiscript"
+
+authenticate()
+
+DefVar $myfqdn$
+set $myfqdn$ = "win10x64.vmnat.local"
+
+DefVar $product$
+DefVar $propname$
+DefVar $propvalue$
+
+
+set $product$ = "jedit"
+set $propname$ = "gui_language"
+set $propvalue$ = "auto"
+
+opsiservicecall_setProductProperty_generic
+
+[opsiservicecall_setProductProperty_generic]
+"method": "setProductProperty"
+"params": [
+            "$product$",
+            "$propname$",
+            "$propvalue$",
+            "$myfqdn$"
+          ]

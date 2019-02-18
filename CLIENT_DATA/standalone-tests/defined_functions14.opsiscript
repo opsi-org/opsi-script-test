@@ -1,0 +1,64 @@
+encoding=UTF-8
+[actions]
+setLogLevel=7
+defVar $path$
+defVar $java_home$
+
+;-------------------------------------------------------------------------
+DefFunc identity(val $ident$:string) : string
+;-------------------------------------------------------------------------
+   set $result$ = $ident$
+EndFunc
+
+;-------------------------------------------------------------------------
+DefFunc removePath(ref $fullPaths$:string, ref $pathToRemove$:string): string
+;-------------------------------------------------------------------------
+   DefVar $logLvl$
+   DefStringList $pathList$
+   set $logLvl$=getLoglevel
+   setLogLevel=0
+   Set $pathList$ = splitString($fullPaths$, ";")
+   Set $pathList$ = removeFromListByMatch($pathToRemove$,$pathList$)
+   Set $pathList$ = removeFromListByMatch("", $pathList$)
+   Set $result$ = composeString($pathList$, ";")
+   setLogLevel=$logLvl$
+EndFunc
+
+;-------------------------------------------------------------------------
+DefFunc addPath(ref $fullPaths$:string, ref $pathToAdd$:string): string
+;-------------------------------------------------------------------------
+   DefVar $logLvl$
+   DefStringList $pathList$
+   set $logLvl$=getLoglevel
+   setLogLevel=6
+   DefVar $found$
+   Set $pathList$ = splitString($fullPaths$, ";")
+   Set $pathList$ = removeFromListByMatch("", $pathList$)
+   set $found$="false"
+   ; for %p% in $pathList$ do sub_compare_path
+   if ($found$ = "true")
+      comment "Path already contains [" + $pathToAdd$ + "]"
+      set $result$ = $path$
+   else
+      comment "Appending to path: [" + $pathToAdd$ + "]"
+      Set $pathList$ = addToList($pathList$, $pathToAdd$)
+      Set $result$ = composeString($pathList$, ";")
+   endif
+   setLogLevel=$logLvl$
+   
+   [sub_compare_path]
+   if ("%p%" = $pathToAdd$)
+      set $found$ = "true"
+   endif
+EndFunc
+
+;----------
+; MAIN
+;----------
+Set $path$ = EnvVar("PATH")
+Set $java_home$ = "C:\Applic.64\javavm\bin"
+Set $path$ = removePath($path$, $java_home$)
+Set $path$ = addPath($path$, $java_home$)
+Set $path$ = identity($path$)
+
+

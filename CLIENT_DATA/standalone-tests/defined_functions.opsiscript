@@ -1,10 +1,10 @@
 
 
 [actions]
-setloglevel=8
+setloglevel=9
 ScriptErrorMessages = false
 
-importFunc "functionlib.opsiscript"
+importLib "functionlib.opsiscript"
 
 DefVar $mystr$
 DefVar $str1$

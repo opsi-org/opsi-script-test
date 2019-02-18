@@ -1,0 +1,18 @@
+[actions]
+
+importlib "servicecall_auth_lib.opsiscript"
+
+authenticate()
+
+DefVar $myfqdn$
+set $myfqdn$ = "win10x64.vmnat.local"
+
+opsiservicecall_myid
+
+[opsiservicecall_myid]
+"method":"setProductActionRequest"
+"params":[
+          "swaudit"
+          "$myfqdn$"
+          "setup"
+         ]

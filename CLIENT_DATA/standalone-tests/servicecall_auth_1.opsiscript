@@ -1,0 +1,6 @@
+[actions]
+
+opsiservicecall_authenticated
+[opsiservicecall_authenticated]
+"method":"backend_info"
+"params":[ ]

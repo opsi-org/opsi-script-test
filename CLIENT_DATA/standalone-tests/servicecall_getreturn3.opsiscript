@@ -1,0 +1,40 @@
+[actions]
+
+importlib "servicecall_auth_lib.opsiscript"
+
+authenticate()
+
+DefVar $myfqdn$
+set $myfqdn$ = "win10x64.vmnat.local"
+
+DefStringList $list1$
+DefStringList $setuplist$
+DefVar $objstr$
+DefVar $arraystr$
+
+set $list1$ = getReturnListFromSection('opsiservicecall_myid')
+set $arraystr$ = takestring(0,$list1$)
+
+if not (jsonIsValid($arraystr$))
+  logError "Not a valid json string"
+else
+  if not (jsonIsArray($arraystr$))
+    logError "Not a valid json array"
+  else
+    for %index% = "0" to calculate(jsonAsArrayCountElements($arraystr$)+"-1") do sub_analyze_obj
+    comment "Number of setup products: "+count($setuplist$)
+    for %prod% in $setuplist$ do comment "setup: "+%prod%
+  endif
+endif
+
+[sub_analyze_obj]
+set $objstr$ = jsonAsArrayGetElementByIndex($arraystr$,"%index%")
+if "setup" = jsonAsObjectGetValueByKey($objstr$,"actionRequest")
+  set $setuplist$ = addtolist($setuplist$,jsonAsObjectGetValueByKey($objstr$,"productId"))
+endif
+
+[opsiservicecall_myid]
+"method":"getProductActionRequests_listOfHashes"
+"params":[
+          "$myfqdn$"
+         ]

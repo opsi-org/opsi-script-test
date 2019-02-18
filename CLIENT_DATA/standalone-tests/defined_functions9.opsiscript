@@ -1,10 +1,10 @@
 
 
 [actions]
-setloglevel=8
+setloglevel=9
 ScriptErrorMessages = false
 
-importFunc "functionlib.opsiscript"
+importLib "functionlib.opsiscript::myFunc8"
 
 DefVar $mystr$
 DefVar $str1$
@@ -14,6 +14,18 @@ DefStringlist $list2$
 set $str1$ = 'ha'
 set $str2$ = 'hi'
 set $mystr$ = $str1$ + $str2$
+
+if GetOS = 'Linux'
+	set $list1$ = myFunc8('pwd')
+else
+	set $list1$ = myFunc8('echo %cd%')
+endif
+
+if GetOS = 'Linux'
+	set $list1$ = myFunc8('pwd')
+else
+	set $list1$ = myFunc8('echo %cd%')
+endif
 
 if GetOS = 'Linux'
 	set $list1$ = myFunc8('pwd')

@@ -1,0 +1,14 @@
+
+encoding=UTF-8
+
+setloglevel=9
+ScriptErrorMessages = false
+
+
+if GetOS = 'Linux'
+	set $list1$ = myFunc9('pwd')
+else
+	set $list1$ = myFunc9('echo %cd%')
+endif
+
+

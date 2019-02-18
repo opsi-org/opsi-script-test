@@ -6,14 +6,7 @@
 ; Text of the AGPL: http://www.gnu.org/licenses/agpl-3.0-standalone.html
 ; credits: http://www.opsi.org/credits/
 
-;***************************************************************************
-; Subversion:
-; $Revision: 40 $
-; $Author: oertel $
-; $Date: 2016-05-20 19:31:32 +0200 (Fr, 20 Mai 2016) $
-;***************************************************************************
-;
-; encoding is cp1252 / windows 1252
+
 
 
 [Actions]
@@ -44,6 +37,7 @@ DefVar $str1$
 DefVar $str2$
 DefVar $str3$
 DefVar $str4$
+DefVar $refstr$
 DefVar $MsVersion$
 DefVar $string1$
 DefVar $string2$
@@ -79,6 +73,7 @@ DefVar $winst_encoding$
 DefVar $winst_jsonfunctions$
 DefVar $winst_crypt$
 DefVar $winst_local_functions$
+DefVar $winst_powershell$
 DefVar $InterestingFile$
 DefVar $key$
 DefVar $value$
@@ -102,6 +97,8 @@ DefVar $target$
 DefVar $workdir$
 DefVar $workfile$
 DefVar $systemroot$
+DefVar $pspolicy$
+DefVar $architecture$
 
 
 DefVar $Flag_winst_constants$
@@ -134,6 +131,7 @@ DefVar $Flag_calculate$
 DefVar $Flag_encoding$
 DefVar $Flag_jsonfunctions$
 DefVar $Flag_crypt$
+DefVar $Flag_powershell$
 
 DefStringList $list$
 DefStringList $list1$
@@ -154,6 +152,7 @@ DefVar $language$
 DefVar $OS$
 DefVar $NTVersion$
 DefVar $opsi_message_title$
+DefVar $exitcode$
 
 DefVar $regWriteValue$
 
@@ -176,10 +175,6 @@ defvar $depotid$
 defvar $valuesListStr$
 
 
-
-set $ScriptLoglevel$ = GetProductProperty ("loglevel", "9")
-setLoglevel=$ScriptLoglevel$
-
 ; retrieve OS and NT Version
 
 Set $OS$ = GetOS
@@ -191,7 +186,7 @@ set $language$ = getValue("language_id_2chars", $languageInfo$)
 if $OS$ = "Windows_NT"
 	Set $NTVersion$ = GetNTVersion
 	set $MsVersion$ = GetMsVersionInfo
-	Set $HomeTestFiles$ = "C:\tmp\testFiles"
+	Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
 endif
 set $ProductId$ = "opsi-script-test"
 if $OS$ = "LINUX"
@@ -201,6 +196,12 @@ if $OS$ = "LINUX"
 endif
 
 Set $INST_SystemType$ = GetSystemType
+
+if $INST_SystemType$ = "64 Bit System"
+	set $architecture$ = "64"
+else
+	set $architecture$ = "32"
+endif
 
 Files_testFiles
 set $FinalResult$ = "passed"
@@ -212,7 +213,7 @@ set $LicensePool$ = "opsi-winst-test-pool"
 
 
 ; Message at install time:
-Message "Testing opsi-winst ..."
+Message "Testing opsi-script ..."
 ;show product picture
 ShowBitmap "%scriptpath%\opsi.png" $ProductId$
 
@@ -226,8 +227,11 @@ if "True" = GetProductProperty ("setfailed","False")
 ;isFatalError
 endif
 
+set $ScriptLoglevel$ = GetProductProperty ("loglevel", "8")
+setLoglevel=$ScriptLoglevel$
+
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
-set $Flag_calculate$               = GetProductProperty ("calculate", "off")
+set $Flag_calculate$               = GetProductProperty ("calculate", "on")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
@@ -241,12 +245,13 @@ set $Flag_licensemanagement$       = GetProductProperty ("licensemanagement", "o
 set $Flag_winst_link_folder$       = GetProductProperty ("LinkFolder", "off")
 set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
-set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "on")
+set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
 set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
+set $Flag_powershell$              = GetProductProperty ("powershell", "off")
 set $Flag_ProfileActions$          = GetProductProperty ("ProfileActions", "off")
-set $Flag_subregistry$             = GetProductProperty ("Registry", "off")
+set $Flag_subregistry$             = GetProductProperty ("Registry", "on")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
 set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
@@ -845,7 +850,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "C:\opsi.org\log"
 		else
-			set $CompValue$ = "/var/log/opsi-client-agent/opsi-script"
+			set $CompValue$ = "/var/log/opsi-script"
 		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -854,6 +859,35 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.12.0.16") >= "0"
+		set $ConstTest$ = "%opsidata%"
+		if $OS$ = "Windows_NT"
+			set $CompValue$ = "C:\opsi.org\data"
+		else
+			set $CompValue$ = "/var/lib/opsi-client-agent"
+		endif
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "%opsiapplog%"
+		if $OS$ = "Windows_NT"
+			set $CompValue$ = "c:\opsi.org\applog"
+		else
+			set $CompValue$ = "~/opsi.org/applog"
+		endif
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif
+	
+	
 	sub_compareResult
 	set $winst_constants$ = $SubResult$
 endif
@@ -861,8 +895,7 @@ endif
 if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 	Message "testing string functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	comment "Chapter 6.2 Parametrizing wInst"
-	comment "testing Parametrizing wInst"
+	comment "testing Parametrizing opsi-script"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
@@ -909,7 +942,35 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 	SetConfidential "forbidden"
 	comment "This is a forbidden string"
 	comment "should be in the log file: This is a ***(confidential)*** string"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+		if isConfidential("forbidden")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 	
+	
+		message "asConfidential"
+		set $ConstTest$ = asConfidential("hidden")
+		comment "This is a hidden string"
+		comment "should be in the log file: This is a ***(confidential)*** string"
+		if isConfidential("hidden")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = asConfidential(stringReplace("this is my old secret", "old", "new"))
+		comment "this is my new secret"
+		comment "should be in the log file:  ***(confidential)*** "
+		if isConfidential("this is my new secret")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.12.0.16
 
 	if not ("%installingProdName%" = "")
 		comment "we are in opsi service mode"
@@ -1026,10 +1087,18 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = "This is confidential"
 		set $CompValue$ = GetConfidentialProductProperty ("confidentialstring","")
 		if ($ConstTest$ = $CompValue$)
-			comment "GetProductProperty passed"
+			comment "GetConfidentialProductProperty passed"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "GetProductProperty failed"
+			LogWarning "GetConfidentialProductProperty failed"
+		endif
+		set $ConstTest$ = "confidential test"
+		set $CompValue$ = GetConfidentialProductProperty ("not-existing-property","confidential test")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetConfidentialProductProperty passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetConfidentialProductProperty failed"
 		endif
 	endif ; 4.11.5.2
 	
@@ -2273,6 +2342,30 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "lower"
+		set $ConstTest$ = "12threefour_!"
+		set $CompValue$ = lower("12ThreeFour_!")
+		if $ConstTest$ = $CompValue$
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "upper"
+		set $ConstTest$ = "12THREEFOUR_!"
+		set $CompValue$ = upper("12ThreeFour_!")
+		if $ConstTest$ = $CompValue$
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
 
 		comment ""
 		comment "-------------------------------------"
@@ -2908,6 +3001,88 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "splitString Confidential"
+		SetConfidential "\\secret1\secret2\secret3"
+		set $ConstTest$ = "secret1"
+		set $list1$ = splitString ("\\secret1\secret2\secret3", "\")
+		Set $CompValue$ = takeString(2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if not(isConfidential(""))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret1")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret2")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret3")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "splitStringOnWhiteSpace Confidential"
+		SetConfidential "secret4  secret5	secret6  "
+		set $ConstTest$ = "secret6"
+		set $list1$ = splitStringOnWhiteSpace ("secret4  secret5	secret6  ")
+		Set $CompValue$ = takeString(2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		if not(isConfidential(""))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret4")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret5")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret6")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.12.0.16
+
 
 
 	comment ""
@@ -3098,6 +3273,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "getSubList"
+	comment "Now with numbers (no whitespace) ...."
 	set $ConstTest$ = "c"
 	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
 	set $list1$ = getSubList(1:3, $list1$)
@@ -3138,6 +3314,196 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "getSubList(1:-1, $list1$) failed"
 	endif
+	comment "Now with numbers (with whitespace) ...."
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList(1 : 3, $list1$)
+	set $CompValue$ = takeString (1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:3, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:3, $list1$) failed"
+	endif
+	set $ConstTest$ = "b"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList( 1 :, $list1$)
+	set $CompValue$ = takeString (0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:, $list1$) failed"
+	endif
+	set $ConstTest$ = "e"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList( : , $list1$)
+	set $CompValue$ = takeString (4, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(:, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(:, $list1$) failed"
+	endif
+	set $ConstTest$ = "d"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList( 1 : -1 , $list1$)
+	set $CompValue$ = takeString (2, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:-1, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:-1, $list1$) failed"
+	endif
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.34")
+		comment "Now with string variables  (no whitespace)...."
+		comment "-------------------------------------"
+		
+		set $tmp1$ = "1"
+		set $tmp2$ = "3"
+		set $ConstTest$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:$tmp2$, $list1$)
+		set $CompValue$ = takeString (1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:3, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:3, $list1$) failed"
+		endif
+		set $ConstTest$ = "b"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:, $list1$)
+		set $CompValue$ = takeString (0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:, $list1$) failed"
+		endif
+		set $tmp1$ = ""
+		set $ConstTest$ = "e"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:, $list1$)
+		set $CompValue$ = takeString (4, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(:, $list1$) failed"
+		endif
+		set $tmp1$ = "1"
+		set $tmp2$ = "-1"
+		set $ConstTest$ = "d"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:$tmp2$, $list1$)
+		set $CompValue$ = takeString (2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:-1, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:-1, $list1$) failed"
+		endif
+		
+		comment "Now with string variables  (with whitespace)...."
+		comment "-------------------------------------"
+		
+		set $tmp1$ = "1"
+		set $tmp2$ = "3"
+		set $ConstTest$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : $tmp2$ , $list1$)
+		set $CompValue$ = takeString (1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:3, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:3, $list1$) failed"
+		endif
+		set $ConstTest$ = "b"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : , $list1$)
+		set $CompValue$ = takeString (0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:, $list1$) failed"
+		endif
+		set $tmp1$ = ""
+		set $ConstTest$ = "e"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : , $list1$)
+		set $CompValue$ = takeString (4, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(:, $list1$) failed"
+		endif
+		set $tmp1$ = "1"
+		set $tmp2$ = "-1"
+		set $ConstTest$ = "d"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : $tmp2$ , $list1$)
+		set $CompValue$ = takeString (2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:-1, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:-1, $list1$) failed"
+		endif
+		
+		comment "Now with string functions ...."
+		comment "-------------------------------------"
+		
+		set $list2$ = createStringList("","-1","0","1","2","3","4","5","6",)
+		set $ConstTest$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(3,$list2$):takestring(5,$list2$), $list1$)
+		set $CompValue$ = takeString (1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:3, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:3, $list1$) failed"
+		endif
+		set $ConstTest$ = "b"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(3,$list2$):takestring(0,$list2$), $list1$)
+		set $CompValue$ = takeString (0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:, $list1$) failed"
+		endif
+		set $tmp1$ = ""
+		set $ConstTest$ = "e"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(0,$list2$):takestring(0,$list2$), $list1$)
+		set $CompValue$ = takeString (4, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(:, $list1$) failed"
+		endif
+		set $tmp1$ = "1"
+		set $tmp2$ = "-1"
+		set $ConstTest$ = "d"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(3,$list2$):takestring(1,$list2$), $list1$)
+		set $CompValue$ = takeString (2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:-1, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:-1, $list1$) failed"
+		endif
+	endif ; 4.12.0.34
+
 
 	comment ""
 	comment "-------------------------------------"
@@ -3173,6 +3539,373 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+		message "getIndexFromListByContaining..string ..."
+		set $tmp$ = "c"
+		set $ConstTest$ = "2"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $CompValue$ = getIndexFromListByContaining($list1$, $tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "C"
+		set $ConstTest$ = "2"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $CompValue$ = getIndexFromListByContaining($list1$, $tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other string"
+		set $ConstTest$ = ""
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $CompValue$ = getIndexFromListByContaining($list1$, $tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		
+		;message "getIndexFromListByContaining..list ..."
+		;set $ConstTest$ = "2"
+		;set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		;set $list2$ = createStringList ('u', 'v', 'w', 'c', 'z')
+		;set $CompValue$ = getIndexFromListByContaining($list1$, $list2$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		;set $ConstTest$ = "2"
+		;set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		;set $list2$ = createStringList ('U', 'V', 'W', 'C', 'Z')
+		;set $CompValue$ = getIndexFromListByContaining($list1$, $list2$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		;set $tmp$ = "other string"
+		;set $ConstTest$ = ""
+		;set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		;set $list2$ = createStringList ('U', 'V', 'W', 'X', 'Z')
+		;set $CompValue$ = getIndexFromListByContaining($list1$, $list2$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
+	;	  * new function : getSubListByMatch(<search string>, <target list>) :stringlist
+  ;* new function : getSubListByMatch(<search list>, <target list>) :stringlist
+  ;* new function : getSubListByContaining(<search string>, <target list>) :stringlist
+  ;* new function : getSubListByContaining(<search list>, <target list>) :stringlist
+  ;* new function : getSubListByKey(<search string>, <target list>) :stringlist
+  ;* new function : getSubListByKey(<search list>, <target list>) :stringlist
+  ;* new function : getKeyList(<list>) :stringlist
+		message "getSubListByMatch..string ..."
+		set $tmp$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = getSubListByMatch($tmp$,$list1$)
+		set $ConstTest$ = "c"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "C"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = getSubListByMatch($tmp$,$list1$)
+		set $ConstTest$ = "C"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other string"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = getSubListByMatch($tmp$,$list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByMatch..list ..."
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = createStringList ('u', 'v', 'w', 'c', 'z')
+		set $list3$ = getSubListByMatch($list2$, $list1$)
+		set $ConstTest$ = "c"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = createStringList ('U', 'V', 'W', 'C', 'Z')
+		set $list3$ = getSubListByMatch($list2$, $list1$)
+		set $ConstTest$ = "c"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other string"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = createStringList ('U', 'V', 'W', 'X', 'Z')
+		set $list3$ = getSubListByMatch($list2$, $list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByContaining..string ..."
+		set $tmp$ = "tt"
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = getSubListByContaining($tmp$,$list1$)
+		set $ConstTest$ = "all bottles"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "TT"
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = getSubListByContaining($tmp$,$list1$)
+		set $ConstTest$ = "all bottles"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other string"
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = getSubListByContaining($tmp$,$list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByContaining..list ..."
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = createStringList ('not', 'really not', 'not at all', 'tt', 'never ever')
+		set $list3$ = getSubListByContaining($list2$, $list1$)
+		set $ConstTest$ = "all bottles"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = createStringList ('NOT', 'Really Not', 'not at all', 'TT', 'never ever')
+		set $list3$ = getSubListByContaining($list2$, $list1$)
+		set $ConstTest$ = "all bottles"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = createStringList ('NOT', 'Really Not', 'not at all', 'not a bottle', 'never ever')
+		set $list3$ = getSubListByContaining($list2$, $list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = createStringList ('NOT', 'Really Not', 'not at all', 'ants', 'never ever')
+		set $list3$ = getSubListByContaining($list2$, $list1$)
+		set $ConstTest$ = "2"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByKey..string ..."
+		set $tmp$ = "all"
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = getSubListByKey($tmp$,$list1$)
+		set $ConstTest$ = "all=ants"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "ALL"
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = getSubListByKey($tmp$,$list1$)
+		set $ConstTest$ = "all=ants"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other"
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = getSubListByKey($tmp$,$list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByKey..list ..."
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('all', 'really not', 'not at all', 'tt', 'never ever')
+		set $list3$ = getSubListByKey($list2$, $list1$)
+		set $ConstTest$ = "all=ants"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('ALL', 'really not', 'not at all', 'tt', 'never ever')
+		set $list3$ = getSubListByKey($list2$, $list1$)
+		set $ConstTest$ = "all=ants"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('ANTS', 'really not', 'not at all', 'tt', 'never ever')
+		set $list3$ = getSubListByKey($list2$, $list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('all', 'really not', 'not at all', 'my', 'never ever')
+		set $list3$ = getSubListByKey($list2$, $list1$)
+		set $ConstTest$ = "2"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getKeyList..list ..."
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('all', 'my', 'round', 'open', 'big')
+		set $list3$ = getKeyList($list1$)
+		set $ConstTest$ = "all"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = count($list2$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('ALL=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('ALL', 'My', 'rouND', 'OPEN', 'big')
+		set $list3$ = getKeyList($list1$)
+		set $ConstTest$ = "ALL"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = count($list2$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('all', 'my', 'round', 'open', 'big')
+		set $list3$ = getKeyList($list1$)
+		set $ConstTest$ = count($list1$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = count($list2$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.12.0.16
 
 	comment ""
 	comment "-------------------------------------"
@@ -5044,40 +5777,42 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	
 	set $SectionName$ ="[secdummy]"
 	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-	if (FileExists($HometestFiles$+"\dummy.ini"))
-		set $ConstTest$ = "[secdüöä]"
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+		if (FileExists($HometestFiles$+"\dummy.ini"))
+			set $ConstTest$ = "[secdüöä]"
+			Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+			Set $CompValue$ = Trim(takeString(0, $list1$))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+			logError "Fatal: could not find .ini file"
+			isFatalError
 		endif
-	else
-		set $TestResult$ = "not o.k."
-		logError "Fatal: could not find .ini file"
-		isFatalError
-	endif
-	set $SectionName$ ="[secdüöä]"
-	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-	if (FileExists($HometestFiles$+"\dummy.ini"))
-		set $ConstTest$ = ""
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
+		set $SectionName$ ="[secdüöä]"
+		Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
+		if (FileExists($HometestFiles$+"\dummy.ini"))
+			set $ConstTest$ = ""
+			Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+			Set $CompValue$ = Trim(takeString(0, $list1$))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+			logError "Fatal: could not find .ini file"
+			isFatalError
 		endif
-	else
-		set $TestResult$ = "not o.k."
-		logError "Fatal: could not find .ini file"
-		isFatalError
-	endif
+	endif ; 4.12.1.0
 
-	Files_remove_folder
+	;Files_remove_folder
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
 		comment ""
@@ -6161,7 +6896,6 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
   	
-		; 7.12 Registry Sections
   	
 		comment ""
 		comment "-------------------------------------"
@@ -6235,7 +6969,82 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue (default)"
+			set $ConstTest$ = "Explorer.exe"
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon","Shell")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue (32)"
+			set $ConstTest$ = "Explorer.exe"
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon","Shell","32bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue  (32) standard entry"
+			Registry_opsi_org_test
+			set $ConstTest$ = "standard entry"
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0","","32bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue (64)"
+			Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+			Set $INST_SearchValue$ = "AutoRestartShell"
+			sub_retrieve_registry_data
+			set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
+			set $CompValue$ = GetRegistryValue ("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "AutoRestartShell","64bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue  (sysnative)"
+			Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+			Set $INST_SearchValue$ = "AutoRestartShell"
+			sub_retrieve_registry_data
+			set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
+			set $CompValue$ = GetRegistryValue("HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "AutoRestartShell","sysnative")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; 4.12.0.16
+
   	
 		comment ""
 		comment "-------------------------------------"
@@ -6666,11 +7475,11 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				set $regWriteValue$ = "64"
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
-				Registry loadunicodetextfile("C:\tmp\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
+				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
 				set $regWriteValue$ = "32"
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
-				Registry loadunicodetextfile("C:\tmp\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
+				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
   	
 				if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
 					Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
@@ -6681,7 +7490,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
-				Registry loadunicodetextfile("C:\tmp\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
+				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
 				if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
 					Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
 					Registry_hkcu_opsi_org_deletekey /AllNtUserDats
@@ -6689,6 +7498,42 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif
   	
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.12.0.27") >= "0"
+			comment "Testing create registry key with /AllUsrClassDats"
+			set $ConstTest$ = ""
+			if ($INST_SystemType$ = "64 Bit System")
+				set $regWriteValue$ = "64"
+				set $CompValue$ = $regWriteValue$
+				Registry_hkcu_userclasses_createkey /AllUsrClassDats
+				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-winst-test", "bitByWinst", "64bit")
+			else
+				set $regWriteValue$ = "32"
+				set $CompValue$ = $regWriteValue$
+				Registry_hkcu_userclasses_createkey /AllUsrClassDats
+				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-winst-test", "bitByWinst", "32bit")
+			endif
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Registry_hkcu_userclasses_delete_test /AllUsrClassDats
+
+			comment "Testing delete registry key with /AllUsrClassDats"
+			Registry_hkcu_userclasses_create_test /AllUsrClassDats
+			set $ConstTest$ = ""
+			Registry_hkcu_userclasses_deletekey /AllUsrClassDats
+			set $CompValue$ = GetRegistrystringvalue("[HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Registry_hkcu_userclasses_delete_test /AllUsrClassDats
+		endif
+
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
 			Registry_createkeys
 			comment ""
@@ -6826,7 +7671,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				
 				Registry_del_environment /sysnative
 				UpdateEnvironment
-				sub_check_environment
+				for %index% = "1" to "2" do sub_check_environment
 				if not (Contains($CompValue$, "deleteme"))
 					comment "passed"
 				else
@@ -6838,6 +7683,144 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				Registry_set_quoted_string
 			endif ; NT6
 		endif ; 4.11.5
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.20")
+			Registry_createkeys_with_brackets
+			set $ConstTest$ = "myentry1"
+			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]","entry1","32bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = "myentry1"
+			set $tmp1$ = "[brackets]"
+			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$,"entry1","32bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+			Registry_deletekeys_with_brackets
+			
+			Registry_createkeys_with_brackets /64bit
+			set $ConstTest$ = "myentry1"
+			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]","entry1","64bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+						set $ConstTest$ = "myentry1"
+			set $tmp1$ = "[brackets]"
+			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$,"entry1","64bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+
+			Registry_deletekeys_with_brackets /64bit
+		endif ; 4.12.0.10
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+			Registry_opsi_org_delete_test
+			Registry_opsi_org_delete_test /64bit
+			Registry_createkeys /32bit
+			message "RegKeyExists...."
+			if RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","32bit")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if $architecture$ = "32"
+				comment "default is sysnative - should on 32 bit systems work"
+				if RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","sysnative")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			else ; 64 bit
+				comment "default is sysnative - should on 64 bit systems notwork"
+				if not(RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if not(RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","sysnative"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if not(RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","64bit"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif ; 32/64
+			
+			message "RegVarExists...."
+			if RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","32bit")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if $architecture$ = "32"
+				comment "default is sysnative - should on 32 bit systems work"
+				if RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","sysnative")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			else ; 64 bit
+				comment "default is sysnative - should on 64 bit systems notwork"
+				if not(RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if not(RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","sysnative"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if not(RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","64bit"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif ; 32/64
+		endif ; 4.12.0.16
 		
 		Registry_opsi_org_delete_test
 		Registry_opsi_org_delete_test /64bit
@@ -6909,7 +7892,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "return"
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_elements "c:\tmp\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_elements "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = 'node_level-2_A color="blue"'
 		set $tmp$ = takeString(0, $list1$)
 		set $CompValue$ = Trim($tmp$)
@@ -6920,7 +7903,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_elements failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributes "c:\tmp\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributes "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = 'color="green"'
 		set $ConstTest2$ = 'count="65"'
 		set $tmp$ = takeString(0, $list1$)
@@ -6934,7 +7917,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_attributes failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_elementnames "c:\tmp\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_elementnames "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "node_level-2_A"
 		set $tmp$ = takeString(0, $list1$)
 		set $CompValue$ = Trim($tmp$)
@@ -6945,7 +7928,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_elementnames failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributenames "c:\tmp\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributenames "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "color"
 		set $ConstTest2$ = "count"
 		set $tmp$ = takeString(0, $list1$)
@@ -6959,7 +7942,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_attributenames failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_text "c:\tmp\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_text "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "Hello World"
 		set $tmp$ = takeString(0, $list1$)
 		set $CompValue$ = Trim($tmp$)
@@ -6970,7 +7953,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "XMLPatch_return_text failed"
 		endif
   	
-		set $list1$ = getReturnListFromSection ('XMLPatch_return_counting "c:\tmp\testfiles\dummy.xml"')
+		set $list1$ = getReturnListFromSection ('XMLPatch_return_counting "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "1"
 		set $ConstTest2$ = "2"
 		set $tmp$ = takeString(0, $list1$)
@@ -7563,13 +8546,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
   	
 			message "testing winbatch_start_helper_c /RunElevated"
 			winbatch_start_helper_c /RunElevated
-			set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 			message "testing winbatch_start_helper_asadmin_c /RunElevated"
 			winbatch_start_helper_asadmin_c /RunElevated
-			set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 			message "testing winbatch_start_helper_asinvoker_c /RunElevated"
 			winbatch_start_helper_asinvoker_c /RunElevated
-			set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
   	
 			marktime
 			message "testing Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
@@ -7930,7 +8913,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			message "processCall msiexec call"
 			;Winbatch_msi_standard
 			set $ConstTest$ = "0"
-			set $CompValue$ = processCall('msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress')
+			set $CompValue$ = processCall('msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "'+$HomeTestFiles$+'\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress')
 			if ($ConstTest$ = $CompValue$)
 				comment "processCall msiexec call passed"
 			else
@@ -8073,6 +9056,16 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			endif
 			DosInAnIcon_exit1
 			set $ConstTest$ = "1"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "DosBatch / DosInAnIcon  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "DosBatch / DosInAnIcon  exitcode failed"
+			endif
+			
+			ShellInAnIcon_exitcode42
+			set $ConstTest$ = "42"
 			set $CompValue$ = getLastExitCode
 			if ($ConstTest$ = $CompValue$)
 				comment "DosBatch / DosInAnIcon  exitcode passed"
@@ -8372,51 +9365,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 		set $list1$ = getOutStreamFromSection ('Execwith_Autoit_param2 "%ScriptPath%\autoit3.exe" PASS $UserPassWord$ $UserName$ $UserGroup$')
 		killtask "autoit3.exe"
   	
-		if ((CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0") and (CompareDotSeparatedNumbers(GetMsVersionInfo,"6.1") >= "0"))
-			set $list1$ = getOutStreamFromSection ('ExecWith_powershell "%SYSTEM%\\WindowsPowerShell\v1.0\powershell.exe"')
-			comment "check if the script was executed..."
-			set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
-			if ("" = $CompValue$)
-				comment "check if the script was not executed because powershell is not activated..."
-				set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
-			endif
-			if not ("" = $CompValue$)
-				comment "Execwith assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "Execwith assumed failed"
-			endif
-		endif
-			
-		if ((CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.5") >= "0") and (CompareDotSeparatedNumbers(GetMsVersionInfo,"6.1") >= "0"))
-			set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "%System%\WindowsPowerShell\v1.0\powershell.exe" winst /32bit')
-			comment "check if the script was executed..."
-			set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
-			if ("" = $CompValue$)
-				comment "check if the script was not executed because powershell is not activated..."
-				set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
-			endif
-			if not ("" = $CompValue$)
-				comment "Execwith assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "Execwith assumed failed"
-			endif
-			
-			set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "%System%\WindowsPowerShell\v1.0\powershell.exe" winst /64bit')
-			comment "check if the script was executed..."
-			set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
-			if ("" = $CompValue$)
-				comment "check if the script was not executed because powershell is not activated..."
-				set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
-			endif
-			if not ("" = $CompValue$)
-				comment "Execwith assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "Execwith assumed failed"
-			endif
-		endif
+		
 		
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
 			comment "Testing parameters for ExecWith"
@@ -9617,51 +10566,51 @@ if $Flag_RunAsLoggedOnAdmin$ = "on"
 
 		message "testing winbatch_start_helper_c"
 		winbatch_start_helper_c
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_c /RunElevated"
 		winbatch_start_helper_c /RunElevated
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_asadmin_c"
 		winbatch_start_helper_asadmin_c
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_asadmin_c /RunElevated"
 		winbatch_start_helper_asadmin_c /RunElevated
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing DosInAnIcon_start_helper_c"
 		DosInAnIcon_start_helper_c
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing DosInAnIcon_start_helper_asadmin_c"
 		DosInAnIcon_start_helper_asadmin_c
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c"
 		winbatch_start_helper_asinvoker_c
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunElevated"
 		winbatch_start_helper_asinvoker_c /RunElevated
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin1 /TimeoutSeconds 10"
 		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin1 /TimeoutSeconds 10
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin2 /TimeoutSeconds 10"
 		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin2 /TimeoutSeconds 10
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /TimeoutSeconds 10"
 		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /TimeoutSeconds 10
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c LocalAdmin /Create3 /TimeoutSeconds 10"
 		LocalAdmin /Create3
 		winbatch_start_helper_asinvoker_c /TimeoutSeconds 10
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		LocalAdmin /Delete
 		;message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin4 /TimeoutSeconds 10"
 		;winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin4 /TimeoutSeconds 10
 		;set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing DosInAnIcon_start_helper_asinvoker_c"
 		DosInAnIcon_start_helper_asinvoker_c
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /RunElevated /TimeoutSeconds 10"
 		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /RunElevated /TimeoutSeconds 10
-		set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-winst-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log")
 
 		marktime
 		message "testing Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
@@ -10101,6 +11050,11 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.0")
 	sub "%scriptpath%\sub-scripts\localfunctions.opsiscript"
 endif
 
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
+endif
+
+
 comment ""
 comment ""
 comment ""
@@ -10125,6 +11079,7 @@ comment "$winst_parametrizing$        --> " + $winst_parametrizing$
 comment "$winst_patches$              --> " + $winst_patches$
 comment "$winst_patch_hosts$          --> " + $winst_patch_hosts$
 comment "$winst_patch_text_file$      --> " + $winst_patch_text_file$
+comment "$winst_powershell$           --> " + $winst_powershell$
 comment "$winst_ProfileActions$       --> " + $winst_ProfileActions$
 comment "$subregistry$                --> " + $subregistry$
 comment "$winst_dos$                  --> " + $winst_dos$
@@ -10216,7 +11171,7 @@ comment ""
 	]
 
 [DosInAnIcon_read_cfg]
-C:\tmp\testfiles\read_alias.exe dummyalias
+$HomeTestFiles$\testfiles\read_alias.exe dummyalias
 
 [ldapsearch_groups]
 targethost: bonifax
@@ -10340,7 +11295,7 @@ wmic os get manufacturer
 [DosInAnIcon_LastWriteTime]
 @echo off
 c:
-cd c:\tmp\testFiles
+cd $HomeTestFiles$\testFiles
 dir
 
 [DosInAnIcon_prepare_copy_u_dir_main]
@@ -11407,6 +12362,13 @@ set "multi_sz_bywinst" = REG_MULTI_SZ:"A|BC|de"
 openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\quoted]
 set "quoted"="$tmp$"
 
+[Registry_createkeys_with_brackets]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+set "entry1"="myentry1"
+
+[Registry_deletekeys_with_brackets]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+
 [Registry_opsi_org_delete_test]
 deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
 
@@ -11437,7 +12399,22 @@ deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
 
 [DosInAnIcon_export_hkcu_complete_opsi_org_test]
 @echo off
-regedit /e "c:\tmp\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test
+regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test
+
+[Registry_hkcu_userclasses_create_test]
+openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_userclasses_delete_test]
+deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+
+[Registry_hkcu_userclasses_createkey]
+openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_userclasses_deletekey]
+deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a]
+
 
 [Registry_hack_forbidden_key]
 openkey [HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard]
@@ -11612,22 +12589,6 @@ $UserName = "$UserPassWord$"
 $Password = "$UserName$"
 $UserGroup = "$UserGroup$"
 
-[ExecWith_powershell]
-set-executionpolicy RemoteSigned
-echo "powershell opsi-winst-test"
-
-[execwith_powershell_architecture]
-set-executionpolicy RemoteSigned
-echo "powershell opsi-winst-test"
-$psversion
-$psversiontable
-#start-process -wait cmd.exe
-$is64BitSystem = ($env:Processor_Architecture -ne "x86")
-$is64BitPowerShell = [IntPtr]::Size -eq 8
-$env:Processor_Architecture
-[IntPtr]::Size
-$is64BitSystem
-$is64BitPowerShell
 
 ;----------------   stop   sections for execwith tests ---------------------------------
 ;----------------   start   sections for dosbatch/winbatch tests ---------------------------------
@@ -11657,7 +12618,7 @@ tasklist /FI "IMAGENAME eq helperchild.exe"
 "%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" --fork-and-stop=2
 
 [Winbatch_startprocess_with_child_nowait_from_c]
-"c:\tmp\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --fork-and-stop=2
+"$HomeTestFiles$\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --fork-and-stop=2
 
 
 [WinBatch_testing2]
@@ -11692,19 +12653,19 @@ tasklist /FI "IMAGENAME eq helperchild.exe"
 "%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" --fork-and-stop=3
 
 [Winbatch_msi_shellexecute]
-"%ScriptPath%\test-files\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+"%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard]
-msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard_from_c]
-msiexec /i "c:\tmp\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [winbatch_myinno]
 "%ScriptPath%\test-files\testFiles\myinnosetup.exe" /silent
 
 [winbatch_myinno_from_c]
-"c:\tmp\testFiles\myinnosetup.exe" /silent
+"$HomeTestFiles$\testFiles\myinnosetup.exe" /silent
 
 [winbatch_myinno_uninstall]
 "%ProgramFiles32Dir%\myinnosetup\unins000.exe" /silent
@@ -11726,32 +12687,32 @@ msiexec /i "c:\tmp\testFiles\dummy.msi" /l* "c:\tmp\dummy.install_log.txt" /qb! 
 ;"%WinstDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
 
 [winbatch_start_helper_asadmin_c]
-"c:\tmp\testFiles\opsi-winst-test-helper\opsiwinsttesthelperasadmin.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-winst-test-helper\opsiwinsttesthelperasadmin.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
 
 [winbatch_start_helper_asinvoker_c]
-"c:\tmp\testFiles\opsi-winst-test-helper\opsiwinsttesthelperasinvoker.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-winst-test-helper\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
 
 [winbatch_start_helper_c]
-"c:\tmp\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
 
 [DosInAnIcon_start_helper_c]
-"c:\tmp\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
 
 [DosInAnIcon_start_helper_asadmin_c]
-"c:\tmp\testFiles\opsi-winst-test-helper\opsiwinsttesthelperasadmin.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-winst-test-helper\opsiwinsttesthelperasadmin.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
 
 [DosInAnIcon_start_helper_asinvoker_c]
-"c:\tmp\testFiles\opsi-winst-test-helper\opsiwinsttesthelperasinvoker.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-winst-test-helper\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
 
 [Files_copy_msi_exe_2_c]
-copy "%ScriptPath%\test-files\testFiles\*.msi" "c:\tmp\testFiles"
-copy "%ScriptPath%\test-files\testFiles\*.exe" "c:\tmp\testFiles"
+copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
 
 [Files_copy_helper_2_c]
-copy "%ScriptPath%\opsi-winst-test-helper\*.exe" "c:\tmp\testFiles\opsi-winst-test-helper"
+copy "%ScriptPath%\opsi-winst-test-helper\*.exe" "$HomeTestFiles$\testFiles\opsi-winst-test-helper"
 
 [Files_clean_from_c]
-del -s -f "c:\tmp\testFiles"
+del -s -f "$HomeTestFiles$\testFiles"
 
 
 [Winbatch_msi_uninstall]
@@ -11807,6 +12768,16 @@ VERIFY OTHER 2> NUL
 echo %ERRORLEVEL%
 exit %ERRORLEVEL%
 
+[ShellInAnIcon_exitcode42]
+set exitcode=0
+VERIFY OTHER 2> NUL
+if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
+echo %exitcode%
+"%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe"
+if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
+exit %exitcode%
+
+
 [DosBatchUseradd]
 net user "$opsiadminuser$" "$opsiadminpwd$" /add
 net localgroup Administratoren /add "$opsiadminuser$"
@@ -11818,7 +12789,7 @@ rmdir /s /q "%ProfileDir%\$opsiadminuser$"
 [ExecWithSetup]
 ; http://msdn.microsoft.com/library/ee942965%28v=VS.100%29.aspx
 ; return exit code via stdout as winst cannot read exit codes from ExecWith
-$ExitCode = RunAsWait("$opsiadminuser$", @ComputerName, "$opsiadminpwd$", 1,  '"c:\tmp\testFiles\myinnosetup.exe" /silent')
+$ExitCode = RunAsWait("$opsiadminuser$", @ComputerName, "$opsiadminpwd$", 1,  '"$HomeTestFiles$\testFiles\myinnosetup.exe" /silent')
 if not @error then
 	ConsoleWrite($exitcode)
 endif

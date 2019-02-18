@@ -1,0 +1,15 @@
+encoding=UTF-8
+[actions]
+setLogLevel=7
+defVar $str$
+
+DefFunc funcwithsyntaxerr($str$ : string) : string
+	comment " now comes the syntaxerror:"
+	This-is-a-syntax-error
+EndFunc
+;----------
+; MAIN
+;----------
+Set $str$ = funcwithsyntaxerr("huhu")
+
+

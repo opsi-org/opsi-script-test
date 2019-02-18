@@ -1,0 +1,14 @@
+[actions]
+
+importlib "servicecall_auth_lib.opsiscript"
+
+authenticate()
+
+comment "I am: %opsiserviceUser%"
+opsiservicecall_myid
+
+[opsiservicecall_myid]
+"method":"getProductActionRequests_listOfHashes"
+"params":[
+          "%opsiserviceUser%"
+         ]

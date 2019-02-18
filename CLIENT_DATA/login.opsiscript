@@ -350,9 +350,9 @@ else
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.4") >= "0"
 			Files_copy_helper_2_c
 			winbatch_start_helper_c /RunAsLoggedOnUser
-			includelog "c:\tmp\testFiles\opsi-winst-test-helper\admin.log" "100"
+			includelog $HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log" "100"
 			winbatch_start_helper /RunAsLoggedOnUser
-			includelog "c:\tmp\testFiles\opsi-winst-test-helper\admin.log" "100"
+			includelog $HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log" "100"
 			Files_clean_from_c
 			
 			Files_profile_copy
@@ -703,16 +703,16 @@ deletekey [HKCU\Software\ACME]
           ]
 
 [Files_copy_helper_2_c]
-copy "%ScriptPath%\opsi-winst-test-helper\*.exe" "c:\tmp\testFiles\opsi-winst-test-helper"
+copy "%ScriptPath%\opsi-winst-test-helper\*.exe" "$HomeTestFiles$\testFiles\opsi-winst-test-helper"
 
 [Files_clean_from_c]
-del -s -f "c:\tmp\testFiles"
+del -s -f "$HomeTestFiles$\testFiles"
 
 [winbatch_start_helper_c]
-"c:\tmp\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
 
 [winbatch_start_helper]
-"%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="c:\tmp\testFiles\opsi-winst-test-helper\admin.log"
+"%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
 
 ;---------------- start sections for patch textfile test ---------------------------
 

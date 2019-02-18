@@ -1,0 +1,13 @@
+[actions]
+defvar $regWriteValue$
+
+set $regWriteValue$ = "huhu"
+Registry_hkcu_opsi_org_deletekey /allntuserdats /sysnative
+Registry_hkcu_opsi_org_test /allntuserdats /sysnative
+
+[Registry_hkcu_opsi_org_test]
+openkey [SOFTWARE\opsi.org\opsi-winst-test]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_opsi_org_deletekey]
+deletekey [SOFTWARE\opsi.org\opsi-winst-test]

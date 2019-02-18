@@ -1,0 +1,15 @@
+
+
+[actions]
+setloglevel=7
+ScriptErrorMessages = false
+
+DefVar $exitcode$
+
+if GetOS = 'Windows_NT'
+	set $exitcode$ = shellCall('echo huhu | findstr ha')
+else
+	set $exitcode$ = shellCall('echo huhu | grep ha')
+endif
+
+comment "exitcode is: "+$exitcode$

@@ -1,0 +1,25 @@
+
+encoding=UTF-8
+[Actions]
+setloglevel=9
+ScriptErrorMessages = false
+
+importLib "functionlib.opsiscript::myFunc9"
+importLib "functionlib.opsiscript::myFunc10"
+
+DefVar $mystr$
+DefVar $str1$
+DefVar $str2$
+DefStringlist $list1$
+
+set $str1$ = 'ha'
+set $str2$ = 'hi'
+set $mystr$ = $str1$ + $str2$
+
+if GetOS = 'Linux'
+	set $list1$ = myFunc10('pwd')
+else
+	set $list1$ = myFunc10('echo %cd%')
+endif
+
+

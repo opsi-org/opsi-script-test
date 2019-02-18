@@ -1,0 +1,22 @@
+
+
+[actions]
+setloglevel=7
+ScriptErrorMessages = false
+DefVar $refstr$
+Defstringlist $list$
+
+DefFunc myFunc2($str1$ : string, ref $str2$ : string, $list$: stringlist) : string
+	if $str1$ > "0"
+		set $result$ = "true"
+	else
+		set $result$ = "false"
+	endif
+endfunc
+
+if not(stringtobool(myfunc2("1",$refstr$,$list$)))
+	comment "false"
+else
+	comment "true"
+endif
+
