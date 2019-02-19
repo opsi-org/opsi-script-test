@@ -244,7 +244,7 @@ if "True" = GetProductProperty ("setfailed","False")
 ;isFatalError
 endif
 
-set $ScriptLoglevel$ = GetProductProperty ("loglevel", "6")
+set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
@@ -252,7 +252,7 @@ set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
-set $Flag_encoding$                = GetProductProperty ("encoding", "off")
+set $Flag_encoding$                = GetProductProperty ("encoding", "on")
 set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "off")
 set $Flag_winst_file$              = GetProductProperty ("files", "off")
 set $Flag_infostest$               = GetProductProperty ("infoFunctions", "off")
