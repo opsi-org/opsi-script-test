@@ -74,6 +74,7 @@ DefVar $winst_encoding$
 DefVar $winst_jsonfunctions$
 DefVar $winst_crypt$
 DefVar $winst_xml2$
+DefVar $winst_macos$
 
 DefVar $winst_local_functions$
 DefVar $winst_powershell$
@@ -123,6 +124,7 @@ DefVar $Flag_winst_local_functions$
 DefVar $Flag_subregistry$
 DefVar $Flag_winst_xml$
 DefVar $Flag_winst_xml2$
+DefVar $Flag_winst_macos$
 DefVar $Flag_winst_dos$
 DefVar $Flag_winst_winbatch$
 DefVar $Flag_execwith_test$
@@ -247,7 +249,7 @@ endif
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "off")
+set $MasterFlag$                   = GetProductProperty ("alltest", "on")
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
@@ -278,7 +280,8 @@ set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", 
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
-set $Flag_winst_xml2$               = GetProductProperty ("XML2", "off")
+set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
+set $Flag_winst_macos$             = GetProductProperty ("macOS", "off")
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
 set $Flag_internalundocumented$    = GetProductProperty ("internalundocumented", "off")
@@ -11182,6 +11185,12 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\urlparser.opsiscript"
 endif
 
+if $OS$ = "macos"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+		sub "%scriptpath%\sub-scripts\macos.opsiscript"
+	endif
+endif
+
 comment ""
 comment ""
 comment ""
@@ -11218,7 +11227,8 @@ comment "$winst_string_list$          --> " + $winst_string_list$
 comment "$subtestsub$                 --> " + $subtestsub$
 comment "$winst_winbatch$             --> " + $winst_winbatch$
 comment "$winst_xml$                  --> " + $winst_xml$
-comment "$winst_xml2$                  --> " + $winst_xml2$
+comment "$winst_xml2$                 --> " + $winst_xml2$
+comment "$winst_macos$                --> " + $winst_macos$
 comment "--------------------------------"
 comment "$compare_to_python$          --> " + $compare_to_python$
 comment "$winst_internalundocumented$ --> " + $winst_internalundocumented$
