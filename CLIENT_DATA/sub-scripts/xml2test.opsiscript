@@ -24,7 +24,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 
 	; start testing
 	set $TestResult$ = "o.k."
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.7.0")
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
 		DefVar $xml2strictMode$
 		set $xml2strictMode$ = 'false'
 		Files_copy_xml2
@@ -69,7 +69,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		set $ConstTest$ = "1"		
+		set $ConstTest$ = "1"
 		;set $list1$ = loadTextFile($HomeTestFiles$+"\unattend_win10_x64.xml")
 		;set $list1$ = getXml2Document($list1$)
 		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\unattend_win10_x64.xml")
