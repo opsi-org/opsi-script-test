@@ -9,6 +9,11 @@ opsi-script-test (4.12.1.0-1) stable; urgency=low
   * xml2
   * regex
   * netcalc
+  * DirectoryExists
+  * ExtractFileName
+  * ExtractFileExtension
+  * filestest now in subscript
+  
 
 -- detlef oertel <d.oertel@uib.de>  Thu,  24 Jan 2019 15:00:00 +0200
 
