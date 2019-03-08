@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE profile>
+<profile xmlns="http://www.suse.com/1.0/yast2ns" xmlns:config="http://www.suse.com/1.0/configns">
+<!--  -->
+  <deploy_image>
+    <image_installation config:type="boolean">true</image_installation>
+  </deploy_image>
+  <!--  -->
+  <services-manager>
+    <default_target>graphical</default_target>
+    <services>
+      <disable config:type="list"/>
+      <enable config:type="list">
+        <service>sshd</service>
+      </enable>
+    </services>
+  </services-manager>
+  <software>
+    <image/>
+    <instsource/>
+    <packages config:type="list">
+      <package>glibc</package>
+      <package>openssh</package>
+      <package>lsb-release</package>
+      <package>grub2</package>
+      <package>syslinux</package>
+      <package>snapper</package>
+      <package>librsync2</package>
+
+      <!-- <package>SuSEfirewall2</package> -->
+      <package>kexec-tools</package>
+      <package>e2fsprogs</package>
+      <package>btrfsprogs</package>
+      <package>python</package>
+    </packages>
+    <patterns config:type="list">
+      <pattern>yast2_basis</pattern>
+      <pattern>x11</pattern>
+      <pattern>sw_management</pattern>
+      <pattern>non_oss</pattern>
+      <pattern>kde</pattern>
+      <pattern>games</pattern>
+      <pattern>fonts</pattern>
+      <pattern>enhanced_base</pattern>
+      <pattern>apparmor</pattern>
+      <pattern>imaging</pattern>
+      <pattern>office</pattern>
+      <pattern>kde_plasma</pattern>
+      <pattern>base</pattern>
+      <pattern>multimedia</pattern>
+    </patterns>
+  </software>
+  <scripts>
+    <chroot-scripts config:type="list">
+      <script>
+        <chrooted config:type="boolean">false</chrooted>
+        <notification>Please wait while opsi-client is installed...</notification>
+        <location>file:///opsi-client-agent.sh</location>
+        <feedback config:type="boolean">#@do_opsi_client*#</feedback>
+        <feedback_type>message</feedback_type>
+      </script>
+    </chroot-scripts>
+    <post-scripts config:type="list">
+      <script>
+        <notification>Please wait while opsi configure the system...</notification>
+        <filename>opsi-postinst.sh</filename>
+        <source>
+          <![CDATA[
+            #! /bin/sh
+            set -x
+            export PATH=/sbin:/usr/sbin:/usr/local/sbin:/root/bin:/usr/local/bin:/usr/bin:/bin:/usr/games
+            /usr/bin/zypper lr
+            rm /etc/zypp/repos.d/SLES*.repo
+            /usr/bin/zypper lr
+            #/usr/bin/zypper rr 1
+          ]]>
+        </source>
+        <feedback config:type="boolean">true</feedback>
+        <feedback_type>message</feedback_type>
+      </script>
+    </post-scripts>
+  </scripts>
+</profile>

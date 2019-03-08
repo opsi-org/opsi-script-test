@@ -1,0 +1,101 @@
+; This code is part of the opsi.org project
+;
+; Copyright (c) uib gmbh (www.uib.de)
+; This sourcecode is owned by the uib gmbh, D55118 Mainz, Germany
+; and published under the Terms of the GNU Affero General Public License.
+; Text of the AGPL: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+; credits: http://www.opsi.org/credits/
+
+
+
+
+[Actions]
+requiredWinstVersion >= "4.12.1.0"
+ScriptErrorMessages = false
+encoding=utf8
+
+defvar $HomeTestFiles$
+set $HomeTestFiles$ = "/tmp/opsi-script-test/"
+
+
+deffunc installmacosdmg($mydmg$ : string) : void
+	defStringlist $outlist$
+	defvar $outline$
+	defVar $regexp$
+	defVar $mountdevice$
+	defVar $mountpoint$
+	defvar $exitcode$
+	set $regexp$ = "\/Volumes\/"
+
+	; todo test file, test extension
+	; convert to supress license agreement
+	; https://superuser.com/questions/221136/bypass-a-licence-agreement-when-mounting-a-dmg-on-the-command-line
+	set $outlist$ = shellcall("hdiutil convert -quiet "+$mydmg$+" -format UDTO -o /tmp/converted.cdr")
+	set $outlist$ = shellcall("hdiutil attach -quiet -nobrowse -noverify -noautoopen -mountpoint /tmp/opsimountpoint /tmp/converted.cdr")
+	;set $outlist$ = shellcall("hdiutil attach "+$mydmg$)
+	; get the line with /volumes/
+	;set $outlist$ = getSubListByContainingRegex($regexp$,$outlist$)
+	;set $outline$ = takeString(0 , $outlist$)
+	;set $outlist$ = splitStringOnWhitespace($outline$)
+	;set $mountdevice$ = takeString(0 , $outlist$)
+	;set $mountpoint$ = takeString(1 , $outlist$)
+	; get content (one file per line)
+	; set $outlist$ = shellcall("ls -1 "+$mountpoint$)
+	set $outlist$ = shellcall("ls -1 /tmp/opsimountpoint")
+	; do we have a .app
+	set $regexp$ =  "\.app$"
+	set $outlist$ = getSubListByContainingRegex($regexp$,$outlist$)
+	if count($outlist$) > "0"
+		; use the first one
+		set $outline$ = trim(takeString("0" , $outlist$))
+		; is it a directory (it should)
+		Files_copy_app
+	else
+		set $regexp$ =  "\.pkg\n"
+		set $outlist$ = getSubListByContainingRegex($regexp$,$outlist$)
+		if count($outlist$) > "0"
+			; install pkg
+			; https://apple.stackexchange.com/questions/72226/installing-pkg-with-terminal
+			; use the first one
+			set $outline$ = trim(takeString("0" , $outlist$))
+			; is it a directory (it should)
+			set $exitcode$ = shellcall("installer -allowUntrusted -verbose -pkg "+$outline$+" -target / -dumplog /tmp/installer.log")
+			if ($exitcode$ = "0")
+				logerror "installer did not end with exitcode 0"
+				includelog("/tmp/installer.log","50")
+			endif
+		endif
+	endif
+	; unmount
+	set $exitcode$ = shellcall("hdiutil detach /tmp/opsimountpoint")
+	if ($exitcode$ = "0")
+		logerror "hdiutil did not end with exitcode 0"
+	endif
+	; shellcall("hdiutil detach "+$mountdevice$)
+	Files_cleanup
+	
+	[Files_cleanup]
+	del -f /tmp/installer.log
+	del -f /tmp/converted.cdr
+	del -f /tmp/opsimountpoint
+
+	[Files_copy_app]
+	copy -s /tmp/opsimountpoint/$outline$/* /Applications/$outline$/
+endfunc
+
+Files_copy_macos
+
+installmacosdmg($HomeTestFiles$+"/FileZilla_3.40.0_macosx-x86_setup_bundled.dmg")
+
+Files_cleanup_macos
+
+
+[Files_copy_macos]
+; sub test:
+copy "%scriptpath%\test-files\macos\*" "$HomeTestFiles$"
+; standalone test:
+copy "%scriptpath%\..\test-files\macos\*" "$HomeTestFiles$"
+
+
+[Files_cleanup_macos]
+del -s "$HomeTestFiles$"

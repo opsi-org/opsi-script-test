@@ -340,6 +340,15 @@ default: ["off"]
 
 [ProductProperty]
 type: unicode
+name: xml2
+multivalue: False
+editable: False
+description: xml2 section and functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
 name: localfunctions
 multivalue: False
 editable: False
@@ -353,6 +362,33 @@ name: powershell
 multivalue: False
 editable: False
 description: powershell with opsi-script
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: regex
+multivalue: False
+editable: False
+description: Regex section and functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: networkcalc
+multivalue: False
+editable: False
+description: NetworkCalc section and functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: urlparser
+multivalue: False
+editable: False
+description: Urlparser section and functions
 values: ["off", "on"]
 default: ["off"]
 
