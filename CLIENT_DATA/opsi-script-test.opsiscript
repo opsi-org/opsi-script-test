@@ -226,8 +226,8 @@ Files_testFiles
 set $FinalResult$ = "passed"
 
 
-set $Lic_ProductId$ = "opsi-winst-test"
-set $LicensePool$ = "opsi-winst-test-pool"
+set $Lic_ProductId$ = "opsi-script-test"
+set $LicensePool$ = "opsi-script-test-pool"
 
 
 
@@ -9201,7 +9201,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		comment "DemandLicenseKey"
 		Set $ConstTest$ = demandLicenseKey ($licensepool$)
-		set $CompValue$ = "opsiwinsttest-test-license-key"
+		set $CompValue$ = "opsiscripttest-test-license-key"
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -9215,11 +9215,10 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 		set $tmp$ = takeString(0, splitstring($tmp$,'"]'))
 		comment " remove heading brackets and quote :"
 		set $tmp$ = takeString(1, splitstring($tmp$,'["'))
-		comment " split servers in to list :"
 		set $list1$ = splitstring($tmp$,";")
-		comment "this should be the model entry from the hw-audit "
+		comment "this should be the id of the license entry "
 		set $ConstTest$ = takeString(0, $list1$)
-		set $CompValue$ = "l_opsi-winst-test"
+		set $CompValue$ = "l_opsi-script-test-pool"
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -9241,7 +9240,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		comment "DemandLicenseKey"
 		Set $ConstTest$ = demandLicenseKey ("",$Lic_ProductId$)
-		set $CompValue$ = "opsiwinsttest-test-license-key"
+		set $CompValue$ = "opsiscripttest-test-license-key"
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -9277,10 +9276,10 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 		set $tmp$ = takeString(0, splitstring($tmp$,'"]'))
 		comment " remove heading brackets and quote :"
 		set $tmp$ = takeString(1, splitstring($tmp$,'["'))
-		comment " split servers in to list :"
 		set $list1$ = splitstring($tmp$,";")
-		comment "this should be the model entry from the hw-audit "
+		comment "this should be the id of the license entry ans empty in this case"
 		set $ConstTest$ = takeString(0, $list1$)
+		set $CompValue$ = ""
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
