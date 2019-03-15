@@ -22,8 +22,8 @@ DefFunc myFunc9($str1$ : string) : stringlist
 endfunc
 
 DefFunc myFunc10($str1$ : string) : stringlist
-	comment "start call external myfunc8 from myfunc9 with parameter: "+$str1$	
+	comment "start call external myfunc9 from myfunc10 with parameter: "+$str1$	
 	set $result$ = myFunc9($str1$)
-	comment "finished call external myfunc8 from myfunc9"
+	comment "finished call external myfunc9 from myfunc10"
 endfunc
 

@@ -263,6 +263,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "opennode not existing node"
+		Files_copy_xml2
 		sub_clean_xml2cmdLines
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green" // node_level-3_A'
 		comment "This should not find the exiting node_level-2_B because strictmode=false and so will create a second node_level-2_B"
@@ -292,11 +293,34 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
+		
+		message "syntax error handling"
+		markErrorNumber
+		FatalOnSyntaxError = False
+		ScriptErrorMessages = False
+		message "opennode not existing node with syntax error"
+		sub_clean_xml2cmdLines
+		Files_copy_xml2
+		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color=green"" // node_level-3_A'
+		set $xml2changeValue$ = '"color" "yellow"'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
+		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
+		FatalOnSyntaxError = True
+		if errorsOccuredSinceMark > 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "SetAttribute"
 		sub_clean_xml2cmdLines
+		Files_copy_xml2
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green"'
 		set $xml2changeValue$ = '"color" "yellow"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
@@ -616,7 +640,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "opennode not existing node"
 		sub_clean_xml2cmdLines
-		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green count="65"" // node_level-3_A'
+		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green" count="65" // node_level-3_A'
 		set $xml2changeValue$ = '"color" "yellow"'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
 		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
@@ -643,6 +667,26 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
+		
+		message "syntax error handling"
+		markErrorNumber
+		FatalOnSyntaxError = False
+		ScriptErrorMessages = False
+		message "opennode not existing node with syntax error"
+		sub_clean_xml2cmdLines
+		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green count="65"" // node_level-3_A'
+		set $xml2changeValue$ = '"color" "yellow"'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
+		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
+		FatalOnSyntaxError = True
+		if errorsOccuredSinceMark > 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
 
 		comment ""
 		comment "-------------------------------------"
