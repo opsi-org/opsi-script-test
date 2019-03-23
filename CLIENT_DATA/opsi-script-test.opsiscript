@@ -249,7 +249,7 @@ endif
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "off")
+set $MasterFlag$                   = GetProductProperty ("alltest", "on")
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
@@ -262,7 +262,7 @@ set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
 set $Flag_winst_ldap_search$       = GetProductProperty ("LdapSearch", "off")
 set $Flag_licensemanagement$       = GetProductProperty ("licensemanagement", "off")
 set $Flag_winst_link_folder$       = GetProductProperty ("LinkFolder", "off")
-set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "on")
+set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
 set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
