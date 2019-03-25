@@ -14,7 +14,8 @@ opsi-script-test (4.12.1.0-1) stable; urgency=low
   * ExtractFileExtension
   * filestest now in subscript
   * changes for license test (opsi-script-test)
-  
+  *
+  * todo: adapt licenesdb for changes for license test (opsi-script-test)
 
 -- detlef oertel <d.oertel@uib.de>  Thu,  24 Jan 2019 15:00:00 +0200
 
