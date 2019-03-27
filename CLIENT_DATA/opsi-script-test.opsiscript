@@ -249,11 +249,11 @@ endif
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "on")
+set $MasterFlag$                   = GetProductProperty ("alltest", "off")
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
-set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "on")
+set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
 set $Flag_encoding$                = GetProductProperty ("encoding", "off")
 set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "off")
 set $Flag_winst_file$              = GetProductProperty ("files", "off")
@@ -280,7 +280,7 @@ set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", 
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
-set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
+set $Flag_winst_xml2$              = GetProductProperty ("XML2", "on")
 set $Flag_winst_macos$             = GetProductProperty ("macOS", "off")
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
@@ -2461,25 +2461,34 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			message "getIpByName"
 			set $ConstTest$ = "%IPAddress%"
 			set $string1$ = "%IPAddress%"
+			markErrorNumber
 			set $CompValue$ = getIpByName($string1$)
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
-				set $TestResult$ = "not o.k."
+				if errorsOccuredSinceMark = 0
+					set $TestResult$ = "not o.k."
+				endif
 				LogWarning "failed"
 			endif
+			markErrorNumber
 			set $CompValue$ = getIpByName("%HostID%")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
-				set $TestResult$ = "not o.k."
+				if errorsOccuredSinceMark = 0
+					set $TestResult$ = "not o.k."
+				endif
 				LogWarning "failed"
 			endif
+			markErrorNumber
 			set $CompValue$ = getIpByName("%PCName%")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
-				set $TestResult$ = "not o.k."
+				if errorsOccuredSinceMark = 0
+					set $TestResult$ = "not o.k."
+				endif
 				LogWarning "failed"
 			endif
 		endif ; windows
@@ -9077,17 +9086,19 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		
-		comment "We will get the property value from product: opsi-winst-test-followup and property: do_not_change"
-		set $ConstTest$ = "expected value"
-		Set $list$ = getReturnListFromSection('opsiservicecall_getProductProperties_hash')
-		set $CompValue$ = takeFirstStringContaining($list$,"do_not_change")
-		set $CompValue$ = takeString(1,splitString($CompValue$,'='))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local")
+			comment "We will get the property value from product: opsi-winst-test-followup and property: do_not_change"
+			set $ConstTest$ = "expected value"
+			Set $list$ = getReturnListFromSection('opsiservicecall_getProductProperties_hash')
+			set $CompValue$ = takeFirstStringContaining($list$,"do_not_change")
+			set $CompValue$ = takeString(1,splitString($CompValue$,'='))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; uib offixe
 
 
 		if $OS$ = "Windows_NT"

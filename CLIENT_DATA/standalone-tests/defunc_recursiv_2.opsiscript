@@ -1,0 +1,32 @@
+
+
+[actions]
+setloglevel=7
+ScriptErrorMessages = false
+
+
+
+;public static void rekursiv(int a)
+;   {
+;      System.out.println("Hinweg "+ a );
+;      a++;
+;      if (a<5)
+;      {
+;         rekursiv(a);  // rekursiver Aufruf
+;      }
+;      System.out.println("Rueckweg " + a );
+;   }
+
+DefFunc recursiv($zahlstr$ : string) : void
+	;http://www.straub.as/java/basic/rekursiv.html
+	
+	comment "Way in : "+$zahlstr$
+	set $zahlstr$ = calculate($zahlstr$+'+1')
+	if $zahlstr$ INT< "5"
+		recursiv($zahlstr$)
+	endif
+	comment "Way out : "+$zahlstr$
+endfunc
+
+
+recursiv("0")
