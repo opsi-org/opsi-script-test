@@ -937,7 +937,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
 			Files_del_empty_folder
 			Files_unzipfile_dir
-			if fileexists("$HomeTestFiles$\dummy.msi")
+			if fileexists($HomeTestFiles$+"\dummy.msi")
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -945,13 +945,13 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
 			Files_del_empty_folder
 			Files_unzipfile_file
-			if fileexists("$HomeTestFiles$\dummy.msi")
+			if fileexists($HomeTestFiles$+"\dummy.msi")
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			Files_empty_folder
+			;Files_empty_folder
 		else
 			set $TestResult$ = "not o.k."
 			logError "Fatal: could not delete all files"
@@ -1166,7 +1166,8 @@ copy -s "%ScriptPath%/test-files/testFiles/*.*" "$HomeTestFiles$"
 
 [Files_empty_folder]
 Delete -s -f "$HomeTestFiles$"
-del -sf "%opsiTmpDir%\zipfile.zip"
+del -sf "%opsiTmpDir%\testdir.zip"
+del -sf "%opsiTmpDir%\testfile.zip"
 
 [Files_delete_hidden]
 Delete "$HomeTestFiles$\.hidden.txt"

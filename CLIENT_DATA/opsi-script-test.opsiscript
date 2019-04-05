@@ -3041,6 +3041,48 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
+	
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a','b', 'c', 'd')
+	Set $CompValue$ = takeString(2, $list1$)
+
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a','', 'c', 'd')
+	Set $CompValue$ = takeString(2, $list1$)
+
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = ""
+	set $list1$ = createStringList ('a','', 'c', 'd')
+	Set $CompValue$ = takeString(1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "0"
+	set $list1$ = createStringList ()
+	Set $CompValue$ = count($list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
 
 	comment ""
 	comment "-------------------------------------"
