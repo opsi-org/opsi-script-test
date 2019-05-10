@@ -75,6 +75,7 @@ DefVar $winst_jsonfunctions$
 DefVar $winst_crypt$
 DefVar $winst_xml2$
 DefVar $winst_macos$
+DefVar $winst_wmi$
 
 DefVar $winst_local_functions$
 DefVar $winst_powershell$
@@ -144,6 +145,7 @@ DefVar $Flag_powershell$
 DefVar $Flag_subregex$
 DefVar $Flag_subnetworkcalc$
 DefVar $Flag_suburlparser$
+DefVar $Flag_subwmi$
 
 DefStringList $list$
 DefStringList $list1$
@@ -154,6 +156,7 @@ DefStringList $INST_ResultList$
 DefStringList $INST_ResultList2$
 DefStringList $INST_ResultList3$
 DefStringList $languageInfo$
+DefStringList $resultlist$
 
 DefVar $INST_SearchKey$
 DefVar $INST_SearchValue$
@@ -262,7 +265,8 @@ set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
 set $Flag_winst_ldap_search$       = GetProductProperty ("LdapSearch", "off")
 set $Flag_licensemanagement$       = GetProductProperty ("licensemanagement", "off")
 set $Flag_winst_link_folder$       = GetProductProperty ("LinkFolder", "off")
-set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "on")
+set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off")
+set $Flag_winst_macos$             = GetProductProperty ("macOS", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
 set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
@@ -278,10 +282,11 @@ set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
 set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
+set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
-set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
-set $Flag_winst_macos$             = GetProductProperty ("macOS", "off")
+set $Flag_winst_xml2$              = GetProductProperty ("XML2", "on")
+
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
 set $Flag_internalundocumented$    = GetProductProperty ("internalundocumented", "off")
@@ -2461,25 +2466,34 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			message "getIpByName"
 			set $ConstTest$ = "%IPAddress%"
 			set $string1$ = "%IPAddress%"
+			markErrorNumber
 			set $CompValue$ = getIpByName($string1$)
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
-				set $TestResult$ = "not o.k."
+				if errorsOccuredSinceMark = 0
+					set $TestResult$ = "not o.k."
+				endif
 				LogWarning "failed"
 			endif
+			markErrorNumber
 			set $CompValue$ = getIpByName("%HostID%")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
-				set $TestResult$ = "not o.k."
+				if errorsOccuredSinceMark = 0
+					set $TestResult$ = "not o.k."
+				endif
 				LogWarning "failed"
 			endif
+			markErrorNumber
 			set $CompValue$ = getIpByName("%PCName%")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
-				set $TestResult$ = "not o.k."
+				if errorsOccuredSinceMark = 0
+					set $TestResult$ = "not o.k."
+				endif
 				LogWarning "failed"
 			endif
 		endif ; windows
@@ -3021,6 +3035,48 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	set $list1$ = createStringList ('a','b', 'c', 'd')
 	Set $CompValue$ = takeString(2, $list1$)
 
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a','b', 'c', 'd')
+	Set $CompValue$ = takeString(2, $list1$)
+
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a','', 'c', 'd')
+	Set $CompValue$ = takeString(2, $list1$)
+
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = ""
+	set $list1$ = createStringList ('a','', 'c', 'd')
+	Set $CompValue$ = takeString(1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "0"
+	set $list1$ = createStringList ()
+	Set $CompValue$ = count($list1$)
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
 	else
@@ -9077,17 +9133,19 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		
-		comment "We will get the property value from product: opsi-winst-test-followup and property: do_not_change"
-		set $ConstTest$ = "expected value"
-		Set $list$ = getReturnListFromSection('opsiservicecall_getProductProperties_hash')
-		set $CompValue$ = takeFirstStringContaining($list$,"do_not_change")
-		set $CompValue$ = takeString(1,splitString($CompValue$,'='))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local")
+			comment "We will get the property value from product: opsi-winst-test-followup and property: do_not_change"
+			set $ConstTest$ = "expected value"
+			Set $list$ = getReturnListFromSection('opsiservicecall_getProductProperties_hash')
+			set $CompValue$ = takeFirstStringContaining($list$,"do_not_change")
+			set $CompValue$ = takeString(1,splitString($CompValue$,'='))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; uib offixe
 
 
 		if $OS$ = "Windows_NT"
@@ -9218,7 +9276,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 		set $list1$ = splitstring($tmp$,";")
 		comment "this should be the id of the license entry "
 		set $ConstTest$ = takeString(0, $list1$)
-		set $CompValue$ = "l_opsi-script-test-pool"
+		set $CompValue$ = "l_opsi-script-test-license"
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -9319,7 +9377,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		comment "getLastServiceErrorClass"
-		Set $ConstTest$ = demandLicenseKey ("opsi-winst-test-empty-pool")
+		Set $ConstTest$ = demandLicenseKey ("opsi-script-test-empty-pool")
 		if getLastServiceErrorClass = "LicenseMissingError"
 			comment "passed"
 		else
@@ -10412,6 +10470,12 @@ if $OS$ = "macos"
 	endif
 endif
 
+if $OS$ = "Windows_NT"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+		sub "%scriptpath%\sub-scripts\wmitest.opsiscript"
+	endif
+endif
+
 comment ""
 comment ""
 comment ""
@@ -10431,6 +10495,7 @@ comment "$winst_ldap_search$          --> " + $winst_ldap_search$
 comment "$winst_licensemanagement$    --> " + $winst_licensemanagement$
 comment "$winst_link_folder$          --> " + $winst_link_folder$
 comment "$winst_local_functions$      --> " + $winst_local_functions$
+comment "$winst_macos$                --> " + $winst_macos$
 comment "$winst_opsiServiceCall$      --> " + $winst_opsiServiceCall$
 comment "$winst_parametrizing$        --> " + $winst_parametrizing$
 comment "$winst_patches$              --> " + $winst_patches$
@@ -10447,9 +10512,9 @@ comment "$winst_string$               --> " + $winst_string$
 comment "$winst_string_list$          --> " + $winst_string_list$
 comment "$subtestsub$                 --> " + $subtestsub$
 comment "$winst_winbatch$             --> " + $winst_winbatch$
+comment "$winst_wmi$                  --> " + $winst_wmi$
 comment "$winst_xml$                  --> " + $winst_xml$
 comment "$winst_xml2$                 --> " + $winst_xml2$
-comment "$winst_macos$                --> " + $winst_macos$
 comment "--------------------------------"
 comment "$compare_to_python$          --> " + $compare_to_python$
 comment "$winst_internalundocumented$ --> " + $winst_internalundocumented$

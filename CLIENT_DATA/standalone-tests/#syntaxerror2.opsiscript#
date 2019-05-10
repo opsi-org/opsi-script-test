@@ -1,9 +1,0 @@
-[actions]
-if 'a'='a'
-defvar $test$
-else
-set $test$ = 'hu'
-;set $test1$ = 'ha'
-;endif
-
-[stop]

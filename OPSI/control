@@ -392,3 +392,12 @@ description: Urlparser section and functions
 values: ["off", "on"]
 default: ["off"]
 
+[ProductProperty]
+type: unicode
+name: wmi
+multivalue: False
+editable: False
+description: WMI interface
+values: ["off", "on"]
+default: ["off"]
+

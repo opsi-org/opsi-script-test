@@ -1,0 +1,36 @@
+
+
+[actions]
+setloglevel=7
+ScriptErrorMessages = false
+
+DefVar $zahlstr$
+DefVar $result$
+
+DefFunc fakultaet_str($zahlstr$ : string) : string
+	DefVar $zahl2str$
+	
+	if $zahlstr$ = "1"
+		set $result$ = "1"
+	else
+		;set $zahl2str$ = calculate($zahlstr$+'-1')
+		;set $result$ = calculate($zahlstr$ + ' * ' + fakultaet_str($zahl2str$))
+		set $result$ = calculate($zahlstr$ + ' * ' + fakultaet_str(calculate($zahlstr$+'-1')))
+	endif
+endfunc
+
+set $zahlstr$ = "1"
+set $result$ = fakultaet_str($zahlstr$)
+comment "fakultaet "+$zahlstr$+" ist: "+$result$
+
+set $zahlstr$ = "2"
+set $result$ = fakultaet_str($zahlstr$)
+comment "fakultaet "+$zahlstr$+" ist: "+$result$
+
+set $zahlstr$ = "3"
+set $result$ = fakultaet_str($zahlstr$)
+comment "fakultaet "+$zahlstr$+" ist: "+$result$
+
+set $zahlstr$ = "4"
+set $result$ = fakultaet_str($zahlstr$)
+comment "fakultaet "+$zahlstr$+" ist: "+$result$

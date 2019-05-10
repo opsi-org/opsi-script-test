@@ -817,7 +817,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				DosInAnIcon_createDirectory
 				if ($INST_SystemType$ = "64 Bit System")
 					set $ConstTest$ = "true"
-					Set $tmp$ = "C:\Windows\system32\SecureBootUpdates"
+					Set $tmp$ = "C:\Windows\system32\Boot"
 					set $tmp1$ = "64bit"
 					set $CompValue$ = boolToString(DirectoryExists($tmp$,$tmp1$))
 					if ($ConstTest$ = $CompValue$)
@@ -827,7 +827,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 						LogWarning "failed"
 					endif
 					set $ConstTest$ = "true"
-					Set $tmp$ = "C:\Windows\system32\SecureBootUpdates"
+					Set $tmp$ = "C:\Windows\system32\Boot"
 					set $tmp1$ = "sysnative"
 					set $CompValue$ = boolToString(DirectoryExists($tmp$,$tmp1$))
 					if ($ConstTest$ = $CompValue$)
@@ -837,7 +837,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 						LogWarning "failed"
 					endif
 					set $ConstTest$ = "true"
-					Set $tmp$ = "C:\Windows\system32\SecureBootUpdates"
+					Set $tmp$ = "C:\Windows\system32\Boot"
 					; fall back to sysnative
 					set $CompValue$ = boolToString(DirectoryExists($tmp$))
 					if ($ConstTest$ = $CompValue$)
@@ -847,7 +847,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 						LogWarning "failed"
 					endif
 					set $ConstTest$ = "false"
-					Set $tmp$ = "C:\Windows\system32\SecureBootUpdates"
+					Set $tmp$ = "C:\Windows\system32\Boot"
 					set $tmp1$ = "32bit"
 					set $CompValue$ = boolToString(DirectoryExists($tmp$,$tmp1$))
 					if ($ConstTest$ = $CompValue$)
@@ -908,6 +908,56 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 		endif
+	endif
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "zipfile / unzipfile"
+		
+		if (FileExists($HomeTestFiles$))
+			Files_empty_folder
+		endif
+		
+		if not (FileExists($HomeTestFiles$))
+			Files_fill_testfiles
+			Files_zipfile
+			if fileexists("%opsiTmpDir%\testfile.zip")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if fileexists("%opsiTmpDir%\testdir.zip")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Files_del_empty_folder
+			Files_unzipfile_dir
+			if fileexists($HomeTestFiles$+"\dummy.msi")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Files_del_empty_folder
+			Files_unzipfile_file
+			if fileexists($HomeTestFiles$+"\dummy.msi")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			;Files_empty_folder
+		else
+			set $TestResult$ = "not o.k."
+			logError "Fatal: could not delete all files"
+			isFatalError
+		endif
+
 	endif
 
 
@@ -1111,9 +1161,13 @@ ls
 cd "subDirectory/subsubDirectory"
 echo "Hello World" > dummyToday.txt
 
+[Files_fill_testfiles]
+copy -s "%ScriptPath%/test-files/testFiles/*.*" "$HomeTestFiles$"
 
 [Files_empty_folder]
 Delete -s -f "$HomeTestFiles$"
+del -sf "%opsiTmpDir%\testdir.zip"
+del -sf "%opsiTmpDir%\testfile.zip"
 
 [Files_delete_hidden]
 Delete "$HomeTestFiles$\.hidden.txt"
@@ -1198,6 +1252,17 @@ set -x
 cd $HomeTestFiles$
 find . -maxdepth 1 -perm 444 -ls
 
+[Files_zipfile]
+zipfile "$HomeTestFiles$\" "%opsiTmpDir%\testdir.zip" 
+zipfile "$HomeTestFiles$\dummy.msi" "%opsiTmpDir%\testfile.zip" 
+
+[Files_unzipfile_dir]
+checktargetpath = "$HomeTestFiles$\"
+unzipfile "%opsiTmpDir%\testdir.zip" "$HomeTestFiles$\" 
+
+[Files_unzipfile_file]
+checktargetpath = "$HomeTestFiles$\"
+unzipfile "%opsiTmpDir%\testfile.zip" "$HomeTestFiles$\" 
 
 [Files_zip]
 zip "$HomeTestFiles$\files\zip" "$HomeTestFiles$\files\*.*"

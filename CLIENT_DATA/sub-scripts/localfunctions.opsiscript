@@ -552,6 +552,75 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 	endif ; 4.12.0.36
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+	
+		DefFunc fakultaet_str($zahlstr$ : string) : string
+			DefVar $zahl2str$
+			
+			if $zahlstr$ = "1"
+				set $result$ = "1"
+			else
+				;set $zahl2str$ = calculate($zahlstr$+'-1')
+				;set $result$ = calculate($zahlstr$ + ' * ' + fakultaet_str($zahl2str$))
+				set $result$ = calculate($zahlstr$ + ' * ' + fakultaet_str(calculate($zahlstr$+'-1')))
+			endif
+		endfunc
+		
+		set $CompValue$ = "1"
+		set $str1$ = "1"
+		set $ConstTest$ = fakultaet_str($str1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed: fakultaet "+$str1$+" ist: "+$ConstTest$
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $CompValue$ = "2"
+		set $str1$ = "2"
+		set $ConstTest$ = fakultaet_str($str1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed: fakultaet "+$str1$+" ist: "+$ConstTest$
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $CompValue$ = "6"
+		set $str1$ = "3"
+		set $ConstTest$ = fakultaet_str($str1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed: fakultaet "+$str1$+" ist: "+$ConstTest$
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $CompValue$ = "24"
+		set $str1$ = "4"
+		set $ConstTest$ = fakultaet_str($str1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed: fakultaet "+$str1$+" ist: "+$ConstTest$
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefFunc recursiv_in_and_out($zahlstr$ : string) : void
+			;http://www.straub.as/java/basic/rekursiv.html
+			
+			comment "Way in : "+$zahlstr$
+			set $zahlstr$ = calculate($zahlstr$+'+1')
+			if $zahlstr$ INT< "5"
+				recursiv_in_and_out($zahlstr$)
+			endif
+			comment "Way out : "+$zahlstr$
+		endfunc
+		
+		recursiv_in_and_out("0")
+
+	endif ; 4.12.0.36
 
 	sub_compareResult
 	set $winst_local_functions$ = $SubResult$
