@@ -1,0 +1,20 @@
+encoding=UTF-8
+[Actions]
+ 
+DefVar $Var1$
+DefVar $Var2$
+DefVar $exitcode$
+
+set $Var1$ = "1"
+set $Var2$ = "2"
+
+importLib "comment_in_imported_function_test_lib.opsiscript"
+
+if ($Var1$ = "1")
+   set $exitcode$ = function-exitcode_check("0","false","Reboot")
+   comment $exitcode$
+
+   if ($Var2$ = "2")
+      comment $Var2$
+   endif
+endif

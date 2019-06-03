@@ -1,0 +1,36 @@
+
+
+[actions]
+setloglevel=8
+ScriptErrorMessages = false
+
+DefVar $mystr$
+DefVar $countobj$
+;set $mystr$ = '[{"Class": {"Type":   "VIRTUAL","Opsi":   "DEVICE_ID"}}]'
+
+set $mystr$ =  EscapeString: [{"Class": {"Type":   "VIRTUAL","Opsi":   "DEVICE_ID"}}],   "Values": [      {         "Type":   "varchar(10)",         "Scope":  "g",         "Opsi":   "deviceType",         "WMI":    "PNPDeviceID.split('\\\\')[0]"      },      {         "Type":   "varchar(4)",         "Scope":  "g",         "Opsi":   "vendorId",         "WMI":    "PNPDeviceID.split('\\\\')[1].replace('FUNC_01&', '').split('&')[0].split('_')[1]",         "Linux":  "vendorId"      },      {         "Type":   "varchar(4)",         "Scope":  "g",         "Opsi":   "deviceId",         "WMI":    "PNPDeviceID.split('\\\\')[1].replace('FUNC_01&', '').split('&')[1].split('_')[1]",         "Linux":  "deviceId"      },      {         "Type":   "varchar(4)",         "Scope":  "g",         "Opsi":   "subsystemVendorId",         "WMI":    "PNPDeviceID.split('\\\\')[1].replace('FUNC_01&', '').split('&')[2].split('_')[1][:4]",         "Linux":  "subsystemVendorId"      },      {         "Type":   "varchar(4)",         "Scope":  "g",         "Opsi":   "subsystemDeviceId",         "WMI":    "PNPDeviceID.split('\\\\')[1].replace('FUNC_01&', '').split('&')[2].split('_')[1][4:]",         "Linux":  "subsystemDeviceId"      },      {         "Type":   "varchar(8)",         "Scope":  "g",         "Opsi":   "revision",         "WMI":    "PNPDeviceID.split('\\\\')[1].replace('FUNC_01&', '').split('&')[3].split('_')[1]",         "Linux":  "revision"      }  ]}]
+
+if jsonIsValid ($mystr$)
+	comment "valid json"
+else
+	comment "no valid json"
+	;isfatalError "no valid json"
+endif	
+
+if jsonIsObject ($mystr$)
+	comment "valid json object"
+else
+	comment "no valid json object"
+	;isfatalError "no valid json object"
+endif	
+
+if jsonIsArray($mystr$)
+	comment "valid json array"
+else
+	comment "no valid json array."
+	;isfatalError "no valid json array"
+endif	
+
+set $countobj$ = jsonAsArrayCountElements($mystr$)
+
+comment "Number of objects in $OPSI_HARDWARE_CLASSES$: "+$countobj$

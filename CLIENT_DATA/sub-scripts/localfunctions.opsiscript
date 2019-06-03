@@ -242,14 +242,21 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		
 		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.13")
 			importLib "%scriptpath%\standalone-tests\functionlib.opsiscript"
-			if GetOS = 'Linux'
+			switch $OS$
+				case "Windows_nt"
+					set $ConstTest$ = "9"
+					set $list1$ = myFunc10('echo %cd%')
+				endcase
+				case "Linux"
+					set $ConstTest$ = "5"
 				set $list1$ = myFunc10('pwd')
-				set $tmp$ = "5"
-			else
-				set $list1$ = myFunc10('echo %cd%')
-				set $tmp$ = "9"
-			endif
-			if count($list1$) int= $tmp$
+				endcase
+				case "macos"
+					set $ConstTest$ = "5"
+					set $list1$ = myFunc10('pwd')
+				endcase
+			endswitch
+			if count($list1$) int= $ConstTest$
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -257,7 +264,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			endif
 			
 			sub "%scriptpath%\standalone-tests\sub_defined_functions12.opsiscript"
-			if count($list1$) int= $tmp$
+			if count($list1$) int= $ConstTest$
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -334,7 +341,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif ; 4.17
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
 		comment " Testing function with stringtobool ..."
 	
 		DefFunc myboolstrFunc1($str1$ : string, ref $str2$ : string, $list$: stringlist) : string
@@ -452,8 +459,168 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
 		else
 			comment "passed"
 		endif
+		
+		; ###############################
+		comment "uib_strlistutils"
+		
+		importlib "uib_strlistutils"
+		
+		set $list1$ = createStringList ("opsi-vhd-control","jedit","opsi-logviewer","classic-shell","config-win10")
+		set $list2$ = createStringList("classic-shell","config-win10","javavm","jedit","opsi-client-agent","opsi-logviewer","opsi-vhd-control","opsi-vhd-tester","opsi-winst")
+		
+		set $list3$ = getListContainingList($list1$,$list2$)
+		if stringToBool(compareLists($list3$,$list1$))
+			comment "passed"
+		else
+			LogWarning "failed"
+		endif
 
 	endif ; 4.12.0.20
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.36")
+		
+		comment "Recursive calls ...."
+		
+		DefFunc myFunc23($str1$ : string) : string
+		;defvar $mylocalvar$
+		
+			set $str1$ = $str1$+"a"
+			comment "run: "+$str1$
+			if strLength($str1$) int< "10"
+				set $str1$ = myFunc23($str1$)
+			endif
+			set $result$ = $str1$
+		endfunc
+		
+		set $ConstTest$ = "aaaaaaaaaa"
+		set $CompValue$ = myFunc23("")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefFunc myFunc23($str1$ : string) : string
+		;defvar $mylocalvar$
+		
+			set $str1$ = $str1$+"a"
+			comment "run: "+$str1$
+			if strLength($str1$) int< "10"
+				set $str1$ = myFunc23($str1$)
+			endif
+			set $result$ = $str1$
+		endfunc
+		
+		set $ConstTest$ = "aaaaaaaaaa"
+		set $CompValue$ = myFunc23("")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		; recursive call with local void function
+
+		Deffunc outerFunc25(ref $str1$ : string, val $str2$ : string) : void
+		
+			DefFunc innerFunc25(ref $str1$ : string) : void
+			defvar $mylocalvar$
+			
+				set $str1$ = $str1$+"a"
+				comment "run: "+$str1$+"  --> "+$mystr$
+				if strLength($str1$) int< "10"
+					innerFunc25($str1$)
+				endif
+			endfunc
+			
+			sub_call
+			
+			[sub_call]
+			innerFunc25($str1$)
+		endfunc
+		
+		set $CompValue$ = "go"
+		outerFunc25($CompValue$,$str2$)
+		set $ConstTest$ = "goaaaaaaaa"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+	endif ; 4.12.0.36
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+	
+		DefFunc fakultaet_str($zahlstr$ : string) : string
+			DefVar $zahl2str$
+			
+			if $zahlstr$ = "1"
+				set $result$ = "1"
+			else
+				;set $zahl2str$ = calculate($zahlstr$+'-1')
+				;set $result$ = calculate($zahlstr$ + ' * ' + fakultaet_str($zahl2str$))
+				set $result$ = calculate($zahlstr$ + ' * ' + fakultaet_str(calculate($zahlstr$+'-1')))
+			endif
+		endfunc
+		
+		set $CompValue$ = "1"
+		set $str1$ = "1"
+		set $ConstTest$ = fakultaet_str($str1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed: fakultaet "+$str1$+" ist: "+$ConstTest$
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $CompValue$ = "2"
+		set $str1$ = "2"
+		set $ConstTest$ = fakultaet_str($str1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed: fakultaet "+$str1$+" ist: "+$ConstTest$
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $CompValue$ = "6"
+		set $str1$ = "3"
+		set $ConstTest$ = fakultaet_str($str1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed: fakultaet "+$str1$+" ist: "+$ConstTest$
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $CompValue$ = "24"
+		set $str1$ = "4"
+		set $ConstTest$ = fakultaet_str($str1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed: fakultaet "+$str1$+" ist: "+$ConstTest$
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefFunc recursiv_in_and_out($zahlstr$ : string) : void
+			;http://www.straub.as/java/basic/rekursiv.html
+			
+			comment "Way in : "+$zahlstr$
+			set $zahlstr$ = calculate($zahlstr$+'+1')
+			if $zahlstr$ INT< "5"
+				recursiv_in_and_out($zahlstr$)
+			endif
+			comment "Way out : "+$zahlstr$
+		endfunc
+		
+		recursiv_in_and_out("0")
+
+	endif ; 4.12.0.36
 
 	sub_compareResult
 	set $winst_local_functions$ = $SubResult$

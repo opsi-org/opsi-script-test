@@ -8,7 +8,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.12.0.35
+version: 4.12.1.0
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -340,6 +340,15 @@ default: ["off"]
 
 [ProductProperty]
 type: unicode
+name: xml2
+multivalue: False
+editable: False
+description: xml2 section and functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
 name: localfunctions
 multivalue: False
 editable: False
@@ -356,486 +365,39 @@ description: powershell with opsi-script
 values: ["off", "on"]
 default: ["off"]
 
-[Changelog]
-opsi-script-test (4.12.0.35-1) stable; urgency=low
-
-  * getsublist with  whitespace around numbers
-
--- detlef oertel <d.oertel@uib.de>  Tue,  15 Jan 2019 15:00:00 +0200
-
-opsi-script-test (4.12.0.34-1) stable; urgency=low
-
-  * getsublist with  string expression instead of numbers
-
--- detlef oertel <d.oertel@uib.de>  Thu,  10 Jan 2019 15:00:00 +0200
-
-opsi-script-test (4.12.0.31-1) stable; urgency=low
-
-  * some changes for changed path in linux opsi-script 4.12.0.31
-  * fix for localfunction test at linux
-
--- detlef oertel <d.oertel@uib.de>  Thu,  18 Oct 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.27-2) stable; urgency=low
-
-  * additional test for GetConfidentialProductProperty
-  * additional standalone tests for servicecall and json
-  * additional tests for Registry_hkcu_userclasses & /AllUsrClassDats
-     from Terry Strooband
-
--- detlef oertel <d.oertel@uib.de>  Tue,  11 Sep 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.27-1) stable; urgency=low
-
-  * registry: Registry_hkcu_userclasses_test /AllUsrClassDats
-      from Terry Strooband
-      small fix
-
--- detlef oertel <d.oertel@uib.de>  Mon,  10 Sep 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.26-1) stable; urgency=low
-
-  * registry: Registry_hkcu_userclasses_test /AllUsrClassDats
-      from Terry Strooband
-
--- detlef oertel <d.oertel@uib.de>  Thu,  06 Sep 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.25-1) stable; urgency=low
-
-  * json: array functions for array like "[true]"
-
--- detlef oertel <d.oertel@uib.de>  Tue,  07 Aug 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.20-1) stable; urgency=low
-
-  * localfunctions.: test for complex call with stringtobool()
-
--- detlef oertel <d.oertel@uib.de>  Thu,  15 May 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.17-1) stable; urgency=low
-
-  * localfunctions.: local functions in loop
-  * standalone tests subsub
-  * standalone tests: local functions in loop
-
--- detlef oertel <d.oertel@uib.de>  Tue,  24 Apr 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.16-1) stable; urgency=low
-
-  * ExecWith_powershell: added trap { write-output $_ ; exit 1 }
-  * ExecWith_powershell: added exit $LASTEXITCODE
-  * fuction with no parameters
-  * fuction with no (void) result
-  * using isConfidential to test:
-    ** SetConfidential
-    ** asConfidential
-    ** splitStringOnWhiteSpace
-    ** splitString
-  * asConfidential
-  * upper(<str>)
-  * lower(str)
-  * RegKeyExists
-  * RegVarExists
-  * %opsiapplog%
-  * %opsidata%
-  * getIndexFromListByContaining
-  * new function : getSubListByMatch(<search string>, <target list>) :stringlist
-  * new function : getSubListByMatch(<search list>, <target list>) :stringlist
-  * new function : getSubListByContaining(<search string>, <target list>) :stringlist
-  * new function : getSubListByContaining(<search list>, <target list>) :stringlist
-  * new function : getSubListByKey(<search string>, <target list>) :stringlist
-  * new function : getSubListByKey(<search list>, <target list>) :stringlist
-  * new function : getKeyList(<list>) :stringlist
-  * getregistryvalue(<keystr>, <varstr> [, <access str>]) : string
-  * powershellCall
-
--- detlef oertel <d.oertel@uib.de>  Tue,  27 Mar 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.13-2) stable; urgency=low
-
-  * ShellInAnIcon_exitcode42: use of 'if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%'
-
--- detlef oertel <d.oertel@uib.de>  Wed,  25 Jan 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.13-1) stable; urgency=low
-
-  * localfunctions: test call from a local function an other local function
-      using a local variable as call by value parameter
-  * localfunctions: more complex if then else through localfunctions and sub
-
--- detlef oertel <d.oertel@uib.de>  Tue,  15 Jan 2018 15:00:00 +0200
-
-opsi-script-test (4.12.0.12-1) stable; urgency=low
-
-  * remove c:\tmp from scripts and replace with %opsitmpdir%
-  * code cleanup
-
--- detlef oertel <d.oertel@uib.de>  Thu,  14 Dec 2017 15:00:00 +0200
-
-opsi-script-test (4.12.0.11-1) stable; urgency=low
-
-  * registry:
-    * fix for Support brackets '[]' in Registry keys ; fixes #2825
-    * osparser: doRegistryHack: openkey, deletekey in Registry sections
-    * osparser: evaluatestring: GetRegistryStringValue*
-
--- detlef oertel <d.oertel@uib.de>  Tue,  12 Dec 2017 15:00:00 +0200
-
-opsi-script-test (4.12.0.10-1) stable; urgency=low
-
-  * test local functions:
-    * Testing repeated function call with local variables
-    * Testing fuction call while if
-  * registry:
-    * Support brackets '[]' in Registry keys ; fixes #2825
-    * osparser: doRegistryHack: openkey, deletekey in Registry sections
-    * osparser: evaluatestring: GetRegistryStringValue*
-
--- detlef oertel <d.oertel@uib.de>  Mon,  06 Dec 2017 15:00:00 +0200
-
-opsi-script-test (4.12.0.8-1) stable; urgency=low
-
-  * test encoding:Patches /encoding "ucs2be"
-
--- detlef oertel <d.oertel@uib.de>  Mon,  23 Oct 2017 15:00:00 +0200
-
-opsi-script-test (4.12.0.6-1) stable; urgency=low
-
-  * test localfunctions: do not see Variables in Param string as local vars
-  * controlfunctions: Execwith_autoit_close_showmessage: use better autoit functions
-
--- detlef oertel <d.oertel@uib.de>  Wed,  04 Oct 2017 15:00:00 +0200
-
-opsi-script-test (4.12.0.0-1) stable; urgency=low
-
-  * local functions
-
--- detlef oertel <d.oertel@uib.de>  Wed,  14 Jul 2017 15:00:00 +0200
-
-opsi-script-test (4.11.6.12-1) stable; urgency=low
-
-  * migrated from opsi-winst-test
-  * migrated to git
-
--- detlef oertel <d.oertel@uib.de>  Wed,  17 May 2017 15:00:00 +0200
-
-
-opsi-winst-test (4.11.6.11-1) stable; urgency=low
-
-  * calculate: typo
-  * encodingtest: reading and writing 16Bit (arabic / japanese) with registry
-  * opsiservicecall: new parameter: /opsiclientd-once
-  * opsiservicecall: new call: opsiservicecall /preloginservice
-  * patch_hosts: more tests
-  * registry supp more tests
-
--- detlef oertel <d.oertel@uib.de>  Wed,  07 Dec 2016 15:00:00 +0200
-
-
-opsi-winst-test (4.11.6.4-1) stable; urgency=low
-
-  * json: new test for jsonAsObjectDeleteByKey, jsonAsArrayDeleteObjectByIndex
-  * new test savetextfilewithencoding(<list>,<filename>,<endoding>)
-
--- detlef oertel <d.oertel@uib.de>  Fri,  07 Oct 2016 15:00:00 +0200
-
-opsi-winst-test (4.11.6.1-1) stable; urgency=low
-
-	* New Property: jsonfunctions
-	* json tests
-	* New Property: cryptfunctions
-	* crypt tests
-	* testing processCall in winbatch
-	* testing shellCall Variants in DosBatch
-	* testing processIsRunning in stringlist (near getProcessList)
-	* getMSVersionMap new key ReleaseID
-	* getMSVersionMap new key prodInfoNumber
-	* getMSVersionMap new key prodInfoText
-	* fix for GetMsVersionInfo Test for win10
-	* fix dummy dir in common_startup ; fixes #1939
-	* fix getValueFromFile / getValueFromFileBySeparator: empty String on Error
-	* new property dummyumlaut
-	* umlaut tests für ini, registry files in encoding test
-
--- detlef oertel <d.oertel@uib.de>  Fri,  20 May 2016 15:00:00 +0200
-
-
-opsi-winst-test (4.11.5.11-1) stable; urgency=low
-
-	* test get property from other product
-
--- detlef oertel <d.oertel@uib.de>  Thu,  13 Aug 2015 15:00:00 +0200
-
-opsi-winst-test (4.11.5.2-1) stable; urgency=low
-
-	* GetConfidentialProductProperty
-	* use of "if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"" for win10
-
--- detlef oertel <d.oertel@uib.de>  Mon,  18 May 2015 15:00:00 +0200
-
-
-opsi-winst-test (4.11.5.1-1) stable; urgency=low
-
-	* New files commands hardlink, symlink, rename, move
-	* activate winbatch test for linux
-	* opsiservicecall_productOnClient_getObjects
-	* fix in PatchTextFile_Sorted
-	* registry: new Statement: UpdateEnvironment : Triggers Windows to reload Environment from Registry; Win only; references #1364
-	* contolFunctions: Switch Case EndCase DefaultCase EndSwitch
-	* New Property: loglevel
-	* Rename Property testall to alltest (should be the first in the list)
-	* New Subtest (Property) encoding
-	* changed (alphabetic) sorting for final result
-	* control: opsiServiceCall_setFollowUp
-	* infotest: getHWBiosInfoMap
-	* new bool CompareDotSeparatedNumbers
-
-
--- detlef oertel <d.oertel@uib.de>  Tue,  20 Jan 2015 15:00:00 +0200
-
-opsi-winst-test (4.11.4.1-1) stable; urgency=low
-
-	* Redesign for opsi-script at Linux
-	* encoding tests
-
--- detlef oertel <d.oertel@uib.de>  Thu,  15 Aug 2013 17:00:13 +0200
-
-
-opsi-winst-test (4.11.3.5-1) stable; urgency=low
-
-	* Test of Linkfolder in login.opsiscript
-	* Test of use of temporary loop constant in subsub call
-	* Test of calculate
-	* Test of 'no update script if setup is failed': new property: setfailed
-	* Test of SetConfidential
-	* Test of SetSkinDirectory
-	* Test of LDAPSearch (username/password)
-	* Test of execwith: winst (/32bit|/64bit|/sysnative)
-	* Test of winbatch: /32bit|/64bit|/sysnative
-	* Test of PatchTextFile /AllNTuserProfiles
-
--- detlef oertel <d.oertel@uib.de>  Wed,  16 Jan 2013 17:00:13 +0200
-
-opsi-winst-test (4.11.3.4-1) stable; urgency=low
-
-	* Test of Winbatch /RunAsLoggeedOnUser in login.ins
-
--- detlef oertel <d.oertel@uib.de>  Thu,  26 Oct 2012 17:00:13 +0200
-
-
-opsi-winst-test (4.11.3-3) stable; urgency=low
-
-	* Wibatch: The parameter to /timeoutseconds may now be a variable
-	* test for %CommonProfileDir%, %CommonDesktopDir%, %CommonStartupDir%, %CommonProgramsDir%
-	* getDiffTimeSec in winbatch runas
-	* execwith powershell test
-	* control section: IconizeWinst / RestoreWinst
-	* getMyIpByTarget
-	* isNumber
-	* contains
-	* stringReplace
-	* LinkFolder: test delete_element
-
- -- detlef oertel <d.oertel@uib.de>  Thu,  27 Mar 2012 17:00:13 +0200
-
-
-opsi-winst-test (4.11.3-2) stable; urgency=low
-
-	* Registry: changed handling of explizit reg_sz setting (4.11.2.7)
-
- -- detlef oertel <d.oertel@uib.de>  Thu,  27 Mar 2012 17:00:13 +0200
-
-
-opsi-winst-test (4.11.3-1) stable; urgency=low
-
-	* Winbatch /timeoutseconds
-	* winst control: ChangeDirectory
-
- -- detlef oertel <d.oertel@uib.de>  Thu,  02 Feb 2012 17:00:13 +0200
-
-
-opsi-winst-test (4.11.2-3) stable; urgency=low
-
-	* fix in registry test
-
- -- detlef oertel <d.oertel@uib.de>  Thu,  02 Feb 2012 17:00:13 +0200
-
-
-opsi-winst-test (4.11.2-2) stable; urgency=low
-
-	* test getproductmap in update
-
- -- detlef oertel <d.oertel@uib.de>  Thu,  05 Oct 2011 17:00:13 +0200
-
-
-opsi-winst-test (4.11.2-1) stable; urgency=low
-
-	* new: login scripts
-	* tests for 4.11.2
-	* new property and test section : internalundocumented
-	* new property and test section : RunAsLoggedOnAdmin
-	* new property and test section : ProfileActions
-
- -- detlef oertel <d.oertel@uib.de>  Thu,  05 Oct 2011 17:00:13 +0200
-
-
-opsi-winst-test (4.0-3) unstable; urgency=low
-
-  * new: opsiservicecall error handling
-  * winst 4.11.1.2:
-  	- runningAsAdmin
-  	- DosBatch / DosInAnIcon  winst /64bit
-  	- GetLoggedInUser
-  	- GetUsercontext
-  	- getProcessList
-  	- SetUsercontext
-
- -- Jan Schneider <j.schneider@uib.de>  Wed,  20 Apr 2011 15:35:00 +0200
-
-opsi-winst-test (4.0-2) unstable; urgency=low
-
-	* new: property and section license management functions
-	* new: property and section idapi functions
-
- -- detlef oertel <d.oertel@uib.de>  Mon,  21 Feb 2011 17:00:13 +0200
-
-opsi-winst-test (4.0-1) unstable; urgency=low
-
-	* Version for winst 4.10.8.3
-
- -- detlef oertel <d.oertel@uib.de>  Fri,  20 Aug 2010 17:00:13 +0200
-
-
-opsi-winst-test (1.0-9) unstable; urgency=low
-
-	* including sub files to make it easier to find examples
-	* new subtest 'parametrizing'
-	* umlaut test in string section
-
- -- detlef oertel <d.oertel@uib.de>  Fri,  5 Apr 2010 17:00:13 +0200
-
-opsi-winst-test (1.0-8) unstable; urgency=low
-
-	* properties to enable/disable subtests (chapters)
-	* master property to enable all
-
- -- detlef oertel <d.oertel@uib.de>  Fri,  17 Mar 2010 17:00:13 +0200
-
-opsi-winst-test (1.0-7) unstable; urgency=low
-
-	* Test %IPAddress% disabled
-	* Test %Username% disabled
-	* Test %CommonAppDataDir% disabled
-	* Test %IPName% disabled
-	* Test Killtask disabled
-	* Test copy -d disabled
-	* Test Linkfolder disabled for win < 6.0
-	* isFatalError removed from [sub_compareResult]
-	* overview of sub test results at the end of log
-	* multiple answers in save_notepad
-	* Test demandLicenseKey disabled
-	* Test Winbatch_testing /LetThemGo disabled
-	* Test Winbatch_testing /WaitOnClose disabled
-	* Test Winbatch_testing /WaitForWindowAppearing disabled
-	* Test Winbatch_testing /WaitForProcessEnding disabled
-	* test sleepseconds changed to 'time /t'
-	* test GetSystemType against 'wmic computersystem get systemtype'
-
- -- detlef oertel <d.oertel@uib.de>  Fri,  12 Nov 2009 17:00:13 +0200
-
-opsi-winst-test (1.0-6) unstable; urgency=low
-
-  * Begin of Changelog
-
- -- Sebastian Niegel <sebastian.niegel@gmx.de>  Fri,  7 Aug 2009 11:43:13 +0200
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+[ProductProperty]
+type: unicode
+name: regex
+multivalue: False
+editable: False
+description: Regex section and functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: networkcalc
+multivalue: False
+editable: False
+description: NetworkCalc section and functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: urlparser
+multivalue: False
+editable: False
+description: Urlparser section and functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: wmi
+multivalue: False
+editable: False
+description: WMI interface
+values: ["off", "on"]
+default: ["off"]
 

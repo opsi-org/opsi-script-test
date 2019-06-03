@@ -5,10 +5,16 @@ setloglevel=9
 ScriptErrorMessages = false
 
 
-if GetOS = 'Linux'
-	set $list1$ = myFunc9('pwd')
-else
-	set $list1$ = myFunc9('echo %cd%')
-endif
+switch $OS$
+	case "Windows_nt"
+		set $list1$ = myFunc9('echo %cd%')
+	endcase
+	case "Linux"
+		set $list1$ = myFunc9('pwd')
+	endcase
+	case "macos"
+		set $list1$ = myFunc9('pwd')
+	endcase
+endswitch
 
 

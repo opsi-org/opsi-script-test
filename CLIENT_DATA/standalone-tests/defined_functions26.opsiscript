@@ -1,0 +1,46 @@
+
+
+[actions]
+setloglevel=9
+ScriptErrorMessages = false
+
+DefVar $mystr$
+DefVar $str1$
+DefVar $str2$
+DefStringlist $list1$
+DefStringlist $list2$
+set $str1$ = ''
+set $str2$ = 'hi'
+set $mystr$ = $str1$ + $str2$
+
+; recursive call with local void function
+
+Deffunc outer(ref $str1$ : string, val $str2$ : string) : void
+
+	DefFunc myFunc(ref $str1$ : string) : void
+	defvar $mylocalvar$
+	defvar $mylocalLoopRealVar$
+	
+		set $str1$ = $str1$+"a"
+		comment "run: "+$str1$+"  --> "+$mystr$
+		if strLength($str1$) int< "20"
+			for %loop% = "0" to "2" do sub_inner
+		endif
+		
+		[sub_inner]
+		set $mylocalLoopRealVar$ = Escapestring: %loop%
+		myFunc($str1$)
+	endfunc
+	
+	sub_call
+	
+	[sub_call]
+	myfunc($str1$)
+endfunc
+
+set $mystr$ = "go"
+outer($mystr$,$str2$)
+comment "finish: "+$mystr$
+
+
+
