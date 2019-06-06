@@ -2963,14 +2963,20 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.1")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "getHWBiosInfoMap"
 		comment "get value by winst function"
 		set $INST_Resultlist$ = getHWBiosInfoMap
-		;for %line% in $INST_Resultlist$ do sub_showEntry
+		if count($INST_Resultlist$) int> "0"
+			for %line% in $INST_Resultlist$ do sub_showEntry
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 	endif
 
 

@@ -16,14 +16,14 @@ if ($Flag_subwmi$ = "on") or ($MasterFlag$ = "on")
 	comment "Testing: "
 	message "getListFromWMI"
 	
-	; this is valid because both properties are valid
+	comment "this is valid because both properties are valid"
 	set $list1$ = createStringList ('Model','Manufacturer')
 	set $str1$ = 'root\cimv2'
 	set $str2$ = 'Win32_ComputerSystem'
 	set $str3$ = ''
 	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
 	
-	; this is not valid because there is no Vendor property
+	comment "this is not valid because there is no Vendor property"
 	set $list1$ = createStringList ('Model','Vendor')
 	set $str1$ = 'root\cimv2'
 	set $str2$ = 'Win32_ComputerSystem'
