@@ -1,0 +1,14 @@
+[actions]
+DefVar $guid$
+
+
+set $guid$ = '{c89bd162-92d4-11e9-9288-a43bc71f05c0}'
+if isRegexMatch($guid$, '^{([a-z0-9-])*}')
+	comment "correct"
+else
+	comment "failed"
+endif
+
+
+
+

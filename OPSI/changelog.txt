@@ -1,5 +1,5 @@
 [Changelog]
-opsi-script-test (4.12.1.4-1) stable; urgency=low
+opsi-script-test (4.12.1.5-1) stable; urgency=low
 
   * fix removing of loopvar from empty loop
 
