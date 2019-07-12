@@ -1,0 +1,6 @@
+[actions]
+
+shellInAnIcon_showtest winst /showoutput
+
+[shellInAnIcon_showtest]
+ping -n 10 localhost
