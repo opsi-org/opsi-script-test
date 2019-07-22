@@ -1,4 +1,10 @@
 [Changelog]
+opsi-script-test (4.12.1.5-2) stable; urgency=low
+
+  * add standalone: autoit_with_opsi-lib1.opsiscript as example for use of the opsi-autoit library
+
+-- detlef oertel <d.oertel@uib.de>  Mon,  22 Jul 2019 15:00:00 +0200
+
 opsi-script-test (4.12.1.5-1) stable; urgency=low
 
   * fix removing of loopvar from empty loop

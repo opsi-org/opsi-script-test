@@ -1,0 +1,39 @@
+[actions]
+DefVar $exitcode$
+
+files_clear_log
+Execwith_autoit "%scriptpath%\..\autoit3.exe" winst /LetThemGo
+
+set $exitcode$ = processcall('"%scriptpath%\..\opsi-winst-test-helper\opsiwinsttesthelper.exe" --wait=2 --showwindow=50')
+killtask "autoit3.exe"
+if fileexists("%opsiLogDir%\au3.log")
+	includelog "%opsiLogDir%\au3.log" "400"
+endif
+files_clear_log
+
+[files_clear_log]
+del -f "%opsiLogDir%\au3.log"
+
+[Execwith_autoit]
+#include "%scriptpath%\..\autoitlib\opsi-autoit-lib.au3"
+; exact title match
+Opt("WinTitleMatchMode", 3)
+$winhandle = 0
+$hTimer = TimerInit()
+$mylog = FileOpen("%opsiLogDir%\au3.log", 2)
+FileWriteLine($mylog,"auto-it started - waiting for the window")
+FileClose($mylog)
+opsiLogWinList("%opsiLogDir%\au3.log")
+; BlockInput(1)
+opsiwinwait("opsi-winst-test-helper" , "", 300, "%opsiLogDir%\au3.log")
+$winhandle = opsiwinactivate("opsi-winst-test-helper" , "", 20, "%opsiLogDir%\au3.log")
+Sleep(1000)
+opsiControlSetText($winhandle,"", "Edit1","testtext", 20, "%opsiLogDir%\au3.log")
+Sleep(1000)
+opsiControlClick($winhandle , "", "Button1", 20, "%opsiLogDir%\au3.log")
+Sleep(1000)
+opsiLogWinList("%opsiLogDir%\au3.log")
+;and good bye
+; BlockInput(0)
+; give feedback if it might be all right
+Exit 0
