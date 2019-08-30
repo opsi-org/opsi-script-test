@@ -636,6 +636,17 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
+		Files_work_on_profiles_del_userp /AllNTUserProfiles
+		set $list$ = getProfilesDirList
+		Files_work_on_profiles_copy_userp /AllNTUserProfiles
+		for %prof% in $list$ do sub_check_dir_exist_inprof
+		Files_work_on_profiles_del_userp /AllNTUserProfiles
+		for %prof% in $list$ do sub_check_dir_not_exist_inprof
+		Files_work_on_profiles_copy_currp /AllNTUserProfiles
+		for %prof% in $list$ do sub_check_dir_exist_inprof
+		Files_work_on_profiles_del_currp /AllNTUserProfiles
+		for %prof% in $list$ do sub_check_dir_not_exist_inprof
+		
 	endif ; windowsmarkErrorNumber
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.1")
@@ -1283,12 +1294,39 @@ copy -c "%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" $HomeTestF
 set -x
 sleep 2
 
-
 [Files_work_on_profiles]
-copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-winst-test"
-del -sf "%UserProfileDir%\opsi-winst-test"
-copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-winst-test"
-del -sf "%CurrentProfileDir%\opsi-winst-test"
+copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
+del -sf "%UserProfileDir%\opsi-script-test"
+copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
+del -sf "%CurrentProfileDir%\opsi-script-test"
+
+[Files_work_on_profiles_copy_userp]
+copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
+
+[Files_work_on_profiles_del_userp]
+del -sf "%UserProfileDir%\opsi-script-test"
+
+[Files_work_on_profiles_copy_currp]
+copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
+
+[Files_work_on_profiles_del_currp]
+del -sf "%CurrentProfileDir%\opsi-script-test"
+
+[sub_check_dir_exist_inprof]
+if directoryexists("%prof%\opsi-script-test")
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+
+[sub_check_dir_not_exist_inprof]
+if not(directoryexists("%prof%\opsi-script-test"))
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
 
 [Files_hardlink]
 ;del "$HomeTestFiles$\files\hardlink.txt"

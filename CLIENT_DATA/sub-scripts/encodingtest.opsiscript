@@ -759,9 +759,9 @@ copy "%ScriptPath%\test-files\encoding\*.ini" $HomeTestFiles$
 copy "%ScriptPath%\test-files\encoding\*.conf" $HomeTestFiles$
 
 [Files_copy_exe_umlaut]
-copy "%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" $HomeTestFiles$
-;rename "$HomeTestFiles$\opsiwinsttesthelper.exe" "$HomeTestFiles$\owth_üäöß.exe"
-rename "opsiwinsttesthelper.exe" "owth_üäöß.exe"
+copy "%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" $HomeTestFiles$
+;rename "$HomeTestFiles$\opsiscripttesthelper.exe" "$HomeTestFiles$\owth_üäöß.exe"
+rename "opsiscripttesthelper.exe" "owth_üäöß.exe"
 
 [Files_empty_testfolder]
 Delete -s -f $HomeTestFiles$

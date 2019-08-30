@@ -1,0 +1,37 @@
+[actions]
+
+DefVar $ConstTest$
+DefVar $CompValue$
+DefVar $linux_start_counter$
+DefVar $SHI_pckey$
+DefVar $OS_ConfFile$
+DefVar $startcounter$
+
+DefStringlist $list$
+
+set $OS_ConfFile$ = "c:\opsi.org\usertmp\cryottest.ini"
+set $SHI_pckey$ = "389387d370b6aa9a7babe0b6c5f0bd65"
+
+
+set $ConstTest$ = "12345"
+set $ConstTest$ = encryptStringBlow("FFFF",$ConstTest$)
+set $ConstTest$ = decryptStringBlow("FFFF",$ConstTest$)
+set $CompValue$ = "12345"
+if ($ConstTest$ = $CompValue$)
+	comment "cryptStringBlow passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "testing cryptStringBlow failed"
+endif
+
+set $linux_start_counter$ = $SHI_pckey$+" 15"
+set $linux_start_counter$ = encryptStringBlow($SHI_pckey$,$linux_start_counter$)
+comment "Patching "+$OS_ConfFile$+" ..."
+Patches_opsiscript_conf_start $OS_ConfFile$
+set $linux_start_counter$ = getValueFromIniFile($OS_ConfFile$,"general","start","")
+set $linux_start_counter$ = decryptStringBlow($SHI_pckey$,$linux_start_counter$)
+set $list$ = splitstringonwhitespace($linux_start_counter$)
+set $startcounter$ = takestring(1,$list$)
+
+[Patches_opsiscript_conf_start]
+set [general] start=$linux_start_counter$

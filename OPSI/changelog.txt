@@ -1,4 +1,13 @@
 [Changelog]
+
+opsi-script-test (4.12.2.1-1) stable; urgency=low
+
+  * switch to new opsi-script-test helpers
+  * new standalone tests: fileAllNtUser*
+  * test_files: more tests for files with alluser profiles
+
+-- detlef oertel <d.oertel@uib.de>  Mon,  26 Aug 2019 15:00:00 +0200
+
 opsi-script-test (4.12.1.5-2) stable; urgency=low
 
   * add standalone: autoit_with_opsi-lib1.opsiscript as example for use of the opsi-autoit library
