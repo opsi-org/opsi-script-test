@@ -1285,7 +1285,7 @@ cd "$HomeTestFiles$\zip\"
 dir /A:R
 
 [Files_copy_c]
-copy -c "%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" $HomeTestFiles$
+copy -c "%ScriptPath%\opsi-script-test-helper\opsiwinsttesthelper.exe" $HomeTestFiles$
 
 [winbatch_copy_c]
 "$HomeTestFiles$\opsiwinsttesthelper.exe" --wait=2

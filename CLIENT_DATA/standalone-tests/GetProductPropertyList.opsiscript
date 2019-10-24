@@ -1,0 +1,13 @@
+defVar $list$
+defVar $TestResult$
+
+[Actions]
+message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
+;set $list1$ = createStringList("ab", "cd", "ef", "g,h")
+set $list$ = GetProductPropertyList ("dummymulti","True")
+if not ("" = takeFirstStringContaining($list$,"g,h"))
+	comment "GetProductPropertyList passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "GetProductPropertyList failed"
+endif
