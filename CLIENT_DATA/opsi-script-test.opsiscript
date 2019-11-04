@@ -4433,23 +4433,57 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		
 	endif ; 4.11.5
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
-		Files_copy_for_filelist
-		
-		;comment "search with string list variable"
-		;comment "searchstr 1 will found in 'line 1' and 'line 10'"
-		;set $ConstTest$ = "5"
-		;set $list2$ = listfiles($HomeTestFiles$,*.exe,)
-		;set $CompValue$ = count($list2$)
-		;if ($ConstTest$ = $CompValue$)
-		;	comment "passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "failed"
-		;endif
+	
+	; Tests for WinstVersion >= 4.12.3
+    if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
+	    comment ""
+		comment "Tests for WinstVersion >= 4.12.3"
+		comment "-------------------------------------"	    
 
-		Files_empty_folder
-	sub_compareResult
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "findFiles"
+        Files_copy_for_filelist ;initialize test directory
+        
+        comment "Search all  files in $HomeTestFiles$ and subdirectories"
+		set $ConstTest$ = "32"
+		set $list2$ = findFiles($HomeTestFiles$,*.*,"True")
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Search all exe files in $HomeTestFiles$ and subdirectories"
+		set $ConstTest$ = "0"
+		set $list2$ = findFiles($HomeTestFiles$,*.exe,"True")
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Search all txt files in $HomeTestFiles$ and subdirectories"
+		set $ConstTest$ = "19"
+		set $list2$ = findFiles($HomeTestFiles$,*.txt,"True")
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		Files_empty_folder ;remove test files 
+		;End of Testing findFiles
+	endif ; WinstVersion >= 4.12.3	
+
+    sub_compareResult
 	set $winst_string_list$ = $SubResult$
 endif
 
