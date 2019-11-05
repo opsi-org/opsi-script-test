@@ -4436,9 +4436,10 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	
 	; Tests for WinstVersion >= 4.12.3
     if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
-	    comment ""
-		comment "Tests for WinstVersion >= 4.12.3"
-		comment "-------------------------------------"	    
+	comment ""
+	comment "Tests for WinstVersion >= 4.12.3"
+	comment ""
+	comment "-------------------------------------"    
 
 		comment ""
 		comment "-------------------------------------"
@@ -4448,7 +4449,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
         
         comment "Search all  files in $HomeTestFiles$ and subdirectories"
 		set $ConstTest$ = "32"
-		set $list2$ = findFiles($HomeTestFiles$,*.*,"True")
+		set $list2$ = findFiles($HomeTestFiles$,"*.*","True")
 		set $CompValue$ = count($list2$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -4457,9 +4458,20 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
+		comment "No search string given search all fiels in $HomeTestFiles$ and subdirectories"
+		set $ConstTest$ = "32"
+		set $list2$ = findFiles($HomeTestFiles$,"","True")
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+
 		comment "Search all exe files in $HomeTestFiles$ and subdirectories"
 		set $ConstTest$ = "0"
-		set $list2$ = findFiles($HomeTestFiles$,*.exe,"True")
+		set $list2$ = findFiles($HomeTestFiles$,"*.exe","True")
 		set $CompValue$ = count($list2$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -4470,7 +4482,18 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		
 		comment "Search all txt files in $HomeTestFiles$ and subdirectories"
 		set $ConstTest$ = "19"
-		set $list2$ = findFiles($HomeTestFiles$,*.txt,"True")
+		set $list2$ = findFiles($HomeTestFiles$,"*.txt","True")
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Search file encode-cp866.opsiscript in $HomeTestFiles$ and subdirectories"
+		set $ConstTest$ = "1"
+		set $list2$ = findFiles($HomeTestFiles$,"encode-cp866.opsiscript","True")
 		set $CompValue$ = count($list2$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
