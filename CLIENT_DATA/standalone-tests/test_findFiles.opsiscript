@@ -1,71 +1,117 @@
-	; Tests for WinstVersion >= 4.12.3
-    if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
-	comment ""
-	comment "Tests for WinstVersion >= 4.12.3"
-	comment ""
-	comment "-------------------------------------"    
+[Actions]
+DefVar $ConstTest$
+DefStringList $list2$
+DefVar $CompValue$
+DefVar $HomeTestFiles$
+DefVar $TestResult$
+DefVar $OS$
+DefVar $NTVersion$
+DefVar $MsVersion$
+DefVar $ProductID$
 
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "findFiles"
-        Files_copy_for_filelist ;initialize test directory
-        
-        comment "Search all  files in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "32"
-		set $list2$ = findFiles($HomeTestFiles$,"*.*","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment "No search string given search all fiels in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "32"
-		set $list2$ = findFiles($HomeTestFiles$,"","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+; retrieve OS and NT Version
 
-		comment "Search all exe files in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "0"
-		set $list2$ = findFiles($HomeTestFiles$,"*.exe","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment "Search all txt files in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "19"
-		set $list2$ = findFiles($HomeTestFiles$,"*.txt","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment "Search file encode-cp866.opsiscript in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "1"
-		set $list2$ = findFiles($HomeTestFiles$,"encode-cp866.opsiscript","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		Files_empty_folder ;remove test files 
-		;End of Testing findFiles
-	endif ; WinstVersion >= 4.12.3	
+Set $OS$ = GetOS
+; retrieve current language
+;set $languageInfo$ = getLocaleInfoMap
+;set $language$ = getValue("language_id_2chars", $languageInfo$)
+
+set $ProductID$ = "opsi-script-stand-alone-test-findFiles"
+
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		Set $NTVersion$ = GetNTVersion
+		set $MsVersion$ = GetMsVersionInfo
+		Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+	endcase
+endswitch
+
+
+; Tests for WinstVersion >= 4.12.3
+;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
+comment ""
+comment "Tests for WinstVersion >= 4.12.3"
+comment ""
+comment "-------------------------------------"    
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "findFiles"
+    Files_copy_for_filelist ;initialize test directory
+    
+    comment "Search all  files in $HomeTestFiles$ and subdirectories"
+	set $ConstTest$ = "32"
+	set $list2$ = findFiles($HomeTestFiles$,"*.*","True")
+    set $CompValue$ = count($list2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment "No search string given search all fiels in $HomeTestFiles$ and subdirectories"
+	set $ConstTest$ = "32"
+	set $list2$ = findFiles($HomeTestFiles$,"","True")
+	set $CompValue$ = count($list2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif    
+
+	comment "Search all exe files in $HomeTestFiles$ and subdirectories"
+	set $ConstTest$ = "0"
+	set $list2$ = findFiles($HomeTestFiles$,"*.exe","True")
+	set $CompValue$ = count($list2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment "Search all txt files in $HomeTestFiles$ and subdirectories"
+	set $ConstTest$ = "19"
+	set $list2$ = findFiles($HomeTestFiles$,"*.txt","True")
+	set $CompValue$ = count($list2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment "Search file encode-cp866.opsiscript in $HomeTestFiles$ and subdirectories"
+	set $ConstTest$ = "1"
+	set $list2$ = findFiles($HomeTestFiles$,"encode-cp866.opsiscript","True")
+	set $CompValue$ = count($list2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	Files_empty_folder ;remove test files 
+	;End of Testing findFiles
+;endif ; WinstVersion >= 4.12.3
+	
+[Files_copy_for_filelist]
+copy -s "C:\Users\Jan\git-workbench\opsi-script-test\CLIENT_DATA\test-files\string\*.*" $HomeTestFiles$
+copy -s "C:\Users\Jan\git-workbench\opsi-script-test\CLIENT_DATA\test-files\encoding\*.*" $HomeTestFiles$
+
+[Files_empty_folder]
+del -f "$HomeTestFiles$\files\symlink.txt"
+Del -s -f $HomeTestFiles$
