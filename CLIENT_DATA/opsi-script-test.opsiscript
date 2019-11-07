@@ -20,6 +20,7 @@ DefVar $MasterFlag$
 DefVar $FinalResult$
 DefVar $AktTestSubScript$
 DefVar $ExpectedResult$
+DefVar $TestNr$
 DefVar $TestResult$
 DefVar $SubResult$
 DefVar $HomeTestFiles$
@@ -4447,55 +4448,55 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		message "findFiles"
         Files_copy_for_filelist ;initialize test directory
         
-        comment "Search all  files in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "32"
-		set $list2$ = findFiles($HomeTestFiles$,"*.*","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
+		comment "Search all  files in $HomeTestFiles$"
+		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		;set $list2$ = GetListContaining($list2$, ".")
+		set $list3$ = listFiles($HomeTestFiles$,"*.*","False")
+		if (count($list2$) = count($list3$))
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
 		
-		comment "No search string given search all fiels in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "32"
-		set $list2$ = findFiles($HomeTestFiles$,"","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
+		comment "No search string given, search all fiels in $HomeTestFiles$"
+		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test2')
+		;set $list2$ = GetListContaining($list2$, "*.*")
+		set $list3$ = listFiles($HomeTestFiles$,"","False")
+		if (count($list2$) = count($list3$))
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+	
 		comment "Search all exe files in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "0"
-		set $list2$ = findFiles($HomeTestFiles$,"*.exe","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
+		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test3')
+		set $list2$ = GetListContaining($list2$, ".exe")
+		set $list3$ = listFiles($HomeTestFiles$,"*.exe","False")
+		if (count($list2$) = count($list3$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	
+		comment "Search all txt files in $HomeTestFiles$"
+		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test4')
+		set $list2$ = GetListContaining($list2$, ".txt")
+		set $list3$ = listFiles($HomeTestFiles$,"*.txt","False")
+		if (count($list2$) = count($list3$))
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
 		
-		comment "Search all txt files in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "19"
-		set $list2$ = findFiles($HomeTestFiles$,"*.txt","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment "Search file encode-cp866.opsiscript in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "1"
-		set $list2$ = findFiles($HomeTestFiles$,"encode-cp866.opsiscript","True")
-		set $CompValue$ = count($list2$)
-		if ($ConstTest$ = $CompValue$)
+		comment "Search file encode-cp866.opsiscript in $HomeTestFiles$"
+		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test5')
+		set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+		set $list3$ = listFiles($HomeTestFiles$,"encode-cp866.opsiscript","False")
+		if (count($list2$) = count($list3$))
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
@@ -10927,6 +10928,30 @@ if strPart($ConstTest$,"1","15") = takeString(0,splitString("%aktprocess%",";"))
 	endif
 endif
 
+[DosInAnIcon_ListFiles_Test1]
+@echo off
+cd $HomeTestFiles$
+dir *.* /A-D /B
+
+[DosInAnIcon_ListFiles_Test2]
+@echo off
+cd $HomeTestFiles$
+dir *.* /A-D /B
+
+[DosInAnIcon_ListFiles_Test3]
+@echo off
+cd $HomeTestFiles$
+dir *.exe /A-D /B
+
+[DosInAnIcon_ListFiles_Test4]
+@echo off
+cd $HomeTestFiles$
+dir *.txt /A-D /B
+
+[DosInAnIcon_ListFiles_Test5]
+@echo off
+cd $HomeTestFiles$
+dir encode-cp866.opsiscript /A-D /B
 
 ;----------------   end   sections for string list test ---------------------------------
 ;----------------   start   sections for controls test ---------------------------------

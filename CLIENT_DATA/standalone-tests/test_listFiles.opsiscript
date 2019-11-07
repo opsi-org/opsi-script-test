@@ -1,6 +1,8 @@
 [Actions]
 DefVar $ConstTest$
+;DefVar $TestNr$
 DefStringList $list2$
+DefStringList $list3$
 DefVar $CompValue$
 DefVar $HomeTestFiles$
 DefVar $TestResult$
@@ -16,7 +18,7 @@ Set $OS$ = GetOS
 ;set $languageInfo$ = getLocaleInfoMap
 ;set $language$ = getValue("language_id_2chars", $languageInfo$)
 
-set $ProductID$ = "opsi-script-stand-alone-test-findFiles"
+set $ProductID$ = "opsi-script-stand-alone-test-listFiles"
 
 switch $OS$
 	case "Windows_nt"
@@ -35,7 +37,6 @@ switch $OS$
 	endcase
 endswitch
 
-
 ; Tests for WinstVersion >= 4.12.3
 ;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
 comment ""
@@ -49,55 +50,55 @@ comment "-------------------------------------"
 	message "findFiles"
     Files_copy_for_filelist ;initialize test directory
     
-    comment "Search all  files in $HomeTestFiles$ and subdirectories"
-	set $ConstTest$ = "32"
-	set $list2$ = findFiles($HomeTestFiles$,"*.*","True")
-    set $CompValue$ = count($list2$)
-	if ($ConstTest$ = $CompValue$)
+    comment "Search all  files in $HomeTestFiles$"
+	set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+	;set $list2$ = GetListContaining($list2$, ".")
+	set $list3$ = listFiles($HomeTestFiles$,"*.*","False")
+	if (count($list2$) = count($list3$))
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
 	
-	comment "No search string given search all fiels in $HomeTestFiles$ and subdirectories"
-	set $ConstTest$ = "32"
-	set $list2$ = findFiles($HomeTestFiles$,"","True")
-	set $CompValue$ = count($list2$)
-	if ($ConstTest$ = $CompValue$)
+	comment "No search string given, search all fiels in $HomeTestFiles$"
+	set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test2')
+	;set $list2$ = GetListContaining($list2$, "*.*")
+	set $list3$ = listFiles($HomeTestFiles$,"","False")
+	if (count($list2$) = count($list3$))
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
-	endif    
+	endif
 
 	comment "Search all exe files in $HomeTestFiles$ and subdirectories"
-	set $ConstTest$ = "0"
-	set $list2$ = findFiles($HomeTestFiles$,"*.exe","True")
-	set $CompValue$ = count($list2$)
-	if ($ConstTest$ = $CompValue$)
+	set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test3')
+	set $list2$ = GetListContaining($list2$, ".exe")
+	set $list3$ = listFiles($HomeTestFiles$,"*.exe","False")
+	if (count($list2$) = count($list3$))
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
+	comment "Search all txt files in $HomeTestFiles$"
+	set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test4')
+	set $list2$ = GetListContaining($list2$, ".txt")
+	set $list3$ = listFiles($HomeTestFiles$,"*.txt","False")
+	if (count($list2$) = count($list3$))
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
 	
-	comment "Search all txt files in $HomeTestFiles$ and subdirectories"
-	set $ConstTest$ = "19"
-	set $list2$ = findFiles($HomeTestFiles$,"*.txt","True")
-	set $CompValue$ = count($list2$)
-	if ($ConstTest$ = $CompValue$)
-		comment "passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "failed"
-	endif
-	
-	comment "Search file encode-cp866.opsiscript in $HomeTestFiles$ and subdirectories"
-	set $ConstTest$ = "1"
-	set $list2$ = findFiles($HomeTestFiles$,"encode-cp866.opsiscript","True")
-	set $CompValue$ = count($list2$)
-	if ($ConstTest$ = $CompValue$)
+	comment "Search file encode-cp866.opsiscript in $HomeTestFiles$"
+	set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test5')
+	set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+	set $list3$ = listFiles($HomeTestFiles$,"encode-cp866.opsiscript","False")
+	if (count($list2$) = count($list3$))
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
@@ -107,11 +108,38 @@ comment "-------------------------------------"
 	Files_empty_folder ;remove test files 
 	;End of Testing findFiles
 ;endif ; WinstVersion >= 4.12.3
-	
+
+[DosInAnIcon_ListFiles_Test1]
+@echo off
+cd $HomeTestFiles$
+dir *.* /A-D /B
+
+[DosInAnIcon_ListFiles_Test2]
+@echo off
+cd $HomeTestFiles$
+dir *.* /A-D /B
+
+[DosInAnIcon_ListFiles_Test3]
+@echo off
+cd $HomeTestFiles$
+dir *.exe /A-D /B
+
+[DosInAnIcon_ListFiles_Test4]
+@echo off
+cd $HomeTestFiles$
+dir *.txt /A-D /B
+
+[DosInAnIcon_ListFiles_Test5]
+@echo off
+cd $HomeTestFiles$
+dir encode-cp866.opsiscript /A-D /B
+
+
+
 [Files_copy_for_filelist]
 copy -s "C:\Users\Jan\git-workbench\opsi-script-test\CLIENT_DATA\test-files\string\*.*" $HomeTestFiles$
 copy -s "C:\Users\Jan\git-workbench\opsi-script-test\CLIENT_DATA\test-files\encoding\*.*" $HomeTestFiles$
 
 [Files_empty_folder]
-del -f "$HomeTestFiles$\files\symlink.txt"
-Del -s -f $HomeTestFiles$
+;del -f "$HomeTestFiles$\files\symlink.txt"
+del -s -f $HomeTestFiles$
