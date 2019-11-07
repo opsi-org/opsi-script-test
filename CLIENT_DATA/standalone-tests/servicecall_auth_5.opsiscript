@@ -1,0 +1,15 @@
+[actions]
+setloglevel=8
+;opsiservicecall_authenticated  /serviceurl "https://sepiella:4447" /username "adminuser" /password "linux123"
+;opsiservicecall_authenticated  /serviceurl "https://sepia:4447" /username "adminuser" /password "linux123"
+opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+;opsiservicecall_authenticated  /serviceurl "https://jan-opsi42:4447" /username "adminuser" /password "linux123"
+;opsiservicecall_authenticated  /serviceurl "https://vmax12opsi42:4447" /username "adminuser" /password "linux123"
+defvar $str$  
+
+Set $str$ = BoolToString(sendlog("pcjan.uib.local", "instlog", "False"))
+
+[opsiservicecall_authenticated]
+"method": "getProductIds_list" ;"config_getObjects"
+"params":[ ]
+

@@ -108,6 +108,10 @@ DefVar $systemroot$
 DefVar $pspolicy$
 DefVar $architecture$
 
+DefVar $opsi_script_test_helper_bin$
+DefVar $opsi_script_test_helper_child_bin$
+DefVar $opsi_script_test_helper_path$
+
 
 DefVar $Flag_winst_constants$
 DefVar $Flag_winst_parametrizing$
@@ -206,14 +210,23 @@ switch $OS$
 		Set $NTVersion$ = GetNTVersion
 		set $MsVersion$ = GetMsVersionInfo
 		Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
+		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-win\opsiscripttesthelper.exe"
+		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-win\helperchild.exe"
+		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-win"
 	endcase
 	case "Linux"
 		comment "We are running on Linux"
 		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-lin\opsiscripttesthelper"
+		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-lin\helperchild"
+		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-lin"
 	endcase
 	case "macos"
 		comment "We are running on macOS"
 		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac\opsiscripttesthelper"
+		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac\helperchild"
+		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-mac"
 	endcase
 endswitch
 
@@ -2795,7 +2808,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = takeString(0,$INST_ResultList$)
 		set $ConstTest$ = takeString(1, splitStringOnWhiteSpace($ConstTest$))
 		comment "get version info from helper.exe by winst function"
-		set $InterestingFile$ = "%scriptpath%\opsi-script-test-helper\opsiscripttesthelper.exe"
+		set $InterestingFile$ = "%scriptpath%\"+$opsi_script_test_helper_bin$
 		set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 		set $example$ = getValue("language name 0", $INST_Resultlist$ )
 		set $CompValue$ = getValue("fileversion", $INST_Resultlist$ )
@@ -4226,7 +4239,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		message "processIsRunning"
 		if $OS$ = "Windows_NT"
 			set $ConstTest$ = "helperchild.exe"
-			set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2')
+			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
 			set $list1$ = getProcessList
 			if processIsRunning($ConstTest$)
 				comment "passed"
@@ -4435,20 +4448,20 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	
 	
 	; Tests for WinstVersion >= 4.12.3
-    if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
-	comment ""
-	comment "Tests for WinstVersion >= 4.12.3"
-	comment ""
-	comment "-------------------------------------"    
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
+		comment ""
+		comment "Tests for WinstVersion >= 4.12.3"
+		comment ""
+		comment "-------------------------------------"    
 
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "findFiles"
-        Files_copy_for_filelist ;initialize test directory
-        
-        comment "Search all  files in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "32"
+		Files_copy_for_filelist ;initialize test directory
+
+		comment "Search all  files in $HomeTestFiles$ and subdirectories"
+		set $ConstTest$ = "38"
 		set $list2$ = findFiles($HomeTestFiles$,"*.*","True")
 		set $CompValue$ = count($list2$)
 		if ($ConstTest$ = $CompValue$)
@@ -4459,7 +4472,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		comment "No search string given search all fiels in $HomeTestFiles$ and subdirectories"
-		set $ConstTest$ = "32"
+		set $ConstTest$ = "38"
 		set $list2$ = findFiles($HomeTestFiles$,"","True")
 		set $CompValue$ = count($list2$)
 		if ($ConstTest$ = $CompValue$)
@@ -8007,13 +8020,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
   	
 			message "testing winbatch_start_helper_c /RunElevated"
 			winbatch_start_helper_c /RunElevated
-			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 			message "testing winbatch_start_helper_asadmin_c /RunElevated"
 			winbatch_start_helper_asadmin_c /RunElevated
-			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 			message "testing winbatch_start_helper_asinvoker_c /RunElevated"
 			winbatch_start_helper_asinvoker_c /RunElevated
-			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
   	
 			marktime
 			message "testing Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
@@ -8118,7 +8131,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			else
 				message "processCall /WaitForWindowAppearing"
 				marktime
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2') /WaitForWindowAppearing "opsi-script-test-helper"
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /WaitForWindowAppearing "opsi-script-test-helper"
 				difftime
 				comment "difftime should be about 2 seconds"
 				;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
@@ -8151,7 +8164,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
   		
 				message "processCall /WaitForProcessEnding"
 				marktime
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2')  /WaitForProcessEnding "helperchild.exe"
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /WaitForProcessEnding "helperchild.exe"
 				difftime
 				comment "difftime should be 5 seconds"
 				sleepseconds 1
@@ -8171,7 +8184,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
   		
 				message 'processCall /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 20'
 				marktime
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2')  /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 20
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 20
 				difftime
 				comment "difftime should be 5 seconds"
 				sleepseconds 1
@@ -8191,7 +8204,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
   		
 				message 'processCall /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 2'
 				marktime
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2')  /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 2
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 2
 				difftime
 				comment "difftime should be 2 seconds"
 				sleepseconds 1
@@ -8210,7 +8223,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				killtask "opsiscripttesthelper.exe"
   		
 				comment "same test without /WaitForProcessEnding"
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2') 
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') 
 				sleepseconds 1
 				;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
 				set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
@@ -8228,7 +8241,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
   		
 
 				comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2')  /TimeOutSeconds 20
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /TimeOutSeconds 20
 				sleepseconds 1
 				;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
 				set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
@@ -8247,7 +8260,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				;/WaitForWindowVanish sees only Windows of 32 Bit applications
 				message "processCall /WaitForWindowVanish"
 				marktime
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2') /WaitForWindowVanish "opsi-script-test-helper"
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /WaitForWindowVanish "opsi-script-test-helper"
 				difftime
 				comment "difftime should be 5 seconds"
 				sleepseconds 1
@@ -8266,7 +8279,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				message "processCall /WaitSeconds"
 				comment "should be take 2 seconds even the program is finished before 2 seconds"
 				marktime
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe"') /WaitSeconds 2
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'"') /WaitSeconds 2
 				difftime
 				sleepseconds 1
 				;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
@@ -8287,7 +8300,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				comment "should be take longer than 2 seconds"
 				marktime
 				;Winbatch_helper_wait2_showwindow1
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --wait=2 --showwindow=1') /WaitSeconds 2
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --wait=2 --showwindow=1') /WaitSeconds 2
 				difftime
 				sleepseconds 1
 				;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
@@ -8307,7 +8320,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				comment "should be take exactly 2 seconds even if the program takes longer"
 				marktime
 				;Winbatch_helper_wait2_showwindow5
-				set $tmp$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --wait=2 --showwindow=5') /WaitSeconds 2 /LetThemgo
+				set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --wait=2 --showwindow=5') /WaitSeconds 2 /LetThemgo
 				difftime
 				sleepseconds 1
 				;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
@@ -8330,7 +8343,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			message "processCall exitcode"
 			;Winbatch_exitcode_42_noquote
 			set $ConstTest$ = "42"
-			set $CompValue$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe"')
+			set $CompValue$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'"')
 			if ($ConstTest$ = $CompValue$)
 				comment "processCall exitcode passed"
 			else
@@ -8343,7 +8356,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			message "processCall exitcode"
 			;Winbatch_exitcode_42_doublequote
 			set $ConstTest$ = "42"
-			set $CompValue$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe"  --log')
+			set $CompValue$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'"  --log')
 			if ($ConstTest$ = $CompValue$)
 				comment "processCall exitcode passed"
 			else
@@ -8353,7 +8366,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			message "processCall exitcode"
 			;Winbatch_exitcode_43_noquote_with_param
 			set $ConstTest$ = "43"
-			set $CompValue$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe"  --exit-code=43')
+			set $CompValue$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'"  --exit-code=43')
 			if ($ConstTest$ = $CompValue$)
 				comment "processCall exitcode passed"
 			else
@@ -8363,7 +8376,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			message "processCall exitcode"
 			;Winbatch_exitcode_43_doublequote_with_param
 			set $ConstTest$ = "43"
-			set $CompValue$ = processCall('"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --exit-code=43')
+			set $CompValue$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --exit-code=43')
 			if ($ConstTest$ = $CompValue$)
 				comment "processCall exitcode passed"
 			else
@@ -9233,7 +9246,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 				comment "Testing: "
 				message "opsiservicecall /opsiclientd"
 				; that does not work: The file will not be found
-				;set $testfilepath$ = "%scriptpath%\opsi-script-test-helper\opsiscripttesthelper.exe"
+				;set $testfilepath$ = "%scriptpath%\'+$opsi_script_test_helper_bin$+'"
 				;set $tmp$ = Convert2JsonStr($testfilepath$)
 				;set $testfilepath$ = regstring($testfilepath$)
 				;set $ConstTest$ = "opsiscripttesthelper.exe"
@@ -9672,7 +9685,7 @@ if $Flag_RunAsLoggedOnAdmin$ = "on"
 		LocalAdmin /Create3
 		sub_current_path
 		message "Winbatch_testing /RunAsLoggedOnAdmin"
-		if FileExists("%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe")
+		if FileExists("%ScriptPath%\'+$opsi_script_test_helper_bin$+'")
 			Winbatch_exitcode_43_noquote_with_param
 			set $ConstTest$ = "43"
 			set $CompValue$ = getLastExitCode
@@ -10004,7 +10017,7 @@ if $Flag_RunAsLoggedOnAdmin$ = "on"
 
 		;message "Winbatch_testing /WaitForWindowAppearing /RunAsLoggedOnAdmin"
 		;marktime
-		;Winbatch_startprocess_with_child_nowait /RunAsLoggedOnAdmin /WaitForWindowAppearing "opsi-script-test-helper"
+		;Winbatch_startprocess_with_child_nowait /RunAsLoggedOnAdmin /WaitForWindowAppearing "opsi-script-test-helper-win"
 		;difftime
 		;comment "difftime should be about 2 seconds"
 		;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
@@ -10038,51 +10051,51 @@ if $Flag_RunAsLoggedOnAdmin$ = "on"
 
 		message "testing winbatch_start_helper_c"
 		winbatch_start_helper_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_c /RunElevated"
 		winbatch_start_helper_c /RunElevated
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_asadmin_c"
 		winbatch_start_helper_asadmin_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_asadmin_c /RunElevated"
 		winbatch_start_helper_asadmin_c /RunElevated
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing DosInAnIcon_start_helper_c"
 		DosInAnIcon_start_helper_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing DosInAnIcon_start_helper_asadmin_c"
 		DosInAnIcon_start_helper_asadmin_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c"
 		winbatch_start_helper_asinvoker_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunElevated"
 		winbatch_start_helper_asinvoker_c /RunElevated
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin1 /TimeoutSeconds 10"
 		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin1 /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin2 /TimeoutSeconds 10"
 		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin2 /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /TimeoutSeconds 10"
 		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c LocalAdmin /Create3 /TimeoutSeconds 10"
 		LocalAdmin /Create3
 		winbatch_start_helper_asinvoker_c /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		LocalAdmin /Delete
 		;message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin4 /TimeoutSeconds 10"
 		;winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin4 /TimeoutSeconds 10
-		;set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-script-test-helper\admin.log")
+		;set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing DosInAnIcon_start_helper_asinvoker_c"
 		DosInAnIcon_start_helper_asinvoker_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /RunElevated /TimeoutSeconds 10"
 		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /RunElevated /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log")
+		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 
 		marktime
 		message "testing Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
@@ -10289,7 +10302,7 @@ if $Flag_RunAsLoggedOnAdmin$ = "on"
 		;/WaitForWindowVanish sees only Windows of 32 Bit applications
 		;message "Winbatch_testing /WaitForWindowVanish /RunAsLoggedOnAdmin"
 		;marktime
-		;Winbatch_startprocess_with_child_nowait /RunAsLoggedOnAdmin /WaitForWindowVanish "opsi-script-test-helper"
+		;Winbatch_startprocess_with_child_nowait /RunAsLoggedOnAdmin /WaitForWindowVanish "opsi-script-test-helper-win"
 		;difftime
 		;comment "difftime should be 5 seconds"
 		;sleepseconds 1
@@ -10764,7 +10777,7 @@ goto end
 
 [DosInAnIcon_time]
 @echo off
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --time-output
+"%ScriptPath%\$opsi_script_test_helper_bin$" --time-output
 rem time /t
 
 [ShellInAnIcon_time]
@@ -10878,7 +10891,7 @@ comment "value for key '" +$key$ + "' : '" + $value$ + "'"
 
 [DosInAnIcon_helper_version]
 @echo off
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --version
+"%ScriptPath%\$opsi_script_test_helper_bin$" --version
 
 ;----------------   end   sections for info map test ---------------------------------
 ;----------------   start   sections for string list test ---------------------------------
@@ -11790,7 +11803,7 @@ Send("{ENTER}")
 Exit
 
 [winbatch_helper_showwindow_50]
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --wait=2 --showwindow=50
+"%ScriptPath%\$opsi_script_test_helper_bin$" --wait=2 --showwindow=50
 
 
 [ExecWith_save_notepad]
@@ -11852,42 +11865,42 @@ tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"
 tasklist /FI "IMAGENAME eq helperchild.exe"
 
 [Winbatch_startprocess_with_child_nowait]
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2
+"%ScriptPath%\$opsi_script_test_helper_bin$" --fork-and-stop=2
 
 [Winbatch_startprocess_with_child_nowait_from_c]
-"$HomeTestFiles$\testFiles\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=2
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=2
 
 
 [WinBatch_testing2]
 %ScriptPath%\dos\dummy2.bat
 
 [Winbatch_exitcode_42_noquote]
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe"
+"%ScriptPath%\$opsi_script_test_helper_bin$"
 
 [Winbatch_exitcode_42_singlequote]
-'%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe'
+'%ScriptPath%\$opsi_script_test_helper_bin$'
 
 [Winbatch_exitcode_42_doublequote]
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe"
+"%ScriptPath%\$opsi_script_test_helper_bin$"
 
 [Winbatch_exitcode_43_noquote_with_param]
-%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe --exit-code=43
+%ScriptPath%\$opsi_script_test_helper_bin$ --exit-code=43
 
 
 [Winbatch_exitcode_43_singlequote_with_param]
-'%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe' --exit-code=43
+'%ScriptPath%\$opsi_script_test_helper_bin$' --exit-code=43
 
 [Winbatch_exitcode_43_doublequote_with_param]
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --exit-code=43
+"%ScriptPath%\$opsi_script_test_helper_bin$" --exit-code=43
 
 [Winbatch_helper_wait2_showwindow1]
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --wait=2 --showwindow=1
+"%ScriptPath%\$opsi_script_test_helper_bin$" --wait=2 --showwindow=1
 
 [Winbatch_helper_wait2_showwindow5]
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --wait=2 --showwindow=5
+"%ScriptPath%\$opsi_script_test_helper_bin$" --wait=2 --showwindow=5
 
 [Winbatch_helper_showwindow1]
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --fork-and-stop=3
+"%ScriptPath%\$opsi_script_test_helper_bin$" --fork-and-stop=3
 
 [Winbatch_msi_shellexecute]
 "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
@@ -11924,29 +11937,29 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 ;"%WinstDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
 
 [winbatch_start_helper_asadmin_c]
-"$HomeTestFiles$\testFiles\opsi-script-test-helper\opsiwinsttesthelperasadmin.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 
 [winbatch_start_helper_asinvoker_c]
-"$HomeTestFiles$\testFiles\opsi-script-test-helper\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 
 [winbatch_start_helper_c]
-"$HomeTestFiles$\testFiles\opsi-script-test-helper\opsiscripttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 
 [DosInAnIcon_start_helper_c]
-"$HomeTestFiles$\testFiles\opsi-script-test-helper\opsiscripttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 
 [DosInAnIcon_start_helper_asadmin_c]
-"$HomeTestFiles$\testFiles\opsi-script-test-helper\opsiwinsttesthelperasadmin.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-script-test-helper-win\opsiwinsttesthelperasadmin.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 
 [DosInAnIcon_start_helper_asinvoker_c]
-"$HomeTestFiles$\testFiles\opsi-script-test-helper\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-script-test-helper-win\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 
 [Files_copy_msi_exe_2_c]
 copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
 copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
 
 [Files_copy_helper_2_c]
-copy "%ScriptPath%\opsi-script-test-helper\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper"
+copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"
 
 [Files_clean_from_c]
 del -s -f "$HomeTestFiles$\testFiles"
@@ -12010,7 +12023,7 @@ set exitcode=0
 VERIFY OTHER 2> NUL
 if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
 echo %exitcode%
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe"
+"%ScriptPath%\$opsi_script_test_helper_bin$"
 if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
 exit %exitcode%
 
@@ -12177,7 +12190,7 @@ endif
 
 ;----------------   start  internal undocumented functions tests ---------------------------------
 [winbatch_create_file]
-"%ScriptPath%\opsi-script-test-helper\opsiscripttesthelper.exe" --createfile="$testfilepath$" --filesize=$testfilesize$
+"%ScriptPath%\$opsi_script_test_helper_bin$" --createfile="$testfilepath$" --filesize=$testfilesize$
 
 [DosInAnIcon_dir]
 @echo off

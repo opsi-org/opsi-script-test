@@ -2,6 +2,7 @@
 opsi-script-test (4.12.3-1) stable; urgency=low
 
   * integrate linux opsi-script-test-helper
+  * stringlist: listfiles small fixes
   
 -- detlef oertel <d.oertel@uib.de>  Thu,  31 Oct 2019 15:00:00 +0200
 
