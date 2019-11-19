@@ -108,6 +108,7 @@ DefVar $workfile$
 DefVar $systemroot$
 DefVar $pspolicy$
 DefVar $architecture$
+DefVar $GUI$
 
 DefVar $opsi_script_test_helper_bin$
 DefVar $opsi_script_test_helper_child_bin$
@@ -173,6 +174,8 @@ DefVar $OS$
 DefVar $NTVersion$
 DefVar $opsi_message_title$
 DefVar $exitcode$
+DefVar $pathDelim$
+DefVar $ping5command$
 
 DefVar $regWriteValue$
 
@@ -202,6 +205,11 @@ Set $OS$ = GetOS
 ; retrieve current language
 set $languageInfo$ = getLocaleInfoMap
 set $language$ = getValue("language_id_2chars", $languageInfo$)
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
+	set $GUI$ = booltostring(runningWithGui)
+else
+	set $GUI$ = "true"
+endif
 
 set $ProductId$ = "opsi-script-test"
 
@@ -214,13 +222,22 @@ switch $OS$
 		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-win\opsiscripttesthelper.exe"
 		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-win\helperchild.exe"
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-win"
+		set $pathDelim$ = "\"
+		set $ping5command$ = "ping 127.0.0.1 -n 5"
 	endcase
 	case "Linux"
 		comment "We are running on Linux"
 		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
-		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-lin\opsiscripttesthelper"
-		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-lin\helperchild"
+		if $GUI$ = "true"
+			Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-lin/64/opsiscripttesthelper"
+			Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-lin/64/helperchild"
+		else
+			Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-lin/64/opsiscripttesthelper_nogui"
+			Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-lin/64/helperchild_nogui"
+		endif
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-lin"
+		set $pathDelim$ = "/"
+		set $ping5command$ = "ping -c 5 127.0.0.1"
 	endcase
 	case "macos"
 		comment "We are running on macOS"
@@ -228,6 +245,8 @@ switch $OS$
 		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac\opsiscripttesthelper"
 		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac\helperchild"
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-mac"
+		set $pathDelim$ = "/"
+		set $ping5command$ = "ping -c 5 127.0.0.1"
 	endcase
 endswitch
 
@@ -297,9 +316,9 @@ set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off
 set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
-set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
+set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "on")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
-set $Flag_winst_xml2$              = GetProductProperty ("XML2", "on")
+set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
 
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
@@ -309,7 +328,7 @@ set $Flag_RunAsLoggedOnAdmin$      = GetProductProperty ("RunAsLoggedOnAdmin", "
 ;set $Flag_winst_idapiconfig$       = GetProductProperty ("idapiconfig", "off")
 
 
-if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.7") >= "0"
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.4.7")
 	AutoActivityDisplay = true
 endif
 
@@ -391,7 +410,6 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif  ; lang = de
 
-		comment " Chapter 5.2"
 
 		message "Testing constants: "+"%"+"DefaultUserProfileDir"+"%"
 		set $ConstTest$="%DefaultUserProfileDir%"
@@ -648,14 +666,14 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$="%PCName%"
 	if $OS$ = "Windows_NT"
 		set $CompValue$= EnvVar("Computername")
-		if ($ConstTest$=$CompValue$)
-			comment "passed"
-		else
-			LogWarning "failed"
-			set $TestResult$ = "not o.k."
-		endif
 	else
-		set $CompValue$= EnvVar("HOSTNAME")
+		set $CompValue$= takeString(0,shellCall("hostname"))
+	endif
+	if ($ConstTest$=$CompValue$)
+		comment "passed"
+	else
+		LogWarning "failed"
+		set $TestResult$ = "not o.k."
 	endif
 	
 
@@ -667,23 +685,24 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	switch $OS$
 		case "Windows_nt"
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
+			set $tmp$ = takeString(3, $list1$)
+			set $CompValue$ = takeString(-1, splitString ($tmp$, " "))
 		endcase
 		case "Linux"
-			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
+			set $CompValue$ = takeString(0,shellCall("hostname -f"))
 		endcase
 		case "macos"
 			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
 		endcase
 	endswitch
-	set $tmp$ = takeString(3, $list1$)
-	set $CompValue$ = takeString(-1, splitString ($tmp$, " "))
-	comment ">>not tested"
-	;if ($ConstTest$ = $CompValue$)
-	;	comment "passed"
-	;else
-	;	LogWarning "failed"
-	;	set $TestResult$ = "not o.k."
-	;endif
+	
+	;comment ">>not tested"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		LogWarning "failed"
+		set $TestResult$ = "not o.k."
+	endif
 
 	comment ""
 	comment "-------------------------------------"
@@ -693,23 +712,24 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	switch $OS$
 		case "Windows_nt"
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
+			set $tmp$ = takeString(34, $list1$)
+			set $CompValue$ = takeString(-1, splitString ($tmp$, " "))
 		endcase
 		case "Linux"
-			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
+			set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
 		endcase
 		case "macos"
 			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
 		endcase
 	endswitch
-	set $tmp$ = takeString(34, $list1$)
-	set $CompValue$ = takeString(-1, splitString ($tmp$, " "))
-	comment ">>not tested"
-	;if ($ConstTest$ = $CompValue$)
-	;	comment "passed"
-	;else
-	;	LogWarning "failed"
-	;	set $TestResult$ = "not o.k."
-	;endif
+	
+	;comment ">>not tested"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		LogWarning "failed"
+		set $TestResult$ = "not o.k."
+	endif
 
 	comment ""
 	comment "-------------------------------------"
@@ -888,10 +908,10 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "%CurrentStartupDir%"
 	set $ConstTest$ = "%CurrentProgramsDir%"
 	set $ConstTest$ = "%CurrentSendToDir%"
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4") >= "0"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.4")
 		set $ConstTest$ = "%opsiDepotId%"
 	endif
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.4") >= "0"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.4.4")
 		set $ConstTest$ = "%opsiTmpDir%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "C:\opsi.org\tmp"
@@ -911,7 +931,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			if runningAsAdmin
 				set $CompValue$ = "/var/log/opsi-script"
 			else
-				set $CompValue$ = "/tmp/opsi-script"
+				set $CompValue$ = "/tmp"
 		endif
 		endif
 		if ($ConstTest$ = $CompValue$)
@@ -922,7 +942,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.12.0.16") >= "0"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
 		set $ConstTest$ = "%opsidata%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "C:\opsi.org\data"
@@ -1181,7 +1201,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 
-	; Chapter 6.3.2 Strings in Strings (Nested String Values)
+	; Strings in Strings (Nested String Values)
 
 	comment ""
 	comment "-------------------------------------"
@@ -1197,7 +1217,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 
-	; Chapter 6.3.3 String Concatenation
+	; String Concatenation
 
 	comment ""
 	comment "-------------------------------------"
@@ -1216,32 +1236,37 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 
-	; Chapter 6.3.5 String Functions which Return the OS Type
+	; String Functions which Return the OS Type
 
-	; GetOS is deprecated - not tested anymore - use GetMsVersionInfo or GetMSVersionMap
-	;comment ""
-	;comment "-------------------------------------"
-	;comment "Testing: "
-	;comment "GetOS"
-	;comment GetOS
-	;set $ConstTest$ = GetOS
-	;set $list1$ = getOutStreamFromSection ('DosInAnIcon_GetOS')
-	;set $tmp$ = takeString(0, $list1$)
-	;if (($tmp$ = "XP") OR ($tmp$ = "2000") OR ($tmp$ = "Vista"))
-	;	set $CompValue$ = "Windows_NT"
-	;endif
-	;if $tmp$ = "9598ME"
-	;	set $CompValue$ = "Windows_95"
-	;endif
-	;if not (($tmp$ = "XP") OR ($tmp$ = "2000") OR ($tmp$ = "9598ME"))
-	;	comment ">> not tested for Windows_16 and Linux"
-	;endif
-	;if ($ConstTest$ = $CompValue$)
-	;	comment "passed"
-	;else
-	;	set $TestResult$ = "not o.k."
-	;	LogWarning "failed"
-	;endif
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "GetOS"
+	comment GetOS
+	set $ConstTest$ = GetOS
+	Switch $ConstTest$
+		Case "WINDOWS_NT"
+			set $CompValue$ = takeFirstStringContaining(shellCall("ver"),"Microsoft Windows")
+			if not($CompValue$ = "")
+				set $CompValue$ = "WINDOWS_NT"
+			endif
+		EndCase
+		Case "LINUX"
+			set $CompValue$ = takeString(0,shellCall("uname"))
+		EndCase
+		Case "MACOS"
+			set $CompValue$ = takeString(0,shellCall("uname"))
+		EndCase
+		DefaultCase
+			set $CompValue$ = "notexisting"
+		EndCase
+	EndSwitch
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
 
 	; GetNtVersion is deprecated - not tested anymore - use GetMsVersionInfo or GetMSVersionMap
 	;comment ""
@@ -1319,7 +1344,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif
 
-		; Chapter 6.3.6 String Functions for Retrieving Environment or Command Line Parameters
+		;  String Functions for Retrieving Environment or Command Line Parameters
   	
 		comment ""
 		comment "-------------------------------------"
@@ -1361,6 +1386,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "GetLastExitCode"
+
 	if $OS$ ="Windows_NT"
 		Winbatch_exitcode_43_noquote_with_param
 	else
@@ -1842,7 +1868,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	endif ; 4.11.4.4
 
 
-	; Chapter 6.3.11 Additional String Functions
+	; Additional String Functions
 
 	comment ""
 	comment "-------------------------------------"
@@ -2455,62 +2481,62 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 
-		if $OS$ = "Windows_NT"
-			if not ("%opsiserviceURL%" = "")
-				comment ""
-				comment "-------------------------------------"
-				comment "Testing: "
-				message "getMyIpByTarget"
-				set $ConstTest$ = "%IPAddress%"
-				set $string1$ = "%opsiServer%"
-				set $CompValue$ = getMyIpByTarget($string1$)
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-			endif ; opsi service
-		endif ; windows
-			
-		if $OS$ = "Windows_NT"
+		if not ("%opsiserviceURL%" = "")
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
-			message "getIpByName"
+			message "getMyIpByTarget"
 			set $ConstTest$ = "%IPAddress%"
-			set $string1$ = "%IPAddress%"
-			markErrorNumber
-			set $CompValue$ = getIpByName($string1$)
+			set $string1$ = "%opsiServer%"
+			set $CompValue$ = getMyIpByTarget($string1$)
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
-				if errorsOccuredSinceMark = 0
-					set $TestResult$ = "not o.k."
-				endif
+				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			markErrorNumber
-			set $CompValue$ = getIpByName("%HostID%")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				if errorsOccuredSinceMark = 0
-					set $TestResult$ = "not o.k."
-				endif
-				LogWarning "failed"
+		endif ; opsi service
+			
+
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "getIpByName"
+		set $ConstTest$ = "127.0.0.1"
+		set $string1$ = "localhost"
+		markErrorNumber
+		set $CompValue$ = getIpByName($string1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			if errorsOccuredSinceMark = 0
+				set $TestResult$ = "not o.k."
 			endif
-			markErrorNumber
-			set $CompValue$ = getIpByName("%PCName%")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				if errorsOccuredSinceMark = 0
-					set $TestResult$ = "not o.k."
-				endif
-				LogWarning "failed"
+			LogWarning "failed"
+		endif
+		markErrorNumber
+		set $ConstTest$ = getMyIpByTarget(getIpByName("%HostID%"))
+		set $CompValue$ = getIpByName("%HostID%")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			if errorsOccuredSinceMark = 0
+				set $TestResult$ = "not o.k."
 			endif
-		endif ; windows
+			LogWarning "failed"
+		endif
+		markErrorNumber
+		set $ConstTest$ = getMyIpByTarget(getIpByName("%PCName%"))
+		set $CompValue$ = getIpByName("%PCName%")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			if errorsOccuredSinceMark = 0
+				set $TestResult$ = "not o.k."
+			endif
+			LogWarning "failed"
+		endif
+
 	
 
 	else
@@ -7578,12 +7604,11 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 
-	;Chapter 7.9 WinBatch Sections
+	; WinBatch Sections
 	
-	if $OS$ = "Windows_NT"
 
 		;if $MsVersion$ <= "5.0"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+		if ($OS$ = "Windows_NT") and CompareDotSeparatedNumbers(GetMsVersionInfo,"<=","5.0")
 			comment "not tested at win2k  because tasklist is needed"
 		else
 			comment ""
@@ -7593,70 +7618,106 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			message "Winbatch_testing /LetThemGo"
 			Winbatch_testing /LetThemGo
 			sleepSeconds 2
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_ping')
-			set $ConstTest$ = "ping.exe"
-			set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			if $OS$ = "Windows_NT"
+				set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+				set $ConstTest$ = "ping.exe"
+				set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+				set $list$ = splitStringOnWhitespace($tmp$)
+				set $CompValue$ = takeString(getIndexFromListByContaining($list$,"ping"), $list$)
+				killtask "ping.exe"
+			else
+				set $list1$ = shellCall('ps -ef | grep ping"')
+				set $ConstTest$ = "ping"
+				set $tmp$ = takeFirstStringContaining($list1$,"ping")
+				set $list$ = splitStringOnWhitespace($tmp$)
+				set $CompValue$ = takeString(getIndexFromListByContaining($list$,"ping"), $list$)
+				killtask "ping"
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "/LetThemGo passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "/LetThemGo failed"
 			endif
-			killtask "ping.exe"
+			
 		endif
 		
 		;NormalizeWinst
   	
 		;if $MsVersion$ <= "5.0"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+		if ($OS$ = "Windows_NT") and CompareDotSeparatedNumbers(GetMsVersionInfo,"<=","5.0")
 			comment "not tested at win2k  because tasklist is needed"
 		else
 			message "Winbatch_testing /WaitOnClose"
 			Winbatch_testing /WaitOnClose
 			sleepseconds 1
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_ping')
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			if $OS$ = "Windows_NT"
+				set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+				set $ConstTest$ = "ping.exe"
+				set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				killtask "ping.exe"
+			else
+				set $list1$ = shellCall('ps -ef | grep ping"')
+				set $ConstTest$ = "ping"
+				set $tmp$ = takeFirstStringContaining($list1$,"ping")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				killtask "ping"
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "/WaitOnClose passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "/WaitOnClose failed"
 			endif
-			killtask "ping.exe"
+
   	
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
+			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.3")
 				message "Winbatch_testing /WaitOnClose /timeoutseconds 20"
 				Winbatch_testing /WaitOnClose /timeoutseconds 20
 				sleepseconds 1
-				set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_ping')
-				set $ConstTest$ = ""
-				set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				if $OS$ = "Windows_NT"
+					set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+					set $ConstTest$ = "ping.exe"
+					set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "ping.exe"
+				else
+					set $list1$ = shellCall('ps -ef | grep ping"')
+					set $ConstTest$ = "ping"
+					set $tmp$ = takeFirstStringContaining($list1$,"ping")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "ping"
+				endif
 				if ($ConstTest$ = $CompValue$)
 					comment "/WaitOnClose passed"
 				else
 					set $TestResult$ = "not o.k."
 					LogWarning "/WaitOnClose failed"
 				endif
-				killtask "ping.exe"
   	
 				message "Winbatch_testing /WaitOnClose /timeoutseconds $seconds$"
 				set $tmp$ = "2"
 				Winbatch_testing /WaitOnClose /timeoutseconds $tmp$
-				set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_ping')
-				set $ConstTest$ = "ping.exe"
-				set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				if $OS$ = "Windows_NT"
+					set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+					set $ConstTest$ = "ping.exe"
+					set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "ping.exe"
+				else
+					set $list1$ = shellCall('ps -ef | grep ping"')
+					set $ConstTest$ = "ping"
+					set $tmp$ = takeFirstStringContaining($list1$,"ping")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "ping"
+				endif
 				if ($ConstTest$ = lower($CompValue$))
 					comment "/WaitOnClose passed"
 				else
 					set $TestResult$ = "not o.k."
 					LogWarning "/WaitOnClose failed"
 				endif
-				killtask "ping.exe"
   	
 			endif ; 4.11.3
   	
@@ -7666,77 +7727,120 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
   	
 		;/WaitForWindowVanish sees only Windows of 32 Bit applications
 		;if $MsVersion$ <= "5.0"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+		
+		CompareDotSeparatedNumbers(GetMsVersionInfo,"<=","5.0")
 			comment "not tested at win2k  because tasklist is needed"
 		else
-			message "Winbatch_testing /WaitForWindowAppearing"
-			marktime
-			Winbatch_startprocess_with_child_nowait /WaitForWindowAppearing "opsi-script-test-helper"
-			difftime
-			comment "difftime should be about 2 seconds"
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			set $ConstTest$ = "helperchild.exe"
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForWindowAppearing assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForWindowAppearing assumed failed"
-			endif
-			marktime
-			sleepSeconds 3
-			difftime
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			set $ConstTest$ = ""
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForWindowAppearing assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForWindowAppearing assumed failed"
-			endif
-			killtask "helperchild.exe"
-			killtask "opsiscripttesthelper.exe"
+			if ($OS$ = "Windows_NT")
+				message "Winbatch_testing /WaitForWindowAppearing"
+				marktime
+				Winbatch_startprocess_with_child_nowait /WaitForWindowAppearing "opsi-script-test-helper"
+				difftime
+				comment "difftime should be about 2 seconds"
+				if $OS$ = "Windows_NT"
+					set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+					set $ConstTest$ = "helperchild.exe"
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild.exe"
+				else
+					set $list1$ = shellCall('ps -ef | grep helperchild"')
+					set $ConstTest$ = "helperchild"
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild"
+				endif
+				
+				if ($ConstTest$ = $CompValue$)
+					comment "/WaitForWindowAppearing assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "/WaitForWindowAppearing assumed failed"
+				endif
+				marktime
+				sleepSeconds 3
+				difftime
+				if $OS$ = "Windows_NT"
+					set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+					set $ConstTest$ = ""
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild.exe"
+					killtask "opsiscripttesthelper.exe"
+				else
+					set $list1$ = shellCall('ps -ef | grep helperchild"')
+					set $ConstTest$ = ""
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild"
+					killtask "opsiscripttesthelper"
+				endif
+				if ($ConstTest$ = $CompValue$)
+					comment "/WaitForWindowAppearing assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "/WaitForWindowAppearing assumed failed"
+				endif
+			endif ; windows
   	
 			message "Winbatch_testing /WaitForProcessEnding"
 			marktime
-			Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe"
+			set $string1$ =  ExtractFileName ($opsi_script_test_helper_child_bin$)  
+			Winbatch_startprocess_with_child_nowait /WaitForProcessEnding $string1$
 			difftime
 			comment "difftime should be 5 seconds"
 			sleepseconds 1
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			if $OS$ = "Windows_NT"
+					set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+					set $ConstTest$ = ""
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild.exe"
+					killtask "opsiscripttesthelper.exe"
+				else
+					set $list1$ = shellCall('ps -ef | grep helperchild"')
+					set $ConstTest$ = ""
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild"
+					killtask "opsiscripttesthelper"
+				endif
 			if ($ConstTest$ = $CompValue$)
 				comment "/WaitForProcessEnding assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "/WaitForProcessEnding assumed failed"
 			endif
-			killtask "helperchild.exe"
-			killtask "opsiscripttesthelper.exe"
+			killtask $string1$
+			killtask ExtractFileName ($opsi_script_test_helper_bin$)  
   	
 			message "Winbatch_testing /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 20"
 			marktime
-			Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 20
+			Winbatch_startprocess_with_child_nowait /WaitForProcessEnding $string1$ /TimeOutSeconds 20
 			difftime
 			comment "difftime should be 5 seconds"
 			sleepseconds 1
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			if $OS$ = "Windows_NT"
+					set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+					set $ConstTest$ = ""
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild.exe"
+					killtask "opsiscripttesthelper.exe"
+				else
+					set $list1$ = shellCall('ps -ef | grep helperchild"')
+					set $ConstTest$ = ""
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild"
+					killtask "opsiscripttesthelper"
+				endif
 			if ($ConstTest$ = $CompValue$)
 				comment "/WaitForProcessEnding assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "/WaitForProcessEnding assumed failed"
 			endif
-			killtask "helperchild.exe"
-			killtask "opsiscripttesthelper.exe"
   	
 			message "Winbatch_testing /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 2"
 			marktime
@@ -7744,69 +7848,99 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			difftime
 			comment "difftime should be 2 seconds"
 			sleepseconds 1
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $ConstTest$ = "helperchild.exe"
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			if $OS$ = "Windows_NT"
+				set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+				set $ConstTest$ = ""
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				killtask "helperchild.exe"
+				killtask "opsiscripttesthelper.exe"
+			else
+				set $list1$ = shellCall('ps -ef | grep helperchild"')
+				set $ConstTest$ = ""
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				killtask "helperchild"
+				killtask "opsiscripttesthelper"
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "/WaitForProcessEnding assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "/WaitForProcessEnding assumed failed"
 			endif
-			killtask "helperchild.exe"
-			killtask "opsiscripttesthelper.exe"
   	
 			comment "same test without /WaitForProcessEnding"
 			Winbatch_startprocess_with_child_nowait
 			sleepseconds 1
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $ConstTest$ = "helperchild.exe"
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			if $OS$ = "Windows_NT"
+				set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+				set $ConstTest$ = "helperchild.exe"
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				killtask "helperchild.exe"
+				killtask "opsiscripttesthelper.exe"
+			else
+				set $list1$ = shellCall('ps -ef | grep helperchild"')
+				set $ConstTest$ = "helperchild"
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				killtask "helperchild"
+				killtask "opsiscripttesthelper"
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "/WaitForProcessEnding assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "/WaitForProcessEnding assumed failed"
 			endif
-			killtask "helperchild.exe"
-			killtask "opsiscripttesthelper.exe"
   	
 			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
 				comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
 				Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20
 				sleepseconds 1
-				set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-				set $ConstTest$ = "helperchild.exe"
-				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				if $OS$ = "Windows_NT"
+					set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+					set $ConstTest$ = "helperchild.exe"
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild.exe"
+					killtask "opsiscripttesthelper.exe"
+				else
+					set $list1$ = shellCall('ps -ef | grep helperchild"')
+					set $ConstTest$ = "helperchild"
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+					killtask "helperchild"
+					killtask "opsiscripttesthelper"
+				endif
 				if ($ConstTest$ = $CompValue$)
 					comment "/WaitForProcessEnding assumed passed"
 				else
 					set $TestResult$ = "not o.k."
 					LogWarning "/WaitForProcessEnding assumed failed"
 				endif
-				killtask "helperchild.exe"
-				killtask "opsiscripttesthelper.exe"
 			endif
   	
-			;/WaitForWindowVanish sees only Windows of 32 Bit applications
-			message "Winbatch_testing /WaitForWindowVanish"
-			marktime
-			Winbatch_startprocess_with_child_nowait /WaitForWindowVanish "opsi-script-test-helper"
-			difftime
-			comment "difftime should be 5 seconds"
-			sleepseconds 1
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			set $ConstTest$ = ""
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForWindowVanish assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForWindowVanish assumed failed"
+
+			if $OS$ = "Windows_NT"
+				;/WaitForWindowVanish sees only Windows of 32 Bit applications
+				message "Winbatch_testing /WaitForWindowVanish"
+				marktime
+				Winbatch_startprocess_with_child_nowait /WaitForWindowVanish "opsi-script-test-helper"
+				difftime
+				comment "difftime should be 5 seconds"
+				sleepseconds 1
+				set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				set $ConstTest$ = ""
+				if ($ConstTest$ = $CompValue$)
+					comment "/WaitForWindowVanish assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "/WaitForWindowVanish assumed failed"
+				endif
 			endif
   	
 			message "Winbatch_testing /WaitSeconds"
@@ -7815,10 +7949,21 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			Winbatch_exitcode_42_doublequote /WaitSeconds 2
 			difftime
 			sleepseconds 1
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
-			set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			set $ConstTest$ = ""
+			if $OS$ = "Windows_NT"
+				set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+				set $ConstTest$ = ""
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				killtask "helperchild.exe"
+				killtask "opsiscripttesthelper.exe"
+			else
+				set $list1$ = shellCall('ps -ef | grep helperchild"')
+				set $ConstTest$ = ""
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				killtask "helperchild"
+				killtask "opsiscripttesthelper"
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "/WaitSeconds assumed passed"
 			else
@@ -11871,8 +12016,7 @@ $UserGroup = "$UserGroup$"
 Delete -s -f $HomeTestFiles$
 
 [WinBatch_testing]
-ping 127.0.0.1 -n 5
-;%ScriptPath%\dos\dummy.bat
+$ping5command$
 
 [Winbatch_top]
 /bin/bash -c "ping 127.0.0.1 &"
@@ -11900,32 +12044,32 @@ tasklist /FI "IMAGENAME eq helperchild.exe"
 %ScriptPath%\dos\dummy2.bat
 
 [Winbatch_exitcode_42_noquote]
-"%ScriptPath%\$opsi_script_test_helper_bin$"
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$"
 
 [Winbatch_exitcode_42_singlequote]
-'%ScriptPath%\$opsi_script_test_helper_bin$'
+'%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$'
 
 [Winbatch_exitcode_42_doublequote]
-"%ScriptPath%\$opsi_script_test_helper_bin$"
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$"
 
 [Winbatch_exitcode_43_noquote_with_param]
-%ScriptPath%\$opsi_script_test_helper_bin$ --exit-code=43
+%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$ --exit-code=43
 
 
 [Winbatch_exitcode_43_singlequote_with_param]
-'%ScriptPath%\$opsi_script_test_helper_bin$' --exit-code=43
+'%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$' --exit-code=43
 
 [Winbatch_exitcode_43_doublequote_with_param]
-"%ScriptPath%\$opsi_script_test_helper_bin$" --exit-code=43
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --exit-code=43
 
 [Winbatch_helper_wait2_showwindow1]
-"%ScriptPath%\$opsi_script_test_helper_bin$" --wait=2 --showwindow=1
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --wait=2 --showwindow=1
 
 [Winbatch_helper_wait2_showwindow5]
-"%ScriptPath%\$opsi_script_test_helper_bin$" --wait=2 --showwindow=5
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --wait=2 --showwindow=5
 
 [Winbatch_helper_showwindow1]
-"%ScriptPath%\$opsi_script_test_helper_bin$" --fork-and-stop=3
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=3
 
 [Winbatch_msi_shellexecute]
 "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
