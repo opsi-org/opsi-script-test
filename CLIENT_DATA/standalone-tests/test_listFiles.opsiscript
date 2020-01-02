@@ -38,7 +38,7 @@ switch $OS$
 endswitch
 
 ; Tests for WinstVersion >= 4.12.3
-;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
 comment ""
 comment "Tests for WinstVersion >= 4.12.3"
 comment ""
@@ -47,7 +47,7 @@ comment "-------------------------------------"
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
-	message "findFiles"
+	message "listFiles"
     Files_copy_for_filelist ;initialize test directory
     
     comment "Search all  files in $HomeTestFiles$"
@@ -104,10 +104,32 @@ comment "-------------------------------------"
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
+
+	comment "Search file in %System% with redirection for 32bit programs to SysWOW64"
+	set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6')
+	; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+	set $list3$ = listFiles("%System%","*.*","False")
+	if (count($list2$) = count($list3$))
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
 	
+	comment "Search file in %System% with redirection disabled"
+	set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 winst /64bit')
+	; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+	set $list3$ = listFiles("%System%","*.*","False","64bit")
+	if (count($list2$) = count($list3$))
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+
 	Files_empty_folder ;remove test files 
 	;End of Testing findFiles
-;endif ; WinstVersion >= 4.12.3
+endif ; WinstVersion >= 4.12.3
 
 [DosInAnIcon_ListFiles_Test1]
 @echo off
@@ -134,7 +156,10 @@ dir *.txt /A-D /B
 cd $HomeTestFiles$
 dir encode-cp866.opsiscript /A-D /B
 
-
+[DosInAnIcon_ListFiles_Test6]
+@echo off
+cd %System%
+dir *.* /A-D /B
 
 [Files_copy_for_filelist]
 copy -s "C:\Users\Jan\git-workbench\opsi-script-test\CLIENT_DATA\test-files\string\*.*" $HomeTestFiles$

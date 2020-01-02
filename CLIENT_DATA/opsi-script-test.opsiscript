@@ -4458,14 +4458,14 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
-		message "findFiles"
+		message "listFiles"
 		Files_copy_for_filelist ;initialize test directory
 
 		comment "Search all  files in $HomeTestFiles$"
 		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
 		;set $list2$ = GetListContaining($list2$, ".")
 		set $list3$ = listFiles($HomeTestFiles$,"*.*","False")
-		if (count($list2$) = count($list3$))
+		if (count($list2$) = count($list3$))      
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
@@ -4503,7 +4503,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
-		endif
+		endif            
 		
 		comment "Search file encode-cp866.opsiscript in $HomeTestFiles$"
 		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test5')
@@ -4516,11 +4516,33 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
+		comment "Search file in %System% with redirection for 32bit programs to SysWOW64"
+		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6')
+		; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+		set $list3$ = listFiles("%System%","*.*","False")     
+		if (count($list2$) = count($list3$))          
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Search file in %System% with redirection disabled"
+		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 winst /64bit')
+		; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+		set $list3$ = listFiles("%System%","*.*","False","64bit")
+		if (count($list2$) = count($list3$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
 		Files_empty_folder ;remove test files 
-		;End of Testing findFiles
-	endif ; WinstVersion >= 4.12.3	
-
-    sub_compareResult
+		;End of Testing listFiles
+	endif ; WinstVersion >= 4.12.3	        
+	
+	sub_compareResult
 	set $winst_string_list$ = $SubResult$
 endif
 
@@ -10949,7 +10971,7 @@ dir *.* /A-D /B
 [DosInAnIcon_ListFiles_Test2]
 @echo off
 cd $HomeTestFiles$
-dir *.* /A-D /B
+dir *.* /A-D /B                                              
 
 [DosInAnIcon_ListFiles_Test3]
 @echo off
@@ -10965,6 +10987,11 @@ dir *.txt /A-D /B
 @echo off
 cd $HomeTestFiles$
 dir encode-cp866.opsiscript /A-D /B
+
+[DosInAnIcon_ListFiles_Test6]
+@echo off
+cd %System%
+dir *.* /A-D /B
 
 ;----------------   end   sections for string list test ---------------------------------
 ;----------------   start   sections for controls test ---------------------------------
