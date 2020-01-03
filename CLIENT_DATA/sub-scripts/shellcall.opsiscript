@@ -1,0 +1,564 @@
+encoding=utf8
+
+if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
+	Message "testing Dos / DosInAnIcon functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing  Dos / DosInAnIcon functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	if $OS$ = "Windows_NT"
+
+		;Chapter  7.10 DOSBatch/ShellBatch Sections
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		comment "DosBatch"
+		message "DosBatch"
+		DosBatch_1
+		if (fileExists($HomeTestFiles$+"\dosbatch_1.txt"))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		Files_empty_folder
+
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DosInAnIcon"
+		DosInAnIcon_1
+		;DosBatch_1b
+		;Execwith_1b cmd.exe /C
+		if (fileExists($HomeTestFiles$+"\dosinanicon_1.txt"))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+  	
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.1") >= "0"
+			if $INST_SystemType$ = "64 Bit System"
+				comment ""
+				comment "-------------------------------------"
+				comment "Testing: "
+				message "DosBatch / DosInAnIcon  winst /64bit"
+				Files_copy_test_to_system32 /64Bit
+				DosInAnIcon_remove_test_from_system32 winst /64Bit
+				if not(FileExists64("%System%\dummy.txt"))
+					comment "passed"
+				else
+					LogWarning "failed"
+					set $TestResult$ = "not o.k."
+				endif
+			endif
+  	
+			Files_copy_test_to_system32 /sysnative
+			DosInAnIcon_remove_test_from_system32 winst /sysnative
+			if not(FileExistssysnative("%System%\dummy.txt"))
+				comment "passed"
+			else
+				LogWarning "failed"
+				set $TestResult$ = "not o.k."
+			endif
+		else
+			comment "Dosbatch winst /64bit not tested, minimum winst needed: 4.11.1.1"
+		endif
+  	
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.1") >= "0"
+			message "DosBatch / DosInAnIcon  exitcode"
+			DosInAnIcon_exit42
+			set $ConstTest$ = "42"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "DosBatch / DosInAnIcon  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "DosBatch / DosInAnIcon  exitcode failed"
+			endif
+			DosInAnIcon_exit1
+			set $ConstTest$ = "1"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "DosBatch / DosInAnIcon  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "DosBatch / DosInAnIcon  exitcode failed"
+			endif
+			
+			ShellInAnIcon_exitcode42
+			set $ConstTest$ = "42"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "DosBatch / DosInAnIcon  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "DosBatch / DosInAnIcon  exitcode failed"
+			endif
+		endif
+		
+		comment "Testing parameters for ShellBatch"
+		set $ConstTest$ = "Hello world"
+		set $list$ = getOutStreamFromSection('DosInAnIcon_with_parameter world')
+		set $CompValue$ = takeString(2,$list$)
+		if ($ConstTest$ = $CompValue$)
+			comment "ShellBatch parameter passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "ShellBatch parameter failed"
+		endif
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
+			comment "Testing parameters for ShellBatch"
+			set $ConstTest$ = "Hello world"
+			set $tmp$ = "world"
+			set $list$ = getOutStreamFromSection('DosInAnIcon_with_parameter $tmp$')
+			set $CompValue$ = takeString(2,$list$)
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellBatch parameter passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellBatch parameter failed"
+			endif
+		endif ; 4.11.5
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+			message "shellCall  exitcode"
+			set $list$ = shellCall("exit 43")
+			set $ConstTest$ = "43"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall  exitcode failed"
+			endif
+			shellCall("exit 43")
+			set $ConstTest$ = "43"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall  exitcode failed"
+			endif
+			set $ConstTest$ = "43"
+			set $CompValue$ = shellCall("exit 43")
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall  exitcode failed"
+			endif
+			shellCall("net start")
+			set $ConstTest$ = "0"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall exitcode failed"
+			endif
+			
+			set $ConstTest$ = "0"
+			set $CompValue$ = shellCall("net start")
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall exitcode failed"
+			endif
+			
+			message "shellCall  resultlist"
+			set $list$ = shellCall("tasklist")
+			if not( "" = takeFirstStringContaining($list$, "opsi")) 
+				comment "ShellCall  resultlist passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall  resultlist failed"
+			endif
+			
+		endif ; 4.11.6
+		
+		Files_empty_folder
+	else ; windows / linux
+		message "DosBatch / DosInAnIcon  exitcode"
+		ShellInAnIcon_exit43
+		set $ConstTest$ = "43"
+		set $CompValue$ = getLastExitCode
+		if ($ConstTest$ = $CompValue$)
+			comment "ShellInAnIcon  exitcode passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "ShellInAnIcon  exitcode failed"
+		endif
+		ShellBatch_ping
+		set $ConstTest$ = "0"
+		set $CompValue$ = getLastExitCode
+		if ($ConstTest$ = $CompValue$)
+			comment "ShellBatch exitcode passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "ShellBatch exitcode failed"
+		endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "ShellInAnIcon"
+		ShellBatch_1
+		if (fileExists($HomeTestFiles$+"\shellbatch_1.txt"))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		Files_empty_folder
+		
+		ShellInAnIcon_1
+		if (fileExists($HomeTestFiles$+"\shellinanicon_1.txt"))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Testing parameters for ShellBatch"
+		set $ConstTest$ = "Hello world"
+		set $list$ = getOutStreamFromSection('ShellInAnIcon_with_parameter world')
+		set $CompValue$ = takeFirstStringContaining($list$,"Hello world")
+		if ($ConstTest$ = $CompValue$)
+			comment "ShellBatch parameter passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "ShellBatch parameter failed"
+		endif
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
+			comment "Testing parameters for ShellBatch"
+			set $ConstTest$ = "Hello world"
+			set $tmp$ = "world"
+			set $list$ = getOutStreamFromSection('ShellInAnIcon_with_parameter '+$tmp$)
+			set $CompValue$ = takeFirstStringContaining($list$,"Hello world")
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellBatch parameter passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellBatch parameter failed"
+			endif
+		endif ; 4.11.5
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+			message "shellCall  exitcode"
+			set $list$ = shellCall("exit 43")
+			set $ConstTest$ = "43"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall  exitcode failed"
+			endif
+			shellCall("exit 43")
+			set $ConstTest$ = "43"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall  exitcode failed"
+			endif
+			set $ConstTest$ = "43"
+			set $CompValue$ = shellCall("exit 43")
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall  exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall  exitcode failed"
+			endif
+			shellCall("ping -c 4 localhost")
+			set $ConstTest$ = "0"
+			set $CompValue$ = getLastExitCode
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall exitcode failed"
+			endif
+			
+			set $ConstTest$ = "0"
+			set $CompValue$ = shellCall("ping -c 4 localhost")
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellCall exitcode passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall exitcode failed"
+			endif
+			
+			message "shellCall  resultlist"
+			set $list$ = shellCall("ps -ef")
+			if not( "" = takeFirstStringContaining($list$, "opsi")) 
+				comment "ShellCall  resultlist passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall  resultlist failed"
+			endif
+			set $list$ = shellCall("ps -ef | grep opsi")
+			if not( "" = takeFirstStringContaining($list$, "opsi")) 
+				comment "ShellCall  resultlist passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellCall  resultlist failed"
+			endif
+
+			
+		endif ; 4.11.6
+		Files_empty_folder
+	endif ; windows / linux
+
+	Files_empty_folder
+
+	sub_compareResult
+
+	set $winst_dos$ = $SubResult$
+endif
+
+;----------------   start   sections for dosbatch/winbatch tests ---------------------------------
+[Files_empty_folder]
+Delete -s -f $HomeTestFiles$
+
+;[WinBatch_testing]
+;$ping5command$
+;
+;[Winbatch_top]
+;/bin/bash -c "ping 127.0.0.1 &"
+;
+;[DosInAnIcon_getTask_ping]
+;@echo off
+;tasklist /FI "IMAGENAME eq ping.exe"
+;
+;[DosInAnIcon_getTask_helper]
+;@echo off
+;tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"
+;
+;[DosInAnIcon_getTask_helperchild]
+;@echo off
+;tasklist /FI "IMAGENAME eq helperchild.exe"
+;
+;[Winbatch_startprocess_with_child_nowait]
+;"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
+;
+;[Winbatch_startprocess_with_child_nowait_from_c]
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=2
+;
+;
+;[WinBatch_testing2]
+;%ScriptPath%\dos\dummy2.bat
+;
+;[Winbatch_exitcode_42_noquote]
+;"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$"
+;
+;[Winbatch_exitcode_42_singlequote]
+;'%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$'
+;
+;[Winbatch_exitcode_42_doublequote]
+;"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$"
+;
+;[Winbatch_exitcode_43_noquote_with_param]
+;%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$ --exit-code=43
+;
+;
+;[Winbatch_exitcode_43_singlequote_with_param]
+;'%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$' --exit-code=43
+;
+;[Winbatch_exitcode_43_doublequote_with_param]
+;"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --exit-code=43
+;
+;[Winbatch_helper_wait2_showwindow1]
+;"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --wait=2 --showwindow=1
+;
+;[Winbatch_helper_wait2_showwindow5]
+;"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --wait=2 --showwindow=5
+;
+;[Winbatch_helper_showwindow1]
+;"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=3
+;
+;[Winbatch_msi_shellexecute]
+;"%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+;
+;[Winbatch_msi_standard]
+;msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+;
+;[Winbatch_msi_standard_from_c]
+;msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+;
+;[winbatch_myinno]
+;"%ScriptPath%\test-files\testFiles\myinnosetup.exe" /silent
+;
+;[winbatch_myinno_from_c]
+;"$HomeTestFiles$\testFiles\myinnosetup.exe" /silent
+;
+;[winbatch_myinno_uninstall]
+;"%ProgramFiles32Dir%\myinnosetup\unins000.exe" /silent
+;
+;[winbatch_wow_myinno]
+;"%winstdir%\winst32.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+;
+;[Winbatch_regedit_s_64]
+;"%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+;
+;[Winbatch_regedit_s_32]
+;"%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+;
+;[winbatch_wow_myinno_from_c]
+;"%winstdir%\winst32.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+;
+;[Winbatch_msi_standard_from_c_indirect]
+;;"%WinstDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
+;;"%WinstDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
+;
+;[winbatch_start_helper_asadmin_c]
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;
+;[winbatch_start_helper_asinvoker_c]
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;
+;[winbatch_start_helper_c]
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;
+;;[DosInAnIcon_start_helper_c]
+;;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;;
+;;[DosInAnIcon_start_helper_asadmin_c]
+;;"$HomeTestFiles$\testFiles\opsi-script-test-helper-win\opsiwinsttesthelperasadmin.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;;
+;;[DosInAnIcon_start_helper_asinvoker_c]
+;;"$HomeTestFiles$\testFiles\opsi-script-test-helper-win\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;;
+;[Files_copy_msi_exe_2_c]
+;copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+;copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+;
+;[Files_copy_helper_2_c]
+;copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"
+;
+;[Files_clean_from_c]
+;del -s -f "$HomeTestFiles$\testFiles"
+;
+;
+;[Winbatch_msi_uninstall]
+;msiexec /x {E19B367E-992C-4BD5-86D1-804C10184D71} /qb! REBOOT=ReallySuppress
+;
+;[Winbatch_powercfg_hibernate_off]
+;powercfg /hibernate off
+;
+;[DosInAnIcon_powercfg_hibernate_off]
+;powercfg /hibernate off
+;echo %ERRORLEVEL%
+;exit %ERRORLEVEL%
+
+[DosBatch_1]
+c:
+mkdir $HomeTestFiles$
+cd $HomeTestFiles$
+echo dummy > dosbatch_1.txt
+
+[DosInAnIcon_1]
+c:
+mkdir $HomeTestFiles$
+cd $HomeTestFiles$
+echo dummy > dosinanicon_1.txt
+
+[DosBatch_1b]
+c:
+mkdir $HomeTestFiles$
+cd $HomeTestFiles$
+echo dummy > dosinanicon_1.txt
+
+[Execwith_1b]
+c:
+mkdir $HomeTestFiles$
+cd $HomeTestFiles$
+echo dummy > dosinanicon_1.txt
+
+[DosInAnIcon_remove_test_from_system32]
+%SystemDrive%
+cd "%System%"
+del "dummy.txt"
+
+[DosInAnIcon_kill_notepad]
+taskkill /F /IM notepad.exe
+
+[DosInAnIcon_exit42]
+set exitcode=42
+exit %exitcode%
+
+[DosInAnIcon_exit1]
+rem create an errolevel= 1
+VERIFY OTHER 2> NUL
+echo %ERRORLEVEL%
+exit %ERRORLEVEL%
+
+[ShellInAnIcon_exitcode42]
+set exitcode=0
+VERIFY OTHER 2> NUL
+if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
+echo %exitcode%
+"%ScriptPath%\$opsi_script_test_helper_bin$"
+if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
+exit %exitcode%
+
+
+[DosBatchUseradd]
+net user "$opsiadminuser$" "$opsiadminpwd$" /add
+net localgroup Administratoren /add "$opsiadminuser$"
+
+[DosBatchUserdel]
+net user "$opsiadminuser$" /delete
+rmdir /s /q "%ProfileDir%\$opsiadminuser$"
+
+[ExecWithSetup]
+; http://msdn.microsoft.com/library/ee942965%28v=VS.100%29.aspx
+; return exit code via stdout as winst cannot read exit codes from ExecWith
+$ExitCode = RunAsWait("$opsiadminuser$", @ComputerName, "$opsiadminpwd$", 1,  '"$HomeTestFiles$\testFiles\myinnosetup.exe" /silent')
+if not @error then
+	ConsoleWrite($exitcode)
+endif
+
+;;;;;;;;;;;;;;;;;;;;;
+
+[ShellInAnIcon_exit43]
+set -x
+exit 43
+
+
+[ShellBatch_ping]
+set -x
+ping -c 4 localhost
+
+[ShellBatch_1]
+set -x
+mkdir -p $HomeTestFiles$
+cd $HomeTestFiles$
+echo dummy > shellbatch_1.txt
+
+[ShellInAnIcon_1]
+set -x
+mkdir -p $HomeTestFiles$
+cd $HomeTestFiles$
+echo dummy > shellinanicon_1.txt
+
+[DosInAnIcon_with_parameter]
+echo Hello %1%
+
+[ShellInAnIcon_with_parameter]
+echo Hello $1
+
+;----------------   stop   sections for dosbatch/winbatch tests ---------------------------------

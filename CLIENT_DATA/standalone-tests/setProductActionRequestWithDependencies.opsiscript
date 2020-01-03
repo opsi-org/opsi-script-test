@@ -1,0 +1,16 @@
+[Actions]
+DefStringList $list$
+DefVar $TestResult$
+
+message "setProductActionRequestWithDependencies (<ProductID>, <ClientID>, <ActionRequest>)"
+;set $list1$ = createStringList("ab", "cd", "ef", "g,h")
+;opsiservicecall_authenticated /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+opsiservicecall_setProductActionRequestWithDependencies /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+
+[opsiservicecall_setProductActionRequestWithDependencies]
+"method": "setProductActionRequestWithDependencies"
+"params":[
+			'audacity', 
+			'pcjan.uib.local', 
+			'setup'
+		]

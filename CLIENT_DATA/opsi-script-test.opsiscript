@@ -224,7 +224,7 @@ switch $OS$
 		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-win\helperchild.exe"
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-win"
 		set $pathDelim$ = "\"
-		set $ping5command$ = "ping 127.0.0.1 -n 5"
+		set $ping5command$ = "ping 127.0.0.1 -n 8"
 	endcase
 	case "Linux"
 		comment "We are running on Linux"
@@ -1272,7 +1272,8 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = GetOS
 	Switch $ConstTest$
 		Case "WINDOWS_NT"
-			set $CompValue$ = takeFirstStringContaining(shellCall("ver"),"Microsoft Windows")
+			set $list$ = shellCall("ver")
+			set $CompValue$ = takeFirstStringContaining($list$,"Microsoft Windows")
 			if not($CompValue$ = "")
 				set $CompValue$ = "WINDOWS_NT"
 			endif
@@ -9766,6 +9767,10 @@ endif
 net user opsitest $tmp$ /add
 net user opsitest /delete
 
+[Winbatch_exitcode_43_noquote_with_param]
+%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$ --exit-code=43
+
+
 ;----------------   end   sections for string test ---------------------------------
 ;----------------   start   sections for info map test ---------------------------------
 [sub_showEntry]
@@ -10000,9 +10005,9 @@ echo %cd%
 pwd
 
 [execwith_autoit_close_helper]
-WinWait("opsi-script-test-helper","")
+WinWait("opsi-helper-child","")
 ; activating
-WinActivate("opsi-script-test-helper","")
+WinActivate("opsi-helper-child","")
 send ("{TAB}")
 send ("{ENTER}")
 exit
@@ -10706,8 +10711,8 @@ notepad "$testfilepath$$testfile$"
 
 [ExecWith_close_helper_window]
 ; wait for helper window and write something
-WinWaitActive("opsi-script-test-helper")
-WinActivate("opsi-script-test-helper")
+WinWaitActive("opsi-helper-child")
+WinActivate("opsi-helper-child")
 Sleep(50)
 Send("abc")
 Sleep(50)
@@ -10795,8 +10800,6 @@ $UserGroup = "$UserGroup$"
 ;[Winbatch_exitcode_42_doublequote]
 ;"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$"
 ;
-;[Winbatch_exitcode_43_noquote_with_param]
-;%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$ --exit-code=43
 ;
 ;
 ;[Winbatch_exitcode_43_singlequote_with_param]
