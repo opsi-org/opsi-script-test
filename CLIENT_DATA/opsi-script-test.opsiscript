@@ -977,13 +977,13 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		if ($OS$ = "Windows_NT") and CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 			comment " test stringlist"
 			set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
-			set $list$ = replaceOpsiConstansts($list$)
+			set $list$ = replaceOpsiConstants($list$)
 			set $list1$ = getKeyList($list$)
 			for %key% in $list1$ do sub_check_key_value_constants
 			
 			comment " test string"
 			set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
-			set $str$ = replaceOpsiConstansts($str$)
+			set $str$ = replaceOpsiConstants($str$)
 			set $ConstTest$ = takestring(0,splitstring($str$,"="))
 			set $CompValue$ = takestring(1,splitstring($str$,"="))
 			if $ConstTest$ = $CompValue$
