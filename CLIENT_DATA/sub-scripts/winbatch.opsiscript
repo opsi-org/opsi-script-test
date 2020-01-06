@@ -23,7 +23,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	Winbatch_testing /LetThemGo
 	sleepSeconds 1
 	if $OS$ = "Windows_NT"
-		set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+		;;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
 		set $ConstTest$ = "ping.exe"
 		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
 		set $list$ = splitStringOnWhitespace($tmp$)
@@ -61,7 +62,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	Winbatch_testing /WaitOnClose
 	sleepseconds 1
 	if $OS$ = "Windows_NT"
-		set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
 		set $ConstTest$ = ""
 		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
 		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -93,7 +95,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		Winbatch_testing /WaitOnClose /timeoutseconds 20
 		sleepseconds 1
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
 			set $ConstTest$ = ""
 			set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -123,7 +126,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $tmp$ = "1"
 		Winbatch_testing /WaitOnClose /timeoutseconds $tmp$
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
 			set $ConstTest$ = "ping.exe"
 			set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -165,7 +169,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "/WaitForWindowAppearing assumed failed"
 		endif
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $ConstTest$ = "helperchild.exe"
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -180,7 +185,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		marktime
 		sleepSeconds 3
 		difftime
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $ConstTest$ = ""
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -211,7 +217,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 	sleepseconds 1
 	if $OS$ = "Windows_NT"
-		set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 		set $ConstTest$ = ""
 		set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -250,7 +257,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 	sleepseconds 1
 	if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $ConstTest$ = ""
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -288,7 +296,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 	sleepseconds 1
 	if $OS$ = "Windows_NT"
-		set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 		set $ConstTest$ = "helperchild.exe"
 		set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -330,7 +339,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 	sleepseconds 1
 	if $OS$ = "Windows_NT"
-		set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 		set $ConstTest$ = "helperchild.exe"
 		set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -373,7 +383,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		sleepseconds 1
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $ConstTest$ = "helperchild.exe"
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -381,7 +392,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			killtask "opsiscripttesthelper.exe"
 		else
 			set $list1$ = shellCall('ps -ef | grep [h]elperchild"')
-			set $ConstTest$ = ""
+			set $ConstTest$ = "helperchild"
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
 			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), "helperchild")
 			killtask "helperchild"
@@ -441,7 +452,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 	sleepseconds 1
 	if $OS$ = "Windows_NT"
-		set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
+		set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
 		set $ConstTest$ = ""
 		set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
 		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -480,7 +492,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 	sleepseconds 1
 	if $OS$ = "Windows_NT"
-		set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
+		set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
 		set $ConstTest$ = ""
 		set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
 		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -518,7 +531,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 	sleepseconds 1
 	if $OS$ = "Windows_NT"
-		set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
+		set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
 		set $ConstTest$ = "opsiscripttesthelper.exe"
 		set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
 		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -854,7 +868,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			difftime
 			comment "difftime should be about 2 seconds"
 			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
 			set $ConstTest$ = "helperchild.exe"
@@ -868,7 +883,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			sleepSeconds 5
 			difftime
 			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
 			set $ConstTest$ = ""
@@ -900,7 +916,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		sleepseconds 1
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $ConstTest$ = ""
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -942,7 +959,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		sleepseconds 1
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $ConstTest$ = ""
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -980,7 +998,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		sleepseconds 1
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $ConstTest$ = "helperchild.exe"
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -1024,7 +1043,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		sleepseconds 1
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $ConstTest$ = "helperchild.exe"
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -1067,15 +1087,16 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		sleepseconds 1
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-			set $ConstTest$ = ""
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+			set $ConstTest$ = "helperchild.exe"
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
 			killtask "helperchild.exe"
 			killtask "opsiscripttesthelper.exe"
 		else
 			set $list1$ = shellCall('ps -ef | grep [h]elperchild"')
-			set $ConstTest$ = ""
+			set $ConstTest$ = "helperchild"
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild")
 			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), "helperchild")
 			killtask "helperchild"
@@ -1097,7 +1118,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			comment "difftime should be 5 seconds"
 			sleepseconds 1
 			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
 			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
 			set $ConstTest$ = ""
@@ -1131,7 +1153,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		set $string2$ = ExtractFileName($opsi_script_test_helper_bin$)
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq '+$string2$+'"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq '+$string2$+'"')
+			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_string2')
 			set $ConstTest$ = ""
 			set $tmp$ = takeFirstStringContaining($list1$,$string2$)
 			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $string2$)
@@ -1160,7 +1183,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --wait=2 --showwindow=1') /WaitSeconds 2
 		difftime
 		if $OS$ = "Windows_NT"
-			set $ConstTest$ = "5"
+			set $ConstTest$ = "4"
 		else
 			comment "no fork here"
 			set $ConstTest$ = "3"
@@ -1175,7 +1198,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		set $string2$ = ExtractFileName($opsi_script_test_helper_bin$)
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq '+$string2$+'"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq '+$string2$+'"')
+			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_string2')
 			set $ConstTest$ = ""
 			set $tmp$ = takeFirstStringContaining($list1$,$string2$)
 			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $string2$)
@@ -1214,7 +1238,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		set $string2$ = ExtractFileName($opsi_script_test_helper_bin$)
 		if $OS$ = "Windows_NT"
-			set $list1$ = shellCall('tasklist /FI "IMAGENAME eq '+$string2$+'"')
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq '+$string2$+'"')
+			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_string2')
 			set $ConstTest$ = $string2$
 			set $tmp$ = takeFirstStringContaining($list1$,$string2$)
 			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $string2$)
@@ -1365,11 +1390,15 @@ tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"
 @echo off
 tasklist /FI "IMAGENAME eq helperchild.exe"
 
+[DosInAnIcon_getTask_string2]
+@echo off
+tasklist /FI "IMAGENAME eq $string2$"
+
 [Winbatch_startprocess_with_child_nowait]
-"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=4
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
 
 [Winbatch_startprocess_with_child_nowait_from_c]
-"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=4
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=2
 
 
 [WinBatch_testing2]

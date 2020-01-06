@@ -7,6 +7,7 @@ opsi-script-test (4.12.3.4-1) stable; urgency=low
   *    stringlist function replaceOpsiConstansts(<list>) : <list>
   *    string function replaceOpsiConstansts(<string>) : <string>    
   * new string function which(<command in path>) : string (command with path) [W/L/M]
+  * new boolean function isPingReachable(<target host>) : bool 
   
 -- detlef oertel <d.oertel@uib.de>  Thu,  31 Oct 2019 15:00:00 +0200
 

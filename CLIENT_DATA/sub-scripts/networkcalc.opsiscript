@@ -190,6 +190,47 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing getDefaultNetmaskByIP4adr failed"
 	endif
 	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.4")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "isPingReachable"
+    	
+		comment "Testing with valid IP"
+		if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local")
+			if isPingReachable("192.168.1.14")
+				comment "isPingReachable passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "testing isPingReachable failed"
+			endif
+			if isPingReachable("bonifax.uib.local")
+				comment "isPingReachable passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "testing isPingReachable failed"
+			endif
+		endif
+		if isPingReachable("localhost")
+			comment "isPingReachable passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing isPingReachable failed"
+		endif
+		if isPingReachable("127.0.0.1")
+			comment "isPingReachable passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing isPingReachable failed"
+		endif
+		if not (isPingReachable("0.0.0.0"))
+			comment "isPingReachable passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing isPingReachable failed"
+		endif
+	endif ; 4.12.3.4
+	
 
 	sub_compareResult
 	set $winst_networkcalc$ = $SubResult$

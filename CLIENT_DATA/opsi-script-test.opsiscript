@@ -224,7 +224,9 @@ switch $OS$
 		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-win\helperchild.exe"
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-win"
 		set $pathDelim$ = "\"
-		set $ping5command$ = "ping 127.0.0.1 -n 8"
+		; for ping parameters and errorcode see:
+		; https://superuser.com/questions/403905/ping-from-windows-7-get-no-reply-but-sets-errorlevel-to-0
+		set $ping5command$ = "ping -w 2999 -n 5 127.0.0.1"
 	endcase
 	case "Linux"
 		comment "We are running on Linux"
@@ -317,7 +319,7 @@ set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off
 set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
-set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "on")
+set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
 
@@ -2859,8 +2861,8 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
   	
 		comment "ask helper.exe for version info and catch it from output"
 		set $INST_ResultList$ = getOutStreamFromSection("DosInAnIcon_helper_version")
-		set $ConstTest$ = takeString(0,$INST_ResultList$)
-		set $ConstTest$ = takeString(1, splitStringOnWhiteSpace($ConstTest$))
+		set $ConstTest$ = takeFirstStringContaining($INST_ResultList$,"Version")
+		set $ConstTest$ = trim(takeString(1, splitString($ConstTest$,':')))
 		comment "get version info from helper.exe by winst function"
 		set $InterestingFile$ = "%scriptpath%\"+$opsi_script_test_helper_bin$
 		set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
@@ -7855,29 +7857,31 @@ if ($Flag_winst_ldap_search$ = "on")
 				set $TestResult$ = "not o.k."
 			endif
 			
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.5") >= "0"
+			if CompareDotSeparatedNumbers("%WinstVersion%","4.12.3.4") >= "0"
 				comment ""
 				comment "-------------------------------------"
 				comment "Testing: "
 				comment "user / password"
 				Set $LdapHost$ = "vmix7.uib.local"
-				Set $LdapPort$ = "389"
-				Set $LdapUser$ = "cn=Administrator,cn=Users,dc=uib,dc=local"
-				Set $LdapPassword$ = "Linux123"
-				Set $LdapResultType$ = "objects"
-				Set $LdapSearchDn$ = "cn=Users,dc=uib,dc=local"
-				Set $LdapSearchAttributes$ = "name,objectClass"
-				Set $LdapFilter$ = "(&(objectclass=*))"
-  	
-				markErrorNumber
-				set $list1$ = getReturnListFromSection("ldapsearch_users /" + $LdapResultType$)
-				if errorsOccuredSinceMark > 0
-					comment "failed while ldapsearch"
-					set $TestResult$ = "not o.k."
-				else
-					comment "passed"
+				if isPingReachable($LdapHost$)
+					Set $LdapPort$ = "389"
+					Set $LdapUser$ = "cn=Administrator,cn=Users,dc=uib,dc=local"
+					Set $LdapPassword$ = "Linux123"
+					Set $LdapResultType$ = "objects"
+					Set $LdapSearchDn$ = "cn=Users,dc=uib,dc=local"
+					Set $LdapSearchAttributes$ = "name,objectClass"
+					Set $LdapFilter$ = "(&(objectclass=*))"
+  	            	
+					markErrorNumber
+					set $list1$ = getReturnListFromSection("ldapsearch_users /" + $LdapResultType$)
+					if errorsOccuredSinceMark > 0
+						comment "failed while ldapsearch"
+						set $TestResult$ = "not o.k."
+					else
+						comment "passed"
+					endif
 				endif
-			endif ; 4.11.3.5
+			endif ; 4.12.3.4
   	
 			sub_compareResult
 			set $winst_ldap_search$ = $SubResult$
@@ -8406,999 +8410,14 @@ if ($Flag_ProfileActions$ = "on") or ($MasterFlag$ = "on")
 endif
 
 
-;if ($Flag_internalundocumented$ = "on") or ($MasterFlag$ = "on")
-if $Flag_internalundocumented$ = "on"
-	Message "testing internal undocumented functions"
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	comment ""
-	comment "testing internal undocumented functions"
-	comment "DO NOT USE THIS FUNCTIONS IN YOUR SCRIPTS"
-	comment "THEY MAY CHANGE OR VANISH WITHOUT ANY NOTICE"
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	Set $ExpectedResult$ = "o.k."
-	set $TestResult$ = "o.k."
-
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
-
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		Message "ShrinkFileToMB"
-		comment "create a 2 MB file"
-		set $testfile$ = "testfile.bin"
-		set $testfilepath$ = "c:\opsi.org\tmp\"+$testfile$
-		set $testfilesize$ = "2"
-		winbatch_create_file
-		DosInAnIcon_dir
-		ShrinkFileToMB $testfilepath$ "1"
-		set $INST_ResultList$ = getOutStreamFromSection("DosInAnIcon_dir")
-		files_remove_file
-		set $INST_ResultList$ = splitstringOnWhitespace(takeFirstStringContaining($INST_ResultList$, $testfile$))
-		Set $ConstTest$ = takeString(2,$INST_ResultList$)
-		set $CompValue$ = "2.000.000"
-		if ($ConstTest$ < $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-
-		set $testfilesize$ = "10"
-		winbatch_create_file
-		DosInAnIcon_dir
-		ShrinkFileToMB $testfilepath$ "5"
-		set $INST_ResultList$ = getOutStreamFromSection("DosInAnIcon_dir")
-		files_remove_file
-		set $INST_ResultList$ = splitstringOnWhitespace(takeFirstStringContaining($INST_ResultList$, $testfile$))
-		Set $ConstTest$ = takeString(2,$INST_ResultList$)
-		set $CompValue$ = "6.000.000"
-		if ($ConstTest$ < $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-
-	endif ; 4.11.2
-	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "BlockInput"
-
-		BlockInput "true"
-		execwith_autoit_close_helper  "%SCRIPTPATH%\autoit3.exe" WINST /letThemGo
-		marktime
-		message "testing Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
-		Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
-		difftime
-		comment "difftime should be 5 seconds because autoit could not work with blocked input"
-		set $tmp$ = getDiffTimeSec
-		if $tmp$ INT< "5"
-			set $TestResult$ = "not o.k."
-			LogWarning "BlockInput /true assumed failed"
-		else
-			sleepseconds 1
-			set $list1$ = getprocesslist
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitString($tmp$,";"))
-			if ($ConstTest$ = $CompValue$)
-				comment "BlockInput /true assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "BlockInput true assumed failed"
-			endif
-		endif
-		killtask "autoit3.exe"
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-		BlockInput "false"
-		execwith_autoit_close_helper  "%SCRIPTPATH%\autoit3.exe" WINST /letThemGo
-		marktime
-		message "testing BlockInput /false with Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
-		Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
-		difftime
-		comment "difftime should be 4 seconds because child is closed by autoit"
-		set $tmp$ = getDiffTimeSec
-		if $tmp$ INT>= "5"
-			set $TestResult$ = "not o.k."
-			LogWarning "BlockInput /false assumed failed"
-		else
-			sleepseconds 1
-			set $list1$ = getprocesslist
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitString($tmp$,";"))
-			if ($ConstTest$ = $CompValue$)
-				comment "BlockInput /false assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "BlockInput /false assumed failed"
-			endif
-		endif
-		killtask "autoit3.exe"
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-	endif ; 4.11.3
-
-
-	sub_compareResult
-	set $winst_internalundocumented$ = $SubResult$
-endif
-
-if ($Flag_RunAsLoggedOnAdmin$ = "on") or ($MasterFlag$ = "on")
-;if $Flag_RunAsLoggedOnAdmin$ = "on"
-	Message "testing winbatch /RunAsLoggedOnAdmin functions"
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	comment ""
-	comment "testing winbatch /RunAsLoggedOnAdmin functions"
-	comment "EXPERIMENTAL"
-	comment "DO NOT USE THIS FUNCTIONS IN YOUR SCRIPTS"
-	comment "THEY MAY CHANGE OR VANISH WITHOUT ANY NOTICE"
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	Set $ExpectedResult$ = "o.k."
-	set $TestResult$ = "o.k."
-
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
-
-		set $tmp$ = "%CurrentAppdataDir%"
-		set $tmp$ = "%CurrentStartmenuDir%"
-		set $tmp$ = "%CurrentDesktopDir%"
-		set $tmp$ = "%CurrentStartupDir%"
-		set $tmp$ = "%CurrentProgramsDir%"
-		set $tmp$ = "%CurrentSendToDir%"
-		comment " create the admin ..."
-		LocalAdmin /Create3
-		sub_current_path
-		message "Winbatch_testing /RunAsLoggedOnAdmin"
-		if FileExists("%ScriptPath%\'+$opsi_script_test_helper_bin$+'")
-			Winbatch_exitcode_43_noquote_with_param
-			set $ConstTest$ = "43"
-			set $CompValue$ = getLastExitCode
-			if ($ConstTest$ = $CompValue$)
-				comment "Winbatch_testing exitcode passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "Winbatch_testing /RunAsLoggedOnAdmin failed"
-			endif
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "Winbatch_testing /RunAsLoggedOnAdmin failed"
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-		LocalAdmin /Delete
-
-		LocalAdmin /Create3
-		sub_current_path
-		if FileExists("%ScriptPath%\test-files\testFiles\myinnosetup.exe")
-			winbatch_myinno
-			if FileExists("%CurrentAppdataDir%\myprog.exe")
-				comment "winbatch_myinno passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "winbatch_myinno failed"
-			endif
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "winbatch_myinno failed"
-		endif
-
-		if FileExists("%ProgramFiles32Dir%\myinnosetup\unins000.exe")
-			winbatch_myinno_uninstall
-		endif
-		comment " delete the admin ..."
-		LocalAdmin /Delete
-		sub_current_path
-
-		LocalAdmin /Create3
-		sub_current_path
-		if FileExists("%ScriptPath%\test-files\testFiles\myinnosetup.exe")
-			if FileExists("%CurrentAppdataDir%\myprog.exe")
-				comment "delete it"
-			endif
-			winbatch_wow_myinno
-			includelog "c:\opsi.org\log\winbatch_wow_myinno.log" "100"
-			if FileExists("%CurrentAppdataDir%\myprog.exe")
-				comment "winbatch_myinno passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "winbatch_myinno failed"
-			endif
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "winbatch_myinno failed"
-		endif
-
-		if FileExists("%ProgramFiles32Dir%\myinnosetup\unins000.exe")
-			winbatch_myinno_uninstall
-		endif
-		comment " delete the admin ..."
-		LocalAdmin /Delete
-		sub_current_path
-
-
-;		message "Winbatch_testing remote msiexec call /RunElevated /TimeoutSeconds 30"
-;
-;		Winbatch_msi_standard /RunElevated /TimeoutSeconds 30
-;		set $ConstTest$ = "0"
-;		set $CompValue$ = getLastExitCode
-;		if ($ConstTest$ = $CompValue$)
-;			comment "Winbatch_testing msiexec call /RunElevated passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "Winbatch_testing msiexec call /RunElevated failed"
-;		endif
-;
-;		comment "cleanup ..."
-;		sleepseconds 5
-;		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-;  		comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-;  		Winbatch_msi_uninstall /RunElevated
-;  	endif
-;
-;		message "Winbatch_testing remote msiexec call /RunAsLoggedOnAdmin1 /TimeoutSeconds 30"
-;		Winbatch_msi_standard /RunAsLoggedOnAdmin1 /TimeoutSeconds 30
-;		comment "Is expected to fail on NT 6"
-;		if GetMsVersionInfo >= "6"
-;			set $ConstTest$ = getLastExitCode
-;		else
-;			set $ConstTest$ = "0"
-;		endif
-;		set $CompValue$ = getLastExitCode
-;		if ($ConstTest$ = $CompValue$)
-;			comment "Winbatch_testing msiexec call /RunAsLoggedOnAdmin1 passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "Winbatch_testing msiexec call /RunAsLoggedOnAdmin1 failed"
-;		endif
-;
-;		comment "cleanup ..."
-;		sleepseconds 5
-;		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-;  		comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-;  		Winbatch_msi_uninstall
-;  	endif
-;
-;  	if getmsversioninfo < "6"
-;  		message "Winbatch_testing remote msiexec call /RunAsLoggedOnAdmin2 /TimeoutSeconds 30"
-;  		Winbatch_msi_standard /RunAsLoggedOnAdmin2 /TimeoutSeconds 30
-;			set $ConstTest$ = "0"
-;			set $CompValue$ = getLastExitCode
-;			if ($ConstTest$ = $CompValue$)
-;				comment "Winbatch_testing msiexec call /RunAsLoggedOnAdmin2 passed"
-;			else
-;				set $TestResult$ = "not o.k."
-;				LogWarning "Winbatch_testing msiexec call /RunAsLoggedOnAdmin2 failed"
-;			endif
-;		endif
-;
-;		comment "cleanup ..."
-;		sleepseconds 5
-;		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-;  		comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-;  		Winbatch_msi_uninstall
-;  	endif
-;
-;  	if getmsversioninfo < "6"
-;  		message "Winbatch_testing remote msiexec call /RunAsLoggedOnAdmin3 /TimeoutSeconds 30"
-;  		Winbatch_msi_standard /RunAsLoggedOnAdmin3 /TimeoutSeconds 30
-;			set $ConstTest$ = "0"
-;			set $CompValue$ = getLastExitCode
-;			if ($ConstTest$ = $CompValue$)
-;				comment "Winbatch_testing msiexec call /RunAsLoggedOnAdmin3 passed"
-;			else
-;				set $TestResult$ = "not o.k."
-;				LogWarning "Winbatch_testing msiexec call /RunAsLoggedOnAdmin3 failed"
-;			endif
-;		endif
-;
-;		comment "cleanup ..."
-;		sleepseconds 5
-;		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-;  		comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-;  		Winbatch_msi_uninstall
-;  	endif
-;
-;  	;message "Winbatch_testing remote msiexec call /RunAsLoggedOnAdmin4 /TimeoutSeconds 30"
-;  	;Winbatch_msi_standard /RunAsLoggedOnAdmin4 /TimeoutSeconds 30
-;		;set $ConstTest$ = "0"
-;		;set $CompValue$ = getLastExitCode
-;		;if ($ConstTest$ = $CompValue$)
-;		;	comment "Winbatch_testing msiexec call /RunAsLoggedOnAdmin4 passed"
-;		;else
-;		;	set $TestResult$ = "not o.k."
-;		;	LogWarning "Winbatch_testing msiexec call /RunAsLoggedOnAdmin4 failed"
-;		;endif
-;
-;		comment "cleanup ..."
-;		sleepseconds 5
-;		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-;  		comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-;  		Winbatch_msi_uninstall
-;  	endif
-
-
-		Files_copy_msi_exe_2_c
-
-		LocalAdmin /Create3
-		sub_current_path
-		winbatch_myinno_from_c
-		if FileExists("%CurrentAppdataDir%\myprog.exe")
-			comment "winbatch_myinno passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "winbatch_myinno failed"
-		endif
-		set $tmp$ = GetRegistryStringValue32("[HKCU\Software\opsi.org\test\test] Path")
-		if FileExists("%ProgramFiles32Dir%\myinnosetup\unins000.exe")
-			winbatch_myinno_uninstall
-		endif
-		comment " delete the admin ..."
-		LocalAdmin /Delete
-		sub_current_path
-
-		LocalAdmin /Create3
-		sub_current_path
-		winbatch_wow_myinno_from_c
-		if FileExists("%CurrentAppdataDir%\myprog.exe")
-			comment "winbatch_myinno passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "winbatch_myinno failed"
-		endif
-		set $tmp$ = GetRegistryStringValue32("[HKCU\Software\opsi.org\test\test] Path")
-		if FileExists("%ProgramFiles32Dir%\myinnosetup\unins000.exe")
-			winbatch_myinno_uninstall
-		endif
-		comment " delete the admin ..."
-		LocalAdmin /Delete
-		sub_current_path
-
-		DefVar $opsiadminuser$
-		DefVar $opsiadminpwd$
-
-		Set $opsiadminuser$ = "opsiTestAdmin"
-		Set $opsiadminpwd$ = randomstr
-
-		comment "Start setup program"
-				DosBatchUserdel
-				DosBatchUseradd
-				DefStringList $res$
-				Set $res$ = getOutStreamFromSection("ExecWithSetup '%ScriptPath%\AutoIt3.exe' WINST")
-				if count($res$) = "1"
-						DefVar $e$
-						Set $e$ = takeString(0, $res$)
-						Comment "setup exit code: " + $e$
-						if ($e$ = "1614") or ($e$ = "3010")
-								ExitWindows /Reboot
-						endif
-				else
-						LogError "Fatal: Setup did not return exit code!"
-						IsFatalError
-				endif
-				DosBatchUserdel
-
-
-		message "Winbatch_testing local msiexec call /RunElevated /TimeoutSeconds 30"
-		Winbatch_msi_standard_from_c /RunElevated /TimeoutSeconds 30
-		set $ConstTest$ = "0"
-		set $CompValue$ = getLastExitCode
-		if ($ConstTest$ = $CompValue$)
-			comment "Winbatch_testing msiexec call /RunElevated passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "Winbatch_testing msiexec call /RunElevated failed"
-		endif
-
-		comment "cleanup ..."
-		sleepseconds 5
-		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-			comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-			Winbatch_msi_uninstall /RunElevated
-		endif
-
-		message "Winbatch_testing local msiexec call /RunAsLoggedOnAdmin1 /TimeoutSeconds 30"
-		Winbatch_msi_standard_from_c /RunAsLoggedOnAdmin1 /TimeoutSeconds 30
-		comment "Is expected to fail on NT 6"
-		;if GetMsVersionInfo INT>= "6"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
-			set $ConstTest$ = getLastExitCode
-		else
-			set $ConstTest$ = "0"
-		endif
-		set $CompValue$ = getLastExitCode
-		if ($ConstTest$ = $CompValue$)
-			comment "Winbatch_testing msiexec call /RunAsLoggedOnAdmin1 passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "Winbatch_testing msiexec call /RunAsLoggedOnAdmin1 failed"
-		endif
-
-		comment "cleanup ..."
-		sleepseconds 5
-		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-			comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-			Winbatch_msi_uninstall
-		endif
-
-		message "Winbatch_testing local msiexec call /RunAsLoggedOnAdmin2 /TimeoutSeconds 30"
-		Winbatch_msi_standard_from_c /RunAsLoggedOnAdmin2 /TimeoutSeconds 30
-		set $ConstTest$ = "0"
-		set $CompValue$ = getLastExitCode
-		if ($ConstTest$ = $CompValue$)
-			comment "Winbatch_testing msiexec call /RunAsLoggedOnAdmin2 passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "Winbatch_testing msiexec call /RunAsLoggedOnAdmin2 failed"
-		endif
-
-		comment "cleanup ..."
-		sleepseconds 5
-		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-			comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-			Winbatch_msi_uninstall
-		endif
-
-		message "Winbatch_testing local msiexec call /RunAsLoggedOnAdmin3 /TimeoutSeconds 30"
-		Winbatch_msi_standard_from_c /RunAsLoggedOnAdmin3 /TimeoutSeconds 30
-		set $ConstTest$ = "0"
-		set $CompValue$ = getLastExitCode
-		if ($ConstTest$ = $CompValue$)
-			comment "Winbatch_testing msiexec call /RunAsLoggedOnAdmin3 passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "Winbatch_testing msiexec call /RunAsLoggedOnAdmin3 failed"
-		endif
-
-		comment "cleanup ..."
-		sleepseconds 5
-		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-			comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-			Winbatch_msi_uninstall
-		endif
-
-		;message "Winbatch_testing local msiexec call /RunAsLoggedOnAdmin4 /TimeoutSeconds 30"
-		;Winbatch_msi_standard_from_c /RunAsLoggedOnAdmin4 /TimeoutSeconds 30
-		;set $ConstTest$ = "0"
-		;set $CompValue$ = getLastExitCode
-		;if ($ConstTest$ = $CompValue$)
-		;	comment "Winbatch_testing msiexec call /RunAsLoggedOnAdmin4 passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "Winbatch_testing msiexec call /RunAsLoggedOnAdmin4 failed"
-		;endif
-
-		comment "cleanup ..."
-		sleepseconds 5
-		if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
-			comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
-			Winbatch_msi_uninstall
-		endif
-
-
-
-
-
-
-		;message "Winbatch_testing /WaitForWindowAppearing /RunAsLoggedOnAdmin"
-		;marktime
-		;Winbatch_startprocess_with_child_nowait /RunAsLoggedOnAdmin /WaitForWindowAppearing "opsi-script-test-helper-win"
-		;difftime
-		;comment "difftime should be about 2 seconds"
-		;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-		;set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-		;set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		;set $ConstTest$ = "helperchild.exe"
-		;if ($ConstTest$ = $CompValue$)
-		;	comment "/WaitForWindowAppearing /RunAsLoggedOnAdmin assumed passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "/WaitForWindowAppearing /RunAsLoggedOnAdmin assumed failed"
-		;endif
-		;marktime
-		;sleepSeconds 3
-		;difftime
-		;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-		;set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-		;set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		;set $ConstTest$ = ""
-		;if ($ConstTest$ = $CompValue$)
-		;	comment "/WaitForWindowAppearing /RunAsLoggedOnAdmin assumed passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "/WaitForWindowAppearing /RunAsLoggedOnAdmin assumed failed"
-		;endif
-		;killtask "helperchild.exe"
-		;killtask "opsiscripttesthelper.exe"
-
-		message "Winbatch_testing /WaitForProcessEnding /RunAsLoggedOnAdmin"
-		Files_copy_helper_2_c
-
-		message "testing winbatch_start_helper_c"
-		winbatch_start_helper_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_c /RunElevated"
-		winbatch_start_helper_c /RunElevated
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_asadmin_c"
-		winbatch_start_helper_asadmin_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_asadmin_c /RunElevated"
-		winbatch_start_helper_asadmin_c /RunElevated
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing DosInAnIcon_start_helper_c"
-		DosInAnIcon_start_helper_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing DosInAnIcon_start_helper_asadmin_c"
-		DosInAnIcon_start_helper_asadmin_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_asinvoker_c"
-		winbatch_start_helper_asinvoker_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_asinvoker_c /RunElevated"
-		winbatch_start_helper_asinvoker_c /RunElevated
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin1 /TimeoutSeconds 10"
-		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin1 /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin2 /TimeoutSeconds 10"
-		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin2 /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /TimeoutSeconds 10"
-		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_asinvoker_c LocalAdmin /Create3 /TimeoutSeconds 10"
-		LocalAdmin /Create3
-		winbatch_start_helper_asinvoker_c /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		LocalAdmin /Delete
-		;message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin4 /TimeoutSeconds 10"
-		;winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin4 /TimeoutSeconds 10
-		;set $list1$ = loadTextFile ("c:\tmp\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing DosInAnIcon_start_helper_asinvoker_c"
-		DosInAnIcon_start_helper_asinvoker_c
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		message "testing winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /RunElevated /TimeoutSeconds 10"
-		winbatch_start_helper_asinvoker_c /RunAsLoggedOnAdmin3 /RunElevated /TimeoutSeconds 10
-		set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-
-		marktime
-		message "testing Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
-		Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
-		difftime
-		comment "difftime should be 5 seconds"
-		set $tmp$ = getDiffTimeSec
-		if $tmp$ INT>= "10"
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding /RunElevated assumed failed"
-		else
-			sleepseconds 1
-			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $list1$ = getprocesslist
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitString($tmp$,";"))
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForProcessEnding /RunElevated assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForProcessEnding /RunElevated assumed failed"
-			endif
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-		marktime
-		message "testing Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin1 /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
-		Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin1 /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
-		difftime
-		comment "difftime should be 5 seconds"
-		set $tmp$ = getDiffTimeSec
-		if $tmp$ INT>= "10"
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-		else
-			sleepseconds 1
-			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $list1$ = getprocesslist
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitString($tmp$,";"))
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-			endif
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-		marktime
-		message "testing Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin2 /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
-		Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin2 /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
-		difftime
-		comment "difftime should be 5 seconds"
-		set $tmp$ = getDiffTimeSec
-		if $tmp$ INT>= "10"
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-		else
-			sleepseconds 1
-			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $list1$ = getprocesslist
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitString($tmp$,";"))
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-			endif
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-		marktime
-		message "testing Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin3 /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
-		Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin3 /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
-		difftime
-		comment "difftime should be 5 seconds"
-		set $tmp$ = getDiffTimeSec
-		if $tmp$ INT>= "10"
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-		else
-			sleepseconds 1
-			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $list1$ = getprocesslist
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitString($tmp$,";"))
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-			endif
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-		;marktime
-		;message "testing Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin4 /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
-		;Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin4 /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
-		;difftime
-		;comment "difftime should be 5 seconds"
-		;set $tmp$ = getDiffTimeSec
-		;if $tmp$ INT>= "10"
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-		;else
-		;	sleepseconds 1
-		;	;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-		;	set $list1$ = getprocesslist
-		;	set $ConstTest$ = ""
-		;	set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-		;	set $CompValue$ = takeString(0, splitString($tmp$,";"))
-		;	if ($ConstTest$ = $CompValue$)
-		;		comment "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-		;	endif
-		;endif
-		;killtask "helperchild.exe"
-		;killtask "opsiscripttesthelper.exe"
-
-		marktime
-		message "testing Winbatch_startprocess_with_child_nowait_from_c /RunAsInvoker /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
-		Winbatch_startprocess_with_child_nowait_from_c /RunAsInvoker /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
-		difftime
-		comment "difftime should be 5 seconds"
-		set $tmp$ = getDiffTimeSec
-		if $tmp$ INT>= "10"
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-		else
-			sleepseconds 1
-			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $list1$ = getprocesslist
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitString($tmp$,";"))
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-			endif
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-		marktime
-		message "testing Winbatch_startprocess_with_child_nowait /RunAsInvoker /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
-		Winbatch_startprocess_with_child_nowait /RunAsInvoker /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
-		difftime
-		comment "difftime should be 5 seconds"
-		set $tmp$ = getDiffTimeSec
-		if $tmp$ INT>= "10"
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-		else
-			sleepseconds 1
-			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			set $list1$ = getprocesslist
-			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitString($tmp$,";"))
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-			endif
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-
-		comment "same test without /WaitForProcessEnding"
-		message "testing Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin"
-		Winbatch_startprocess_with_child_nowait_from_c /RunAsLoggedOnAdmin
-		sleepseconds 1
-		;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-		set $list1$ = getprocesslist
-		set $ConstTest$ = "helperchild.exe"
-		set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-		set $CompValue$ = takeString(0, splitString($tmp$,";"))
-		if ($ConstTest$ = $CompValue$)
-			comment "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding /RunAsLoggedOnAdmin assumed failed"
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-
-		;/WaitForWindowVanish sees only Windows of 32 Bit applications
-		;message "Winbatch_testing /WaitForWindowVanish /RunAsLoggedOnAdmin"
-		;marktime
-		;Winbatch_startprocess_with_child_nowait /RunAsLoggedOnAdmin /WaitForWindowVanish "opsi-script-test-helper-win"
-		;difftime
-		;comment "difftime should be 5 seconds"
-		;sleepseconds 1
-		;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-		;set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-		;set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		;set $ConstTest$ = ""
-		;if ($ConstTest$ = $CompValue$)
-		;	comment "/WaitForWindowVanish /RunAsLoggedOnAdmin assumed passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "/WaitForWindowVanish /RunAsLoggedOnAdmin assumed failed"
-		;endif
-
-		message "Winbatch_testing /WaitSeconds /RunAsLoggedOnAdmin"
-		comment "should be take 2 seconds even the program is finished before 2 seconds"
-		marktime
-		message "testing Winbatch_exitcode_43_doublequote_with_param /RunAsLoggedOnAdmin /WaitSeconds 2"
-		Winbatch_exitcode_43_doublequote_with_param /RunAsLoggedOnAdmin /WaitSeconds 2
-		difftime
-		sleepseconds 1
-		;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
-		set $list1$ = getprocesslist
-		set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
-		set $CompValue$ = takeString(0, splitString($tmp$,";"))
-		set $ConstTest$ = ""
-		if ($ConstTest$ = $CompValue$)
-			comment "/WaitSeconds /RunAsLoggedOnAdmin assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitSeconds /RunAsLoggedOnAdmin assumed failed"
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-
-		comment "should be take longer than 2 seconds"
-		marktime
-		message "testing Winbatch_helper_wait2_showwindow1 /RunAsLoggedOnAdmin /WaitSeconds 2"
-		Winbatch_helper_wait2_showwindow1 /RunAsLoggedOnAdmin /WaitSeconds 2
-		difftime
-		sleepseconds 1
-		;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
-		set $list1$ = getprocesslist
-		set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
-		set $CompValue$ = takeString(0, splitString($tmp$,";"))
-		set $ConstTest$ = ""
-		if ($ConstTest$ = $CompValue$)
-			comment "/WaitSeconds /RunAsLoggedOnAdmin assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitSeconds /RunAsLoggedOnAdmin assumed failed"
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-		comment "should be take exactly 2 seconds even if the program takes longer"
-		marktime
-		message "testing Winbatch_helper_wait2_showwindow5 /RunAsLoggedOnAdmin /WaitSeconds 2 /LetThemgo"
-		Winbatch_helper_wait2_showwindow5 /RunAsLoggedOnAdmin /WaitSeconds 2 /LetThemgo
-		difftime
-		sleepseconds 1
-		;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
-		set $list1$ = getprocesslist
-		set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
-		set $CompValue$ = takeString(0, splitString($tmp$,";"))
-		set $ConstTest$ = "opsiscripttesthelper.exe"
-		if ($ConstTest$ = $CompValue$)
-			comment "/WaitSeconds /RunAsLoggedOnAdmin assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitSeconds /RunAsLoggedOnAdmin assumed failed"
-		endif
-		killtask "helperchild.exe"
-		killtask "opsiscripttesthelper.exe"
-
-		Files_clean_from_c
-
-		;if GetMSVersionInfo INT>= "6"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
-			message "testing Winbatch_powercfg_hibernate_off /RunElevated"
-			Winbatch_powercfg_hibernate_off /RunElevated
-			set $ConstTest$ = "0"
-			set $CompValue$ = getLastExitCode
-			if ($ConstTest$ = $CompValue$)
-				comment "Winbatch_testing /RunElevated passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "testing /RunElevated failed"
-			endif
-
-			message "testing Winbatch_powercfg_hibernate_off /RunAsLoggedOnAdmin1"
-			Winbatch_powercfg_hibernate_off /RunAsLoggedOnAdmin1
-			comment "Is expected to fail on NT 6"
-			;if GetMsVersionInfo INT>= "6"
-			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
-				set $ConstTest$ = "1"
-			else
-				set $ConstTest$ = "0"
-			endif
-			set $CompValue$ = getLastExitCode
-			if ($ConstTest$ = $CompValue$)
-				comment "Winbatch_testing /RunAsLoggedOnAdmin1 passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "testing /RunAsLoggedOnAdmin1 failed"
-			endif
-
-			message "testing Winbatch_powercfg_hibernate_off /RunAsLoggedOnAdmin2"
-			Winbatch_powercfg_hibernate_off /RunAsLoggedOnAdmin2
-			set $ConstTest$ = "0"
-			set $CompValue$ = getLastExitCode
-			if ($ConstTest$ = $CompValue$)
-				comment "Winbatch_testing /RunAsLoggedOnAdmin2 passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "testing /RunAsLoggedOnAdmin2 failed"
-			endif
-
-			message "testing Winbatch_powercfg_hibernate_off /RunAsLoggedOnAdmin3"
-			Winbatch_powercfg_hibernate_off /RunAsLoggedOnAdmin3
-			set $ConstTest$ = "0"
-			set $CompValue$ = getLastExitCode
-			if ($ConstTest$ = $CompValue$)
-				comment "Winbatch_testing /RunAsLoggedOnAdmin3 passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "testing /RunAsLoggedOnAdmin3 failed"
-			endif
-
-			;message "testing Winbatch_powercfg_hibernate_off /RunAsLoggedOnAdmin4"
-			;Winbatch_powercfg_hibernate_off /RunAsLoggedOnAdmin4
-			;set $ConstTest$ = "0"
-			;set $CompValue$ = getLastExitCode
-			;if ($ConstTest$ = $CompValue$)
-			;	comment "Winbatch_testing /RunAsLoggedOnAdmin4 passed"
-			;else
-			;	set $TestResult$ = "not o.k."
-			;	LogWarning "testing /RunAsLoggedOnAdmin4 failed"
-			;endif
-
-			message "testing DosInAnIcon_powercfg_hibernate_off"
-			DosInAnIcon_powercfg_hibernate_off
-			comment "Is expected to fail on NT 6"
-			;if GetMsVersionInfo INT>= "6"
-			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
-				set $ConstTest$ = "1"
-			else
-				set $ConstTest$ = "0"
-			endif
-			set $CompValue$ = getLastExitCode
-			if ($ConstTest$ = $CompValue$)
-				comment "Winbatch_testing passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "testing  failed"
-			endif
-
-			message "testing LocalAdmin /Create1 DosInAnIcon_powercfg_hibernate_off"
-			LocalAdmin /Create1
-			DosInAnIcon_powercfg_hibernate_off
-			LocalAdmin /Delete
-			comment "Is expected to fail on NT 6"
-			;if GetMsVersionInfo INT>= "6"
-			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
-				set $ConstTest$ = "1"
-			else
-				set $ConstTest$ = "0"
-			endif
-			set $CompValue$ = getLastExitCode
-			if ($ConstTest$ = $CompValue$)
-				comment "Winbatch_testing /Create1 passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "testing /Create1 failed"
-			endif
-
-			message "testing LocalAdmin /Create2 DosInAnIcon_powercfg_hibernate_off"
-			LocalAdmin /Create2
-			DosInAnIcon_powercfg_hibernate_off
-			LocalAdmin /Delete
-			comment "Is expected to fail on NT 6"
-			;if GetMsVersionInfo INT>= "6"
-			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
-				set $ConstTest$ = "1"
-			else
-				set $ConstTest$ = "0"
-			endif
-			set $CompValue$ = getLastExitCode
-			if ($ConstTest$ = $CompValue$)
-				comment "Winbatch_testing /Create2 passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "testing /Create2 failed"
-			endif
-
-			; will not work at all:
-			;LocalAdmin /Create3
-			;DosInAnIcon_powercfg_hibernate_off
-			;LocalAdmin /Delete
-			;
-			; will not work at all:
-			;LocalAdmin /Create4
-			;DosInAnIcon_powercfg_hibernate_off
-			;LocalAdmin /Delete
-
-			Registry_hack_forbidden_key
-			winbatch_hack_forbidden_key1
-			winbatch_hack_forbidden_key2
-			LocalAdmin /Create3
-			Registry_hack_forbidden_key
-			winbatch_hack_forbidden_key1
-			winbatch_hack_forbidden_key2
-			sub_current_path
-			LocalAdmin /Delete
-		endif
-	endif
-
-	sub_compareResult
-	set $winst_RunAsLoggedOnAdmin$ = $SubResult$
-endif
-
 ;$Flag_winst_dos$ = "on")
 sub "%scriptpath%\sub-scripts\shellcall.opsiscript"
 
 sub "%scriptpath%\sub-scripts\winbatch.opsiscript"
+
+sub "%scriptpath%\sub-scripts\RunAsLoggedOnAdmin.opsiscript"
+
+sub "%scriptpath%\sub-scripts\internalundocumented.opsiscript"
 
 sub "%scriptpath%\sub-scripts\encodingtest.opsiscript"
 
@@ -10769,20 +9788,20 @@ $UserGroup = "$UserGroup$"
 ;[Winbatch_top]
 ;/bin/bash -c "ping 127.0.0.1 &"
 ;
-;[DosInAnIcon_getTask_ping]
-;@echo off
-;tasklist /FI "IMAGENAME eq ping.exe"
+[DosInAnIcon_getTask_ping]
+@echo off
+tasklist /FI "IMAGENAME eq ping.exe"
+
+[DosInAnIcon_getTask_helper]
+@echo off
+tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"
+
+[DosInAnIcon_getTask_helperchild]
+@echo off
+tasklist /FI "IMAGENAME eq helperchild.exe"
 ;
-;[DosInAnIcon_getTask_helper]
-;@echo off
-;tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"
-;
-;[DosInAnIcon_getTask_helperchild]
-;@echo off
-;tasklist /FI "IMAGENAME eq helperchild.exe"
-;
-;[Winbatch_startprocess_with_child_nowait]
-;"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
+[Winbatch_startprocess_with_child_nowait]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
 ;
 ;[Winbatch_startprocess_with_child_nowait_from_c]
 ;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=2
@@ -10829,8 +9848,8 @@ $UserGroup = "$UserGroup$"
 ;[winbatch_myinno]
 ;"%ScriptPath%\test-files\testFiles\myinnosetup.exe" /silent
 ;
-;[winbatch_myinno_from_c]
-;"$HomeTestFiles$\testFiles\myinnosetup.exe" /silent
+[winbatch_myinno_from_c]
+"$HomeTestFiles$\testFiles\myinnosetup.exe" /silent
 ;
 ;[winbatch_myinno_uninstall]
 ;"%ProgramFiles32Dir%\myinnosetup\unins000.exe" /silent
@@ -10844,8 +9863,8 @@ $UserGroup = "$UserGroup$"
 ;[Winbatch_regedit_s_32]
 ;"%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
 ;
-;[winbatch_wow_myinno_from_c]
-;"%winstdir%\winst32.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+[winbatch_wow_myinno_from_c]
+"%winstdir%\winst32.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 ;
 ;[Winbatch_msi_standard_from_c_indirect]
 ;;"%WinstDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
@@ -10869,10 +9888,10 @@ $UserGroup = "$UserGroup$"
 ;[DosInAnIcon_start_helper_asinvoker_c]
 ;"$HomeTestFiles$\testFiles\opsi-script-test-helper-win\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 ;
-;[Files_copy_msi_exe_2_c]
-;copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
-;copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
-;
+[Files_copy_msi_exe_2_c]
+copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+
 ;[Files_copy_helper_2_c]
 ;copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"
 ;

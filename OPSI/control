@@ -401,3 +401,12 @@ description: WMI interface
 values: ["off", "on"]
 default: ["off"]
 
+[ProductProperty]
+type: unicode
+name: internalundocumented
+multivalue: False
+editable: False
+description: internalundocumented
+values: ["off", "on"]
+default: ["off"]
+
