@@ -113,6 +113,8 @@ DefVar $GUI$
 DefVar $opsi_script_test_helper_bin$
 DefVar $opsi_script_test_helper_child_bin$
 DefVar $opsi_script_test_helper_path$
+DefVar $opsi_script_test_helper_bin_name$
+DefVar $helper_child_bin_name$
 
 
 DefVar $Flag_winst_constants$
@@ -211,6 +213,7 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
 else
 	set $GUI$ = "true"
 endif
+;set $GUI$ = "false"
 
 set $ProductId$ = "opsi-script-test"
 
@@ -238,6 +241,10 @@ switch $OS$
 			Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-lin/64/opsiscripttesthelper_nogui"
 			Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-lin/64/helperchild_nogui"
 		endif
+;		set $helper_child_bin_name$ =  '%ScriptPath%/'+$opsi_script_test_helper_child_bin$
+;		set $helper_child_bin_name$ =  ExtractFileName($opsi_script_test_helper_child_bin$)
+;		set $opsi_script_test_helper_bin_name$ =  '%ScriptPath%/'+$opsi_script_test_helper_bin$
+;		set $opsi_script_test_helper_bin_name$ =  ExtractFileName($opsi_script_test_helper_bin$)
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-lin"
 		set $pathDelim$ = "/"
 		set $ping5command$ = "ping -c 5 127.0.0.1"
@@ -247,11 +254,14 @@ switch $OS$
 		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
 		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac\opsiscripttesthelper"
 		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac\helperchild"
+
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-mac"
 		set $pathDelim$ = "/"
 		set $ping5command$ = "ping -c 5 127.0.0.1"
 	endcase
 endswitch
+set $helper_child_bin_name$ =  ExtractFileName ($opsi_script_test_helper_child_bin$)
+set $opsi_script_test_helper_bin_name$ =  ExtractFileName ($opsi_script_test_helper_bin$)
 
 Set $INST_SystemType$ = GetSystemType
 
@@ -8431,10 +8441,8 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.0")
 	sub "%scriptpath%\sub-scripts\localfunctions.opsiscript"
 endif
 
-if $OS$ = "Windows_NT"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
-		sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
-	endif
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
 endif
 
 if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
@@ -8449,16 +8457,14 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\urlparser.opsiscript"
 endif
 
-if $OS$ = "macos"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
-		sub "%scriptpath%\sub-scripts\macos.opsiscript"
-	endif
+
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+	sub "%scriptpath%\sub-scripts\macos.opsiscript"
 endif
 
-if $OS$ = "Windows_NT"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
-		sub "%scriptpath%\sub-scripts\wmitest.opsiscript"
-	endif
+
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+	sub "%scriptpath%\sub-scripts\wmitest.opsiscript"
 endif
 
 comment ""

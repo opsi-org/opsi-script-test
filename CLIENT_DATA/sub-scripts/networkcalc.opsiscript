@@ -211,6 +211,14 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "testing isPingReachable failed"
 			endif
 		endif
+		if not("%opsiserver%" = "")
+			if isPingReachable("%opsiserver%")
+				comment "isPingReachable passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "testing isPingReachable failed"
+			endif
+		endif
 		if isPingReachable("localhost")
 			comment "isPingReachable passed"
 		else
@@ -223,12 +231,33 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "testing isPingReachable failed"
 		endif
-		if not (isPingReachable("0.0.0.0"))
-			comment "isPingReachable passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "testing isPingReachable failed"
-		endif
+		switch $OS$
+			case "Windows_nt"
+				if not (isPingReachable("0.0.0.0"))
+					comment "isPingReachable passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing isPingReachable failed"
+				endif
+			endcase
+			case "Linux"
+				if isPingReachable("0.0.0.0")
+					comment "isPingReachable passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing isPingReachable failed"
+				endif
+			endcase
+			case "macos"
+				if isPingReachable("0.0.0.0")
+					comment "isPingReachable passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing isPingReachable failed"
+				endif
+			endcase
+		endswitch
+		
 	endif ; 4.12.3.4
 	
 

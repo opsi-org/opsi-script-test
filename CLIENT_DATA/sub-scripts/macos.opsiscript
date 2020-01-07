@@ -1,59 +1,37 @@
 encoding=utf8
 
 if ($Flag_winst_macos$ = "on") or ($MasterFlag$ = "on")
-	Message "testing macos functions"
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	comment ""
-	comment "testing macOS functions"
-	comment ""
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-
+	if not($OS$ = "macos")
+		comment "macos test only implemented for macOS"
+		set $winst_macos$ = "not implemented"
+	else
+		Message "testing macos functions"
+		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		comment ""
+		comment "testing macOS functions"
+		comment ""
+		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	
-	Set $ExpectedResult$ = "o.k."
-
-	; start testing
-	set $TestResult$ = "o.k."
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
 		
-		DefVar $xml2strictMode$
-		set $xml2strictMode$ = 'false'
-		Files_copy_macos
-		
-		
-		;comment ""
-		;comment "-------------------------------------"
-		;comment "Testing: "
-		;message "XML2 Sections"
-		;set $testfile$ = $HomeTestFiles$+"\unattend_win10_x64.xml"
-		;set $xml2nodepath$ ='settings pass="windowsPE" // component name="Microsoft-Windows-Setup" // DiskConfiguration // Disk wcm:action="add" // ModifyPartitions'
-		;markErrorNumber
-		;xml2_w10una_test $testfile$
-		;if errorsOccuredSinceMark = 0
-		;	comment "passed"
-		;else
-		;	LogWarning "failed"
-		;	set $TestResult$ = "not o.k."
-		;endif
-		;set $ConstTest$ = "value1"		
-		;;set $list1$ = loadTextFile($HomeTestFiles$+"\unattend_win10_x64.xml")
-		;;set $list1$ = getXml2Document($list1$)
-		;set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\unattend_win10_x64.xml")
-		;set $list2$ = xml2GetFirstChildNodeByName($list1$,"ModifyPartitions")
-		;set $CompValue$ = getXml2AttributeValueByKey($list2$,"name1")
-		;if ($ConstTest$ = $CompValue$)
-		;	comment "passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "failed"
-		;endif
-		
-		Files_cleanup_macos
-	endif ; 4.11.7
+		Set $ExpectedResult$ = "o.k."
 	
-	sub_compareResult
-	
-	set $winst_macos$ = $SubResult$
-
+		; start testing
+		set $TestResult$ = "o.k."
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+			
+			DefVar $xml2strictMode$
+			set $xml2strictMode$ = 'false'
+			Files_copy_macos
+			
+			
+			
+			Files_cleanup_macos
+		endif ; 4.11.7
+		
+		sub_compareResult
+		
+		set $winst_macos$ = $SubResult$
+	endif ; macos
 endif
 
 [Files_copy_macos]
