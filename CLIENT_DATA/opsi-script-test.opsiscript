@@ -11,6 +11,9 @@
 
 [Actions]
 requiredWinstVersion >= "4.11.4.1"
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.6")
+	requiredOpsiscriptVersion >= "4.12.3.6"
+endif
 ScriptErrorMessages = false
 encoding=utf8
 setOutputLevel = 3
@@ -726,10 +729,13 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		case "Windows_nt"
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
 			;set $tmp$ = takeString(34, $list1$)
-			set $tmp$ = takeFirstStringContaining($list1$,"IPv4 Address")
+			set $tmp$ = takeFirstStringContaining($list1$,"IPv4")
 			set $tmp$ = trim($tmp$)
 			set $CompValue$ = takeString(-1, splitString ($tmp$, ":"))
-			set $CompValue$ = trim(stringReplace($CompValue$,"(Preferred)",""))
+			if contains($CompValue$, "(")
+				set $CompValue$ = trim(takeString(0, splitString ($CompValue$, "(")))
+				;trim(stringReplace($CompValue$,"(Preferred)",""))
+			endif
 		endcase
 		case "Linux"
 			set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
@@ -916,6 +922,29 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif
+	
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.6")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Testing constants: "+"%"+"OpsiscriptVersion" +"%"
+		set $ConstTest$ = "%OpsiscriptVersion%"
+		if $OS$ = "Windows_NT"
+			set $InterestingFile$ = "%Opsiscriptdir%\winst.exe"
+			if not (FileExists($InterestingFile$))
+				set $InterestingFile$ = "%Opsiscriptdir%\winst32.exe"
+			endif
+			set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
+			set $CompValue$ = getValue("file version with dots", $INST_Resultlist$ )
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+	endif ; 4.12.3.6
 
 
 	set $ConstTest$ = "%CurrentAppdataDir%"
@@ -4516,18 +4545,17 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	; Tests for WinstVersion >= 4.12.3
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
 		comment ""
-		comment "Tests for WinstVersion >= 4.12.3"
-		comment ""
-		comment "-------------------------------------"    
-
-		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "listFiles"
 		Files_copy_for_filelist ;initialize test directory
 
 		comment "Search all  files in $HomeTestFiles$"
-		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test1')
+		endif
 		;set $list2$ = GetListContaining($list2$, ".")
 		set $list3$ = listFiles($HomeTestFiles$,"*.*","False")
 		if (count($list2$) = count($list3$))      
@@ -4537,10 +4565,28 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		comment "No search string given, search all fiels in $HomeTestFiles$"
-		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test2')
-		;set $list2$ = GetListContaining($list2$, "*.*")
+		comment "No search pattern given, search all files in $HomeTestFiles$"
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test1')
+		endif
 		set $list3$ = listFiles($HomeTestFiles$,"","False")
+		if (count($list2$) = count($list3$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Search all exe files in $HomeTestFiles$ no subdirectories"
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test1')
+		endif
+		set $list2$ = GetListContaining($list2$, ".exe")
+		set $list3$ = listFiles($HomeTestFiles$,"*.exe","false")
 		if (count($list2$) = count($list3$))
 			comment "passed"
 		else
@@ -4549,9 +4595,13 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif
 
 		comment "Search all exe files in $HomeTestFiles$ and subdirectories"
-		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test3')
-		set $list2$ = GetListContaining($list2$, ".exe")
-		set $list3$ = listFiles($HomeTestFiles$,"*.exe","False")
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test3')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test3')
+		endif
+		;set $list2$ = GetListContaining($list2$, ".exe")
+		set $list3$ = listFiles($HomeTestFiles$,"*.exe","True")
 		if (count($list2$) = count($list3$))
 			comment "passed"
 		else
@@ -4560,7 +4610,11 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		comment "Search all txt files in $HomeTestFiles$"
-		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test4')
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test1')
+		endif
 		set $list2$ = GetListContaining($list2$, ".txt")
 		set $list3$ = listFiles($HomeTestFiles$,"*.txt","False")
 		if (count($list2$) = count($list3$))
@@ -4571,8 +4625,12 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif            
 		
 		comment "Search file encode-cp866.opsiscript in $HomeTestFiles$"
-		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test5')
-		set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test5')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test5')
+		endif ; windows
+		;set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
 		set $list3$ = listFiles($HomeTestFiles$,"encode-cp866.opsiscript","False")
 		if (count($list2$) = count($list3$))
 			comment "passed"
@@ -4581,27 +4639,28 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		comment "Search file in %System% with redirection for 32bit programs to SysWOW64"
-		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6')
-		; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
-		set $list3$ = listFiles("%System%","*.*","False")     
-		if (count($list2$) = count($list3$))          
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment "Search file in %System% with redirection disabled"
-		set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 winst /64bit')
-		; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
-		set $list3$ = listFiles("%System%","*.*","False","64bit")
-		if (count($list2$) = count($list3$))
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		if $OS$ = "Windows_NT"
+			comment "Search file in %System% with redirection for 32bit programs to SysWOW64"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6')
+			set $list3$ = listFiles("%System%","*.*","False")     
+			if (count($list2$) = count($list3$))          
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+			comment "Search file in %System% with redirection disabled"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 winst /64bit')
+			; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+			set $list3$ = listFiles("%System%","*.*","False","64bit")
+			if (count($list2$) = count($list3$))
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; windows
 		
 		Files_empty_folder ;remove test files 
 		;End of Testing listFiles
@@ -4910,9 +4969,11 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 
-	Set $list$ = getOutStreamFromSection ('dosbatch_profiledir')
-	comment "loop over the result"
-	for $x$ in $list$ do sub_file_exists
+	if $OS$ = "Windows_NT"
+		Set $list$ = getOutStreamFromSection ('dosbatch_profiledir')
+		comment "loop over the result"
+		for $x$ in $list$ do sub_file_exists
+	endif ; windows
 
 	comment ""
 	comment "-------------------------------------"
@@ -5108,7 +5169,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5") >= "0"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -5150,6 +5211,14 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		comment "Set the opsi-winst-followup product to setup"
 		opsiServiceCall_setFollowUp
 	endif ; 4.11.5
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.6")
+	
+		forceLogInAppenMode = true
+	
+		forceLogInAppenMode = false 
+		
+	endif ; 4.12.3.6
 
 
 	sub_compareResult
@@ -8817,6 +8886,7 @@ copy "%ScriptPath%\test-files\string\dummyUTF-16.txt" $HomeTestFiles$
 [Files_copy_for_filelist]
 copy -s "%ScriptPath%\test-files\string\*.*" $HomeTestFiles$
 copy -s "%ScriptPath%\test-files\encoding\*.*" $HomeTestFiles$
+copy -s "%ScriptPath%\test-files\testfiles\*.*" $HomeTestFiles$
 
 [DosInAnIcon_netstat]
 @echo off
@@ -8857,27 +8927,39 @@ endif
 [DosInAnIcon_ListFiles_Test1]
 @echo off
 cd $HomeTestFiles$
-dir *.* /A-D /B
+dir /a-d /b *.*
 
-[DosInAnIcon_ListFiles_Test2]
-@echo off
+[ShellInAnIcon_ListFiles_Test1]
 cd $HomeTestFiles$
-dir *.* /A-D /B                                              
+ls -p | grep -v /
+
+;[DosInAnIcon_ListFiles_Test2]
+;@echo off
+;cd $HomeTestFiles$
+;dir *.* /A-D /B                                              
 
 [DosInAnIcon_ListFiles_Test3]
 @echo off
 cd $HomeTestFiles$
-dir *.exe /A-D /B
+dir /s /b *.exe
 
-[DosInAnIcon_ListFiles_Test4]
-@echo off
+[ShellInAnIcon_ListFiles_Test3]
 cd $HomeTestFiles$
-dir *.txt /A-D /B
+find . -name "*.exe"
+
+;[DosInAnIcon_ListFiles_Test4]
+;@echo off
+;cd $HomeTestFiles$
+;dir *.txt /A-D /B
 
 [DosInAnIcon_ListFiles_Test5]
 @echo off
 cd $HomeTestFiles$
-dir encode-cp866.opsiscript /A-D /B
+dir /b encode-cp866.opsiscript
+
+[ShellInAnIcon_ListFiles_Test5]
+cd $HomeTestFiles$
+find . -name "encode-cp866.opsiscript"
 
 [DosInAnIcon_ListFiles_Test6]
 @echo off
@@ -9986,10 +10068,10 @@ copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
 ;
 ;;;;;;;;;;;;;;;;;;;;;;
 ;
-;[ShellInAnIcon_exit43]
-;set -x
-;exit 43
-;
+[ShellInAnIcon_exit43]
+set -x
+exit 43
+
 ;
 ;[ShellBatch_ping]
 ;set -x
