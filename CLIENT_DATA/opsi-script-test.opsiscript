@@ -5214,9 +5214,9 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.6")
 	
-		forceLogInAppenMode = true
+		forceLogInAppendMode = true
 	
-		forceLogInAppenMode = false 
+		forceLogInAppendMode = false 
 		
 	endif ; 4.12.3.6
 

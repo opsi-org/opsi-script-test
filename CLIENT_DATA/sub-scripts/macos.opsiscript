@@ -19,8 +19,6 @@ if ($Flag_winst_macos$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "o.k."
 		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
 			
-			DefVar $xml2strictMode$
-			set $xml2strictMode$ = 'false'
 			Files_copy_macos
 			
 			
