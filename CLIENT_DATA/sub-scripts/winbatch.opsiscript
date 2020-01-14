@@ -157,7 +157,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	if ($OS$ = "Windows_NT")
 		message "Winbatch_testing /WaitForWindowAppearing"
 		marktime
-		Winbatch_startprocess_with_child_nowait /WaitForWindowAppearing "opsi-helper-child"
+		Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild" 
 		difftime
 		comment "difftime should be about 2 seconds"
 		set $ConstTest$ = "2"
@@ -166,6 +166,10 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
 			comment "/WaitForWindowAppearing assumed passed"
 		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/WaitForWindowAppearing assumed failed"
+		endif
+		if "20" = getDiffTimeSec
 			set $TestResult$ = "not o.k."
 			LogWarning "/WaitForWindowAppearing assumed failed"
 		endif
@@ -401,7 +405,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		;/WaitForWindowVanish sees only Windows of 32 Bit applications
 		message "Winbatch_testing /WaitForWindowVanish"
 		marktime
-		Winbatch_startprocess_with_child_nowait /WaitForWindowVanish "opsi-helper-child"
+		Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20 /WaitForWindowVanish "helperchild"
 		difftime
 		comment "difftime should be 5 seconds"
 		set $ConstTest$ = "5"
@@ -844,9 +848,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		if $OS$ = "Windows_NT"
 			message "processCall /WaitForWindowAppearing"
 			marktime
-			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /WaitForWindowAppearing "opsi-helper-child"
+			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild" 
 			difftime
 			comment "difftime should be about 2 seconds"
+			if "20" = getDiffTimeSec
+				set $TestResult$ = "not o.k."
+				LogWarning "/WaitForWindowAppearing assumed failed"
+			endif
 			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
 			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
 			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
@@ -1080,9 +1088,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			;/WaitForWindowVanish sees only Windows of 32 Bit applications
 			message "processCall /WaitForWindowVanish"
 			marktime
-			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /WaitForWindowVanish "opsi-helper-child"
+			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /TimeOutSeconds 20 /WaitForWindowVanish "helperchild"
 			difftime
 			comment "difftime should be 5 seconds"
+			if "20" = getDiffTimeSec
+				set $TestResult$ = "not o.k."
+				LogWarning "/WaitForWindowVanish timeout: assumed failed"
+			endif
 			sleepseconds 1
 			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
 			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
