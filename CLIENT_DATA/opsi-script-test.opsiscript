@@ -742,6 +742,11 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		endcase
 		case "macos"
 			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
+			set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
+			set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en0"))
+			if not (isValidIP4 ($CompValue$))
+				set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en1"))
+			endif
 		endcase
 	endswitch
 	
@@ -3072,18 +3077,20 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.1")
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "getHWBiosInfoMap"
-		comment "get value by winst function"
-		set $INST_Resultlist$ = getHWBiosInfoMap
-		if count($INST_Resultlist$) int> "0"
-			for %line% in $INST_Resultlist$ do sub_showEntry
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+		if not ($OS$ = "macos"(
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "getHWBiosInfoMap"
+			comment "get value by winst function"
+			set $INST_Resultlist$ = getHWBiosInfoMap
+			if count($INST_Resultlist$) int> "0"
+				for %line% in $INST_Resultlist$ do sub_showEntry
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
 		endif
 	endif
 
