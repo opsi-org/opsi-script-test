@@ -13,6 +13,9 @@ DefVar $opsi_script_test_helper_bin$
 DefVar $opsi_script_test_helper_path$
 DefVar $pathDelim$
 DefVar $ping5command$
+DefVar $param1$
+DefVar $param2$
+DefVar $param3$
 
 set $GUI$ = "true"
 Set $OS$ = GetOS
@@ -50,28 +53,34 @@ switch $OS$
 endswitch
 
 setloglevel = 8
+set $param1$ = "/WaitForProcessEnding"
+set $string1$ =  ExtractFileName ($opsi_script_test_helper_child_bin$)
+set $param2$ = "/TimeOutSeconds"
+set $param3$ = "20"
+
 
 message "Winbatch_testing /WaitForProcessEnding"
-			marktime
-			set $string1$ =  ExtractFileName ($opsi_script_test_helper_child_bin$)  
-			Winbatch_startprocess_with_child_nowait /WaitForProcessEnding $string1$
-			;Winbatch_startprocess_with_child_nowait  /TimeOutSeconds 5
-			difftime
+marktime  
+;Winbatch_startprocess_with_child_nowait /WaitForProcessEnding $string1$
+;Winbatch_startprocess_with_child_nowait  /TimeOutSeconds 5
+Winbatch_startprocess_with_child_nowait $param1$ $string1$ $param2$ $param3$
+;Winbatch_startprocess_with_child_nowait $param1$+" "+$string1$+" "+$param2$+" "+$param3$
+difftime
 
 
-			comment "difftime should be 5 seconds"
-			set $ConstTest$ = "6"
-			set $difftime$ = getDiffTimeSec
-			set $CompValue$ = $difftime$
-			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-				comment "/WaitForProcessEnding assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForProcessEnding assumed failed"
-			endif
-			;shellInAnIcon_start_wfp
-			
-			
+comment "difftime should be 5 seconds"
+set $ConstTest$ = "6"
+set $difftime$ = getDiffTimeSec
+set $CompValue$ = $difftime$
+if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+	comment "/WaitForProcessEnding assumed passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "/WaitForProcessEnding assumed failed"
+endif
+;shellInAnIcon_start_wfp
+
+
 [Winbatch_startprocess_with_child_nowait]
 "%ScriptPath%$pathDelim$..$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
 
