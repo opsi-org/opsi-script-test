@@ -8,7 +8,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.12.3.6
+version: 4.12.3.7
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -389,6 +389,15 @@ name: urlparser
 multivalue: False
 editable: False
 description: Urlparser section and functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: var_as_param
+multivalue: False
+editable: False
+description: Variabe as Section Parameters
 values: ["off", "on"]
 default: ["off"]
 

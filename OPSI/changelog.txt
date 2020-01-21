@@ -1,4 +1,10 @@
 [Changelog]
+opsi-script-test (4.12.3.7-1) stable; urgency=low
+
+  * var_as_param tests (variable as parameter for section calls)
+  
+-- detlef oertel <d.oertel@uib.de>  Tue,  21 Jan 2020 15:00:00 +0200
+
 opsi-script-test (4.12.3.6-1) stable; urgency=low
 
   * integrate macos opsi-script-test-helper

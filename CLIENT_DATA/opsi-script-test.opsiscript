@@ -86,6 +86,7 @@ DefVar $winst_powershell$
 DefVar $winst_regex$
 DefVar $winst_networkcalc$
 DefVar $winst_urlparser$
+DefVar $winst_var_as_param$
 DefVar $InterestingFile$
 DefVar $key$
 DefVar $value$
@@ -157,6 +158,7 @@ DefVar $Flag_subregex$
 DefVar $Flag_subnetworkcalc$
 DefVar $Flag_suburlparser$
 DefVar $Flag_subwmi$
+DefVar $Flag_var_as_param$
 
 DefStringList $list$
 DefStringList $list1$
@@ -331,6 +333,7 @@ set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
 set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
+set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
@@ -3077,7 +3080,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.1")
-		if not ($OS$ = "macos"(
+		if not ($OS$ = "macos")
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -8543,6 +8546,10 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
 	sub "%scriptpath%\sub-scripts\wmitest.opsiscript"
 endif
 
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.7")
+	sub "%scriptpath%\sub-scripts\var_as_param.opsiscript"
+endif
+
 comment ""
 comment ""
 comment ""
@@ -8578,6 +8585,7 @@ comment "$winst_dos$                  --> " + $winst_dos$
 comment "$winst_string$               --> " + $winst_string$
 comment "$winst_string_list$          --> " + $winst_string_list$
 comment "$subtestsub$                 --> " + $subtestsub$
+comment "$winst_var_as_param$         --> " + $winst_var_as_param$
 comment "$winst_winbatch$             --> " + $winst_winbatch$
 comment "$winst_wmi$                  --> " + $winst_wmi$
 comment "$winst_xml$                  --> " + $winst_xml$
