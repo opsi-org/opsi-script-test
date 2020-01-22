@@ -698,6 +698,9 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	comment "Testing: "
 	message "Testing constants: "+"%"+"IPName" +"%"
 	set $ConstTest$="%IPName%"
+	if contains($ConstTest$, ".")
+		set $ConstTest$= takestring(0,splitstring($ConstTest$, "."))
+	endif
 	switch $OS$
 		case "Windows_nt"
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
@@ -3077,7 +3080,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.1")
-		if not ($OS$ = "macos"(
+		if not ($OS$ = "macos")
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
