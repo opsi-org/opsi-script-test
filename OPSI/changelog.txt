@@ -2,6 +2,7 @@
 opsi-script-test (4.12.3.6-1) stable; urgency=low
 
   * integrate macos opsi-script-test-helper
+  * check for double backslashes in sub_sections
   
 -- detlef oertel <d.oertel@uib.de>  Mon,  20 Jan 2020 15:00:00 +0200
 

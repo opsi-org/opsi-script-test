@@ -1044,6 +1044,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
+	sub "%scriptpath%\sub-scripts\subsub_constants.opsiscript"
 	
 	sub_compareResult
 	set $winst_constants$ = $SubResult$
