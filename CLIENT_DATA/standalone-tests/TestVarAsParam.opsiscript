@@ -1,0 +1,84 @@
+[Actions]
+SetLogLevel = 7
+
+DefVar $Architecture$
+DefVar $DisplayName$
+
+DefStringList $Architectures$
+DefStringList $ExecWith_Result$
+
+Set $Architectures$ = CreateStringList("32Bit", "64Bit", "SysNative")
+Set $DisplayName$ = "*TestVarAsParam*"
+
+
+;Works fine!
+;Creates Registry Keys for each Architecture in $Architectures$
+for %Element% in $Architectures$ do Sub_TestVarAsParam_Registry
+
+;Fails in all combinations :-/
+;Is supposed to read the RegVar DisplayName from the registry key generated in the previous section
+for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
+
+
+
+[Sub_TestVarAsParam_Registry]
+	Set $Architecture$ = "%Element%"
+	Registry_TestVarAsParam_Create "/" + $Architecture$
+	;Registry_TestVarAsParam_Delete "/" + $Architecture$
+
+[Sub_TestVarAsParam_ExecWith]
+	Set $Architecture$ = "%Element%"
+
+	;Most basic test I can come up with....
+	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_HelloWorld powershell.exe -ExecutionPolicy Bypass")
+
+	;Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos 'powershell.exe -ExecutionPolicy Bypass' winst /64Bit")
+	;Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass")
+	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe" winst /64Bit
+	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass" winst /64Bit
+
+
+	;Test with VarAsParams:
+
+	;Set $ExecWith_Result$ = GetOutStreamFromSection(ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$)
+	;Fails with:
+	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 24 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 24): $ExecWith_Result$ = GetOutStreamFromSection(ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$) -> ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$) illegal String Expressionstr
+
+	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass winst /" + $Architecture$
+	;Fails with:
+	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 25 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 25): ExecWith_Powershell_SearchUninstallInfos -> winst option not recognized
+
+	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass winst /" + $Architecture$
+	;Fails with:
+	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 33 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 33): ExecWith_Powershell_SearchUninstallInfos -> winst option not recognized
+
+
+
+[ExecWith_Powershell_SearchUninstallInfos]
+	$RegKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+	#Search $RegKey for the given DisplayName and return DisplayName, QuietUninstallString (if present) and UninstallString from the found subentries
+		Get-ChildItem -Path $RegKey| Where-Object -FilterScript { $_.GetValue("DisplayName", "not found") -like "$DisplayName$"} | ForEach-Object -Process {
+		if (-Not($_.GetValue("DisplayName", "not found") -eq "not found") -or ($_.GetValue("DisplayName", "not found") -eq "") -or ($_.GetValue("DisplayName", "not found") -eq $null))
+			{
+			Write-Output (-join ("InstalledVersion=" + $_.GetValue("DisplayName")))
+			if (-Not($_.GetValue("QuietUninstallString", "not found") -eq "not found") -or ($_.GetValue("QuietUninstallString", "not found") -eq "") -or ($_.GetValue("QuietUninstallString", "not found") -eq $null))
+				{
+				Write-Output (-join ("QuietUninstallString=" + $_.GetValue("QuietUninstallString")))
+				}
+			if (-Not($_.GetValue("UninstallString", "not found") -eq "not found") -or ($_.GetValue("UninstallString", "not found") -eq "") -or ($_.GetValue("UninstallString", "not found") -eq $null))
+				{
+				Write-Output (-join ("UninstallString=" + $_.GetValue("UninstallString")))
+				}
+			}
+		}
+
+[ExecWith_Powershell_HelloWorld]
+	$strString = "Hello World"
+	write-host $strString
+
+[Registry_TestVarAsParam_Create]
+	OpenKey [HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\TestVarAsParam_$Architecture$]
+	Set "DisplayName" = REG_SZ:"TestVarAsParam_$Architecture$"
+
+[Registry_TestVarAsParam_Delete]
+	[HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\TestVarAsParam_$Architecture$]
