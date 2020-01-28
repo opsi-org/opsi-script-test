@@ -8,7 +8,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.12.3.7
+version: 4.12.3.9
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -416,6 +416,15 @@ name: internalundocumented
 multivalue: False
 editable: False
 description: internalundocumented
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: macos
+multivalue: False
+editable: False
+description: Apple macOS Tests
 values: ["off", "on"]
 default: ["off"]
 

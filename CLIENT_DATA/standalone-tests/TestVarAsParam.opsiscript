@@ -1,8 +1,13 @@
 [Actions]
+requiredWinstVersion >= "4.12.3.9"
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.6")
+	requiredOpsiscriptVersion >= "4.12.3.9"
+endif
 SetLogLevel = 7
 
 DefVar $Architecture$
 DefVar $DisplayName$
+DefVar $str1$
 
 DefStringList $Architectures$
 DefStringList $ExecWith_Result$
@@ -23,7 +28,7 @@ for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
 
 [Sub_TestVarAsParam_Registry]
 	Set $Architecture$ = "%Element%"
-	Registry_TestVarAsParam_Create "/" + $Architecture$
+	executeSection('Registry_TestVarAsParam_Create /' + $Architecture$)
 	;Registry_TestVarAsParam_Delete "/" + $Architecture$
 
 [Sub_TestVarAsParam_ExecWith]
@@ -52,6 +57,11 @@ for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
 	;Fails with:
 	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 33 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 33): ExecWith_Powershell_SearchUninstallInfos -> winst option not recognized
 
+	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass "+$ParamDelimiter$+" "+ $sArchitecture$)
+	set $str1$ = "powershell.exe -ExecutionPolicy Bypass "+$ParamDelimiter$+" "+ $sArchitecture$
+	executesection('ExecWith_Powershell_SearchUninstallInfos '+$str1$)
+	executesection('ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /'+$Architecture$)
+	
 
 
 [ExecWith_Powershell_SearchUninstallInfos]
