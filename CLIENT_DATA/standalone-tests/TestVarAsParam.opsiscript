@@ -6,31 +6,166 @@ endif
 SetLogLevel = 7
 
 DefVar $Architecture$
-DefVar $DisplayName$
+DefVar $Modifier$
 DefVar $str1$
 
 DefStringList $Architectures$
-DefStringList $ExecWith_Result$
 
 Set $Architectures$ = CreateStringList("32Bit", "64Bit", "SysNative")
-Set $DisplayName$ = "*TestVarAsParam*"
+
+;###################################################### Registry ######################################################
+DefVar $RegKey$
+DefVar $RegType$
+DefVar $RegVar$
+DefVar $RegVal$
+
+;for %Element% in $Architectures$ do Sub_TestVarAsParam_Registry
 
 
-;Works fine!
-;Creates Registry Keys for each Architecture in $Architectures$
-for %Element% in $Architectures$ do Sub_TestVarAsParam_Registry
+
+;###################################################### Files #########################################################
+DefVar $Source$
+DefVar $Destination$
+DefVar $Target$
+DefVar $Options$
+DefVar $ProgramFilesDir$
+
+for %Element% in $Architectures$ do Sub_TestVarAsParam_Files
+
+
+
+;###################################################### ExecWith ######################################################
+
+;DefVar $DisplayName$
+
+;DefStringList $ExecWith_Result$
+
+;Set $DisplayName$ = "*TestVarAsParam*"
 
 ;Fails in all combinations :-/
 ;Is supposed to read the RegVar DisplayName from the registry key generated in the previous section
-for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
+;for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
 
 
 
+
+
+
+
+
+;###################################################### Registry ######################################################
 [Sub_TestVarAsParam_Registry]
 	Set $Architecture$ = "%Element%"
 	executeSection('Registry_TestVarAsParam_Create /' + $Architecture$)
 	;Registry_TestVarAsParam_Delete "/" + $Architecture$
+	Set $RegKey$ = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\TestVarAsParam_" + $Architecture$
+	Set $RegType$ = "REG_SZ"
+	Set $RegVar$ = "DisplayName"
+	Set $RegVal$ = "TestVarAsParam_" + $Architecture$
+	Set $Modifier$ = ""
 
+	;Works
+	Registry_TestVarAsParam_Create "/" + $Architecture$ + $Modifier$
+
+	;Fails
+	;Registry_TestVarAsParam_Create "/" + $Architecture$ $Modifier$
+
+	if GetRegistryValue($RegKey$, $RegVar$, $Architecture$) = $RegVal$
+		Comment "Registry_TestVarAsParam_Create passed"
+		Registry_TestVarAsParam_Delete "/" + $Architecture$ + $Modifier$
+	else
+		LogError "Registry_TestVarAsParam_Create failed"
+		IsFatalError "Registry_TestVarAsParam_Create failed"
+	endif
+
+	Set $Modifier$ = "/AllNTUserDats"
+	Set $RegKey$ = "SOFTWARE\TestVarAsParam_" + $Architecture$
+
+	;Works
+	Registry_TestVarAsParam_Create "/" + $Architecture$  $Modifier$
+	Registry_TestVarAsParam_Delete "/" + $Architecture$  $Modifier$
+
+	;Fails
+	;Registry_TestVarAsParam_Create "/" + $Architecture$ + $Modifier$
+	;Registry_TestVarAsParam_Delete "/" + $Architecture$ + $Modifier$
+
+[Registry_TestVarAsParam_Create]
+	OpenKey [$RegKey$]
+	Set "$RegVar$" = $RegType$:"$RegVal$"
+
+[Registry_TestVarAsParam_Delete]
+	DeleteKey [$RegKey$]
+
+
+;###################################################### Files #########################################################
+[Sub_TestVarAsParam_Files]
+	Set $Architecture$ = "%Element%"
+
+	Switch $Architecture$
+		Case "32Bit"
+			Set $ProgramFilesDir$ = "%ProgramFiles32Dir%"
+		EndCase
+
+		Case "64Bit"
+			Set $ProgramFilesDir$ = "%ProgramFiles64Dir%"
+		EndCase
+
+		Case "SysNative"
+			Set $ProgramFilesDir$ = "%ProgramFilesSysNativeDir%"
+		EndCase
+	EndSwitch
+
+	Set $Modifier$ = ""
+	Set $Source$ = "%opsiTmpDir%\Testfolder"
+	Set $Destination$ = $ProgramFilesDir$
+	Set $Target$ = $ProgramFilesDir$ + "\TestFolder"
+	Set $Options$ = "-se"
+
+	;Works
+	Files_TestVarAsParam_Copy "/" + $Architecture$ + $Modifier$
+
+	;Works but logs: "Syntaxerror: "$Modifier$" is no valid parameter"
+	;Files_TestVarAsParam_Copy "/" + $Architecture$ $Modifier$
+
+	if DirectoryExists($Target$, $Architecture$)
+		Comment "Files_TestVarAsParam_Copy passed"
+		Set $Options$ = "-s"
+		Files_TestVarAsParam_Delete "/" + $Architecture$ + $Modifier$
+		if DirectoryExists($Target$, $Architecture$)
+			LogError "Files_TestVarAsParam_Delete failed"
+			IsFatalError "Files_TestVarAsParam_Delete failed"
+		else
+			Comment "Files_TestVarAsParam_Delete passed"
+		endif
+	else
+		LogError "Files_TestVarAsParam_Copy failed"
+		IsFatalError "Files_TestVarAsParam_Copy failed"
+	endif
+
+	Set $Modifier$ = "/AllNTUserProfiles"
+	Set $Destination$ = ""
+	Set $Target$ = "%CurrentProfileDir%\TestFolder"
+	Set $Options$ = "-se"
+
+	;Works
+	Files_TestVarAsParam_Copy "/" + $Architecture$ $Modifier$
+
+	;Fails with:
+	;Syntaxerror: ""/" + $Architecture$ + $Modifier$" is no valid parameter
+	;Files_TestVarAsParam_Copy "/" + $Architecture$ + $Modifier$
+
+	Set $Options$ = "-s"
+	Files_TestVarAsParam_Delete "/" + $Architecture$ $Modifier$
+
+[Files_TestVarAsParam_Copy]
+	copy $Options$ $Source$ $Destination$
+
+[Files_TestVarAsParam_Delete]
+	del $Options$ $Target$
+
+
+
+;###################################################### ExecWith ######################################################
 [Sub_TestVarAsParam_ExecWith]
 	Set $Architecture$ = "%Element%"
 
@@ -85,10 +220,3 @@ for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
 [ExecWith_Powershell_HelloWorld]
 	$strString = "Hello World"
 	write-host $strString
-
-[Registry_TestVarAsParam_Create]
-	OpenKey [HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\TestVarAsParam_$Architecture$]
-	Set "DisplayName" = REG_SZ:"TestVarAsParam_$Architecture$"
-
-[Registry_TestVarAsParam_Delete]
-	[HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\TestVarAsParam_$Architecture$]
