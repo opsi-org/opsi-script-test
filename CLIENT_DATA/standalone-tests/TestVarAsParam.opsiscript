@@ -23,6 +23,7 @@ DefVar $Source$
 DefVar $Destination$
 DefVar $Target$
 DefVar $Options$
+DefVar $ProgramFilesDir$
 
 for %Element% in $Architectures$ do Sub_TestVarAsParam_Files
 
@@ -92,10 +93,25 @@ for %Element% in $Architectures$ do Sub_TestVarAsParam_Files
 ;###################################################### Files #########################################################
 [Sub_TestVarAsParam_Files]
 	Set $Architecture$ = "%Element%"
+
+	Switch $Architecture$
+		Case "32Bit"
+			Set $ProgramFilesDir$ = "%ProgramFiles32Dir%"
+		EndCase
+
+		Case "64Bit"
+			Set $ProgramFilesDir$ = "%ProgramFiles64Dir%"
+		EndCase
+
+		Case "SysNative"
+			Set $ProgramFilesDir$ = "%ProgramFilesSysNativeDir%"
+		EndCase
+	EndSwitch
+
 	Set $Modifier$ = ""
-	Set $Source$ = "%opsiTmpDir%\Testfolder\"
-	Set $Destination$ = "%System%"
-	Set $Target$ = "%System%\TestFolder"
+	Set $Source$ = "%opsiTmpDir%\Testfolder"
+	Set $Destination$ = $ProgramFilesDir$
+	Set $Target$ = $ProgramFilesDir$ + "\TestFolder"
 	Set $Options$ = "-se"
 
 	;Works
@@ -104,19 +120,35 @@ for %Element% in $Architectures$ do Sub_TestVarAsParam_Files
 	;Works but logs: "Syntaxerror: "$Modifier$" is no valid parameter"
 	;Files_TestVarAsParam_Copy "/" + $Architecture$ $Modifier$
 
-	if DirectoryExists("%System%\TestFolder", $Architecture$)
+	if DirectoryExists($Target$, $Architecture$)
 		Comment "Files_TestVarAsParam_Copy passed"
-		isSuccess
 		Set $Options$ = "-s"
-		;Files_TestVarAsParam_Delete "/" + $Architecture$ + $Modifier$
+		Files_TestVarAsParam_Delete "/" + $Architecture$ + $Modifier$
+		if DirectoryExists($Target$, $Architecture$)
+			LogError "Files_TestVarAsParam_Delete failed"
+			IsFatalError "Files_TestVarAsParam_Delete failed"
+		else
+			Comment "Files_TestVarAsParam_Delete passed"
+		endif
 	else
 		LogError "Files_TestVarAsParam_Copy failed"
 		IsFatalError "Files_TestVarAsParam_Copy failed"
 	endif
 
-	;Set $Modifier$ = "/AllNTUserProfiles"
+	Set $Modifier$ = "/AllNTUserProfiles"
+	Set $Destination$ = ""
+	Set $Target$ = "%CurrentProfileDir%\TestFolder"
+	Set $Options$ = "-se"
+
+	;Works
+	Files_TestVarAsParam_Copy "/" + $Architecture$ $Modifier$
+
+	;Fails with:
+	;Syntaxerror: ""/" + $Architecture$ + $Modifier$" is no valid parameter
 	;Files_TestVarAsParam_Copy "/" + $Architecture$ + $Modifier$
-	;Files_TestVarAsParam_Delete "/" + $Architecture$ + $Modifier$
+
+	Set $Options$ = "-s"
+	Files_TestVarAsParam_Delete "/" + $Architecture$ $Modifier$
 
 [Files_TestVarAsParam_Copy]
 	copy $Options$ $Source$ $Destination$
