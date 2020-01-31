@@ -523,6 +523,152 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 	endif
 
+;########################################################################################################
+; ################   Files
+
+	Set $DirectorySubDirectory = $HomeTestFiles$+"\subDirectory"
+	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"
+	Set $FileCopyTestSubDirectory$ = $HomeTestFiles$+"\subDirectory\CopyTestSubDirectory.txt"
+
+	if ($INST_SystemType$ = "64 Bit System") and ($OS$="Windows_NT")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "64 Bit redirection"
+		Files_copy_test_to_system32
+		if FileExists("%System%\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if FileExists64("%System%\dummy.txt")
+			comment "no redirection for 32 bit"
+		else
+			comment "redirection for 32 bit"
+		endif
+		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		ExecWith_remove_test_from_system32 'cmd.exe' /C
+		executeSection('Files_copy_test_to_system32 /64Bit')
+		if FileExists64("%System%\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_system32 'cmd.exe' /C
+		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+
+		executeSection('Files_copy_test_to_programfiles')
+		if FileExists("%ProgramFilesDir%\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_programfiles 'cmd.exe' /C
+		executeSection('Files_copy_test_to_programfiles '+$sBit64$)
+		if FileExists64("%ProgramFilesDir%\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+
+		executeSection('Files_copy_test_to_programfiles2')
+		if FileExists("c:\program files\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
+			comment "no redirection for 32 bit"
+		else
+			comment "redirection for 32 bit"
+		endif
+		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		ExecWith_remove_test_from_programfiles2 'cmd.exe' /C
+		executeSection('Files_copy_test_to_programfiles2 '+$sBit64$)
+		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "SysNative Bit redirection"
+		executeSection('Files_copy_test_to_system32')
+		if FileExists32("%System%\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if FileExistsSysNative("%System%\dummy.txt")
+			comment "no redirection for 32 bit"
+		else
+			comment "redirection for 32 bit"
+		endif
+		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		ExecWith_remove_test_from_system32 'cmd.exe' /C
+		executeSection('Files_copy_test_to_system32 '+$sBitSysnative$)
+		if FileExistsSysNative("%System%\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_system32 'cmd.exe' /C
+		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+
+		Files_copy_test_to_programfiles
+		if FileExists32("%ProgramFilesDir%\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_programfiles 'cmd.exe' /C
+		executeSection('Files_copy_test_to_programfiles '+$sBitSysnative$)
+		if FileExistsSysNative("%ProgramFilesDir%\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+
+		executeSection('Files_copy_test_to_programfiles2')
+		if FileExists32("c:\program files\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if FileExistsSysNative("c:\program files\opsi.org\test\dummy.txt")
+			comment "no redirection for 32 bit"
+		else
+			comment "redirection for 32 bit"
+		endif
+		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		ExecWith_remove_test_from_programfiles2 'cmd.exe' /C
+		executeSection('Files_copy_test_to_programfiles2 '+$sBitSysnative$)
+		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+	endif
+
+
 
 	sub_compareResult
 	set $winst_var_as_param$ = $SubResult$
@@ -969,4 +1115,28 @@ copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%System%"
 [DosInAnIcon_remove_test_from_system32]
 %SystemDrive%
 cd "%System%"
+del "dummy.txt"
+
+
+;----------------   start   sections for files test ---------------------------------
+
+[ExecWith_remove_test_from_system32]
+%SystemDrive%
+cd "%System%"
+del "dummy.txt"
+
+[Files_copy_test_to_programfiles]
+copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%ProgramFilesDir%\opsi.org\test"
+
+[ExecWith_remove_test_from_programfiles]
+%SystemDrive%
+cd "%ProgramFilesDir%\opsi.org\test"
+del "dummy.txt"
+
+[Files_copy_test_to_programfiles2]
+copy "%ScriptPath%\test-files\testFiles\dummy.txt" "c:\program files\opsi.org\test"
+
+[ExecWith_remove_test_from_programfiles2]
+%SystemDrive%
+cd "c:\program files\opsi.org\test"
 del "dummy.txt"
