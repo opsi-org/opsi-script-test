@@ -86,6 +86,7 @@ DefVar $winst_powershell$
 DefVar $winst_regex$
 DefVar $winst_networkcalc$
 DefVar $winst_urlparser$
+DefVar $winst_var_as_param$
 DefVar $InterestingFile$
 DefVar $key$
 DefVar $value$
@@ -157,6 +158,7 @@ DefVar $Flag_subregex$
 DefVar $Flag_subnetworkcalc$
 DefVar $Flag_suburlparser$
 DefVar $Flag_subwmi$
+DefVar $Flag_var_as_param$
 
 DefStringList $list$
 DefStringList $list1$
@@ -331,6 +333,7 @@ set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
 set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
+set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
@@ -1705,7 +1708,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 
 	endif ; 4.11.2.1
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.2") >= "0"
+	
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.2")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -4673,6 +4678,67 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; windows
 		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "setValueByKey (with default keyvalue separator: =)"
+			comment ""
+			set $INST_Resultlist$ = createStringList("a=1","b=2","c=2")
+			set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$)
+			set $ConstTest$ = "myvalue"
+			set $CompValue$ = getValue("mykey", $INST_Resultlist$)
+			comment "compare values"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $INST_Resultlist$ = createStringList("a = 1","b = 2","c = 2")
+			set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$)
+			set $ConstTest$ = "myvalue"
+			set $CompValue$ = getValue("b", $INST_Resultlist$)
+			comment "compare values"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+	
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "setValueByKey (with explicit set keyvalue separator)"
+			comment ""
+			set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+			set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$,":")
+			set $ConstTest$ = "myvalue"
+			set $CompValue$ = getValueBySeparator("mykey", ":", $INST_Resultlist$)
+			comment "compare values"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+	
+			set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+			set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$,":")
+			set $ConstTest$ = "myvalue"
+			set $CompValue$ = getValueBySeparator("b", ":", $INST_Resultlist$)
+			comment "compare values"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+		endif ; 4.12.3.9
+		
 		Files_empty_folder ;remove test files 
 		;End of Testing listFiles
 	endif ; WinstVersion >= 4.12.3	        
@@ -6510,971 +6576,6 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 	;endif  ; windows
 endif
 
-if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
-
-	if $OS$ = "windows_NT"
-	
-	Message "testing registry functions"
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	comment ""
-	comment "testing registry functions"
-	comment ""
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	Set $ExpectedResult$ = "o.k."
-
-	set $TestResult$ = "o.k."
-		; 6.3.7 Reading Values from the Windows Registry and Transforming Values into Registry Format
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "RegString"
-		set $ConstTest$ = "c:\\windows\\system\\"
-		set $CompValue$ = RegString ("c:\windows\system\")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "GetRegistryStringValue"
-		set $ConstTest$ = "Explorer.exe"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon] Shell")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "GetRegistryStringValue32"
-		set $ConstTest$ = "Explorer.exe"
-		set $CompValue$ = GetRegistryStringValue32 ("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon] Shell")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "GetRegistryStringValue32 standard entry"
-		Registry_opsi_org_test
-		set $ConstTest$ = "standard entry"
-		set $CompValue$ = GetRegistryStringValue32 ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0]")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "GetRegistryStringValue64"
-		Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-		Set $INST_SearchValue$ = "AutoRestartShell"
-		sub_retrieve_registry_data
-		set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
-		set $CompValue$ = GetRegistryStringValue64 ("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon] AutoRestartShell")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "GetRegistryStringValueSysNative"
-		Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-		Set $INST_SearchValue$ = "AutoRestartShell"
-		sub_retrieve_registry_data
-		set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
-		set $CompValue$ = GetRegistryStringValueSysNative ("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon] AutoRestartShell")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GetRegistryValue (default)"
-			set $ConstTest$ = "Explorer.exe"
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon","Shell")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-  		
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GetRegistryValue (32)"
-			set $ConstTest$ = "Explorer.exe"
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon","Shell","32bit")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-  		
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GetRegistryValue  (32) standard entry"
-			Registry_opsi_org_test
-			set $ConstTest$ = "standard entry"
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0","","32bit")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-  		
-  		
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GetRegistryValue (64)"
-			Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-			Set $INST_SearchValue$ = "AutoRestartShell"
-			sub_retrieve_registry_data
-			set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
-			set $CompValue$ = GetRegistryValue ("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "AutoRestartShell","64bit")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-  		
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GetRegistryValue  (sysnative)"
-			Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-			Set $INST_SearchValue$ = "AutoRestartShell"
-			sub_retrieve_registry_data
-			set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
-			set $CompValue$ = GetRegistryValue("HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "AutoRestartShell","sysnative")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-		endif ; 4.12.0.16
-
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "createkeys"
-		Registry_createkeys
-		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
-		if $CompValue$ = "C:\Program files\test\test.exe -a"
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		Registry_opsi_org_delete_test
-		Registry "%Scriptpath%\test-files\construct_subkeys.reg" /regedit
-		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
-		if $CompValue$ = "C:\Program Files\test\test.exe -a"
-			comment "/regedit passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		Registry_opsi_org_delete_test
-		Registry loadUnicodeTextFile("%Scriptpath%\test-files\unicode_subkeys.reg") /regedit
-		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
-		if $CompValue$ = "C:\Program Files\test\test.exe -a"
-			comment "/regedit passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		;Registry_opsi_org_delete_test
-		;set $string1$ = "first line"+HexStrToDecStr(0x0d0a)+"second line"
-		;Registry_multiline
-		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
-		;if $CompValue$ = "C:\Program Files\test\test.exe -a"
-		;	comment "/regedit passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "failed"
-		;endif
-  	
-		;Registry_opsi_org_delete_test
-		;Registry "%Scriptpath%\test-files\multiline.reg" /regedit
-		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\multiline]")
-		;if $CompValue$ = "C:\Program Files\test\test.exe -a"
-		;	comment "/regedit passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "failed"
-		;endif
-  	
-		;Registry_opsi_org_delete_test
-		;Registry loadUnicodeTextFile("%Scriptpath%\test-files\unicode_multiline.reg") /regedit
-		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\multiline]")
-		;if $CompValue$ = "C:\Program Files\test\test.exe -a"
-		;	comment "/regedit passed"
-		;else
-		;	set $TestResult$ = "not o.k."
-		;	LogWarning "failed"
-		;endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "deleteKey"
-		;cleaning up
-		Registry_deleteKey
-		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
-		if $CompValue$ = ""
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "Add"
-		Registry_opsi_org_delete_test
-		Registry_Add
-		set $ConstTest$ = "value"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "Supp"
-		Registry_Supp
-		set $ConstTest$ = "value;value1;value2;value3"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "Supp (again)"
-		Registry_Supp
-		set $ConstTest$ = "value;value1;value2;value3"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "Supp (again1)"
-		Registry_Supp1
-		set $ConstTest$ = "value;value1;value2;value3"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "Add (again)"
-		Registry_Add
-		set $ConstTest$ = "value;value1;value2;value3"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "SaveValueToFile"
-		Files_testFiles
-		Registry_SaveValueToFile
-		if (FileExists($HomeTestFiles$+"\SaveValueToFile.txt"))
-			set $ConstTest$ = "value;value1;value2;value3"
-			set $list1$ = loadTextFile($HomeTestFiles$+"\SaveValueToFile.txt")
-			Set $CompValue$ = takeString(0, $list1$)
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "Supp (again2)"
-		Registry_set4supp
-		set $ConstTest$ = "C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		Registry_Supp2
-		set $ConstTest$ = "C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient;C:\Program Files (x86)\Java\jre8\bin"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		Registry_Supp2
-		set $ConstTest$ = "C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient;C:\Program Files (x86)\Java\jre8\bin"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		set $systemroot$ = '%'+'systemroot%'
-		Registry_set4supp3
-		set $ConstTest$ = '%'+'systemroot%'+';%'+'systemroot%\system32'
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		Registry_Supp3
-		set $ConstTest$ = '%'+'systemroot%'+';%'+'systemroot%\system32'+';%'+'systemroot%\system32\wbem'
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-  	
-		if not (FileExists($HomeTestFiles$))
-			Files_testFiles
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "GetMultiSZFromFile"
-		Registry_GetMultiSZFromFile
-		set $ConstTest$ = "hello;world;how;are;you"
-		set $CompValue$ = Trim(GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test2"))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "DeleteVar"
-		Registry_DeleteVar
-		set $ConstTest$ = ""
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-  	
-		if ($INST_SystemType$ = "64 Bit System")
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "Write / Read 64 Bit Registry"
-			set $ConstTest$ = ""
-			set $regWriteValue$ = "64"
-			set $CompValue$ = $regWriteValue$
-			Registry_opsi_org_test /64Bit
-			ExecWith_opsi_org_test "%systemroot%\cmd64.exe" /c
-			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			Registry_opsi_org_test /SysNative
-			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			set $regWriteValue$ = "32"
-			set $CompValue$ = $regWriteValue$
-			Registry_opsi_org_test
-			ExecWith_opsi_org_test "cmd.exe" /c
-			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			Registry_opsi_org_test /32Bit
-			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			Registry_opsi_org_delete_test
-			set $CompValue$ = ""
-			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			Registry_opsi_org_delete_test /64bit
-			set $CompValue$ = ""
-			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			set $ConstTest$ = GetRegistryStringValueSysnative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-		else
-			;if $MsVersion$ <= "5.0"
-			if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
-				comment "not tested at win2k  because tasklist is needed"
-			else
-				set $regWriteValue$ = "32"
-				set $CompValue$ = $regWriteValue$
-				Registry_opsi_org_test /64Bit
-				ExecWith_opsi_org_test "cmd.exe" /c
-				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-			endif
-		endif
-  	
-		if ($INST_SystemType$ = "64 Bit System")
-			set $regWriteValue$ = "64"
-			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
-			set $regWriteValue$ = "32"
-			Registry_hkcu_opsi_org_test /AllNtUserDats
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
-			 Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-			 Registry_hkcu_opsi_org_deletekey /AllNtUserDats
-			endif
-		else
-			set $regWriteValue$ = "32"
-			Registry_hkcu_opsi_org_test /AllNtUserDats
-			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats
-			endif
-		endif
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		comment "FlushKey"
-		comment ">>not tested yet"
-  	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		comment "OpenKey"
-		if ($TestResult$ = "o.k.")
-			comment "not explicit tested | assumed passed"
-		else
-			comment "status is unknown"
-		endif
-  	
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.7") >= "0"
-			if ($INST_SystemType$ = "64 Bit System")
-				set $regWriteValue$ = "64"
-				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
-				DosInAnIcon_export_hkcu_complete_opsi_org_test
-				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
-				set $regWriteValue$ = "32"
-				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
-				DosInAnIcon_export_hkcu_complete_opsi_org_test
-				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
-  	
-				if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
-					Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-					Registry_hkcu_opsi_org_deletekey /AllNtUserDats
-				endif
-			else
-				set $regWriteValue$ = "32"
-				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
-				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
-				DosInAnIcon_export_hkcu_complete_opsi_org_test
-				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
-				if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
-					Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-					Registry_hkcu_opsi_org_deletekey /AllNtUserDats
-				endif
-			endif
-		endif
-  	
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.12.0.27") >= "0"
-			comment "Testing create registry key with /AllUsrClassDats"
-			set $ConstTest$ = ""
-			if ($INST_SystemType$ = "64 Bit System")
-				set $regWriteValue$ = "64"
-				set $CompValue$ = $regWriteValue$
-				Registry_hkcu_userclasses_createkey /AllUsrClassDats
-				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-winst-test", "bitByWinst", "64bit")
-			else
-				set $regWriteValue$ = "32"
-				set $CompValue$ = $regWriteValue$
-				Registry_hkcu_userclasses_createkey /AllUsrClassDats
-				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-winst-test", "bitByWinst", "32bit")
-			endif
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			Registry_hkcu_userclasses_delete_test /AllUsrClassDats
-
-			comment "Testing delete registry key with /AllUsrClassDats"
-			Registry_hkcu_userclasses_create_test /AllUsrClassDats
-			set $ConstTest$ = ""
-			Registry_hkcu_userclasses_deletekey /AllUsrClassDats
-			set $CompValue$ = GetRegistrystringvalue("[HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b] bitByWinst")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			Registry_hkcu_userclasses_delete_test /AllUsrClassDats
-		endif
-
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
-			Registry_createkeys
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GetRegistryKeyList"
-  	
-			set $ConstTest$ = "key3"
-			set $list$ = GetRegistryKeyList32("hklm\software\opsi.org\opsi-winst-test")
-			set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-  	
-			if ($INST_SystemType$ = "64 Bit System")
-				Registry_createkeys /64bit
-  	
-				set $ConstTest$ = "key3"
-				set $list$ = GetRegistryKeyList64("hklm\software\opsi.org\opsi-winst-test")
-				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-  	
-				set $ConstTest$ = "key3"
-				set $list$ = GetRegistryKeyListSysNative("hklm\software\opsi.org\opsi-winst-test")
-				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-			endif
-  	
-  	
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GetRegistryVarList"
-  	
-			set $ConstTest$ = "var3"
-			set $list$ = GetRegistryVarList32("hklm\software\opsi.org\opsi-winst-test")
-			set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-  	
-			if ($INST_SystemType$ = "64 Bit System")
-				set $ConstTest$ = "var3"
-				set $list$ = GetRegistryVarList64("hklm\software\opsi.org\opsi-winst-test")
-				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-  	
-				set $ConstTest$ = "var3"
-				set $list$ = GetRegistryVarListSysNative("hklm\software\opsi.org\opsi-winst-test")
-				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-			endif
-			
-					comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GetRegistryVarMap"
-  	
-			set $ConstTest$ = "value3"
-				set $string1$ = "var3"
-				set $list$ = GetRegistryVarMap32("hklm\software\opsi.org\opsi-winst-test")
-				set $CompValue$ = getValue($string1$,$list$)
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-  	
-			if ($INST_SystemType$ = "64 Bit System")
-				set $ConstTest$ = "value3"
-				set $string1$ = "var3"
-				set $list$ = GetRegistryVarMap64("hklm\software\opsi.org\opsi-winst-test")
-				set $CompValue$ = getValue($string1$,$list$)
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-  	
-				set $ConstTest$ = "value3"
-				set $string1$ = "var3"
-				set $list$ = GetRegistryVarMapSysNative("hklm\software\opsi.org\opsi-winst-test")
-				set $CompValue$ = getValue($string1$,$list$)
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-			endif
-		endif ; 4.11.3
-		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5") >= "0"
-			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
-				message "Set Environment Variables and check for it...."
-				Registry_add_environment /sysnative
-				set $list$ = shellCall('set opsi-winst-test')
-				UpdateEnvironment
-				comment "Wait for Environment update ...."
-				for %index% = "1" to "2" do sub_check_environment
-				if Contains($CompValue$, "deleteme")
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				
-				Registry_del_environment /sysnative
-				UpdateEnvironment
-				for %index% = "1" to "2" do sub_check_environment
-				if not (Contains($CompValue$, "deleteme"))
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				
-				set $tmp$ = '"this is a string in double quotes"'
-				Registry_set_quoted_string
-			endif ; NT6
-		endif ; 4.11.5
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.20")
-			Registry_createkeys_with_brackets
-			set $ConstTest$ = "myentry1"
-			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]","entry1","32bit")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			set $ConstTest$ = "myentry1"
-			set $tmp1$ = "[brackets]"
-			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$,"entry1","32bit")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			
-			Registry_deletekeys_with_brackets
-			
-			Registry_createkeys_with_brackets /64bit
-			set $ConstTest$ = "myentry1"
-			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]","entry1","64bit")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-						set $ConstTest$ = "myentry1"
-			set $tmp1$ = "[brackets]"
-			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$,"entry1","64bit")
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-
-			Registry_deletekeys_with_brackets /64bit
-		endif ; 4.12.0.10
-		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
-			Registry_opsi_org_delete_test
-			Registry_opsi_org_delete_test /64bit
-			Registry_createkeys /32bit
-			message "RegKeyExists...."
-			if RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","32bit")
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			if $architecture$ = "32"
-				comment "default is sysnative - should on 32 bit systems work"
-				if RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test")
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				if RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","sysnative")
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-			else ; 64 bit
-				comment "default is sysnative - should on 64 bit systems notwork"
-				if not(RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test"))
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				if not(RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","sysnative"))
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				if not(RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","64bit"))
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-			endif ; 32/64
-			
-			message "RegVarExists...."
-			if RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","32bit")
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			if $architecture$ = "32"
-				comment "default is sysnative - should on 32 bit systems work"
-				if RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1")
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				if RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","sysnative")
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-			else ; 64 bit
-				comment "default is sysnative - should on 64 bit systems notwork"
-				if not(RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1"))
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				if not(RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","sysnative"))
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				if not(RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","64bit"))
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-			endif ; 32/64
-		endif ; 4.12.0.16
-		
-		Registry_opsi_org_delete_test
-		Registry_opsi_org_delete_test /64bit
-		Files_delete_SaveValueToFile_txt
-	else ; windows
-		set $TestResult$ = "not implemented"
-	endif  ; windows 
-	
-	sub_compareResult
-
-	set $subregistry$ = $SubResult$
-endif
 
 if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 	Message "testing XMLPatch functions"
@@ -8517,6 +7618,8 @@ sub "%scriptpath%\sub-scripts\crypttest.opsiscript"
 
 sub "%scriptpath%\sub-scripts\xml2test.opsiscript"
 
+sub "%scriptpath%\sub-scripts\registry.opsiscript"
+
 if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.0")
 	sub "%scriptpath%\sub-scripts\localfunctions.opsiscript"
 endif
@@ -8545,6 +7648,10 @@ endif
 
 if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
 	sub "%scriptpath%\sub-scripts\wmitest.opsiscript"
+endif
+
+if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
+	sub "%scriptpath%\sub-scripts\var_as_param.opsiscript"
 endif
 
 comment ""
@@ -8582,6 +7689,7 @@ comment "$winst_dos$                  --> " + $winst_dos$
 comment "$winst_string$               --> " + $winst_string$
 comment "$winst_string_list$          --> " + $winst_string_list$
 comment "$subtestsub$                 --> " + $subtestsub$
+comment "$winst_var_as_param$         --> " + $winst_var_as_param$
 comment "$winst_winbatch$             --> " + $winst_winbatch$
 comment "$winst_wmi$                  --> " + $winst_wmi$
 comment "$winst_xml$                  --> " + $winst_xml$
@@ -9533,219 +8641,219 @@ end_link
 
 ;----------------  end  sections for linkfolder test ---------------------------------
 ;----------------   start   sections for registry test ---------------------------------
-
-[sub_retrieve_registry_data]
-if $INST_SystemType$ = "64 Bit System"
-	set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")
-	for $s$ in $INST_ResultList$ do sub_fetch_SearchResult
-else
-	set $INST_SearchResult$ = GetRegistryStringValue("["+$INST_SearchKey$+"] "+$INST_SearchValue$)
-endif
-
+;
+;[sub_retrieve_registry_data]
+;if $INST_SystemType$ = "64 Bit System"
+;	set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")
+;	for $s$ in $INST_ResultList$ do sub_fetch_SearchResult
+;else
+;	set $INST_SearchResult$ = GetRegistryStringValue("["+$INST_SearchKey$+"] "+$INST_SearchValue$)
+;endif
+;
 [execWith_reg_query]
 @echo off
 reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
 
-[sub_fetch_SearchResult]
-set $INST_ResultList2$ = splitStringOnWhiteSpace("$s$")
-if $INST_SearchValue$ = takeString(1,$INST_ResultList2$)
-	if not (takeString(3,$INST_ResultList2$) = "")
-		set $INST_ResultList3$ = getSublist(3:, $INST_ResultList2$)
-		set $INST_SearchResult$ = composeString($INST_ResultList3$," ")
-	else
-		set $INST_SearchResult$ = ""
-	endif
-endif
-
-[Registry_createkeys]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-set "var1" = "value1"
-set "var2" = "value2"
-set "var3" = "value3"
-set "var4" = "value4"
-set "var5" = REG_SZ:"value5"
-set "var6" = REG_EXPAND_SZ:"value6"
-set "var7" = REG_DWORD:777
-set "var8" = REG_BINARY:08 08 08 0F 10
-set "var9" = REG_MULTI_SZ:"value9|value10|de"
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
-set ""="C:\Program files\test\test.exe -a"
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key1]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key2]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key3]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key4]
-
-[Registry_deleteKey]
-deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a]
-
-[Registry_deleteKey_winst_test]
-deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\winst-test]
-
-[Registry_Add]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-Add "test"=REG_EXPAND_SZ:"value"
-
-[Registry_Supp]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-supp "test" ; "value1;value2;value3;"
-
-[Registry_Supp1]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-supp "test" ; "value2"
-
-[Registry_set4supp]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-set "test"=REG_EXPAND_SZ:"C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient"
-
-[Registry_Supp2]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-supp "test" ; "C:\Program Files (x86)\Java\jre8\bin"
-
-[Registry_set4supp3]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-set "test"=REG_EXPAND_SZ:"$systemroot$;$systemroot$\system32"
-
-
-[Registry_Supp3]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-supp "test" ; "$systemroot$\System32\Wbem"
-
-
-[Registry_GetMultiSZFromFile]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-GetMultiSZFromFile "test2" "%ScriptPath%\test-files\reg_multisz_text.txt"
-
-[Registry_SaveValueToFile]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-SaveValueToFile "test" "$HomeTestFiles$\SaveValueToFile.txt"
-
-[Registry_DeleteVar]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-DeleteVar "test"
-DeleteVar "test2"
-
-[Files_delete_SaveValueToFile_txt]
-Delete -f "$HomeTestFiles$\SaveValueToFile.txt"
-
-[Registry_opsi_org_test]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0]
-set ""="standard entry"
-set "bitByWinst"="$regWriteValue$"
-set "str_bywinst"=REG_SZ:"my string"
-set "str_bywinst_with_%"="string with no percent char set without explicit data type will be written as string"
-set "str_bywinst_with_%"="string with % set without explicit data type and will so be changed to expand_string"
-set "str_bywinst_with_%"=REG_SZ:"string with % set with explicit data type string "
-set "strexpand_bywinst"=REG_EXPAND_SZ:"%programfiles%"
-set "dword_test1"= REG_DWORD:10
-set "dword_test2"= REG_DWORD:0xA
-set "dword_test3"= REG_DWORD:0x0A
-set "dword_test4"= REG_DWORD:$0A
-set "binary_bywinst"=REG_BINARY:00 FF
-set "binary_empty_bywinst"=REG_BINARY:
-set "multi_sz_bywinst" = REG_MULTI_SZ:"A|BC|de"
-
-[Registry_set_quoted_string]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\quoted]
-set "quoted"="$tmp$"
-
-[Registry_createkeys_with_brackets]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
-set "entry1"="myentry1"
-
-[Registry_deletekeys_with_brackets]
-deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
-
-[Registry_opsi_org_delete_test]
-deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-
-
-[ExecWith_opsi_org_test]
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0" /v "bitByReg" /t REG_SZ /d "$regWriteValue$" /f
-
-[Registry_hkcu_opsi_org_test]
-openkey [SOFTWARE\opsi.org\opsi-winst-test]
-set "bitByWinst"="$regWriteValue$"
-
-[Registry_hkcu_opsi_org_deletekey]
-openkey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
-deletekey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
-
-[Registry_hkcu_complete_opsi_org_test]
-openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test]
-set "bitByWinst"="$regWriteValue$"
-openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
-set "bitByWinst"="$regWriteValue$"
-openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b\c]
-set "bitByWinst"="$regWriteValue$"
-
-
-[Registry_hkcu_complete_opsi_org_deletekey]
-openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
-deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
-
-[DosInAnIcon_export_hkcu_complete_opsi_org_test]
-@echo off
-regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test
-
-[Registry_hkcu_userclasses_create_test]
-openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b]
-set "bitByWinst"="$regWriteValue$"
-
-[Registry_hkcu_userclasses_delete_test]
-deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
-
-[Registry_hkcu_userclasses_createkey]
-openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
-set "bitByWinst"="$regWriteValue$"
-
-[Registry_hkcu_userclasses_deletekey]
-deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a]
-
-
-[Registry_hack_forbidden_key]
-openkey [HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard]
-set "HideWizard" = REG_DWORD:0x1
-DeleteVar "HideWizard"
-
-[winbatch_hack_forbidden_key1]
-reg add "HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard" /v "HideWizard" /t REG_DWORD /d "1" /f
-
-[winbatch_hack_forbidden_key2]
-reg delete "HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard" /v "HideWizard" /f
-
-[Registry_multiline]
-openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
-set ""="part1\npart2\npart3"
-;set "test" = "$string1$"
-
-[Registry_add_environment]
-openkey [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
-set "opsi-script-test"="deleteme"
-
-[Registry_del_environment]
-openkey [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
-DeleteVar "opsi-script-test"
-
-[sub_check_environment]
-comment "This will not work because the environment is inherited from the running process"
-set $list$ = shellCall('set opsi-script-test')
-set $CompValue$ = takeFirstStringContaining($list$, "deleteme")
-if "" = $CompValue$
-	comment "This will work because this new started process will get a new environment"
-	winbatch_check_environment /RunElevated
-	if ("42" = getlastExitCode)
-		set $CompValue$ = "opsi-script-test=deleteme"
-	else
-		message "Set Environment Variables and wait for update "+calculate("%index% * 10")+" seconds ..."
-		sleepseconds 10
-	endif
-endif
-
-[winbatch_check_environment]
-"%system%\cmd.exe" /c "if %opsi-script-test%==deleteme exit 42"
-
-
-;----------------   end   sections for registry test ---------------------------------
+;[sub_fetch_SearchResult]
+;set $INST_ResultList2$ = splitStringOnWhiteSpace("$s$")
+;if $INST_SearchValue$ = takeString(1,$INST_ResultList2$)
+;	if not (takeString(3,$INST_ResultList2$) = "")
+;		set $INST_ResultList3$ = getSublist(3:, $INST_ResultList2$)
+;		set $INST_SearchResult$ = composeString($INST_ResultList3$," ")
+;	else
+;		set $INST_SearchResult$ = ""
+;	endif
+;endif
+;
+;[Registry_createkeys]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;set "var1" = "value1"
+;set "var2" = "value2"
+;set "var3" = "value3"
+;set "var4" = "value4"
+;set "var5" = REG_SZ:"value5"
+;set "var6" = REG_EXPAND_SZ:"value6"
+;set "var7" = REG_DWORD:777
+;set "var8" = REG_BINARY:08 08 08 0F 10
+;set "var9" = REG_MULTI_SZ:"value9|value10|de"
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+;set ""="C:\Program files\test\test.exe -a"
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key1]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key2]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key3]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key4]
+;
+;[Registry_deleteKey]
+;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a]
+;
+;[Registry_deleteKey_winst_test]
+;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\winst-test]
+;
+;[Registry_Add]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;Add "test"=REG_EXPAND_SZ:"value"
+;
+;[Registry_Supp]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;supp "test" ; "value1;value2;value3;"
+;
+;[Registry_Supp1]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;supp "test" ; "value2"
+;
+;[Registry_set4supp]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;set "test"=REG_EXPAND_SZ:"C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient"
+;
+;[Registry_Supp2]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;supp "test" ; "C:\Program Files (x86)\Java\jre8\bin"
+;
+;[Registry_set4supp3]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;set "test"=REG_EXPAND_SZ:"$systemroot$;$systemroot$\system32"
+;
+;
+;[Registry_Supp3]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;supp "test" ; "$systemroot$\System32\Wbem"
+;
+;
+;[Registry_GetMultiSZFromFile]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;GetMultiSZFromFile "test2" "%ScriptPath%\test-files\reg_multisz_text.txt"
+;
+;[Registry_SaveValueToFile]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;SaveValueToFile "test" "$HomeTestFiles$\SaveValueToFile.txt"
+;
+;[Registry_DeleteVar]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;DeleteVar "test"
+;DeleteVar "test2"
+;
+;[Files_delete_SaveValueToFile_txt]
+;Delete -f "$HomeTestFiles$\SaveValueToFile.txt"
+;
+;[Registry_opsi_org_test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0]
+;set ""="standard entry"
+;set "bitByWinst"="$regWriteValue$"
+;set "str_bywinst"=REG_SZ:"my string"
+;set "str_bywinst_with_%"="string with no percent char set without explicit data type will be written as string"
+;set "str_bywinst_with_%"="string with % set without explicit data type and will so be changed to expand_string"
+;set "str_bywinst_with_%"=REG_SZ:"string with % set with explicit data type string "
+;set "strexpand_bywinst"=REG_EXPAND_SZ:"%programfiles%"
+;set "dword_test1"= REG_DWORD:10
+;set "dword_test2"= REG_DWORD:0xA
+;set "dword_test3"= REG_DWORD:0x0A
+;set "dword_test4"= REG_DWORD:$0A
+;set "binary_bywinst"=REG_BINARY:00 FF
+;set "binary_empty_bywinst"=REG_BINARY:
+;set "multi_sz_bywinst" = REG_MULTI_SZ:"A|BC|de"
+;
+;[Registry_set_quoted_string]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\quoted]
+;set "quoted"="$tmp$"
+;
+;[Registry_createkeys_with_brackets]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+;set "entry1"="myentry1"
+;
+;[Registry_deletekeys_with_brackets]
+;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+;
+;[Registry_opsi_org_delete_test]
+;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;
+;
+;[ExecWith_opsi_org_test]
+;reg add "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0" /v "bitByReg" /t REG_SZ /d "$regWriteValue$" /f
+;
+;[Registry_hkcu_opsi_org_test]
+;openkey [SOFTWARE\opsi.org\opsi-winst-test]
+;set "bitByWinst"="$regWriteValue$"
+;
+;[Registry_hkcu_opsi_org_deletekey]
+;openkey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+;deletekey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+;
+;[Registry_hkcu_complete_opsi_org_test]
+;openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test]
+;set "bitByWinst"="$regWriteValue$"
+;openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+;set "bitByWinst"="$regWriteValue$"
+;openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b\c]
+;set "bitByWinst"="$regWriteValue$"
+;
+;
+;[Registry_hkcu_complete_opsi_org_deletekey]
+;openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+;deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+;
+;[DosInAnIcon_export_hkcu_complete_opsi_org_test]
+;@echo off
+;regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test
+;
+;[Registry_hkcu_userclasses_create_test]
+;openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b]
+;set "bitByWinst"="$regWriteValue$"
+;
+;[Registry_hkcu_userclasses_delete_test]
+;deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+;
+;[Registry_hkcu_userclasses_createkey]
+;openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+;set "bitByWinst"="$regWriteValue$"
+;
+;[Registry_hkcu_userclasses_deletekey]
+;deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a]
+;
+;
+;[Registry_hack_forbidden_key]
+;openkey [HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard]
+;set "HideWizard" = REG_DWORD:0x1
+;DeleteVar "HideWizard"
+;
+;[winbatch_hack_forbidden_key1]
+;reg add "HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard" /v "HideWizard" /t REG_DWORD /d "1" /f
+;
+;[winbatch_hack_forbidden_key2]
+;reg delete "HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard" /v "HideWizard" /f
+;
+;[Registry_multiline]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+;set ""="part1\npart2\npart3"
+;;set "test" = "$string1$"
+;
+;[Registry_add_environment]
+;openkey [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
+;set "opsi-script-test"="deleteme"
+;
+;[Registry_del_environment]
+;openkey [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
+;DeleteVar "opsi-script-test"
+;
+;[sub_check_environment]
+;comment "This will not work because the environment is inherited from the running process"
+;set $list$ = shellCall('set opsi-script-test')
+;set $CompValue$ = takeFirstStringContaining($list$, "deleteme")
+;if "" = $CompValue$
+;	comment "This will work because this new started process will get a new environment"
+;	winbatch_check_environment /RunElevated
+;	if ("42" = getlastExitCode)
+;		set $CompValue$ = "opsi-script-test=deleteme"
+;	else
+;		message "Set Environment Variables and wait for update "+calculate("%index% * 10")+" seconds ..."
+;		sleepseconds 10
+;	endif
+;endif
+;
+;[winbatch_check_environment]
+;"%system%\cmd.exe" /c "if %opsi-script-test%==deleteme exit 42"
+;
+;
+;;----------------   end   sections for registry test ---------------------------------
 
 ;----------------   start   sections for xml test ---------------------------------
 [Files_copy_xml]
@@ -10236,3 +9344,24 @@ del -f "$testfilepath$"
 [Files_copy_test_to_system32]
 copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%System%"
 
+[ExecWith_Powershell_HelloWorld]
+	$strString = "Hello World"
+	write-host $strString
+	
+[ExecWith_Powershell_SearchUninstallInfos]
+	$RegKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+	#Search $RegKey for the given DisplayName and return DisplayName, QuietUninstallString (if present) and UninstallString from the found subentries
+		Get-ChildItem -Path $RegKey| Where-Object -FilterScript { $_.GetValue("DisplayName", "not found") -like "$DisplayName$"} | ForEach-Object -Process {
+		if (-Not($_.GetValue("DisplayName", "not found") -eq "not found") -or ($_.GetValue("DisplayName", "not found") -eq "") -or ($_.GetValue("DisplayName", "not found") -eq $null))
+			{
+			Write-Output (-join ("InstalledVersion=" + $_.GetValue("DisplayName")))
+			if (-Not($_.GetValue("QuietUninstallString", "not found") -eq "not found") -or ($_.GetValue("QuietUninstallString", "not found") -eq "") -or ($_.GetValue("QuietUninstallString", "not found") -eq $null))
+				{
+				Write-Output (-join ("QuietUninstallString=" + $_.GetValue("QuietUninstallString")))
+				}
+			if (-Not($_.GetValue("UninstallString", "not found") -eq "not found") -or ($_.GetValue("UninstallString", "not found") -eq "") -or ($_.GetValue("UninstallString", "not found") -eq $null))
+				{
+				Write-Output (-join ("UninstallString=" + $_.GetValue("UninstallString")))
+				}
+			}
+		}
