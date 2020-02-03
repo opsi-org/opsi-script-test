@@ -1704,7 +1704,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 
 	endif ; 4.11.2.1
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.2") >= "0"
+	
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.2")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -4671,6 +4673,67 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 		endif ; windows
+		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
+		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "setValueByKey (with default keyvalue separator: =)"
+			comment ""
+			set $INST_Resultlist$ = createStringList("a=1","b=2","c=2")
+			set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$)
+			set $ConstTest$ = "myvalue"
+			set $CompValue$ = getValue("mykey", $INST_Resultlist$)
+			comment "compare values"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $INST_Resultlist$ = createStringList("a = 1","b = 2","c = 2")
+			set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$)
+			set $ConstTest$ = "myvalue"
+			set $CompValue$ = getValue("b", $INST_Resultlist$)
+			comment "compare values"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+	
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "setValueByKey (with explicit set keyvalue separator)"
+			comment ""
+			set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+			set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$,":")
+			set $ConstTest$ = "myvalue"
+			set $CompValue$ = getValueBySeparator("mykey", ":", $INST_Resultlist$)
+			comment "compare values"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+	
+			set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+			set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$,":")
+			set $ConstTest$ = "myvalue"
+			set $CompValue$ = getValueBySeparator("b", ":", $INST_Resultlist$)
+			comment "compare values"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+		endif ; 4.12.3.9
 		
 		Files_empty_folder ;remove test files 
 		;End of Testing listFiles
