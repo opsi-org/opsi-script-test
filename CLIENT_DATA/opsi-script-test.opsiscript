@@ -4989,15 +4989,13 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	else ; windows
 		markTime
 		set $list1$ = getOutStreamFromSection("ShellInAnIcon_time")
-		set $tmp$ = takeString(0, $list1$)
-		Set $ConstTest$ =  takeString(3, splitStringOnWhitespace($tmp$))
+		set $ConstTest$ = takeString(0, $list1$)
 		comment "sleepSeconds 2"
 		marktime
 		sleepSeconds 2
 		difftime
 		set $list1$ = getOutStreamFromSection("ShellInAnIcon_time")
-		set $tmp$ = takeString(0, $list1$)
-		set $CompValue$ = takeString(3, splitStringOnWhitespace($tmp$))
+		set $CompValue$ = takeString(0, $list1$)
 		if $ConstTest$ < $CompValue$
 			comment "sleepSeconds assumed passed"
 		else
@@ -7869,7 +7867,7 @@ goto end
 rem time /t
 
 [ShellInAnIcon_time]
-date
+date "+%s"
 
 [DosInAnIcon_retrieve_systemtype]
 @echo off
