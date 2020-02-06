@@ -59,9 +59,55 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
         set $TestResult$ = "not o.k."
         LogWarning "testing getSubListByContainingRegex failed"
     endif
+    
+    comment "case sensitive"
+    set $string1$ = "\.pkg$"
+	set $list1$ = createStringList('hello.pkg','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none')
+	set $ConstTest$ = "hello.pkg"
+	
+	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")	
+    if ($ConstTest$ = $CompValue$)
+        comment "getSubListByContainingRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing getSubListByContainingRegex failed"
+    endif
+    
+    comment "not case sensitive"
+    set $string1$ = "\.[pP][kK][gG]$"
+	set $list1$ = createStringList('hello.pkg','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none')
+	set $ConstTest$ = "hello.pkg | heLLo.pKg | hEl Lo.PKG"
+	
+	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")	
+    if ($ConstTest$ = $CompValue$)
+        comment "getSubListByContainingRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing getSubListByContainingRegex failed"
+    endif
+    
+    comment "not case sensitive"
+    set $string1$ = "(?i)\.pkg$"
+	set $list1$ = createStringList('hello.pkg','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none')
+	set $ConstTest$ = "hello.pkg | heLLo.pKg | hEl Lo.PKG"
+	
+	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")	
+    if ($ConstTest$ = $CompValue$)
+        comment "getSubListByContainingRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing getSubListByContainingRegex failed"
+    endif
        
     comment "Searching with a list of expressions"
     
+    set $list1$ = createStringList('uib gmbh','example@xyz.com and example2@xyz.com', 'client')
     set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
 	set $ConstTest$ = "uib gmbh | example@xyz.com and example2@xyz.com"
 	
@@ -112,6 +158,19 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
         LogWarning "testing getRegexMatchList failed"
     endif
     
+    set $string1$ = "(?i)^.*\.pkg$"
+	set $list1$ = createStringList('hello.pkg','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none','hello.world.pkg','hello.pkg.world')
+	set $ConstTest$ = "hello.pkg | heLLo.pKg | hEl Lo.PKG | hello.world.pkg"
+	
+	set $list2$ = getRegexMatchList($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")	
+    if ($ConstTest$ = $CompValue$)
+        comment "getSubListByContainingRegex passed"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "testing getSubListByContainingRegex failed"
+    endif
     
 	comment ""
 	comment "-------------------------------------"

@@ -1,4 +1,11 @@
 [Changelog]
+opsi-script-test (4.12.3.9-2) stable; urgency=low
+
+  * regex test find file with given extension in list
+  * 
+  
+-- detlef oertel <d.oertel@uib.de>  Thu,  06 Feb 2020 15:00:00 +0200
+
 opsi-script-test (4.12.3.9-1) stable; urgency=low
 
   * var_as_param tests (variable as parameter for section calls)
