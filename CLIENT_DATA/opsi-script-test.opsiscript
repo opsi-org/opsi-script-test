@@ -257,8 +257,8 @@ switch $OS$
 	case "macos"
 		comment "We are running on macOS"
 		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
-		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac\opsiscripttesthelper"
-		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac\helperchild"
+		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac/opsiscripttesthelper"
+		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac/helperchild"
 
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-mac"
 		set $pathDelim$ = "/"

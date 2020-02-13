@@ -298,136 +298,34 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 ; ################   Registry
 
 ;	;DefVar $Architecture$
-	DefVar $DisplayName$
-	
-	DefStringList $Architectures$
-	DefStringList $ExecWith_Result$
-	
-	Set $Architectures$ = CreateStringList("32Bit", "64Bit", "SysNative")
-	Set $DisplayName$ = "*TestVarAsParam*"
-	
-	comment ""
-	comment "-------------------------------------"
-	comment "Testting: "
-	comment "Registry var as param"
-	message "Registry var as param"
-	
-	;Creates Registry Keys for each Architecture in $Architectures$
-	for %Element% in $Architectures$ do Sub_TestVarAsParam_Registry
-	
-	if ($INST_SystemType$ = "64 Bit System")
+	if $OS$ = "Windows_NT"
+		DefVar $DisplayName$
+		
+		DefStringList $Architectures$
+		DefStringList $ExecWith_Result$
+		
+		Set $Architectures$ = CreateStringList("32Bit", "64Bit", "SysNative")
+		Set $DisplayName$ = "*TestVarAsParam*"
+		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
-		message "Write / Read 64 Bit Registry"
-		set $ConstTest$ = ""
-		set $regWriteValue$ = "64"
-		set $CompValue$ = $regWriteValue$
-		executeSection('Registry_opsi_org_test '+$sBit64$)
-		ExecWith_opsi_org_test "%systemroot%\cmd64.exe" /c
-		set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		executeSection('Registry_opsi_org_test '+$sBitSysnative$)
-		set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $regWriteValue$ = "32"
-		set $CompValue$ = $regWriteValue$
-		executeSection('Registry_opsi_org_test')
-		ExecWith_opsi_org_test "cmd.exe" /c
-		set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		executeSection('Registry_opsi_org_test '+$sBit32$)
-		set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		executeSection('Registry_opsi_org_delete_test')
-		set $CompValue$ = ""
-		set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		executeSection('Registry_opsi_org_delete_test '+$sBit64$)
-		set $CompValue$ = ""
-		set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = GetRegistryStringValueSysnative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-	else
-		;if $MsVersion$ <= "5.0"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
-			comment "not tested at win2k  because tasklist is needed"
-		else
-			set $regWriteValue$ = "32"
+		comment "Testting: "
+		comment "Registry var as param"
+		message "Registry var as param"
+		
+		;Creates Registry Keys for each Architecture in $Architectures$
+		for %Element% in $Architectures$ do Sub_TestVarAsParam_Registry
+		
+		if ($INST_SystemType$ = "64 Bit System")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "Write / Read 64 Bit Registry"
+			set $ConstTest$ = ""
+			set $regWriteValue$ = "64"
 			set $CompValue$ = $regWriteValue$
 			executeSection('Registry_opsi_org_test '+$sBit64$)
-			ExecWith_opsi_org_test "cmd.exe" /c
+			ExecWith_opsi_org_test "%systemroot%\cmd64.exe" /c
 			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -442,28 +340,132 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
+			executeSection('Registry_opsi_org_test '+$sBitSysnative$)
+			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $regWriteValue$ = "32"
+			set $CompValue$ = $regWriteValue$
+			executeSection('Registry_opsi_org_test')
+			ExecWith_opsi_org_test "cmd.exe" /c
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			executeSection('Registry_opsi_org_test '+$sBit32$)
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			executeSection('Registry_opsi_org_delete_test')
+			set $CompValue$ = ""
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			executeSection('Registry_opsi_org_delete_test '+$sBit64$)
+			set $CompValue$ = ""
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValueSysnative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		else
+			;if $MsVersion$ <= "5.0"
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+				comment "not tested at win2k  because tasklist is needed"
+			else
+				set $regWriteValue$ = "32"
+				set $CompValue$ = $regWriteValue$
+				executeSection('Registry_opsi_org_test '+$sBit64$)
+				ExecWith_opsi_org_test "cmd.exe" /c
+				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
 		endif
-	endif
-  	
-	if ($INST_SystemType$ = "64 Bit System")
-		set $regWriteValue$ = "64"
-		executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$+' '+ $sBit64$)
-		set $regWriteValue$ = "32"
-		executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$)
-		executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$+' '+ $sBit64$)
-		executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$)
-	else
-		set $regWriteValue$ = "32"
-		executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$)
-		executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$+' '+ $sBit64$)
-		executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$+' '+ $sBit64$)
-		executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$)
-	endif
-
-	executeSection('Registry_TestVarAsParam_Delete')
-	executeSection('Registry_opsi_org_delete_test')
-	executeSection('Registry_opsi_org_delete_test /64bit')
-	Files_delete_SaveValueToFile_txt
+  		
+		if ($INST_SystemType$ = "64 Bit System")
+			set $regWriteValue$ = "64"
+			executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$+' '+ $sBit64$)
+			set $regWriteValue$ = "32"
+			executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$)
+			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$+' '+ $sBit64$)
+			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$)
+		else
+			set $regWriteValue$ = "32"
+			executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$)
+			executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$+' '+ $sBit64$)
+			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$+' '+ $sBit64$)
+			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$)
+		endif
+    	
+		executeSection('Registry_TestVarAsParam_Delete')
+		executeSection('Registry_opsi_org_delete_test')
+		executeSection('Registry_opsi_org_delete_test /64bit')
+		Files_delete_SaveValueToFile_txt
+	endif ; windows
 
 
 ;########################################################################################################
@@ -476,52 +478,54 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	comment "Execwith var as param"
 	message "Execwith var as param"
 	
-	;Creates Registry Keys for each Architecture in $Architectures$
-	for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
-	
-	comment "start an autoit3 instance which will wait for a notepad to come"
-	executeSection('ExecWith_close_helper_window "%SCRIPTPATH%\autoit3.exe" '+$ParamDelimiter$+' '+ $sLetThemGo$+' '+ $sEscapeStrings$)
-	winbatch_helper_showwindow_50
-	sleepseconds 1
-	set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
-	set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
-	set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-	set $ConstTest$ = ""
-	if ($ConstTest$ = $CompValue$)
-		comment "Execwith assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "Execwith assumed failed"
-	endif
-	killtask "helperchild.exe"
-	killtask "opsiscripttesthelper.exe"
-	killtask "autoit3.exe"
-
-	
-
-	if $INST_SystemType$ = "64 Bit System"
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "DosBatch / DosInAnIcon  winst /64bit"
-		Files_copy_test_to_system32 /64bit
-		executeSection('DosInAnIcon_remove_test_from_system32 winst '+$sBit64$)
-		if not(FileExists64("%System%\dummy.txt"))
+	if $OS$ = "Windows_NT"
+		;Creates Registry Keys for each Architecture in $Architectures$
+		for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
+		
+		comment "start an autoit3 instance which will wait for a notepad to come"
+		executeSection('ExecWith_close_helper_window "%SCRIPTPATH%\autoit3.exe" '+$ParamDelimiter$+' '+ $sLetThemGo$+' '+ $sEscapeStrings$)
+		winbatch_helper_showwindow_50
+		sleepseconds 1
+		set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
+		set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
+		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+		set $ConstTest$ = ""
+		if ($ConstTest$ = $CompValue$)
+			comment "Execwith assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Execwith assumed failed"
+		endif
+		killtask "helperchild.exe"
+		killtask "opsiscripttesthelper.exe"
+		killtask "autoit3.exe"
+    	
+		
+    	
+		if $INST_SystemType$ = "64 Bit System"
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "DosBatch / DosInAnIcon  winst /64bit"
+			Files_copy_test_to_system32 /64bit
+			executeSection('DosInAnIcon_remove_test_from_system32 winst '+$sBit64$)
+			if not(FileExists64("%System%\dummy.txt"))
+				comment "passed"
+			else
+				LogWarning "failed"
+				set $TestResult$ = "not o.k."
+			endif
+		endif
+  		
+		Files_copy_test_to_system32 /sysnative
+		executeSection('DosInAnIcon_remove_test_from_system32 winst '+$sBitSysnative$)
+		if not(FileExistssysnative("%System%\dummy.txt"))
 			comment "passed"
 		else
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-	endif
-  	
-	Files_copy_test_to_system32 /sysnative
-	executeSection('DosInAnIcon_remove_test_from_system32 winst '+$sBitSysnative$)
-	if not(FileExistssysnative("%System%\dummy.txt"))
-		comment "passed"
-	else
-		LogWarning "failed"
-		set $TestResult$ = "not o.k."
-	endif
+	endif ; windows
 
 ;########################################################################################################
 ; ################   Files
