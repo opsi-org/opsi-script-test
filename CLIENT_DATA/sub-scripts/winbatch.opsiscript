@@ -12,6 +12,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 
+	Files_testFiles
+
 	; WinBatch Sections
 	
 
@@ -1447,6 +1449,8 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 [winbatch_start_helper_c]
 "$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 
+[Files_testFiles]
+checkTargetPath = "$HomeTestFiles$"
 
 [Files_copy_msi_exe_2_c]
 copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
