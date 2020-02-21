@@ -1465,4 +1465,6 @@ msiexec /x {E19B367E-992C-4BD5-86D1-804C10184D71} /qb! REBOOT=ReallySuppress
 [Winbatch_powercfg_hibernate_off]
 powercfg /hibernate off
 
+[Registry_opsi_org_delete_test]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
 ;----------------   stop   sections for dosbatch/winbatch tests ---------------------------------

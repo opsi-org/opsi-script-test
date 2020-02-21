@@ -8778,18 +8778,18 @@ reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
 ;openkey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
 ;deletekey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
 ;
-;[Registry_hkcu_complete_opsi_org_test]
-;openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test]
-;set "bitByWinst"="$regWriteValue$"
-;openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
-;set "bitByWinst"="$regWriteValue$"
-;openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b\c]
-;set "bitByWinst"="$regWriteValue$"
-;
-;
-;[Registry_hkcu_complete_opsi_org_deletekey]
-;openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
-;deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+[Registry_hkcu_complete_opsi_org_test]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test]
+set "bitByWinst"="$regWriteValue$"
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+set "bitByWinst"="$regWriteValue$"
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b\c]
+set "bitByWinst"="$regWriteValue$"
+
+
+[Registry_hkcu_complete_opsi_org_deletekey]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
 ;
 ;[DosInAnIcon_export_hkcu_complete_opsi_org_test]
 ;@echo off
@@ -9146,8 +9146,8 @@ copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
 ;cd "%System%"
 ;del "dummy.txt"
 ;
-;[DosInAnIcon_kill_notepad]
-;taskkill /F /IM notepad.exe
+[DosInAnIcon_kill_notepad]
+taskkill /F /IM notepad.exe
 ;
 ;[DosInAnIcon_exit42]
 ;set exitcode=42
@@ -9327,6 +9327,13 @@ if errorsOccuredSinceMark > 14
 	LogWarning "failed"
 	set $TestResult$ = "not o.k."
 endif
+
+[Files_work_on_profiles]
+copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
+del -sf "%UserProfileDir%\opsi-script-test"
+copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
+del -sf "%CurrentProfileDir%\opsi-script-test"
+
 ;----------------   stop   ProfileActions tests ---------------------------------
 
 ;----------------   start  internal undocumented functions tests ---------------------------------

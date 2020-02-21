@@ -2,7 +2,7 @@
 opsi-script-test (4.12.3.9-2) stable; urgency=low
 
   * regex test find file with given extension in list
-  * 
+  * fix some errors from move tests to sub-scripts
   
 -- detlef oertel <d.oertel@uib.de>  Thu,  06 Feb 2020 15:00:00 +0200
 
