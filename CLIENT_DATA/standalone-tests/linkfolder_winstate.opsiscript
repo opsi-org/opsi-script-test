@@ -1,0 +1,46 @@
+
+[actions]
+
+DefStringlist $list1$
+
+set $list1$ = createStringList ("echo Hello World", "pause", "exit")
+shellCall('mkdir "%opsiTmpDir%\linkfoldertest"')
+if not(saveTextFile($list1$, "%opsiTmpDir%\linkfoldertest\hello.cmd"))
+	comment "could not save file"
+else
+	Linkfolder_set_window_statelinks
+endif
+
+[Linkfolder_set_window_statelinks]
+set_basefolder desktop
+set_subfolder ""
+
+set_link
+	name: hellonor
+	target: "%opsiTmpDir%\linkfoldertest\hello.cmd"
+	parameters:
+	working_dir: %opsiTmpDir%
+	icon_file:
+	icon_index:
+	window_state: normal
+end_link
+
+set_link
+	name: hellomin
+	target: "%opsiTmpDir%\linkfoldertest\hello.cmd"
+	parameters:
+	working_dir: %opsiTmpDir%
+	icon_file:
+	icon_index:
+	window_state: min
+end_link
+
+set_link
+	name: hellomax
+	target: "%opsiTmpDir%\linkfoldertest\hello.cmd"
+	parameters:
+	working_dir: %opsiTmpDir%
+	icon_file:
+	icon_index:
+	window_state: max
+end_link
