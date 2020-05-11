@@ -7,3 +7,6 @@
 #   PRODUCT_ID: id of the current product
 #   CLIENT_DATA_DIR: directory which contains the installed client data
 #
+
+chmod ugo+x $CLIENT_DATA_DIR/opsi-script-test-helper-lin/64/*
+chmod ugo+x $CLIENT_DATA_DIR/opsi-script-test-helper-mac/*
