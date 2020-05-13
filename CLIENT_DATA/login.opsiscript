@@ -16,6 +16,7 @@ DefVar $regWriteValue$
 DefVar $MsVersion$
 DefVar $tmp$
 DefVar $ScriptLoglevel$
+DefVar $HomeTestFiles$
 
 DefStringList $mylist$
 DefStringList $list1$
@@ -23,6 +24,8 @@ DefStringList $productonclientHashlist$
 
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
+
+Set $HomeTestFiles$ = "%CurrentProfileDir%\AppData\Local\Temp"
 
 Set $INST_SystemType$ = GetSystemType
 set $MsVersion$ = GetMsVersionInfo
@@ -350,9 +353,9 @@ else
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.4") >= "0"
 			Files_copy_helper_2_c
 			winbatch_start_helper_c /RunAsLoggedOnUser
-			includelog $HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log" "100"
+			includelog $HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log" "100"
 			winbatch_start_helper /RunAsLoggedOnUser
-			includelog $HomeTestFiles$+"\testFiles\opsi-winst-test-helper\admin.log" "100"
+			includelog $HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log" "100"
 			Files_clean_from_c
 			
 			Files_profile_copy
@@ -703,16 +706,16 @@ deletekey [HKCU\Software\ACME]
           ]
 
 [Files_copy_helper_2_c]
-copy "%ScriptPath%\opsi-winst-test-helper\*.exe" "$HomeTestFiles$\testFiles\opsi-winst-test-helper"
+copy -s "%ScriptPath%\opsi-script-test-helper-win\*" "$HomeTestFiles$\testFiles\opsi-script-test-helper\"
 
 [Files_clean_from_c]
 del -s -f "$HomeTestFiles$\testFiles"
 
 [winbatch_start_helper_c]
-"$HomeTestFiles$\testFiles\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
+"$HomeTestFiles$\testFiles\opsi-script-test-helper\opsiscripttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper\admin.log"
 
 [winbatch_start_helper]
-"%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-winst-test-helper\admin.log"
+"%ScriptPath%\opsi-script-test-helper-win\opsiscripttesthelper.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper\admin.log"
 
 ;---------------- start sections for patch textfile test ---------------------------
 
