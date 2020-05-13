@@ -1,4 +1,20 @@
 [Changelog]
+opsi-script-test (4.12.3.10-1) stable; urgency=low
+
+  * fix an error in opsi-script-test.opsiscript 
+      Instead of using the default format of date, display the current unix timestamp. 
+      This way we avoid format inconsistencies across platforms and 
+      simplify the test because we don not need to parse the output of date anymore.
+  * fix in login.opsiscript
+      $HomeTestFiles$ was missing
+      paths to opsiscripttesthelper.exe were outdate
+  * fix in winbatch.opsiscript
+      Ensure that $HomeTestFiles$ exists for Winbatch Tests 
+    
+  Many thanks to sternenseemann (github) for these improvments.
+  
+-- jan werner <j.werner@uib.de>  Wed,  13 May 2020 11:50:00 +0200
+
 opsi-script-test (4.12.3.9-2) stable; urgency=low
 
   * regex test find file with given extension in list
