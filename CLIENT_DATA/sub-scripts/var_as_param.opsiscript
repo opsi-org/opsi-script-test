@@ -185,7 +185,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 
 	message "Winbatch_testing /WaitForProcessEnding"
 	marktime 
-	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+ $helper_child_bin_name$+'"')
+	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+ $helper_child_bin_name$+'" /TimeoutSeconds 20')
 	difftime
 	comment "difftime should be 6 seconds"
 	set $ConstTest$ = "6"
