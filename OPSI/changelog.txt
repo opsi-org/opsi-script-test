@@ -1,4 +1,10 @@
 [Changelog]
+opsi-script-test (4.12.3.10-2) stable; urgency=low
+
+  * controlfunctions: runningOnUefi test
+  
+-- detlef oertel <d.oertel@uib.de>  Mon,  22 Jun 2020 15:00:00 +0200
+
 opsi-script-test (4.12.3.10-1) stable; urgency=low
 
   * fix an error in opsi-script-test.opsiscript 

@@ -5294,6 +5294,37 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		forceLogInAppendMode = false 
 		
 	endif ; 4.12.3.6
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "runningOnUefi"
+	switch $OS$
+		case "Windows_nt"
+			set $list$ = shellCall('bcdedit /enum')
+			set $tmp1$ = takeFirstStringContaining($list$,"\windows\system32\winload")
+			if contains($tmp1$,".efi")
+				set $tmp$ = "0"
+			else
+				set $tmp$ = "-1"
+			endif
+		endcase
+		case "Linux"
+			set $tmp$ = shellCall('efibootmgr -v')
+		endcase
+		case "macos"
+			set $tmp$ = "0"
+		endcase
+	endswitch
+	
+	set $CompValue$ = boolToString($tmp$ = "0")
+	set $ConstTest$ = boolToString(runningOnUefi)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		LogWarning "runningOnUefi failed"
+		set $TestResult$ = "not o.k."
+	endif
 
 
 	sub_compareResult
