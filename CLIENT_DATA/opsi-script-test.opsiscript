@@ -7683,51 +7683,105 @@ if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
 	sub "%scriptpath%\sub-scripts\var_as_param.opsiscript"
 endif
 
+DefFunc resultoutput( $name$ : string, $value$ : string) : void
+	DefVar $space$
+	DefVar $spacelength$
+	
+	set $spacelength$ = "35"
+	set $spacelength$ = calculate($spacelength$+" - "+strLength($name$))
+	for %runvar% = "1" to $spacelength$ do set $space$ = $space$ +" "
+	if $value$ = "failed"
+		comment $name$ + $space$+"--> " + $value$
+		LogError $name$ + $space$+"--> " + $value$
+	else
+		comment $name$ + $space$+"--> " + $value$
+	endif
+endfunc
+
 comment ""
 comment ""
 comment ""
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 comment "All sub results:"
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-comment "$winst_calculate$            --> " + $winst_calculate$
-comment "$winst_constants$            --> " + $winst_constants$
-comment "$winst_controls$             --> " + $winst_controls$
-comment "$winst_crypt$                --> " + $winst_crypt$
-comment "$winst_encoding$             --> " + $winst_encoding$
-comment "$execwith_test$              --> " + $execwith_test$
-comment "$winst_file$                 --> " + $winst_file$
-comment "$infostest$                  --> " + $infostest$
-comment "$winst_jsonfunctions$        --> " + $winst_jsonfunctions$
-comment "$winst_ldap_search$          --> " + $winst_ldap_search$
-comment "$winst_licensemanagement$    --> " + $winst_licensemanagement$
-comment "$winst_link_folder$          --> " + $winst_link_folder$
-comment "$winst_local_functions$      --> " + $winst_local_functions$
-comment "$winst_macos$                --> " + $winst_macos$
-comment "$winst_opsiServiceCall$      --> " + $winst_opsiServiceCall$
-comment "$winst_parametrizing$        --> " + $winst_parametrizing$
-comment "$winst_patches$              --> " + $winst_patches$
-comment "$winst_patch_hosts$          --> " + $winst_patch_hosts$
-comment "$winst_patch_text_file$      --> " + $winst_patch_text_file$
-comment "$winst_powershell$           --> " + $winst_powershell$
-comment "$winst_ProfileActions$       --> " + $winst_ProfileActions$
-comment "$winst_regex$                --> " + $winst_regex$
-comment "$winst_networkcalc$          --> " + $winst_networkcalc$
-comment "$winst_urlparser$            --> " + $winst_urlparser$
-comment "$subregistry$                --> " + $subregistry$
-comment "$winst_dos$                  --> " + $winst_dos$
-comment "$winst_string$               --> " + $winst_string$
-comment "$winst_string_list$          --> " + $winst_string_list$
-comment "$subtestsub$                 --> " + $subtestsub$
-comment "$winst_var_as_param$         --> " + $winst_var_as_param$
-comment "$winst_winbatch$             --> " + $winst_winbatch$
-comment "$winst_wmi$                  --> " + $winst_wmi$
-comment "$winst_xml$                  --> " + $winst_xml$
-comment "$winst_xml2$                 --> " + $winst_xml2$
+resultoutput("winst_calculate",$winst_calculate$)
+resultoutput("winst_constants",$winst_constants$)
+resultoutput("winst_controls",$winst_controls$)
+resultoutput("winst_crypt",$winst_crypt$)
+resultoutput("winst_encoding",$winst_encoding$)
+resultoutput("execwith_test",$execwith_test$)
+resultoutput("winst_file",$winst_file$)
+resultoutput("infostest",$infostest$)
+resultoutput("winst_jsonfunctions",$winst_jsonfunctions$)
+resultoutput("winst_ldap_search",$winst_ldap_search$)
+resultoutput("winst_licensemanagement",$winst_licensemanagement$)
+resultoutput("winst_link_folder",$winst_link_folder$)
+resultoutput("winst_local_functions",$winst_local_functions$)
+resultoutput("winst_macos",$winst_macos$)
+resultoutput("winst_opsiServiceCall",$winst_opsiServiceCall$)
+resultoutput("winst_parametrizing",$winst_parametrizing$)
+resultoutput("winst_patches",$winst_patches$)
+resultoutput("winst_patch_hosts",$winst_patch_hosts$)
+resultoutput("winst_patch_text_file",$winst_patch_text_file$)
+resultoutput("winst_powershell",$winst_powershell$)
+resultoutput("winst_ProfileActions",$winst_ProfileActions$)
+resultoutput("winst_regex",$winst_regex$)
+resultoutput("winst_networkcalc",$winst_networkcalc$)
+resultoutput("winst_urlparser",$winst_urlparser$)
+resultoutput("subregistry",$subregistry$)
+resultoutput("winst_dos",$winst_dos$)
+resultoutput("winst_string",$winst_string$)
+resultoutput("winst_string_list",$winst_string_list$)
+resultoutput("subtestsub",$subtestsub$)
+resultoutput("winst_var_as_param",$winst_var_as_param$)
+resultoutput("winst_winbatch",$winst_winbatch$)
+resultoutput("winst_wmi",$winst_wmi$)
+resultoutput("winst_xml",$winst_xml$)
+resultoutput("winst_xml2",$winst_xml2$)
 comment "--------------------------------"
-comment "$compare_to_python$          --> " + $compare_to_python$
-comment "$winst_internalundocumented$ --> " + $winst_internalundocumented$
-comment "$winst_RunAsLoggedOnAdmin$   --> " + $winst_RunAsLoggedOnAdmin$
+resultoutput("compare_to_python",$compare_to_python$)
+resultoutput("winst_internalundocumented",$winst_internalundocumented$)
+resultoutput("winst_RunAsLoggedOnAdmin",$winst_RunAsLoggedOnAdmin$)
 comment "--------------------------------"
+;comment "$winst_calculate$            --> " + $winst_calculate$
+;comment "$winst_constants$            --> " + $winst_constants$
+;comment "$winst_controls$             --> " + $winst_controls$
+;comment "$winst_crypt$                --> " + $winst_crypt$
+;comment "$winst_encoding$             --> " + $winst_encoding$
+;comment "$execwith_test$              --> " + $execwith_test$
+;comment "$winst_file$                 --> " + $winst_file$
+;comment "$infostest$                  --> " + $infostest$
+;comment "$winst_jsonfunctions$        --> " + $winst_jsonfunctions$
+;comment "$winst_ldap_search$          --> " + $winst_ldap_search$
+;comment "$winst_licensemanagement$    --> " + $winst_licensemanagement$
+;comment "$winst_link_folder$          --> " + $winst_link_folder$
+;comment "$winst_local_functions$      --> " + $winst_local_functions$
+;comment "$winst_macos$                --> " + $winst_macos$
+;comment "$winst_opsiServiceCall$      --> " + $winst_opsiServiceCall$
+;comment "$winst_parametrizing$        --> " + $winst_parametrizing$
+;comment "$winst_patches$              --> " + $winst_patches$
+;comment "$winst_patch_hosts$          --> " + $winst_patch_hosts$
+;comment "$winst_patch_text_file$      --> " + $winst_patch_text_file$
+;comment "$winst_powershell$           --> " + $winst_powershell$
+;comment "$winst_ProfileActions$       --> " + $winst_ProfileActions$
+;comment "$winst_regex$                --> " + $winst_regex$
+;comment "$winst_networkcalc$          --> " + $winst_networkcalc$
+;comment "$winst_urlparser$            --> " + $winst_urlparser$
+;comment "$subregistry$                --> " + $subregistry$
+;comment "$winst_dos$                  --> " + $winst_dos$
+;comment "$winst_string$               --> " + $winst_string$
+;comment "$winst_string_list$          --> " + $winst_string_list$
+;comment "$subtestsub$                 --> " + $subtestsub$
+;comment "$winst_var_as_param$         --> " + $winst_var_as_param$
+;comment "$winst_winbatch$             --> " + $winst_winbatch$
+;comment "$winst_wmi$                  --> " + $winst_wmi$
+;comment "$winst_xml$                  --> " + $winst_xml$
+;comment "$winst_xml2$                 --> " + $winst_xml2$
+;comment "--------------------------------"
+;comment "$compare_to_python$          --> " + $compare_to_python$
+;comment "$winst_internalundocumented$ --> " + $winst_internalundocumented$
+;comment "$winst_RunAsLoggedOnAdmin$   --> " + $winst_RunAsLoggedOnAdmin$
+;comment "--------------------------------"
 ;comment "$winst_idapiconfig$          --> " + $winst_idapiconfig$
 
 ; at the end set the return value
