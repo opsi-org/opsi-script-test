@@ -325,7 +325,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			set $regWriteValue$ = "64"
 			set $CompValue$ = $regWriteValue$
 			executeSection('Registry_opsi_org_test '+$sBit64$)
-			ExecWith_opsi_org_test "%systemroot%\cmd64.exe" /c
+			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+				ExecWith_opsi_org_test '%System%\cmd.exe' /C winst /64bit
+			else
+				ExecWith_opsi_org_test '%SystemRoot%\cmd64.exe' /C
+			endif
 			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -551,7 +555,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
 		ExecWith_remove_test_from_system32 'cmd.exe' /C
 		executeSection('Files_copy_test_to_system32 /64Bit')
 		if FileExists64("%System%\dummy.txt")
@@ -560,8 +568,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		ExecWith_remove_test_from_system32 'cmd.exe' /C
-		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		executeSection('Files_copy_test_to_programfiles')
 		if FileExists("%ProgramFilesDir%\opsi.org\test\dummy.txt")
@@ -578,7 +589,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		executeSection('Files_copy_test_to_programfiles2')
 		if FileExists("c:\program files\opsi.org\test\dummy.txt")
@@ -592,7 +607,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
 		ExecWith_remove_test_from_programfiles2 'cmd.exe' /C
 		executeSection('Files_copy_test_to_programfiles2 '+$sBit64$)
 		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
@@ -601,7 +620,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		comment ""
 		comment "-------------------------------------"
@@ -619,7 +642,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
 		ExecWith_remove_test_from_system32 'cmd.exe' /C
 		executeSection('Files_copy_test_to_system32 '+$sBitSysnative$)
 		if FileExistsSysNative("%System%\dummy.txt")
@@ -629,7 +656,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		ExecWith_remove_test_from_system32 'cmd.exe' /C
-		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		Files_copy_test_to_programfiles
 		if FileExists32("%ProgramFilesDir%\opsi.org\test\dummy.txt")
@@ -646,7 +677,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		executeSection('Files_copy_test_to_programfiles2')
 		if FileExists32("c:\program files\opsi.org\test\dummy.txt")
@@ -660,7 +695,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
 		ExecWith_remove_test_from_programfiles2 'cmd.exe' /C
 		executeSection('Files_copy_test_to_programfiles2 '+$sBitSysnative$)
 		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
@@ -669,7 +708,11 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
 	endif
 
 
@@ -829,7 +872,11 @@ Deletekey [HKLM\SOFTWARE\opsi.org\opsi-script-test]
 
 [sub_retrieve_registry_data]
 if $INST_SystemType$ = "64 Bit System"
-	set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%System%\cmd.exe' /C winst /64bit")
+	else
+		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")
+	endif
 	for $s$ in $INST_ResultList$ do sub_fetch_SearchResult
 else
 	set $INST_SearchResult$ = GetRegistryStringValue("["+$INST_SearchKey$+"] "+$INST_SearchValue$)

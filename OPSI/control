@@ -1,5 +1,5 @@
 [Package]
-version: 2
+version: 1
 depends: 
 
 [Product]
@@ -8,7 +8,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.12.3.15
+version: 4.12.4.0
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -427,4 +427,13 @@ editable: False
 description: Apple macOS Tests
 values: ["off", "on"]
 default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: adminuser_password
+multivalue: False
+editable: True
+description: Password for adminuser (opsiservicecall test)
+values: ["linux123"]
+default: ["linux123"]
 

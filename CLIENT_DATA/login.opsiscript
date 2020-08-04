@@ -144,7 +144,11 @@ else
 			set $regWriteValue$ = "64"
 			set $CompValue$ = $regWriteValue$
 			Registry_opsi_org_test /64Bit 
-			ExecWith_opsi_org_test "%systemroot%\cmd64.exe" /c
+			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+				ExecWith_opsi_org_test '%System%\cmd.exe' /C winst /64bit
+			else
+				ExecWith_opsi_org_test '%SystemRoot%\cmd64.exe' /C
+			endif
 			set $ConstTest$ = GetRegistryStringValue64("[HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"

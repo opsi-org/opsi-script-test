@@ -1,7 +1,20 @@
 [Changelog]
+opsi-script-test (4.12.4.0-1) stable; urgency=low
+
+  * shellInAnIcon with /runelevated
+  
+-- detlef oertel <d.oertel@uib.de>  Mon,  03 Aug 2020 15:00:00 +0200
+
+opsi-script-test (4.12.3.15-3) stable; urgency=low
+
+  * encodingtest: call of binary with umlaut: test winbatch
+  
+-- detlef oertel <d.oertel@uib.de>  Thu,  23 Jul 2020 15:00:00 +0200
+
 opsi-script-test (4.12.3.15-2) stable; urgency=low
 
   * controlfunctions: runningOnUefi test
+  * new property adminuser_password (default=linux123)
   
 -- detlef oertel <d.oertel@uib.de>  Mon,  22 Jun 2020 15:00:00 +0200
 

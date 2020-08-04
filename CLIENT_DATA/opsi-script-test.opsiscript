@@ -205,6 +205,7 @@ defvar $imagename$
 defvar $depotid$
 defvar $valuesListStr$
 defvar $dotest$
+defvar $adminuser_password$
 
 
 ; retrieve OS and NT Version
@@ -712,6 +713,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		endcase
 		case "Linux"
 			set $CompValue$ = takeString(0,shellCall("hostname -f"))
+			set $CompValue$= takestring(0,splitstring($CompValue$, "."))
 		endcase
 		case "macos"
 			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
@@ -745,6 +747,9 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		endcase
 		case "Linux"
 			set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
+			if $CompValue$ = "172.16.166.1"
+				set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
+			endif
 		endcase
 		case "macos"
 			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
@@ -752,6 +757,9 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en0"))
 			if not (isValidIP4 ($CompValue$))
 				set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en1"))
+			endif
+			if not (isValidIP4 ($CompValue$))
+				set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en5"))
 			endif
 		endcase
 	endswitch
@@ -1026,23 +1034,25 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.4")
-		if ($OS$ = "Windows_NT") and CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
-			comment " test stringlist"
-			set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
-			set $list$ = replaceOpsiConstants($list$)
-			set $list1$ = getKeyList($list$)
-			for %key% in $list1$ do sub_check_key_value_constants
-			
-			comment " test string"
-			set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
-			set $str$ = replaceOpsiConstants($str$)
-			set $ConstTest$ = takestring(0,splitstring($str$,"="))
-			set $CompValue$ = takestring(1,splitstring($str$,"="))
-			if $ConstTest$ = $CompValue$
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
+		if ($OS$ = "Windows_NT") 
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
+				comment " test stringlist"
+				set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
+				set $list$ = replaceOpsiConstants($list$)
+				set $list1$ = getKeyList($list$)
+				for %key% in $list1$ do sub_check_key_value_constants
+				
+				comment " test string"
+				set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
+				set $str$ = replaceOpsiConstants($str$)
+				set $ConstTest$ = takestring(0,splitstring($str$,"="))
+				set $CompValue$ = takestring(1,splitstring($str$,"="))
+				if $ConstTest$ = $CompValue$
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
 			endif
 		endif
 	endif
@@ -3086,7 +3096,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.1")
-		if not ($OS$ = "macos")
+		if ($OS$ = "windows_nt")
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -7125,6 +7135,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		Set $ExpectedResult$ = "o.k."
 		set $TestResult$ = "o.k."
+		set $adminuser_password$   = GetProductProperty ("adminuser_password", "linux123")
 		
 		;set $depotid$ = "bonifax.uib.local"
 		;set $captureproduct$ = "win10-x64-1607-captured"
@@ -7152,7 +7163,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 					comment "was not authenticated as admin-> retry scripted login by default user/password"
 					markErrorNumber
 					set $INST_error$ = "false"
-					opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+					opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password $adminuser_password$
 					if errorsOccuredSinceMark > 0
 						set $INST_error$ = "true"
 						comment "scripted login by default user/password failed -> retry interactive"
@@ -7426,7 +7437,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 		Set $ExpectedResult$ = "o.k."
 		; start testing
 		set $TestResult$ = "o.k."
-		;opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+		;opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password $adminuser_password$
 		; Chapter 6.3.12 (String- ) Functions for Licence Management
 		comment ""
 		comment "-------------------------------------"
@@ -7691,8 +7702,8 @@ DefFunc resultoutput( $name$ : string, $value$ : string) : void
 	set $spacelength$ = calculate($spacelength$+" - "+strLength($name$))
 	for %runvar% = "1" to $spacelength$ do set $space$ = $space$ +" "
 	if $value$ = "failed"
-		comment $name$ + $space$+"--> " + $value$
-		LogError $name$ + $space$+"--> " + $value$
+		;comment $name$ + $space$+"--> " + $value$
+		LogError "  "+$name$ + $space$+"--> " + $value$
 	else
 		comment $name$ + $space$+"--> " + $value$
 	endif
@@ -9318,7 +9329,7 @@ exit 43
 [opsiservicecall_getDepotId]
 "method":"getDepotId"
 "params":[
-					"%HostID%",
+					"%opsiserviceuser%",
 					]
 
 

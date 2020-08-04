@@ -446,7 +446,11 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			set $regWriteValue$ = "64"
 			set $CompValue$ = $regWriteValue$
 			Registry_opsi_org_test /64Bit
-			ExecWith_opsi_org_test "%systemroot%\cmd64.exe" /c
+			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+				ExecWith_opsi_org_test '%System%\cmd.exe' /C winst /64bit
+			else
+				ExecWith_opsi_org_test '%SystemRoot%\cmd64.exe' /C
+			endif
 			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -970,7 +974,11 @@ endif
 
 [sub_retrieve_registry_data]
 if $INST_SystemType$ = "64 Bit System"
-	set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%System%\cmd.exe' /C winst /64bit")
+	else
+		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")
+	endif
 	for $s$ in $INST_ResultList$ do sub_fetch_SearchResult
 else
 	set $INST_SearchResult$ = GetRegistryStringValue("["+$INST_SearchKey$+"] "+$INST_SearchValue$)

@@ -447,20 +447,31 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 				set $ConstTest$ = "42"
 				set $CompValue$ = processCall($HomeTestFiles$+"\owth_üäöß.exe")
 				if ($ConstTest$ = $CompValue$)
-					comment "processCall exitcode passed"
+					comment "processCall umlaut exitcode passed"
 				else
 					set $TestResult$ = "not o.k."
-					LogWarning "processCall exitcode failed"
+					LogWarning "processCall umlaut exitcode failed"
+				endif
+				
+				message "winbatch umlaut exitcode"
+				set $ConstTest$ = "42"
+				winbatch_umlaut
+				set $CompValue$ = getlastExitcode
+				if ($ConstTest$ = $CompValue$)
+					comment "winbatch umlaut exitcode passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "winbatch umlaut exitcode failed"
 				endif
 				
 				message "shellCall umlaut exitcode"
 				set $ConstTest$ = "42"
 				set $CompValue$ = shellCall($HomeTestFiles$+"\owth_üäöß.exe")
 				if ($ConstTest$ = $CompValue$)
-					comment "shellCall exitcode passed"
+					comment "shellCall umlaut exitcode passed"
 				else
 					set $TestResult$ = "not o.k."
-					LogWarning "shellCall exitcode failed"
+					LogWarning "shellCall umlaut exitcode failed"
 				endif
 			endif ; windows
 			
@@ -762,6 +773,9 @@ copy "%ScriptPath%\test-files\encoding\*.conf" $HomeTestFiles$
 copy "%ScriptPath%\$opsi_script_test_helper_bin$" $HomeTestFiles$
 ;rename "$HomeTestFiles$\opsiscripttesthelper.exe" "$HomeTestFiles$\owth_üäöß.exe"
 rename "opsiscripttesthelper.exe" "owth_üäöß.exe"
+
+[winbatch_umlaut]
+$HomeTestFiles$\owth_üäöß.exe
 
 [Files_empty_testfolder]
 Delete -s -f $HomeTestFiles$

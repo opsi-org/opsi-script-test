@@ -322,6 +322,102 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 		endif ; 4.11.6
 		Files_empty_folder
 	endif ; windows / linux
+	
+	if $OS$ = "Windows_NT"
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "/runelevated"
+			Files_copy_msi_exe_2_c
+		
+			message "ShellInAnIcon testing local msiexec call /RunElevated /TimeoutSeconds 30"
+			ShellInAnIcon_msi_standard_from_c winst /RunElevated /TimeoutSeconds 30
+			set $ConstTest$ = "0"
+			set $CompValue$ = getLastExitCode
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
+				set $ConstTest$ = "0"
+			else
+				set $ConstTest$ = "0"
+			endif
+			if ($ConstTest$ = $CompValue$)
+				comment "ShellInAnIcon testing msiexec call /RunElevated passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "ShellInAnIcon testing msiexec call /RunElevated failed"
+			endif
+		
+			comment "cleanup ..."
+			sleepseconds 5
+			if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
+				comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
+				ShellInAnIcon_msi_uninstall winst /RunElevated
+			endif
+		
+			Files_copy_helper_2_c
+		
+			message "testing ShellInAnIcon_start_helper_c /RunElevated"
+			ShellInAnIcon_start_helper_c winst /RunElevated
+			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
+			;message "testing winbatch_start_helper_asadmin_c /RunElevated"
+			;ShellInAnIcon_start_helper_asadmin_c winst /RunElevated
+			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
+			;message "testing winbatch_start_helper_asinvoker_c /RunElevated"
+			;ShellInAnIcon_start_helper_asinvoker_c winst /RunElevated
+			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
+		
+			marktime
+			message "testing ShellInAnIcon_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
+			ShellInAnIcon_startprocess_with_child_nowait_from_c winst /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
+			difftime
+			comment "difftime should be 5 seconds"
+			set $tmp$ = getDiffTimeSec
+			if $tmp$ INT>= "10"
+				set $TestResult$ = "not o.k."
+				LogWarning "/WaitForProcessEnding /RunElevated assumed failed"
+			else
+				sleepseconds 1
+				;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
+				set $list1$ = getprocesslist
+				set $ConstTest$ = ""
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+				set $CompValue$ = takeString(0, splitString($tmp$,";"))
+				if ($ConstTest$ = $CompValue$)
+					comment "/WaitForProcessEnding /RunElevated assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "/WaitForProcessEnding /RunElevated assumed failed"
+				endif
+			endif
+			killtask "helperchild.exe"
+			killtask "opsiscripttesthelper.exe"
+		
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
+				message "testing ShellInAnIcon_powercfg_hibernate_off "
+				ShellInAnIcon_powercfg_hibernate_off
+				set $ConstTest$ = "1"
+				set $CompValue$ = getLastExitCode
+				if ($ConstTest$ = $CompValue$)
+					comment "Is expected to fail without /runelevated"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "ShellInAnIcon_powercfg_hibernate_off worked unexpected correct "
+				endif
+				
+				message "testing ShellInAnIcon_powercfg_hibernate_off /RunElevated"
+				ShellInAnIcon_powercfg_hibernate_off winst /RunElevated
+				set $ConstTest$ = "0"
+				set $CompValue$ = getLastExitCode
+				if ($ConstTest$ = $CompValue$)
+					comment "ShellInAnIcon_powercfg_hibernate_off /RunElevated passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing /RunElevated failed"
+				endif
+			endif ; nt6
+		Files_clean_from_c
+		endif ; 4.12.4
+	endif ; windows
 
 	Files_empty_folder
 
@@ -560,5 +656,37 @@ echo Hello %1%
 
 [ShellInAnIcon_with_parameter]
 echo Hello $1
+
+[Files_copy_msi_exe_2_c]
+copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+
+[Files_copy_helper_2_c]
+copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"
+
+[Files_clean_from_c]
+del -s -f "$HomeTestFiles$\testFiles"
+
+[ShellInAnIcon_msi_standard_from_c]
+msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+
+[ShellInAnIcon_msi_uninstall]
+msiexec /x {E19B367E-992C-4BD5-86D1-804C10184D71} /qb! REBOOT=ReallySuppress
+
+[ShellInAnIcon_start_helper_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+
+;[ShellInAnIcon_start_helper_asadmin_c]
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;
+;[ShellInAnIcon_start_helper_asinvoker_c]
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+
+[ShellInAnIcon_startprocess_with_child_nowait_from_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=2
+
+[ShellInAnIcon_powercfg_hibernate_off]
+powercfg /hibernate off
+
 
 ;----------------   stop   sections for dosbatch/winbatch tests ---------------------------------
