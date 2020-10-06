@@ -8181,12 +8181,12 @@ dir *.* /A-D /B
 
 ;----------------   end   sections for string list test ---------------------------------
 ;----------------   start   sections for controls test ---------------------------------
-[Files_empty_folder]
-del -f "$HomeTestFiles$\files\symlink.txt"
-Del -s -f $HomeTestFiles$
+;[Files_empty_folder]
+;del -f "$HomeTestFiles$\files\symlink.txt"
+;Del -s -f $HomeTestFiles$
 
-[Files_empty_folder2]
-del -f "$HomeTestFiles$\files\symlink.txt"
+;[Files_empty_folder2]
+;del -f "$HomeTestFiles$\files\symlink.txt"
 
 [WinBatch_prepare_killtask]
 notepad.exe
@@ -8553,19 +8553,19 @@ copy "%ScriptPath%\test-files\PatchTextFile\*.*" "%userprofiledir%\opsi-winst-te
 [Files_profile_del]
 ;del -s -f "%CurrentAppdataDir%\ACME"
 del "%userprofiledir%\opsi-winst-test.ini"
-del -s -f "%userprofiledir%\opsi-winst-test"
+del -s -f -c "%userprofiledir%\opsi-winst-test"
 
 [Files_copy_patchtextfile]
 copy "%ScriptPath%\test-files\PatchTextFile\*.*" $HomeTestFiles$
 
 [Files_empty_folder]
-Delete -s -f $HomeTestFiles$
+Delete -s -f -c $HomeTestFiles$
 
 [Files_copy_patchtextfile_system]
 copy "%ScriptPath%\test-files\PatchTextFile\*.*" "%system%\opsi-script-test"
 
 [Files_empty_folder_system]
-Delete -s -f "%system%\opsi-script-test"
+Delete -s -f -c "%system%\opsi-script-test"
 
 
 [PatchTextFile_Set_Netscape_User_Pref]
@@ -9424,9 +9424,9 @@ endif
 
 [Files_work_on_profiles]
 copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
-del -sf "%UserProfileDir%\opsi-script-test"
+del -sfc "%UserProfileDir%\opsi-script-test"
 copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
-del -sf "%CurrentProfileDir%\opsi-script-test"
+del -sfc "%CurrentProfileDir%\opsi-script-test"
 
 ;----------------   stop   ProfileActions tests ---------------------------------
 

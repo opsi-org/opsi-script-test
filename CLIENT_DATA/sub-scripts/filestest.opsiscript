@@ -201,7 +201,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "delete"
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not(FileExists($HomeTestFiles$))
@@ -263,6 +263,32 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "-d[n] failed"
+			endif
+			
+			; -c
+			message "del -dc"
+			Files_copy_del_c
+			winbatch_call_del_c /LetThemGo
+			comment "This should give an Warning: File in use ...."
+			markErrorNumber
+			Files_del_c
+			if errorsOccuredSinceMark = 0
+				comment "passed"
+			else
+				LogWarning "failed"
+				set $TestResult$ = "not o.k."
+			endif
+			killtask "helperchild.exe"
+			if FileExists("%opsiTmpDir%\del_c_test\")
+				if FileExists("%opsiTmpDir%\del_c_test\helperchild.exe")
+					comment "del -c passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "del -c  failed"
+				endif
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "del -c  failed"
 			endif
 		endif ; windows
 
@@ -384,7 +410,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "copy "
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not(FileExists($HomeTestFiles$))
@@ -424,7 +450,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
     	
 			message "copy -c "
-			Files_empty_folder
+			Files_empty_folder_files
 			Files_copy_c
 			winbatch_copy_c /LetThemGo
 			comment "This should give an Warning: File in use ...."
@@ -442,7 +468,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		if $OS$ = "Windows_NT"
 			; copy -d
 			message "copy -d "
-			Files_empty_folder
+			Files_empty_folder_files
 			Files_copy_d_exenew
 			comment "copy exe on existing exe"
 			Files_copy_d_exenew
@@ -466,7 +492,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
 			; copy -u
 			message "copy -u"
-			Files_empty_folder
+			Files_empty_folder_files
 			if $OS$ = "Windows_NT"
 				DosInAnIcon_prepare_copy_u
 			else
@@ -492,7 +518,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; windows
 
-		Files_empty_folder
+		Files_empty_folder_files
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not delete all files"
@@ -506,7 +532,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		message "copy -x"
   	
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
   	
 		if not(FileExists($HomeTestFiles$))
@@ -518,7 +544,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			Files_empty_folder
+			Files_empty_folder_files
 		else
 			set $TestResult$ = "not o.k."
 			logError "Fatal: could not delete all files"
@@ -532,7 +558,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "copy -e"
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not (FileExists($HomeTestFiles$))
@@ -543,7 +569,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		Files_empty_folder
+		Files_empty_folder_files
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not delete all files"
@@ -556,7 +582,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "copy -w"
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not (FileExists($HomeTestFiles$))
@@ -579,7 +605,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		Files_empty_folder
+		Files_empty_folder_files
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not delete all files"
@@ -591,7 +617,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "copy -n"
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not (FileExists($HomeTestFiles$))
@@ -616,7 +642,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		Files_empty_folder
+		Files_empty_folder_files
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not delete all files"
@@ -636,7 +662,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		message "copy -r"
   	
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
   	
 		if not (FileExists($HomeTestFiles$))
@@ -664,7 +690,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			Files_empty_folder
+			Files_empty_folder_files
 		else
 			set $TestResult$ = "not o.k."
 			logError "Fatal: could not delete all files"
@@ -696,7 +722,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		message "hardlink, symlink, move, rename"
   	
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
   	
 		if not (FileExists($HomeTestFiles$))
@@ -768,7 +794,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 					LogWarning "failed"
 				endif
 			endif
-			Files_empty_folder
+			Files_empty_folder_files
 		else
 			set $TestResult$ = "not o.k."
 			logError "Fatal: could not delete all files"
@@ -860,7 +886,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		comment "DirectoryExists"
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
 
 		if not(FileExists($HomeTestFiles$))
@@ -968,7 +994,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		message "zipfile / unzipfile"
 		
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
 		
 		if not (FileExists($HomeTestFiles$))
@@ -1215,10 +1241,14 @@ echo "Hello World" > dummyToday.txt
 [Files_fill_testfiles]
 copy -s "%ScriptPath%/test-files/testFiles/*.*" "$HomeTestFiles$"
 
-[Files_empty_folder]
-Delete -s -f "$HomeTestFiles$"
-del -sf "%opsiTmpDir%\testdir.zip"
-del -sf "%opsiTmpDir%\testfile.zip"
+[Files_empty_folder_files]
+Delete -s -f -c "$HomeTestFiles$"
+del -sfc "%opsiTmpDir%\testdir.zip"
+del -sfc "%opsiTmpDir%\testfile.zip"
+
+[Files_empty_folder2]
+del -f "$HomeTestFiles$\files\symlink.txt"
+
 
 [Files_delete_hidden]
 Delete "$HomeTestFiles$\.hidden.txt"
@@ -1237,7 +1267,7 @@ Delete -s "$HomeTestFiles$"
 
 
 [Files_del_empty_folder]
-Del -s -f "$HomeTestFiles$"
+Del -s -f -c "$HomeTestFiles$"
 
 [Files_del_hidden]
 Del "$HomeTestFiles$\.hidden.txt"
@@ -1254,6 +1284,16 @@ Del -d2 "$HomeTestFiles$\*.*"
 [Files_del_s]
 Del -s "$HomeTestFiles$"
 Del -s "$HomeTestFiles$"
+
+[Files_copy_del_c]
+del -sf "%opsiTmpDir%\del_c_test\"
+copy -s "%ScriptPath%\$opsi_script_test_helper_path$\*" "%opsiTmpDir%\del_c_test\"
+
+[winbatch_call_del_c]
+"%opsiTmpDir%\del_c_test\helperchild.exe" --wait=2
+
+[Files_del_c]
+del -csf "%opsiTmpDir%\del_c_test\"
 
 [ShellInAnIcon_ls_testfiles]
 ls -l %ScriptPath%/test-files/testFiles/*
@@ -1336,21 +1376,21 @@ sleep 2
 
 [Files_work_on_profiles]
 copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
-del -sf "%UserProfileDir%\opsi-script-test"
+del -sfc "%UserProfileDir%\opsi-script-test"
 copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
-del -sf "%CurrentProfileDir%\opsi-script-test"
+del -sfc "%CurrentProfileDir%\opsi-script-test"
 
 [Files_work_on_profiles_copy_userp]
 copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
 
 [Files_work_on_profiles_del_userp]
-del -sf "%UserProfileDir%\opsi-script-test"
+del -sfc "%UserProfileDir%\opsi-script-test"
 
 [Files_work_on_profiles_copy_currp]
 copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
 
 [Files_work_on_profiles_del_currp]
-del -sf "%CurrentProfileDir%\opsi-script-test"
+del -sfc "%CurrentProfileDir%\opsi-script-test"
 
 [sub_check_dir_exist_inprof]
 if directoryexists("%prof%\opsi-script-test")
