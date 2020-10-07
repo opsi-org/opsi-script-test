@@ -64,7 +64,7 @@ if ($Flag_subwmi$ = "on") or ($MasterFlag$ = "on")
 		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
 		if errorsOccuredSinceMark = 0
 			set $CompValue$ = getValue("freespace", $resultlist$)
-			set $CompValue$ = calculate($CompValue$+ '-100')
+			set $CompValue$ = calculate($CompValue$+ '-4000')
 			if (HasMinimumSpace ("%Systemdrive%", $CompValue$))
 				comment "passed"
 			else

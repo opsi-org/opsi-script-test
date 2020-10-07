@@ -2,6 +2,7 @@
 opsi-script-test (4.12.4.1-1) stable; urgency=low
 
   * test files del -c
+  * wmitest: freespce -4000
   
 -- detlef oertel <d.oertel@uib.de>  Tue,  06 Oct 2020 15:00:00 +0200
 
