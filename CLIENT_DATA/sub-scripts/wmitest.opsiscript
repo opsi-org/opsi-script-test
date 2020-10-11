@@ -71,7 +71,7 @@ if ($Flag_subwmi$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			set $CompValue$ = calculate($CompValue$+ '+200')
+			set $CompValue$ = calculate($CompValue$+ '+4200')
 			if (HasMinimumSpace ("%Systemdrive%", $CompValue$))
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"

@@ -158,6 +158,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 
 	if ($OS$ = "Windows_NT")
 		message "Winbatch_testing /WaitForWindowAppearing"
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
 		marktime
 		Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild" 
 		difftime
@@ -189,7 +191,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "/WaitForWindowAppearing assumed failed"
 		endif
 		marktime
-		sleepSeconds 3
+		sleepSeconds 10
 		difftime
 		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
 		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
@@ -207,6 +209,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif ; windows
 
 	message "Winbatch_testing /WaitForProcessEnding"
+	killtask $helper_child_bin_name$
+	killtask $opsi_script_test_helper_bin_name$
 	marktime 
 	Winbatch_startprocess_with_child_nowait /WaitForProcessEnding	$helper_child_bin_name$ /TimeOutSeconds 20
 	difftime
@@ -244,6 +248,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 
 	message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 20"
+	killtask $helper_child_bin_name$
+	killtask $opsi_script_test_helper_bin_name$
 	marktime
 	Winbatch_startprocess_with_child_nowait /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
 	difftime
@@ -281,6 +287,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 
 	message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 2"
+	killtask $helper_child_bin_name$
+	killtask $opsi_script_test_helper_bin_name$
 	marktime
 	Winbatch_startprocess_with_child_nowait /WaitForProcessEnding  $helper_child_bin_name$ /TimeOutSeconds 2
 	difftime
@@ -318,6 +326,9 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 
 	comment "same test without /WaitForProcessEnding"
+	killtask $helper_child_bin_name$
+	killtask $opsi_script_test_helper_bin_name$
+	
 	marktime
 	Winbatch_startprocess_with_child_nowait
 	difftime
@@ -406,6 +417,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	if $OS$ = "Windows_NT"
 		;/WaitForWindowVanish sees only Windows of 32 Bit applications
 		message "Winbatch_testing /WaitForWindowVanish"
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
 		marktime
 		Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20 /WaitForWindowVanish "helperchild"
 		difftime
@@ -849,6 +862,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		
 		if $OS$ = "Windows_NT"
 			message "processCall /WaitForWindowAppearing"
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
 			marktime
 			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild" 
 			difftime
@@ -870,7 +885,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "/WaitForWindowAppearing assumed failed"
 			endif
 			marktime
-			sleepSeconds 5
+			sleepSeconds 10
 			difftime
 			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
 			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
@@ -889,6 +904,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif ; windows
 		
 		message "processCall /WaitForProcessEnding"
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
 		marktime
 		set $tmp$ = '"%ScriptPath%' + $pathDelim$ + $opsi_script_test_helper_bin$ + '" --fork-and-stop=2'
 		set $tmp$ = processCall($tmp$)  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
@@ -927,6 +944,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		message 'processCall /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 20'
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
 		marktime
 		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
 		difftime
@@ -967,6 +986,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		message 'processCall /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 2'
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
 		marktime
 		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 2
 		difftime
@@ -1004,6 +1025,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		comment "same test without /WaitForProcessEnding"
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
 		marktime
 		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
 		difftime
@@ -1047,6 +1070,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		
 
 		comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
 		marktime
 		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /TimeOutSeconds 20
 		difftime
@@ -1089,6 +1114,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		if $OS$ = "Windows_NT"
 			;/WaitForWindowVanish sees only Windows of 32 Bit applications
 			message "processCall /WaitForWindowVanish"
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
 			marktime
 			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /TimeOutSeconds 20 /WaitForWindowVanish "helperchild"
 			difftime
@@ -1153,7 +1180,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "processCall assumed failed"
 		endif
 		
-		
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
 		comment "should be take longer than 2 seconds"
 		marktime
 		;Winbatch_helper_wait2_showwindow1

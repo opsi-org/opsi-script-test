@@ -265,31 +265,33 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "-d[n] failed"
 			endif
 			
-			; -c
-			message "del -dc"
-			Files_copy_del_c
-			winbatch_call_del_c /LetThemGo
-			comment "This should give an Warning: File in use ...."
-			markErrorNumber
-			Files_del_c
-			if errorsOccuredSinceMark = 0
-				comment "passed"
-			else
-				LogWarning "failed"
-				set $TestResult$ = "not o.k."
-			endif
-			killtask "helperchild.exe"
-			if FileExists("%opsiTmpDir%\del_c_test\")
-				if FileExists("%opsiTmpDir%\del_c_test\helperchild.exe")
-					comment "del -c passed"
+			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.3")
+				; -c
+				message "del -rc"
+				Files_copy_del_c
+				winbatch_call_del_c /LetThemGo
+				comment "This should give an Warning: File in use ...."
+				markErrorNumber
+				Files_del_c
+				if errorsOccuredSinceMark = 0
+					comment "passed"
+				else
+					LogWarning "failed"
+					set $TestResult$ = "not o.k."
+				endif
+				killtask "helperchild.exe"
+				if FileExists("%opsiTmpDir%\del_c_test\")
+					if FileExists("%opsiTmpDir%\del_c_test\helperchild.exe")
+						comment "del -c passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "del -c  failed"
+					endif
 				else
 					set $TestResult$ = "not o.k."
 					LogWarning "del -c  failed"
 				endif
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "del -c  failed"
-			endif
+			endif ; 4.12.4.3
 		endif ; windows
 
 		; -s
@@ -1293,7 +1295,7 @@ copy -s "%ScriptPath%\$opsi_script_test_helper_path$\*" "%opsiTmpDir%\del_c_test
 "%opsiTmpDir%\del_c_test\helperchild.exe" --wait=2
 
 [Files_del_c]
-del -csf "%opsiTmpDir%\del_c_test\"
+del -crsf "%opsiTmpDir%\del_c_test\"
 
 [ShellInAnIcon_ls_testfiles]
 ls -l %ScriptPath%/test-files/testFiles/*

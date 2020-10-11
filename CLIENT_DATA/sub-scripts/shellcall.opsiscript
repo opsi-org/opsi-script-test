@@ -418,6 +418,144 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 		Files_clean_from_c
 		endif ; 4.12.4
 	endif ; windows
+	
+	message "Testing DosInAnIcon /showoutput speed ; log 7"
+	marktime
+	if $OS$ = "Windows_NT"
+		DosInanIcon_type_a_lot winst /showoutput
+	else
+		ShellInanIcon_cat_a_lot winst /showoutput
+	endif
+	difftime
+	comment "difftime should be about 60 seconds"
+	set $ConstTest$ = "60"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if $ConstTest$ int>= $CompValue$
+		comment "/showoutput  passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/showoutput failed"
+	endif
+	
+	message "Testing DosInAnIcon /noshowoutput speed ; log 7"
+	marktime
+	if $OS$ = "Windows_NT"
+		DosInanIcon_type_a_lot
+	else
+		ShellInanIcon_cat_a_lot
+	endif
+	difftime
+	comment "difftime should be about 1 seconds"
+	set $ConstTest$ = "1"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if $ConstTest$ int>= $CompValue$
+		comment "/noshowoutput  passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/noshowoutput failed"
+	endif
+	
+	message "Testing shellcall /noshowoutput speed ; log 7"
+	marktime
+	if $OS$ = "Windows_NT"
+		shellCall('type "%scriptpath%\opsi-script-test.opsiscript"')
+	else
+		shellCall('cat "%scriptpath%/opsi-script-test.opsiscript"')
+	endif
+	difftime
+	comment "difftime should be about 1 seconds"
+	set $ConstTest$ = "1"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if $ConstTest$ int>= $CompValue$
+		comment "/noshowoutput  passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/noshowoutput failed"
+	endif
+	
+	set $tmp$ = getloglevel
+	setloglevel = 6
+	
+	message "Testing DosInAnIcon /showoutput speed ; log 5"
+	marktime
+	if $OS$ = "Windows_NT"
+		DosInanIcon_type_a_lot winst /showoutput
+	else
+		ShellInanIcon_cat_a_lot winst /showoutput
+	endif
+	difftime
+	comment "difftime should be about 60 seconds"
+	set $ConstTest$ = "60"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if $ConstTest$ int>= $CompValue$
+		comment "/showoutput  passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/showoutput failed"
+	endif
+	
+	message "Testing DosInAnIcon /noshowoutput speed ; log 5"
+	marktime
+	if $OS$ = "Windows_NT"
+		DosInanIcon_type_a_lot
+	else
+		ShellInanIcon_cat_a_lot
+	endif
+	difftime
+	comment "difftime should be about 1 seconds"
+	set $ConstTest$ = "1"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if $ConstTest$ int>= $CompValue$
+		comment "/noshowoutput  passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/noshowoutput failed"
+	endif
+	
+	message "Testing shellcall /noshowoutput speed ; log 5"
+	marktime
+	if $OS$ = "Windows_NT"
+		shellCall('type "%scriptpath%\opsi-script-test.opsiscript"')
+	else
+		shellCall('cat "%scriptpath%/opsi-script-test.opsiscript"')
+	endif
+	difftime
+	comment "difftime should be about 1 seconds"
+	set $ConstTest$ = "1"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if $ConstTest$ int>= $CompValue$
+		comment "/noshowoutput  passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/noshowoutput failed"
+	endif
+	
+	setloglevel = $tmp$
+	
+	message "Testing processCall speed"
+	marktime
+	if $OS$ = "Windows_NT"
+		set $exitcode$ = processCall('cmd.exe /C type "%scriptpath%\opsi-script-test.opsiscript"')
+	else
+		set $exitcode$ = processCall('bash -c "cat %scriptpath%/opsi-script-test.opsiscript"')
+	endif
+	difftime
+	comment "difftime should be about 1 seconds"
+	set $ConstTest$ = "1"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if $ConstTest$ int>= $CompValue$
+		comment "/noshowoutput  passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/noshowoutput failed"
+	endif
 
 	Files_empty_folder
 
@@ -688,5 +826,10 @@ msiexec /x {E19B367E-992C-4BD5-86D1-804C10184D71} /qb! REBOOT=ReallySuppress
 [ShellInAnIcon_powercfg_hibernate_off]
 powercfg /hibernate off
 
+[DosInanIcon_type_a_lot]
+type "%scriptpath%\opsi-script-test.opsiscript"
+
+[ShellInanIcon_cat_a_lot]
+cat "%scriptpath%/opsi-script-test.opsiscript"
 
 ;----------------   stop   sections for dosbatch/winbatch tests ---------------------------------

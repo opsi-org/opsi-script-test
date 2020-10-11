@@ -187,8 +187,8 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	marktime 
 	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+ $helper_child_bin_name$+'" /TimeoutSeconds 20')
 	difftime
-	comment "difftime should be 6 seconds"
-	set $ConstTest$ = "6"
+	comment "difftime should be 5 seconds"
+	set $ConstTest$ = "5"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
 	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
@@ -224,8 +224,8 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	marktime
 	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+$helper_child_bin_name$+'" '+ $sTimeoutseconds$+' 20')
 	difftime
-	comment "difftime should be 6 seconds"
-	set $ConstTest$ = "6"
+	comment "difftime should be 5 seconds"
+	set $ConstTest$ = "5"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
 	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
