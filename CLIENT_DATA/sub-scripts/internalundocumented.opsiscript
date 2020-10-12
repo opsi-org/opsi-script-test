@@ -1,0 +1,363 @@
+encoding=utf8
+
+;if ($Flag_internalundocumented$ = "on") or ($MasterFlag$ = "on")
+if $Flag_internalundocumented$ = "on"
+	Message "testing internal undocumented functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing internal undocumented functions"
+	comment "DO NOT USE THIS FUNCTIONS IN YOUR SCRIPTS"
+	comment "THEY MAY CHANGE OR VANISH WITHOUT ANY NOTICE"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	set $TestResult$ = "o.k."
+
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		Message "ShrinkFileToMB"
+		comment "create a 2 MB file"
+		set $testfile$ = "testfile.bin"
+		set $testfilepath$ = "c:\opsi.org\tmp\"+$testfile$
+		set $testfilesize$ = "2"
+		winbatch_create_file
+		DosInAnIcon_dir
+		ShrinkFileToMB $testfilepath$ "1"
+		set $INST_ResultList$ = getOutStreamFromSection("DosInAnIcon_dir")
+		files_remove_file
+		set $INST_ResultList$ = splitstringOnWhitespace(takeFirstStringContaining($INST_ResultList$, $testfile$))
+		Set $ConstTest$ = takeString(2,$INST_ResultList$)
+		set $CompValue$ = "2.000.000"
+		if ($ConstTest$ < $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+
+		set $testfilesize$ = "10"
+		winbatch_create_file
+		DosInAnIcon_dir
+		ShrinkFileToMB $testfilepath$ "5"
+		set $INST_ResultList$ = getOutStreamFromSection("DosInAnIcon_dir")
+		files_remove_file
+		set $INST_ResultList$ = splitstringOnWhitespace(takeFirstStringContaining($INST_ResultList$, $testfile$))
+		Set $ConstTest$ = takeString(2,$INST_ResultList$)
+		set $CompValue$ = "6.000.000"
+		if ($ConstTest$ < $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+
+	endif ; 4.11.2
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "BlockInput"
+
+		BlockInput "true"
+		execwith_autoit_close_helper  "%SCRIPTPATH%\autoit3.exe" WINST /letThemGo
+		marktime
+		message "testing Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
+		Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
+		difftime
+		comment "difftime should be 5 seconds because autoit could not work with blocked input"
+		set $tmp$ = getDiffTimeSec
+		if $tmp$ INT< "5"
+			set $TestResult$ = "not o.k."
+			LogWarning "BlockInput /true assumed failed"
+		else
+			sleepseconds 1
+			set $list1$ = getprocesslist
+			set $ConstTest$ = ""
+			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+			set $CompValue$ = takeString(0, splitString($tmp$,";"))
+			if ($ConstTest$ = $CompValue$)
+				comment "BlockInput /true assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "BlockInput true assumed failed"
+			endif
+		endif
+		killtask "autoit3.exe"
+		killtask "helperchild.exe"
+		killtask "opsiscripttesthelper.exe"
+
+		BlockInput "false"
+		execwith_autoit_close_helper  "%SCRIPTPATH%\autoit3.exe" WINST /letThemGo
+		marktime
+		message "testing BlockInput /false with Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
+		Winbatch_startprocess_with_child_nowait /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
+		difftime
+		comment "difftime should be 4 seconds because child is closed by autoit"
+		set $tmp$ = getDiffTimeSec
+		if $tmp$ INT>= "5"
+			set $TestResult$ = "not o.k."
+			LogWarning "BlockInput /false assumed failed"
+		else
+			sleepseconds 1
+			set $list1$ = getprocesslist
+			set $ConstTest$ = ""
+			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+			set $CompValue$ = takeString(0, splitString($tmp$,";"))
+			if ($ConstTest$ = $CompValue$)
+				comment "BlockInput /false assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "BlockInput /false assumed failed"
+			endif
+		endif
+		killtask "autoit3.exe"
+		killtask "helperchild.exe"
+		killtask "opsiscripttesthelper.exe"
+
+	endif ; 4.11.3
+
+
+	sub_compareResult
+	set $winst_internalundocumented$ = $SubResult$
+endif
+
+
+;----------------   start   sections for dosbatch/winbatch tests ---------------------------------
+[Files_empty_folder]
+Delete -s -f $HomeTestFiles$
+
+[WinBatch_testing]
+$ping5command$
+
+[Winbatch_top]
+/bin/bash -c "ping 127.0.0.1 &"
+
+[DosInAnIcon_getTask_ping]
+@echo off
+tasklist /FI "IMAGENAME eq ping.exe"
+
+[DosInAnIcon_getTask_helper]
+@echo off
+tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"
+
+[DosInAnIcon_getTask_helperchild]
+@echo off
+tasklist /FI "IMAGENAME eq helperchild.exe"
+
+[DosInAnIcon_getTask_string2]
+@echo off
+tasklist /FI "IMAGENAME eq $string2$"
+
+[Winbatch_startprocess_with_child_nowait]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
+
+[Winbatch_startprocess_with_child_nowait_from_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=2
+
+
+[WinBatch_testing2]
+%ScriptPath%\dos\dummy2.bat
+
+[Winbatch_exitcode_42_noquote]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$"
+
+[Winbatch_exitcode_42_singlequote]
+'%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$'
+
+[Winbatch_exitcode_42_doublequote]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$"
+
+[Winbatch_exitcode_43_noquote_with_param]
+%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$ --exit-code=43
+
+
+[Winbatch_exitcode_43_singlequote_with_param]
+'%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$' --exit-code=43
+
+[Winbatch_exitcode_43_doublequote_with_param]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --exit-code=43
+
+[Winbatch_helper_wait2_showwindow1]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --wait=2 --showwindow=1
+
+[Winbatch_helper_wait2_showwindow5]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --wait=2 --showwindow=5
+
+[Winbatch_helper_showwindow1]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=3
+
+[Winbatch_msi_shellexecute]
+"%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+
+[Winbatch_msi_standard]
+msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+
+[Winbatch_msi_standard_from_c]
+msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+
+[winbatch_myinno]
+"%ScriptPath%\test-files\testFiles\myinnosetup.exe" /silent
+
+[winbatch_myinno_from_c]
+"$HomeTestFiles$\testFiles\myinnosetup.exe" /silent
+
+[winbatch_myinno_uninstall]
+"%ProgramFiles32Dir%\myinnosetup\unins000.exe" /silent
+
+[winbatch_wow_myinno]
+"%winstdir%\winst32.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+
+[Winbatch_regedit_s_64]
+"%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+
+[Winbatch_regedit_s_32]
+"%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+
+[winbatch_wow_myinno_from_c]
+"%winstdir%\winst32.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+
+[Winbatch_msi_standard_from_c_indirect]
+;"%WinstDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
+;"%WinstDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
+
+[winbatch_start_helper_asadmin_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+
+[winbatch_start_helper_asinvoker_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+
+[winbatch_start_helper_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+
+;[DosInAnIcon_start_helper_c]
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;
+;[DosInAnIcon_start_helper_asadmin_c]
+;"$HomeTestFiles$\testFiles\opsi-script-test-helper-win\opsiwinsttesthelperasadmin.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;
+;[DosInAnIcon_start_helper_asinvoker_c]
+;"$HomeTestFiles$\testFiles\opsi-script-test-helper-win\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;
+[Files_copy_msi_exe_2_c]
+copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+
+[Files_copy_helper_2_c]
+copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"
+
+[Files_clean_from_c]
+del -s -f "$HomeTestFiles$\testFiles"
+
+
+[Winbatch_msi_uninstall]
+msiexec /x {E19B367E-992C-4BD5-86D1-804C10184D71} /qb! REBOOT=ReallySuppress
+
+[Winbatch_powercfg_hibernate_off]
+powercfg /hibernate off
+
+;[DosInAnIcon_powercfg_hibernate_off]
+;powercfg /hibernate off
+;echo %ERRORLEVEL%
+;exit %ERRORLEVEL%
+;
+;[DosBatch_1]
+;c:
+;mkdir $HomeTestFiles$
+;cd $HomeTestFiles$
+;echo dummy > dosbatch_1.txt
+;
+;[DosInAnIcon_1]
+;c:
+;mkdir $HomeTestFiles$
+;cd $HomeTestFiles$
+;echo dummy > dosinanicon_1.txt
+;
+;[DosBatch_1b]
+;c:
+;mkdir $HomeTestFiles$
+;cd $HomeTestFiles$
+;echo dummy > dosinanicon_1.txt
+;
+;[Execwith_1b]
+;c:
+;mkdir $HomeTestFiles$
+;cd $HomeTestFiles$
+;echo dummy > dosinanicon_1.txt
+;
+;[DosInAnIcon_remove_test_from_system32]
+;%SystemDrive%
+;cd "%System%"
+;del "dummy.txt"
+;
+;[DosInAnIcon_kill_notepad]
+;taskkill /F /IM notepad.exe
+;
+;[DosInAnIcon_exit42]
+;set exitcode=42
+;exit %exitcode%
+;
+;[DosInAnIcon_exit1]
+;rem create an errolevel= 1
+;VERIFY OTHER 2> NUL
+;echo %ERRORLEVEL%
+;exit %ERRORLEVEL%
+;
+;[ShellInAnIcon_exitcode42]
+;set exitcode=0
+;VERIFY OTHER 2> NUL
+;if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
+;echo %exitcode%
+;"%ScriptPath%\$opsi_script_test_helper_bin$"
+;if %ERRORLEVEL% NEQ 0 set exitcode=%ERRORLEVEL%
+;exit %exitcode%
+;
+;
+;[DosBatchUseradd]
+;net user "$opsiadminuser$" "$opsiadminpwd$" /add
+;net localgroup Administratoren /add "$opsiadminuser$"
+;
+;[DosBatchUserdel]
+;net user "$opsiadminuser$" /delete
+;rmdir /s /q "%ProfileDir%\$opsiadminuser$"
+;
+;[ExecWithSetup]
+;; http://msdn.microsoft.com/library/ee942965%28v=VS.100%29.aspx
+;; return exit code via stdout as winst cannot read exit codes from ExecWith
+;$ExitCode = RunAsWait("$opsiadminuser$", @ComputerName, "$opsiadminpwd$", 1,  '"$HomeTestFiles$\testFiles\myinnosetup.exe" /silent')
+;if not @error then
+;	ConsoleWrite($exitcode)
+;endif
+;
+;;;;;;;;;;;;;;;;;;;;;
+;
+;[ShellInAnIcon_exit43]
+;set -x
+;exit 43
+;
+;
+;[ShellBatch_ping]
+;set -x
+;ping -c 4 localhost
+;
+;[ShellBatch_1]
+;set -x
+;mkdir -p $HomeTestFiles$
+;cd $HomeTestFiles$
+;echo dummy > shellbatch_1.txt
+;
+;[ShellInAnIcon_1]
+;set -x
+;mkdir -p $HomeTestFiles$
+;cd $HomeTestFiles$
+;echo dummy > shellinanicon_1.txt
+;
+;[DosInAnIcon_with_parameter]
+;echo Hello %1%
+;
+;[ShellInAnIcon_with_parameter]
+;echo Hello $1
+
+;----------------   stop   sections for dosbatch/winbatch tests ---------------------------------

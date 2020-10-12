@@ -1,0 +1,38 @@
+[actions]
+
+
+
+deffunc isRebootPending() : string
+	;@Description Checks if a Windows needs a reboot
+	;@Returns Returns string "true" if reboot is required
+	;@OnError Returns string "false"
+	;@SpecialCase 
+	;@References
+	;@Links https://ilovepowershell.com/2015/09/10/how-to-check-if-a-server-needs-a-reboot/
+	;@Links https://www.windowspro.de/script/ausstehende-reboots-nach-updates-pruefen-powershell-regexe
+	;@author detlef oertel
+	;@date 09.07.2019
+	;@Example [actions]
+	;@Example if stringToBool(isRebootPending())
+	;@Example 	comment "we need a reboot"
+	;@Example else
+	;@Example 	comment "we do not need a reboot"
+	;@Example endif
+
+	set $result$ = "false"
+	if RegKeyExists("HKLM\Software\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending")
+		set $result$ = "true"
+	endif
+	if RegKeyExists("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
+		set $result$ = "true"
+	endif
+	if RegVarExists("HKLM\SYSTEM\CurrentControlSet\Control\Session Manager","PendingFileRenameOperations")
+		set $result$ = "true"
+	endif
+endfunc
+
+if stringToBool(isRebootPending())
+	comment "we need a reboot"
+else
+	comment "we do not need a reboot"
+endif

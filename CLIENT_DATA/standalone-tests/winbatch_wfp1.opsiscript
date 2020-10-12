@@ -1,0 +1,89 @@
+
+[actions]
+
+DefVar $string1$
+DefVar $opsi_script_test_helper_child_bin$
+DefVar $ConstTest$
+DefVar $difftime$
+DefVar $CompValue$
+DefVar $TestResult$
+DefVar $OS$
+DefVar $GUI$
+DefVar $opsi_script_test_helper_bin$
+DefVar $opsi_script_test_helper_path$
+DefVar $pathDelim$
+DefVar $ping5command$
+DefVar $param1$
+DefVar $param2$
+DefVar $param3$
+
+set $GUI$ = "true"
+Set $OS$ = GetOS
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-win\opsiscripttesthelper.exe"
+		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-win\helperchild.exe"
+		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-win"
+		set $pathDelim$ = "\"
+		set $ping5command$ = "ping 127.0.0.1 -n 5"
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		if $GUI$ = "true"
+			Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-lin/64/opsiscripttesthelper"
+			Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-lin/64/helperchild"
+		else
+			Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-lin/64/opsiscripttesthelper_nogui"
+			Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-lin/64/helperchild_nogui"
+		endif
+		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-lin"
+		set $pathDelim$ = "/"
+		set $ping5command$ = "ping -c 5 127.0.0.1"
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac\opsiscripttesthelper"
+		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac\helperchild"
+		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-mac"
+		set $pathDelim$ = "/"
+		set $ping5command$ = "ping -c 5 127.0.0.1"
+	endcase
+endswitch
+
+setloglevel = 8
+set $param1$ = "/WaitForProcessEnding"
+set $string1$ =  ExtractFileName ($opsi_script_test_helper_child_bin$)
+set $param2$ = "/TimeOutSeconds"
+set $param3$ = "20"
+
+
+message "Winbatch_testing /WaitForProcessEnding"
+marktime  
+;Winbatch_startprocess_with_child_nowait /WaitForProcessEnding $string1$
+;Winbatch_startprocess_with_child_nowait  /TimeOutSeconds 5
+Winbatch_startprocess_with_child_nowait $param1$ $string1$ $param2$ $param3$
+;Winbatch_startprocess_with_child_nowait $param1$+" "+$string1$+" "+$param2$+" "+$param3$
+difftime
+
+
+comment "difftime should be 5 seconds"
+set $ConstTest$ = "6"
+set $difftime$ = getDiffTimeSec
+set $CompValue$ = $difftime$
+if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+	comment "/WaitForProcessEnding assumed passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "/WaitForProcessEnding assumed failed"
+endif
+;shellInAnIcon_start_wfp
+
+
+[Winbatch_startprocess_with_child_nowait]
+"%ScriptPath%$pathDelim$..$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
+
+
+[shellInAnIcon_start_wfp]
+"%ScriptPath%$pathDelim$..$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=15

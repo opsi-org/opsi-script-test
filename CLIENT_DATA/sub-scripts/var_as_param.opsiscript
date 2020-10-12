@@ -1,0 +1,1193 @@
+encoding=utf8
+
+if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
+	Message "testing Variabe as Section Parameters  functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing var_as_param functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	DefVar $seconds$
+	DefVar $sLetThemGo$
+	DefVar $sWaitOnClose$
+	DefVar $sWaitForProcessEnding$
+	DefVar $sTimeoutseconds$
+	DefVar $Bit32$
+	DefVar $sBit32$
+	DefVar $Bit64$
+	DefVar $sBit64$
+	DefVar $BitSysnative$
+	DefVar $sBitSysnative$
+	DefVar $sAllNtUserDats$
+	DefVar $sEscapeStrings$
+	DefVar $ParamDelimiter$
+	DefVar $sArchitecture$
+	
+	
+	set $seconds$ = "0"
+	set $sLetThemGo$ = "/LetThemGo"
+	set $sWaitOnClose$ = "/WaitOnClose"
+	set $sWaitForProcessEnding$ = "/WaitForProcessEnding"
+	set $sTimeoutseconds$ = "/timeoutseconds"
+	set $Bit64$ = "64bit"
+	set $sBit64$ = "/"+$Bit64$
+	set $Bit32$ = "32bit"
+	set $sBit32$ = "/"+$Bit32$
+	set $BitSysnative$ = "64bit"
+	set $sBitSysnative$ = "/"+$BitSysnative$
+	set $sAllNtUserDats$ = "/AllNtUserDats"
+	set $sEscapeStrings$ = "/EscapeStrings"
+	set $ParamDelimiter$ = "WINST"
+	
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testting: "
+	comment "WinBatch"
+	message "Winbatch_testing /LetThemGo"
+	executeSection('Winbatch_testing '+$SLetThemGo$)
+	sleepSeconds 1
+	if $OS$ = "Windows_NT"
+		;;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
+		set $ConstTest$ = "ping.exe"
+		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+		set $list$ = splitStringOnWhitespace($tmp$)
+		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		if isNumber($tmp$)
+			set $CompValue$ = takeString($tmp$, $list$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		else
+			set $CompValue$ = ""
+		endif
+		killtask "ping.exe"
+	else
+		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
+		set $ConstTest$ = "ping"
+		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $list$ = splitStringOnWhitespace($tmp$)
+		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		if isNumber($tmp$)
+			set $CompValue$ = takeString($tmp$, $list$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		else
+			set $CompValue$ = ""
+		endif
+		killtask "ping"
+	endif
+	if ($ConstTest$ = $CompValue$)
+		comment "/LetThemGo passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/LetThemGo failed"
+	endif
+	
+  	
+	message "Winbatch_testing /WaitOnClose"
+	executeSection('Winbatch_testing '+$sWaitOnClose$)
+	sleepseconds 1
+	if $OS$ = "Windows_NT"
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
+		set $ConstTest$ = ""
+		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+		killtask "ping.exe"
+	else
+		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
+		set $ConstTest$ = "ping"
+		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $list$ = splitStringOnWhitespace($tmp$)
+		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		if isNumber($tmp$)
+			set $CompValue$ = takeString($tmp$, $list$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		else
+			set $CompValue$ = ""
+		endif
+		killtask "ping"
+	endif
+	if ($ConstTest$ = $CompValue$)
+		comment "/WaitOnClose passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/WaitOnClose failed"
+	endif
+
+
+	message "Winbatch_testing /WaitOnClose /timeoutseconds 20"
+	set $seconds$ = "20"
+	executeSection('Winbatch_testing '+$sWaitOnClose$+' '+ $sTimeoutseconds$+' '+ $seconds$)
+	sleepseconds 1
+	if $OS$ = "Windows_NT"
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
+		set $ConstTest$ = ""
+		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+		killtask "ping.exe"
+	else
+		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
+		set $ConstTest$ = "ping"
+		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $list$ = splitStringOnWhitespace($tmp$)
+		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		if isNumber($tmp$)
+			set $CompValue$ = takeString($tmp$, $list$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		else
+			set $CompValue$ = ""
+		endif
+		killtask "ping"
+	endif
+	if ($ConstTest$ = $CompValue$)
+		comment "/WaitOnClose passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/WaitOnClose failed"
+	endif
+
+	message "Winbatch_testing /WaitOnClose /timeoutseconds $seconds$"
+	set $seconds$ = "1"
+	executeSection('Winbatch_testing '+$sWaitOnClose$+' '+ $sTimeoutseconds$+' '+ $seconds$)
+	if $OS$ = "Windows_NT"
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
+		set $ConstTest$ = "ping.exe"
+		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+		killtask "ping.exe"
+	else
+		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
+		set $ConstTest$ = "ping"
+		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $list$ = splitStringOnWhitespace($tmp$)
+		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		if isNumber($tmp$)
+			set $CompValue$ = takeString($tmp$, $list$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		else
+			set $CompValue$ = ""
+		endif
+		killtask "ping"
+	endif
+	if ($ConstTest$ = lower($CompValue$))
+		comment "/WaitOnClose passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/WaitOnClose failed"
+	endif
+
+	message "Winbatch_testing /WaitForProcessEnding"
+	marktime 
+	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+ $helper_child_bin_name$+'" /TimeoutSeconds 20')
+	difftime
+	comment "difftime should be 5 seconds"
+	set $ConstTest$ = "5"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+		comment "/WaitForProcessEnding assumed passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/WaitForProcessEnding assumed failed"
+	endif
+	sleepseconds 1
+	if $OS$ = "Windows_NT"
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+		set $ConstTest$ = ""
+		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+	else
+		set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+		set $ConstTest$ = ""
+		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+		set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+		set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+	endif
+	killtask $helper_child_bin_name$
+	killtask $opsi_script_test_helper_bin_name$
+	if ($ConstTest$ = $CompValue$)
+		comment "/WaitForProcessEnding assumed passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/WaitForProcessEnding assumed failed"
+	endif
+
+	message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 20"
+	marktime
+	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+$helper_child_bin_name$+'" '+ $sTimeoutseconds$+' 20')
+	difftime
+	comment "difftime should be 5 seconds"
+	set $ConstTest$ = "5"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+		comment "/WaitForProcessEnding assumed passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/WaitForProcessEnding assumed failed"
+	endif
+	sleepseconds 1
+	if $OS$ = "Windows_NT"
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+		set $ConstTest$ = ""
+		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+	else
+		set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+		set $ConstTest$ = ""
+		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+		set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+		set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+	endif
+	killtask $helper_child_bin_name$
+	killtask $opsi_script_test_helper_bin_name$
+	if ($ConstTest$ = $CompValue$)
+		comment "/WaitForProcessEnding assumed passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/WaitForProcessEnding assumed failed"
+	endif
+
+	message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 2"
+	marktime
+	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+$helper_child_bin_name$+'" /TimeOutSeconds 2')
+	difftime
+	comment "difftime should be 2 seconds"
+	set $ConstTest$ = "2"
+	set $difftime$ = getDiffTimeSec
+	set $CompValue$ = $difftime$
+	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+		comment "/WaitForProcessEnding assumed passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/WaitForProcessEnding assumed failed"
+	endif
+	sleepseconds 1
+	if $OS$ = "Windows_NT"
+		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+		set $ConstTest$ = "helperchild.exe"
+		set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+	else
+		set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+		set $ConstTest$ = $helper_child_bin_name$
+		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+		set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+		set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+	endif
+	killtask $helper_child_bin_name$
+	killtask $opsi_script_test_helper_bin_name$
+	if ($ConstTest$ = $CompValue$)
+		comment "/WaitForProcessEnding assumed passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "/WaitForProcessEnding assumed failed"
+	endif
+	
+;########################################################################################################
+; ################   Registry
+
+;	;DefVar $Architecture$
+	if $OS$ = "Windows_NT"
+		DefVar $DisplayName$
+		
+		DefStringList $Architectures$
+		DefStringList $ExecWith_Result$
+		
+		Set $Architectures$ = CreateStringList("32Bit", "64Bit", "SysNative")
+		Set $DisplayName$ = "*TestVarAsParam*"
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testting: "
+		comment "Registry var as param"
+		message "Registry var as param"
+		
+		;Creates Registry Keys for each Architecture in $Architectures$
+		for %Element% in $Architectures$ do Sub_TestVarAsParam_Registry
+		
+		if ($INST_SystemType$ = "64 Bit System")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "Write / Read 64 Bit Registry"
+			set $ConstTest$ = ""
+			set $regWriteValue$ = "64"
+			set $CompValue$ = $regWriteValue$
+			executeSection('Registry_opsi_org_test '+$sBit64$)
+			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+				ExecWith_opsi_org_test '%System%\cmd.exe' /C winst /64bit
+			else
+				ExecWith_opsi_org_test '%SystemRoot%\cmd64.exe' /C
+			endif
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			executeSection('Registry_opsi_org_test '+$sBitSysnative$)
+			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $regWriteValue$ = "32"
+			set $CompValue$ = $regWriteValue$
+			executeSection('Registry_opsi_org_test')
+			ExecWith_opsi_org_test "cmd.exe" /c
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			executeSection('Registry_opsi_org_test '+$sBit32$)
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			executeSection('Registry_opsi_org_delete_test')
+			set $CompValue$ = ""
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			executeSection('Registry_opsi_org_delete_test '+$sBit64$)
+			set $CompValue$ = ""
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $ConstTest$ = GetRegistryStringValueSysnative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		else
+			;if $MsVersion$ <= "5.0"
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+				comment "not tested at win2k  because tasklist is needed"
+			else
+				set $regWriteValue$ = "32"
+				set $CompValue$ = $regWriteValue$
+				executeSection('Registry_opsi_org_test '+$sBit64$)
+				ExecWith_opsi_org_test "cmd.exe" /c
+				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
+		endif
+  		
+		if ($INST_SystemType$ = "64 Bit System")
+			set $regWriteValue$ = "64"
+			executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$+' '+ $sBit64$)
+			set $regWriteValue$ = "32"
+			executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$)
+			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$+' '+ $sBit64$)
+			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$)
+		else
+			set $regWriteValue$ = "32"
+			executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$)
+			executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$+' '+ $sBit64$)
+			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$+' '+ $sBit64$)
+			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$)
+		endif
+    	
+		executeSection('Registry_TestVarAsParam_Delete')
+		executeSection('Registry_opsi_org_delete_test')
+		executeSection('Registry_opsi_org_delete_test /64bit')
+		Files_delete_SaveValueToFile_txt
+	endif ; windows
+
+
+;########################################################################################################
+; ################   ExecuteWith
+
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testting: "
+	comment "Execwith var as param"
+	message "Execwith var as param"
+	
+	if $OS$ = "Windows_NT"
+		;Creates Registry Keys for each Architecture in $Architectures$
+		for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
+		
+		comment "start an autoit3 instance which will wait for a notepad to come"
+		executeSection('ExecWith_close_helper_window "%SCRIPTPATH%\autoit3.exe" '+$ParamDelimiter$+' '+ $sLetThemGo$+' '+ $sEscapeStrings$)
+		winbatch_helper_showwindow_50
+		sleepseconds 1
+		set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
+		set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
+		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+		set $ConstTest$ = ""
+		if ($ConstTest$ = $CompValue$)
+			comment "Execwith assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Execwith assumed failed"
+		endif
+		killtask "helperchild.exe"
+		killtask "opsiscripttesthelper.exe"
+		killtask "autoit3.exe"
+    	
+		
+    	
+		if $INST_SystemType$ = "64 Bit System"
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "DosBatch / DosInAnIcon  winst /64bit"
+			Files_copy_test_to_system32 /64bit
+			executeSection('DosInAnIcon_remove_test_from_system32 winst '+$sBit64$)
+			if not(FileExists64("%System%\dummy.txt"))
+				comment "passed"
+			else
+				LogWarning "failed"
+				set $TestResult$ = "not o.k."
+			endif
+		endif
+  		
+		Files_copy_test_to_system32 /sysnative
+		executeSection('DosInAnIcon_remove_test_from_system32 winst '+$sBitSysnative$)
+		if not(FileExistssysnative("%System%\dummy.txt"))
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+	endif ; windows
+
+;########################################################################################################
+; ################   Files
+
+	Set $DirectorySubDirectory = $HomeTestFiles$+"\subDirectory"
+	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"
+	Set $FileCopyTestSubDirectory$ = $HomeTestFiles$+"\subDirectory\CopyTestSubDirectory.txt"
+
+	if ($INST_SystemType$ = "64 Bit System") and ($OS$="Windows_NT")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "64 Bit redirection"
+		Files_copy_test_to_system32
+		if FileExists("%System%\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if FileExists64("%System%\dummy.txt")
+			comment "no redirection for 32 bit"
+		else
+			comment "redirection for 32 bit"
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
+		ExecWith_remove_test_from_system32 'cmd.exe' /C
+		executeSection('Files_copy_test_to_system32 /64Bit')
+		if FileExists64("%System%\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
+
+		executeSection('Files_copy_test_to_programfiles')
+		if FileExists("%ProgramFilesDir%\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_programfiles 'cmd.exe' /C
+		executeSection('Files_copy_test_to_programfiles '+$sBit64$)
+		if FileExists64("%ProgramFilesDir%\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		endif
+
+		executeSection('Files_copy_test_to_programfiles2')
+		if FileExists("c:\program files\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
+			comment "no redirection for 32 bit"
+		else
+			comment "redirection for 32 bit"
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
+		ExecWith_remove_test_from_programfiles2 'cmd.exe' /C
+		executeSection('Files_copy_test_to_programfiles2 '+$sBit64$)
+		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
+
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "SysNative Bit redirection"
+		executeSection('Files_copy_test_to_system32')
+		if FileExists32("%System%\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if FileExistsSysNative("%System%\dummy.txt")
+			comment "no redirection for 32 bit"
+		else
+			comment "redirection for 32 bit"
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
+		ExecWith_remove_test_from_system32 'cmd.exe' /C
+		executeSection('Files_copy_test_to_system32 '+$sBitSysnative$)
+		if FileExistsSysNative("%System%\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_system32 'cmd.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
+
+		Files_copy_test_to_programfiles
+		if FileExists32("%ProgramFilesDir%\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		ExecWith_remove_test_from_programfiles 'cmd.exe' /C
+		executeSection('Files_copy_test_to_programfiles '+$sBitSysnative$)
+		if FileExistsSysNative("%ProgramFilesDir%\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		endif
+
+		executeSection('Files_copy_test_to_programfiles2')
+		if FileExists32("c:\program files\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if FileExistsSysNative("c:\program files\opsi.org\test\dummy.txt")
+			comment "no redirection for 32 bit"
+		else
+			comment "redirection for 32 bit"
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
+		ExecWith_remove_test_from_programfiles2 'cmd.exe' /C
+		executeSection('Files_copy_test_to_programfiles2 '+$sBitSysnative$)
+		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
+	endif
+
+
+
+	sub_compareResult
+	set $winst_var_as_param$ = $SubResult$
+endif
+
+
+;----------------   start   sections for dosbatch/winbatch tests ---------------------------------
+[Files_empty_folder]
+Delete -s -f $HomeTestFiles$
+
+[WinBatch_testing]
+$ping5command$
+
+[Winbatch_top]
+/bin/bash -c "ping 127.0.0.1 &"
+
+[DosInAnIcon_getTask_ping]
+@echo off
+tasklist /FI "IMAGENAME eq ping.exe"
+
+[DosInAnIcon_getTask_helper]
+@echo off
+tasklist /FI "IMAGENAME eq $helper_child_bin_name$"
+
+[DosInAnIcon_getTask_helperchild]
+@echo off
+tasklist /FI "IMAGENAME eq $opsi_script_test_helper_bin_name$"
+
+[DosInAnIcon_getTask_string2]
+@echo off
+tasklist /FI "IMAGENAME eq $opsi_script_test_helper_bin_name$"
+
+[Winbatch_startprocess_with_child_nowait]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
+
+[Winbatch_startprocess_with_child_nowait_from_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=2
+
+
+[WinBatch_testing2]
+%ScriptPath%\dos\dummy2.bat
+
+[Winbatch_exitcode_42_noquote]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$"
+
+[Winbatch_exitcode_42_singlequote]
+'%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$'
+
+[Winbatch_exitcode_42_doublequote]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$"
+
+[Winbatch_exitcode_43_noquote_with_param]
+%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$ --exit-code=43
+
+
+[Winbatch_exitcode_43_singlequote_with_param]
+'%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$' --exit-code=43
+
+[Winbatch_exitcode_43_doublequote_with_param]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --exit-code=43
+
+[Winbatch_helper_wait2_showwindow1]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --wait=2 --showwindow=1
+
+[Winbatch_helper_wait2_showwindow5]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --wait=2 --showwindow=5
+
+[Winbatch_helper_showwindow1]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=3
+
+[Winbatch_msi_shellexecute]
+"%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+
+[Winbatch_msi_standard]
+msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+
+[Winbatch_msi_standard_from_c]
+msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+
+[winbatch_myinno]
+"%ScriptPath%\test-files\testFiles\myinnosetup.exe" /silent
+
+[winbatch_myinno_from_c]
+"$HomeTestFiles$\testFiles\myinnosetup.exe" /silent
+
+[winbatch_myinno_uninstall]
+"%ProgramFiles32Dir%\myinnosetup\unins000.exe" /silent
+
+[winbatch_wow_myinno]
+"%winstdir%\winst32.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+
+[Winbatch_regedit_s_64]
+"%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+
+[Winbatch_regedit_s_32]
+"%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+
+[winbatch_wow_myinno_from_c]
+"%winstdir%\winst32.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+
+[Winbatch_msi_standard_from_c_indirect]
+;"%WinstDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
+;"%WinstDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
+
+[winbatch_start_helper_asadmin_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+
+[winbatch_start_helper_asinvoker_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+
+[winbatch_start_helper_c]
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+
+
+[Files_copy_msi_exe_2_c]
+copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+
+[Files_copy_helper_2_c]
+copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"
+
+[Files_clean_from_c]
+del -s -f "$HomeTestFiles$\testFiles"
+
+
+[Winbatch_msi_uninstall]
+msiexec /x {E19B367E-992C-4BD5-86D1-804C10184D71} /qb! REBOOT=ReallySuppress
+
+[Winbatch_powercfg_hibernate_off]
+powercfg /hibernate off
+
+;----------------   stop   sections for dosbatch/winbatch tests ---------------------------------
+
+[Sub_TestVarAsParam_Registry]
+Set $Architecture$ = "%Element%"
+set $ConstTest$ = $Architecture$
+executeSection('Registry_TestVarAsParam_Create /' + $Architecture$)
+set $CompValue$ = GetRegistryValue("HKLM\SOFTWARE\opsi.org\opsi-script-test\TestVarAsParam", "bitByOpsiScript", $Architecture$)
+if ($ConstTest$ = $CompValue$)
+	comment "VarAsParam assumed passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "VarAsParam assumed failed"
+endif
+
+[Registry_TestVarAsParam_Create]
+	OpenKey [HKLM\SOFTWARE\opsi.org\opsi-script-test\TestVarAsParam]
+	Set "bitByOpsiScript" = REG_SZ:"$Architecture$"
+
+[Registry_TestVarAsParam_Delete]
+Deletekey [HKLM\SOFTWARE\opsi.org\opsi-script-test]
+
+;----------------   start   sections for registry test ---------------------------------
+
+[sub_retrieve_registry_data]
+if $INST_SystemType$ = "64 Bit System"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%System%\cmd.exe' /C winst /64bit")
+	else
+		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")
+	endif
+	for $s$ in $INST_ResultList$ do sub_fetch_SearchResult
+else
+	set $INST_SearchResult$ = GetRegistryStringValue("["+$INST_SearchKey$+"] "+$INST_SearchValue$)
+endif
+
+[execWith_reg_query]
+@echo off
+reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
+
+[sub_fetch_SearchResult]
+set $INST_ResultList2$ = splitStringOnWhiteSpace("$s$")
+if $INST_SearchValue$ = takeString(1,$INST_ResultList2$)
+	if not (takeString(3,$INST_ResultList2$) = "")
+		set $INST_ResultList3$ = getSublist(3:, $INST_ResultList2$)
+		set $INST_SearchResult$ = composeString($INST_ResultList3$," ")
+	else
+		set $INST_SearchResult$ = ""
+	endif
+endif
+
+[Registry_createkeys]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+set "var1" = "value1"
+set "var2" = "value2"
+set "var3" = "value3"
+set "var4" = "value4"
+set "var5" = REG_SZ:"value5"
+set "var6" = REG_EXPAND_SZ:"value6"
+set "var7" = REG_DWORD:777
+set "var8" = REG_BINARY:08 08 08 0F 10
+set "var9" = REG_MULTI_SZ:"value9|value10|de"
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+set ""="C:\Program files\test\test.exe -a"
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key1]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key2]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key3]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key4]
+
+[Registry_deleteKey]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a]
+
+[Registry_deleteKey_winst_test]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\winst-test]
+
+[Registry_Add]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+Add "test"=REG_EXPAND_SZ:"value"
+
+[Registry_Supp]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+supp "test" ; "value1;value2;value3;"
+
+[Registry_Supp1]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+supp "test" ; "value2"
+
+[Registry_set4supp]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+set "test"=REG_EXPAND_SZ:"C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient"
+
+[Registry_Supp2]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+supp "test" ; "C:\Program Files (x86)\Java\jre8\bin"
+
+[Registry_set4supp3]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+set "test"=REG_EXPAND_SZ:"$systemroot$;$systemroot$\system32"
+
+
+[Registry_Supp3]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+supp "test" ; "$systemroot$\System32\Wbem"
+
+
+[Registry_GetMultiSZFromFile]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+GetMultiSZFromFile "test2" "%ScriptPath%\test-files\reg_multisz_text.txt"
+
+[Registry_SaveValueToFile]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+SaveValueToFile "test" "$HomeTestFiles$\SaveValueToFile.txt"
+
+[Registry_DeleteVar]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+DeleteVar "test"
+DeleteVar "test2"
+
+[Files_delete_SaveValueToFile_txt]
+Delete -f "$HomeTestFiles$\SaveValueToFile.txt"
+
+[Registry_opsi_org_test]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0]
+set ""="standard entry"
+set "bitByWinst"="$regWriteValue$"
+set "str_bywinst"=REG_SZ:"my string"
+set "str_bywinst_with_%"="string with no percent char set without explicit data type will be written as string"
+set "str_bywinst_with_%"="string with % set without explicit data type and will so be changed to expand_string"
+set "str_bywinst_with_%"=REG_SZ:"string with % set with explicit data type string "
+set "strexpand_bywinst"=REG_EXPAND_SZ:"%programfiles%"
+set "dword_test1"= REG_DWORD:10
+set "dword_test2"= REG_DWORD:0xA
+set "dword_test3"= REG_DWORD:0x0A
+set "dword_test4"= REG_DWORD:$0A
+set "binary_bywinst"=REG_BINARY:00 FF
+set "binary_empty_bywinst"=REG_BINARY:
+set "multi_sz_bywinst" = REG_MULTI_SZ:"A|BC|de"
+
+[Registry_set_quoted_string]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\quoted]
+set "quoted"="$tmp$"
+
+[Registry_createkeys_with_brackets]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+set "entry1"="myentry1"
+
+[Registry_deletekeys_with_brackets]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+
+[Registry_opsi_org_delete_test]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+
+
+[ExecWith_opsi_org_test]
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0" /v "bitByReg" /t REG_SZ /d "$regWriteValue$" /f
+
+[Registry_hkcu_opsi_org_test]
+openkey [SOFTWARE\opsi.org\opsi-winst-test]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_opsi_org_deletekey]
+openkey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+deletekey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+
+[Registry_hkcu_complete_opsi_org_test]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test]
+set "bitByWinst"="$regWriteValue$"
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+set "bitByWinst"="$regWriteValue$"
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b\c]
+set "bitByWinst"="$regWriteValue$"
+
+
+[Registry_hkcu_complete_opsi_org_deletekey]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+
+[DosInAnIcon_export_hkcu_complete_opsi_org_test]
+@echo off
+regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test
+
+[Registry_hkcu_userclasses_create_test]
+openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_userclasses_delete_test]
+deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+
+[Registry_hkcu_userclasses_createkey]
+openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_userclasses_deletekey]
+deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a]
+
+
+[Registry_hack_forbidden_key]
+openkey [HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard]
+set "HideWizard" = REG_DWORD:0x1
+DeleteVar "HideWizard"
+
+[winbatch_hack_forbidden_key1]
+reg add "HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard" /v "HideWizard" /t REG_DWORD /d "1" /f
+
+[winbatch_hack_forbidden_key2]
+reg delete "HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard" /v "HideWizard" /f
+
+[Registry_multiline]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+set ""="part1\npart2\npart3"
+;set "test" = "$string1$"
+
+[Registry_add_environment]
+openkey [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
+set "opsi-script-test"="deleteme"
+
+[Registry_del_environment]
+openkey [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
+DeleteVar "opsi-script-test"
+
+[sub_check_environment]
+comment "This will not work because the environment is inherited from the running process"
+set $list$ = shellCall('set opsi-script-test')
+set $CompValue$ = takeFirstStringContaining($list$, "deleteme")
+if "" = $CompValue$
+	comment "This will work because this new started process will get a new environment"
+	winbatch_check_environment /RunElevated
+	if ("42" = getlastExitCode)
+		set $CompValue$ = "opsi-script-test=deleteme"
+	else
+		message "Set Environment Variables and wait for update "+calculate("%index% * 10")+" seconds ..."
+		sleepseconds 10
+	endif
+endif
+
+[winbatch_check_environment]
+"%system%\cmd.exe" /c "if %opsi-script-test%==deleteme exit 42"
+
+
+;----------------   end   sections for registry test ---------------------------------
+
+
+
+
+[Sub_TestVarAsParam_ExecWith]
+	Set $Architecture$ = "%Element%"
+	Set $sArchitecture$ = "/"+$Architecture$
+
+	;Most basic test I can come up with....
+	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_HelloWorld powershell.exe -ExecutionPolicy Bypass")
+
+	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /64Bit")
+	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass")
+	ExecWith_Powershell_SearchUninstallInfos "powershell.exe" winst /64Bit
+	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass" winst /64Bit
+	ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /64Bit
+
+
+	;Test with VarAsParams:
+
+	;Set $ExecWith_Result$ = GetOutStreamFromSection(ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$)
+	;Fails with:
+	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 24 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 24): $ExecWith_Result$ = GetOutStreamFromSection(ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$) -> ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$) illegal String Expressionstr
+
+	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass winst /" + $Architecture$
+	;Fails with:
+	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 25 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 25): ExecWith_Powershell_SearchUninstallInfos -> winst option not recognized
+
+	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass winst /" + $Architecture$
+	;Fails with:
+	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 33 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 33): ExecWith_Powershell_SearchUninstallInfos -> winst option not recognized
+
+	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass "+$ParamDelimiter$+" "+ $sArchitecture$)
+	set $str1$ = "powershell.exe -ExecutionPolicy Bypass "+$ParamDelimiter$+" "+ $sArchitecture$
+	executesection('ExecWith_Powershell_SearchUninstallInfos '+$str1$)
+	executesection('ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /'+$Architecture$)
+	
+
+[ExecWith_Powershell_SearchUninstallInfos]
+	$RegKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+	#Search $RegKey for the given DisplayName and return DisplayName, QuietUninstallString (if present) and UninstallString from the found subentries
+		Get-ChildItem -Path $RegKey| Where-Object -FilterScript { $_.GetValue("DisplayName", "not found") -like "$DisplayName$"} | ForEach-Object -Process {
+		if (-Not($_.GetValue("DisplayName", "not found") -eq "not found") -or ($_.GetValue("DisplayName", "not found") -eq "") -or ($_.GetValue("DisplayName", "not found") -eq $null))
+			{
+			Write-Output (-join ("InstalledVersion=" + $_.GetValue("DisplayName")))
+			if (-Not($_.GetValue("QuietUninstallString", "not found") -eq "not found") -or ($_.GetValue("QuietUninstallString", "not found") -eq "") -or ($_.GetValue("QuietUninstallString", "not found") -eq $null))
+				{
+				Write-Output (-join ("QuietUninstallString=" + $_.GetValue("QuietUninstallString")))
+				}
+			if (-Not($_.GetValue("UninstallString", "not found") -eq "not found") -or ($_.GetValue("UninstallString", "not found") -eq "") -or ($_.GetValue("UninstallString", "not found") -eq $null))
+				{
+				Write-Output (-join ("UninstallString=" + $_.GetValue("UninstallString")))
+				}
+			}
+		}
+
+[ExecWith_Powershell_HelloWorld]
+	$strString = "Hello World"
+	write-host $strString
+	
+[ExecWith_close_helper_window]
+; wait for helper window and write something
+WinWaitActive("opsi-helper-child")
+WinActivate("opsi-helper-child")
+Sleep(50)
+Send("abc")
+Sleep(50)
+Send("{TAB}")
+Send("{ENTER}")
+Exit
+
+[winbatch_helper_showwindow_50]
+"%ScriptPath%\$opsi_script_test_helper_bin$" --wait=2 --showwindow=50
+
+[Files_copy_test_to_system32]
+copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%System%"
+
+[DosInAnIcon_remove_test_from_system32]
+%SystemDrive%
+cd "%System%"
+del "dummy.txt"
+
+
+;----------------   start   sections for files test ---------------------------------
+
+[ExecWith_remove_test_from_system32]
+%SystemDrive%
+cd "%System%"
+del "dummy.txt"
+
+[Files_copy_test_to_programfiles]
+copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%ProgramFilesDir%\opsi.org\test"
+
+[ExecWith_remove_test_from_programfiles]
+%SystemDrive%
+cd "%ProgramFilesDir%\opsi.org\test"
+del "dummy.txt"
+
+[Files_copy_test_to_programfiles2]
+copy "%ScriptPath%\test-files\testFiles\dummy.txt" "c:\program files\opsi.org\test"
+
+[ExecWith_remove_test_from_programfiles2]
+%SystemDrive%
+cd "c:\program files\opsi.org\test"
+del "dummy.txt"

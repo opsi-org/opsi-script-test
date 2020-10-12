@@ -1,0 +1,101 @@
+; This code is part of the opsi.org project
+;
+; Copyright (c) uib gmbh (www.uib.de)
+; This sourcecode is owned by the uib gmbh, D55118 Mainz, Germany
+; and published under the Terms of the GNU Affero General Public License.
+; Text of the AGPL: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+; credits: http://www.opsi.org/credits/
+
+
+
+
+[Actions]
+requiredWinstVersion >= "4.12.1.0"
+ScriptErrorMessages = false
+encoding=utf8
+
+defvar $HomeTestFiles$
+defvar $exitcode$
+defvar $rebootallowed$
+
+defstringlist $resultlist$
+set $HomeTestFiles$ = "/tmp/opsi-script-test/"
+set $rebootallowed$ = "false"
+
+
+
+
+Files_copy_macos
+
+;Message "Run softwareupdate ..."
+;;set $resultlist$ = shellCall('softwareupdate --install --all --verbose')
+;set $resultlist$ = getoutstreamfromsection('ShellInAnIcon_softwareupdate winst /showoutput')
+;
+;set $exitcode$ = getlastexitcode
+;if $exitcode$ = "0"
+;	comment "softwareupdate reported no error"
+;	set $resultlist$ = getSubListByContainingRegex('Please restart immediately.',$resultlist$)
+;	if count($resultlist$) > "0"
+;		comment "Reboot required"
+;		if $rebootallowed$ = "true"
+;			Exitwindows /Reboot
+;		endif
+;	endif
+;else
+;	logerror "softwareupdate reported error number: "+$exitcode$
+;endif
+
+
+Message "Run mas (appstore updates) ..."
+if not(fileexists('/usr/local/bin/brew'))
+	ShellInAnIcon_install_brew winst /showoutput
+endif
+set $exitcode$ = shellCall('/usr/local/bin/brew list mas')
+if $exitcode$ = "0"
+	comment "check for mas reported no error"
+else
+	logerror "check for mas reported error number: "+$exitcode$
+	ShellInAnIcon_install_mas winst /showoutput
+endif
+ShellInAnIcon_update_with_mas winst /showoutput
+set $exitcode$ = getlastexitcode
+if not($exitcode$ = "0")
+	logerror "Failed to update from app store via mas"
+	isFatalError "update failed"
+endif
+
+Files_cleanup_macos
+
+
+[Files_copy_macos]
+; sub test:
+copy "%scriptpath%\test-files\macos\*" "$HomeTestFiles$"
+; standalone test:
+copy "%scriptpath%\..\test-files\macos\*" "$HomeTestFiles$"
+
+
+[Files_cleanup_macos]
+del -s "$HomeTestFiles$"
+
+[ShellInAnIcon_softwareupdate]
+set -x
+softwareupdate --list
+softwareupdate --install --all --verbose
+exit $?
+
+
+[ShellInAnIcon_install_mas]
+set -x
+/usr/local/bin/brew install mas
+exit $?
+
+[ShellInAnIcon_install_brew]
+set -x
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+exit $?
+
+[ShellInAnIcon_update_with_mas]
+set -x
+/usr/local/bin/mas outdated
+/usr/local/bin/mas upgrade
+exit $?

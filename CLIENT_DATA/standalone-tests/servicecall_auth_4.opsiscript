@@ -1,0 +1,9 @@
+[actions]
+
+;opsiservicecall_authenticated  /serviceurl "https://sepiella:4447" /username "adminuser" /password "linux123"
+;opsiservicecall_authenticated  /serviceurl "https://sepia:4447" /username "adminuser" /password "linux123"
+opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+
+[opsiservicecall_authenticated]
+"method":"authenticated"
+"params":[ ]

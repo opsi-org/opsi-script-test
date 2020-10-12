@@ -1,0 +1,10 @@
+[actions]
+
+opsiservicecall_fireEvent_software_on_demand /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+
+[opsiservicecall_fireEvent_software_on_demand]
+"method":"hostControlSafe_fireEvent"
+"params":[
+			'on_demand', 
+			'pcjan.uib.local'
+		]

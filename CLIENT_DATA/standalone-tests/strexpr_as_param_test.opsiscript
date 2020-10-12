@@ -1,0 +1,42 @@
+
+;W:\opsi-script-test\CLIENT_DATA\standalone-tests\strexpr_as_param_test.opsiscript
+[actions]
+
+defvar $str1$
+defvar $paramstr$
+defvar $arch$
+
+set $paramstr$ = "sysnative"
+
+if GetSystemType = "64 Bit System"
+	set $arch$ = "64"
+else
+	set $arch$ = "32"
+endif
+
+Registry_set_value /sysnative
+set $str1$ = getRegistryValue("HKLM\Software\opsi.org\opsi-script-test", "strexpr_as_param","sysnative")
+comment "got from registry: "+$str1$
+if $str1$ = $arch$+'_'+$arch$
+	comment "fine"
+else
+	comment "oh oh"
+endif
+Registry_del_key  /sysnative
+
+Registry_set_value "/"+$paramstr$
+set $str1$ = getRegistryValue("HKLM\Software\opsi.org\opsi-script-test", "strexpr_as_param",$paramstr$)
+comment "got from registry: "+$str1$
+if $str1$ = $arch$+'_'+$arch$
+	comment "fine"
+else
+	comment "oh oh"
+endif
+Registry_del_key  "/"+$paramstr$
+
+[Registry_set_value]
+openkey [HKLM\Software\opsi.org\opsi-script-test]
+set "strexpr_as_param" = "$arch$_$arch$"
+
+[Registry_del_key]
+deletekey [HKLM\Software\opsi.org\opsi-script-test]
