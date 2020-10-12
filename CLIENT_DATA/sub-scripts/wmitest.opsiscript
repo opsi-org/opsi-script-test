@@ -1,169 +1,173 @@
 encoding=utf8
 
 if ($Flag_subwmi$ = "on") or ($MasterFlag$ = "on")
-	Message "testing wmi functions"
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	comment ""
-	comment "testing wmi functions"
-	comment ""
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	Set $ExpectedResult$ = "o.k."
-	; start testing
-	set $TestResult$ = "o.k."
-	
-	comment ""
-	comment "-------------------------------------"
-	comment "Testing: "
-	message "getListFromWMI"
-	
-	; this is valid because both properties are valid
-	set $list1$ = createStringList ('Model','Manufacturer')
-	set $str1$ = 'root\cimv2'
-	set $str2$ = 'Win32_ComputerSystem'
-	set $str3$ = ''
-	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
-	
-	; this is not valid because there is no Vendor property
-	set $list1$ = createStringList ('Model','Vendor')
-	set $str1$ = 'root\cimv2'
-	set $str2$ = 'Win32_ComputerSystem'
-	set $str3$ = ''
-	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
-	
-	comment "Testing for os architecture"
-	set $ConstTest$ = GetSystemType
-	set $list1$ = createStringList ('systemtype')
-	set $str1$ = 'root\cimv2'
-	set $str2$ = 'Win32_ComputerSystem'
-	set $str3$ = ''
-	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
-	set $CompValue$ = getValue("systemtype", $resultlist$)
-	if $CompValue$ = "x64-based PC"
-		set $CompValue$ = "64 Bit System"
+	if not($OS$ = "Windows_NT")
+		comment "wmitest only implemented for Windows NT6"
+		set $winst_wmi$ = "not implemented"
 	else
-		set $CompValue$ = "x86 System"
-	endif
-	if ($ConstTest$ = $CompValue$)
-		comment "getListFromWMI passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "testing getListFromWMI failed"
-	endif
-	
-	comment "Testing for freespace"
-	;wmic LogicalDisk "%Systemdrive%" get freespace
-	set $list1$ = createStringList ('freespace')
-	set $str1$ = 'root\cimv2'
-	set $str2$ = 'Win32_LogicalDisk'
-	set $str3$ = 'where Name="%Systemdrive%"'
-	markerrornumber
-	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
-	if errorsOccuredSinceMark = 0
-		set $CompValue$ = getValue("freespace", $resultlist$)
-		set $CompValue$ = calculate($CompValue$+ '-100')
-		if (HasMinimumSpace ("%Systemdrive%", $CompValue$))
-			comment "passed"
+		Message "testing wmi functions"
+		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		comment ""
+		comment "testing wmi functions"
+		comment ""
+		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		Set $ExpectedResult$ = "o.k."
+		; start testing
+		set $TestResult$ = "o.k."
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "getListFromWMI"
+		
+		comment "this is valid because both properties are valid"
+		set $list1$ = createStringList ('Model','Manufacturer')
+		set $str1$ = 'root\cimv2'
+		set $str2$ = 'Win32_ComputerSystem'
+		set $str3$ = ''
+		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
+		
+		comment "this is not valid because there is no Vendor property"
+		set $list1$ = createStringList ('Model','Vendor')
+		set $str1$ = 'root\cimv2'
+		set $str2$ = 'Win32_ComputerSystem'
+		set $str3$ = ''
+		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
+		
+		comment "Testing for os architecture"
+		set $ConstTest$ = GetSystemType
+		set $list1$ = createStringList ('systemtype')
+		set $str1$ = 'root\cimv2'
+		set $str2$ = 'Win32_ComputerSystem'
+		set $str3$ = ''
+		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
+		set $CompValue$ = getValue("systemtype", $resultlist$)
+		if $CompValue$ = "x64-based PC"
+			set $CompValue$ = "64 Bit System"
+		else
+			set $CompValue$ = "x86 System"
+		endif
+		if ($ConstTest$ = $CompValue$)
+			comment "getListFromWMI passed"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+			LogWarning "testing getListFromWMI failed"
 		endif
-		set $CompValue$ = calculate($CompValue$+ '+200')
-		if (HasMinimumSpace ("%Systemdrive%", $CompValue$))
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+		
+		comment "Testing for freespace"
+		;wmic LogicalDisk "%Systemdrive%" get freespace
+		set $list1$ = createStringList ('freespace')
+		set $str1$ = 'root\cimv2'
+		set $str2$ = 'Win32_LogicalDisk'
+		set $str3$ = 'where Name="%Systemdrive%"'
+		markerrornumber
+		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
+		if errorsOccuredSinceMark = 0
+			set $CompValue$ = getValue("freespace", $resultlist$)
+			set $CompValue$ = calculate($CompValue$+ '-4000')
+			if (HasMinimumSpace ("%Systemdrive%", $CompValue$))
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			set $CompValue$ = calculate($CompValue$+ '+4200')
+			if (HasMinimumSpace ("%Systemdrive%", $CompValue$))
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			else
+				comment "passed"
+			endif
+		endif
+		
+		comment "Testing for drive count"
+		;wmic LogicalDisk "%Systemdrive%" get name
+		set $list1$ = createStringList ('Name')
+		set $str1$ = ''
+		set $str2$ = 'Win32_LogicalDisk'
+		set $str3$ = ''
+		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
+		set $CompValue$ = count($resultlist$)
+		set $resultlist$ = powershellCall('get-psdrive -psprovider filesystem | select-object -expand Name')
+		set $ConstTest$ = count($resultlist$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getListFromWMI passed"
 		else
-			comment "passed"
+			set $TestResult$ = "not o.k."
+			LogWarning "testing getListFromWMI failed"
 		endif
-	endif
-	
-	comment "Testing for drive count"
-	;wmic LogicalDisk "%Systemdrive%" get name
-	set $list1$ = createStringList ('Name')
-	set $str1$ = ''
-	set $str2$ = 'Win32_LogicalDisk'
-	set $str3$ = ''
-	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
-	set $CompValue$ = count($resultlist$)
-	set $resultlist$ = powershellCall('get-psdrive -psprovider filesystem | select-object -expand Name')
-	set $ConstTest$ = count($resultlist$)
-	if ($ConstTest$ = $CompValue$)
-		comment "getListFromWMI passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "testing getListFromWMI failed"
-	endif
-	
-	comment "Testing for OS manufacturer"
-	;wmic os get manufacturer
-	set $ConstTest$ = "Microsoft Corporation"
-	set $list1$ = createStringList ('manufacturer')
-	set $str1$ = 'root\cimv2'
-	set $str2$ = 'Win32_OperatingSystem'
-	set $str3$ = ''
-	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
-	set $CompValue$ = getValue("manufacturer", $resultlist$)
-	if ($ConstTest$ = $CompValue$)
-		comment "getListFromWMI passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "testing getListFromWMI failed"
-	endif	
-	
-	comment "Testing for OS locale"
-	;wmic os get locale
-	set $resultlist$ = getLocaleInfoMap
-	set $ConstTest$ = getValue("default_language_id", $resultlist$)
-	set $list1$ = createStringList ('locale')
-	set $str1$ = 'root\cimv2'
-	set $str2$ = 'Win32_OperatingSystem'
-	set $str3$ = ''
-	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
-	set $CompValue$ = getValue("locale", $resultlist$)
-	if ($ConstTest$ = $CompValue$)
-		comment "getListFromWMI passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "testing getListFromWMI failed"
-	endif	
-	
-	comment "Testing for OS producttype"
-	;wmic os get producttype
-	set $resultlist$ = getMSVersionMap
-	set $ConstTest$ = getValue("product_type_nr", $resultlist$)
-	set $list1$ = createStringList ('producttype')
-	set $str1$ = 'root\cimv2'
-	set $str2$ = 'Win32_OperatingSystem'
-	set $str3$ = ''
-	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
-	set $CompValue$ = getValue("producttype", $resultlist$)
-	if ($ConstTest$ = $CompValue$)
-		comment "getListFromWMI passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "testing getListFromWMI failed"
-	endif	
-	
-	;if CompareDotSeparatedNumbers(GetMsVersionInfo,'>=',"10.0")
-	;	comment "Testing for OS Volumes"
-	;	;wmic os get producttype
-	;	set $ConstTest$ = '%systemdrive%'
-	;	set $list1$ = createStringList ('DriveLetter')
-	;	set $str1$ = 'root\CIMV2\Security\MicrosoftVolumeEncryption'
-	;	set $str2$ = 'Win32_EncryptableVolume'
-	;	set $str3$ = ''
-	;	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
-	;	set $CompValue$ = getValue("DriveLetter", $resultlist$)
-	;	if ($ConstTest$ = $CompValue$)
-	;		comment "getListFromWMI passed"
-	;	else
-	;		set $TestResult$ = "not o.k."
-	;		LogWarning "testing getListFromWMI failed"
-	;	endif
-	;endif
-  
-	sub_compareResult
-	set $winst_wmi$ = $SubResult$
-
+		
+		comment "Testing for OS manufacturer"
+		;wmic os get manufacturer
+		set $ConstTest$ = "Microsoft Corporation"
+		set $list1$ = createStringList ('manufacturer')
+		set $str1$ = 'root\cimv2'
+		set $str2$ = 'Win32_OperatingSystem'
+		set $str3$ = ''
+		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
+		set $CompValue$ = getValue("manufacturer", $resultlist$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getListFromWMI passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing getListFromWMI failed"
+		endif	
+		
+		comment "Testing for OS locale"
+		;wmic os get locale
+		set $resultlist$ = getLocaleInfoMap
+		set $ConstTest$ = getValue("default_language_id", $resultlist$)
+		set $list1$ = createStringList ('locale')
+		set $str1$ = 'root\cimv2'
+		set $str2$ = 'Win32_OperatingSystem'
+		set $str3$ = ''
+		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
+		set $CompValue$ = getValue("locale", $resultlist$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getListFromWMI passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing getListFromWMI failed"
+		endif	
+		
+		comment "Testing for OS producttype"
+		;wmic os get producttype
+		set $resultlist$ = getMSVersionMap
+		set $ConstTest$ = getValue("product_type_nr", $resultlist$)
+		set $list1$ = createStringList ('producttype')
+		set $str1$ = 'root\cimv2'
+		set $str2$ = 'Win32_OperatingSystem'
+		set $str3$ = ''
+		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
+		set $CompValue$ = getValue("producttype", $resultlist$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getListFromWMI passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "testing getListFromWMI failed"
+		endif	
+		
+		;if CompareDotSeparatedNumbers(GetMsVersionInfo,'>=',"10.0")
+		;	comment "Testing for OS Volumes"
+		;	;wmic os get producttype
+		;	set $ConstTest$ = '%systemdrive%'
+		;	set $list1$ = createStringList ('DriveLetter')
+		;	set $str1$ = 'root\CIMV2\Security\MicrosoftVolumeEncryption'
+		;	set $str2$ = 'Win32_EncryptableVolume'
+		;	set $str3$ = ''
+		;	set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
+		;	set $CompValue$ = getValue("DriveLetter", $resultlist$)
+		;	if ($ConstTest$ = $CompValue$)
+		;		comment "getListFromWMI passed"
+		;	else
+		;		set $TestResult$ = "not o.k."
+		;		LogWarning "testing getListFromWMI failed"
+		;	endif
+		;endif
+	  
+		sub_compareResult
+		set $winst_wmi$ = $SubResult$
+	endif ; windows
 endif
 
 

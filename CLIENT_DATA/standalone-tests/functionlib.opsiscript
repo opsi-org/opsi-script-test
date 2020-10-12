@@ -27,3 +27,11 @@ DefFunc myFunc10($str1$ : string) : stringlist
 	comment "finished call external myfunc9 from myfunc10"
 endfunc
 
+DefFunc myNoResultFunc(ref $str1$ : string) : void
+	set $str1$ = "huhu"
+endfunc
+
+DefFunc myNoResultFuncVal(val $str1$ : string) : void
+	set $str1$ = "huhu"
+	comment $str1$
+endfunc

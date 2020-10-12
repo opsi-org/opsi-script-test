@@ -33,7 +33,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
 		ExecWith_remove_test_from_system32 'cmd.exe' /C
 		Files_copy_test_to_system32 /64Bit
 		if FileExists64("%System%\dummy.txt")
@@ -43,7 +47,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		ExecWith_remove_test_from_system32 'cmd.exe' /C
-		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		Files_copy_test_to_programfiles
 		if FileExists("%ProgramFilesDir%\opsi.org\test\dummy.txt")
@@ -60,7 +68,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		Files_copy_test_to_programfiles2
 		if FileExists("c:\program files\opsi.org\test\dummy.txt")
@@ -74,7 +86,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
 		ExecWith_remove_test_from_programfiles2 'cmd.exe' /C
 		Files_copy_test_to_programfiles2 /64Bit
 		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
@@ -83,7 +99,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		comment ""
 		comment "-------------------------------------"
@@ -101,7 +121,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
 		ExecWith_remove_test_from_system32 'cmd.exe' /C
 		Files_copy_test_to_system32 /SysNative
 		if FileExistsSysNative("%System%\dummy.txt")
@@ -111,7 +135,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		ExecWith_remove_test_from_system32 'cmd.exe' /C
-		ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		Files_copy_test_to_programfiles
 		if FileExists32("%ProgramFilesDir%\opsi.org\test\dummy.txt")
@@ -128,7 +156,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
+		endif
 
 		Files_copy_test_to_programfiles2
 		if FileExists32("c:\program files\opsi.org\test\dummy.txt")
@@ -142,7 +174,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
 		ExecWith_remove_test_from_programfiles2 'cmd.exe' /C
 		Files_copy_test_to_programfiles2 /SysNative
 		if FileExists64("c:\program files\opsi.org\test\dummy.txt")
@@ -151,7 +187,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
+		else
+			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
+		endif
 	endif
 
 	comment ""
@@ -161,7 +201,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "delete"
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not(FileExists($HomeTestFiles$))
@@ -224,6 +264,34 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "-d[n] failed"
 			endif
+			
+			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.3")
+				; -c
+				message "del -rc"
+				Files_copy_del_c
+				winbatch_call_del_c /LetThemGo
+				comment "This should give an Warning: File in use ...."
+				markErrorNumber
+				Files_del_c
+				if errorsOccuredSinceMark = 0
+					comment "passed"
+				else
+					LogWarning "failed"
+					set $TestResult$ = "not o.k."
+				endif
+				killtask "helperchild.exe"
+				if FileExists("%opsiTmpDir%\del_c_test\")
+					if FileExists("%opsiTmpDir%\del_c_test\helperchild.exe")
+						comment "del -c passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "del -c  failed"
+					endif
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "del -c  failed"
+				endif
+			endif ; 4.12.4.3
 		endif ; windows
 
 		; -s
@@ -344,7 +412,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "copy "
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not(FileExists($HomeTestFiles$))
@@ -384,7 +452,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
     	
 			message "copy -c "
-			Files_empty_folder
+			Files_empty_folder_files
 			Files_copy_c
 			winbatch_copy_c /LetThemGo
 			comment "This should give an Warning: File in use ...."
@@ -402,7 +470,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		if $OS$ = "Windows_NT"
 			; copy -d
 			message "copy -d "
-			Files_empty_folder
+			Files_empty_folder_files
 			Files_copy_d_exenew
 			comment "copy exe on existing exe"
 			Files_copy_d_exenew
@@ -426,7 +494,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
 			; copy -u
 			message "copy -u"
-			Files_empty_folder
+			Files_empty_folder_files
 			if $OS$ = "Windows_NT"
 				DosInAnIcon_prepare_copy_u
 			else
@@ -452,7 +520,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; windows
 
-		Files_empty_folder
+		Files_empty_folder_files
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not delete all files"
@@ -466,7 +534,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		message "copy -x"
   	
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
   	
 		if not(FileExists($HomeTestFiles$))
@@ -478,7 +546,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			Files_empty_folder
+			Files_empty_folder_files
 		else
 			set $TestResult$ = "not o.k."
 			logError "Fatal: could not delete all files"
@@ -492,7 +560,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "copy -e"
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not (FileExists($HomeTestFiles$))
@@ -503,7 +571,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		Files_empty_folder
+		Files_empty_folder_files
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not delete all files"
@@ -516,7 +584,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "copy -w"
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not (FileExists($HomeTestFiles$))
@@ -539,7 +607,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		Files_empty_folder
+		Files_empty_folder_files
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not delete all files"
@@ -551,7 +619,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "copy -n"
 
 	if (FileExists($HomeTestFiles$))
-		Files_empty_folder
+		Files_empty_folder_files
 	endif
 
 	if not (FileExists($HomeTestFiles$))
@@ -576,7 +644,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		Files_empty_folder
+		Files_empty_folder_files
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not delete all files"
@@ -596,7 +664,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		message "copy -r"
   	
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
   	
 		if not (FileExists($HomeTestFiles$))
@@ -624,7 +692,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			Files_empty_folder
+			Files_empty_folder_files
 		else
 			set $TestResult$ = "not o.k."
 			logError "Fatal: could not delete all files"
@@ -636,6 +704,17 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
+		Files_work_on_profiles_del_userp /AllNTUserProfiles
+		set $list$ = getProfilesDirList
+		Files_work_on_profiles_copy_userp /AllNTUserProfiles
+		for %prof% in $list$ do sub_check_dir_exist_inprof
+		Files_work_on_profiles_del_userp /AllNTUserProfiles
+		for %prof% in $list$ do sub_check_dir_not_exist_inprof
+		Files_work_on_profiles_copy_currp /AllNTUserProfiles
+		for %prof% in $list$ do sub_check_dir_exist_inprof
+		Files_work_on_profiles_del_currp /AllNTUserProfiles
+		for %prof% in $list$ do sub_check_dir_not_exist_inprof
+		
 	endif ; windowsmarkErrorNumber
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.1")
@@ -645,7 +724,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		message "hardlink, symlink, move, rename"
   	
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
   	
 		if not (FileExists($HomeTestFiles$))
@@ -717,7 +796,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 					LogWarning "failed"
 				endif
 			endif
-			Files_empty_folder
+			Files_empty_folder_files
 		else
 			set $TestResult$ = "not o.k."
 			logError "Fatal: could not delete all files"
@@ -809,7 +888,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		comment "DirectoryExists"
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
 
 		if not(FileExists($HomeTestFiles$))
@@ -917,7 +996,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		message "zipfile / unzipfile"
 		
 		if (FileExists($HomeTestFiles$))
-			Files_empty_folder
+			Files_empty_folder_files
 		endif
 		
 		if not (FileExists($HomeTestFiles$))
@@ -1164,10 +1243,14 @@ echo "Hello World" > dummyToday.txt
 [Files_fill_testfiles]
 copy -s "%ScriptPath%/test-files/testFiles/*.*" "$HomeTestFiles$"
 
-[Files_empty_folder]
-Delete -s -f "$HomeTestFiles$"
-del -sf "%opsiTmpDir%\testdir.zip"
-del -sf "%opsiTmpDir%\testfile.zip"
+[Files_empty_folder_files]
+Delete -s -f -c "$HomeTestFiles$"
+del -sfc "%opsiTmpDir%\testdir.zip"
+del -sfc "%opsiTmpDir%\testfile.zip"
+
+[Files_empty_folder2]
+del -f "$HomeTestFiles$\files\symlink.txt"
+
 
 [Files_delete_hidden]
 Delete "$HomeTestFiles$\.hidden.txt"
@@ -1186,7 +1269,7 @@ Delete -s "$HomeTestFiles$"
 
 
 [Files_del_empty_folder]
-Del -s -f "$HomeTestFiles$"
+Del -s -f -c "$HomeTestFiles$"
 
 [Files_del_hidden]
 Del "$HomeTestFiles$\.hidden.txt"
@@ -1203,6 +1286,16 @@ Del -d2 "$HomeTestFiles$\*.*"
 [Files_del_s]
 Del -s "$HomeTestFiles$"
 Del -s "$HomeTestFiles$"
+
+[Files_copy_del_c]
+del -sf "%opsiTmpDir%\del_c_test\"
+copy -s "%ScriptPath%\$opsi_script_test_helper_path$\*" "%opsiTmpDir%\del_c_test\"
+
+[winbatch_call_del_c]
+"%opsiTmpDir%\del_c_test\helperchild.exe" --wait=2
+
+[Files_del_c]
+del -crsf "%opsiTmpDir%\del_c_test\"
 
 [ShellInAnIcon_ls_testfiles]
 ls -l %ScriptPath%/test-files/testFiles/*
@@ -1274,21 +1367,48 @@ cd "$HomeTestFiles$\zip\"
 dir /A:R
 
 [Files_copy_c]
-copy -c "%ScriptPath%\opsi-winst-test-helper\opsiwinsttesthelper.exe" $HomeTestFiles$
+copy -c "%ScriptPath%\$opsi_script_test_helper_path$\*" "$HomeTestFiles$\$opsi_script_test_helper_path$"
 
 [winbatch_copy_c]
-"$HomeTestFiles$\opsiwinsttesthelper.exe" --wait=2
+"$HomeTestFiles$\$opsi_script_test_helper_child_bin$" --wait=2
 
 [ShellInAnIcon_copy_c_lin]
 set -x
 sleep 2
 
-
 [Files_work_on_profiles]
-copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-winst-test"
-del -sf "%UserProfileDir%\opsi-winst-test"
-copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-winst-test"
-del -sf "%CurrentProfileDir%\opsi-winst-test"
+copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
+del -sfc "%UserProfileDir%\opsi-script-test"
+copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
+del -sfc "%CurrentProfileDir%\opsi-script-test"
+
+[Files_work_on_profiles_copy_userp]
+copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
+
+[Files_work_on_profiles_del_userp]
+del -sfc "%UserProfileDir%\opsi-script-test"
+
+[Files_work_on_profiles_copy_currp]
+copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
+
+[Files_work_on_profiles_del_currp]
+del -sfc "%CurrentProfileDir%\opsi-script-test"
+
+[sub_check_dir_exist_inprof]
+if directoryexists("%prof%\opsi-script-test")
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+
+[sub_check_dir_not_exist_inprof]
+if not(directoryexists("%prof%\opsi-script-test"))
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
 
 [Files_hardlink]
 ;del "$HomeTestFiles$\files\hardlink.txt"

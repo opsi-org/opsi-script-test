@@ -1,4 +1,114 @@
 [Changelog]
+opsi-script-test (4.12.4.1-1) stable; urgency=low
+
+  * test files del -c
+  * wmitest: freespce -4000
+  
+-- detlef oertel <d.oertel@uib.de>  Tue,  06 Oct 2020 15:00:00 +0200
+
+opsi-script-test (4.12.4.0-1) stable; urgency=low
+
+  * shellInAnIcon with /runelevated
+  
+-- detlef oertel <d.oertel@uib.de>  Mon,  03 Aug 2020 15:00:00 +0200
+
+opsi-script-test (4.12.3.15-3) stable; urgency=low
+
+  * encodingtest: call of binary with umlaut: test winbatch
+  
+-- detlef oertel <d.oertel@uib.de>  Thu,  23 Jul 2020 15:00:00 +0200
+
+opsi-script-test (4.12.3.15-2) stable; urgency=low
+
+  * controlfunctions: runningOnUefi test
+  * new property adminuser_password (default=linux123)
+  
+-- detlef oertel <d.oertel@uib.de>  Mon,  22 Jun 2020 15:00:00 +0200
+
+opsi-script-test (4.12.3.15-1) stable; urgency=low
+
+  * winbatch: always with timeout to avoid endless runs
+  
+-- detlef oertel <d.oertel@uib.de>  Fri,  12 Jun 2020 15:00:00 +0200
+
+opsi-script-test (4.12.3.10-1) stable; urgency=low
+
+  * fix an error in opsi-script-test.opsiscript 
+      Instead of using the default format of date, display the current unix timestamp. 
+      This way we avoid format inconsistencies across platforms and 
+      simplify the test because we don not need to parse the output of date anymore.
+  * fix in login.opsiscript
+      $HomeTestFiles$ was missing
+      paths to opsiscripttesthelper.exe were outdate
+  * fix in winbatch.opsiscript
+      Ensure that $HomeTestFiles$ exists for Winbatch Tests 
+    
+  Many thanks to sternenseemann (github) for these improvments.
+  
+-- jan werner <j.werner@uib.de>  Wed,  13 May 2020 11:50:00 +0200
+
+opsi-script-test (4.12.3.9-2) stable; urgency=low
+
+  * regex test find file with given extension in list
+  * fix some errors from move tests to sub-scripts
+  
+-- detlef oertel <d.oertel@uib.de>  Thu,  06 Feb 2020 15:00:00 +0200
+
+opsi-script-test (4.12.3.9-1) stable; urgency=low
+
+  * var_as_param tests (variable as parameter for section calls)
+      tests statement: executeSection( < string expr with section call>)
+  * registry tests now in sub-script
+  * new stand alone test: TestVarAsParam.opsiscript
+  * test for new function setValueByKey in stringlist test
+  
+-- detlef oertel <d.oertel@uib.de>  Tue,  21 Jan 2020 15:00:00 +0200
+
+opsi-script-test (4.12.3.6-1) stable; urgency=low
+
+  * integrate macos opsi-script-test-helper
+  * check for double backslashes in sub_sections
+  
+-- detlef oertel <d.oertel@uib.de>  Mon,  20 Jan 2020 15:00:00 +0200
+
+opsi-script-test (4.12.3.4-1) stable; urgency=low
+
+  * integrate linux opsi-script-test-helper
+  * stringlist: listfiles small fixes
+  * constants: 
+  *    stringlist function replaceOpsiConstansts(<list>) : <list>
+  *    string function replaceOpsiConstansts(<string>) : <string>    
+  * new string function which(<command in path>) : string (command with path) [W/L/M]
+  * new boolean function isPingReachable(<target host>) : bool 
+  
+-- detlef oertel <d.oertel@uib.de>  Thu,  31 Oct 2019 15:00:00 +0200
+
+opsi-script-test (4.12.2.1-1) stable; urgency=low
+
+  * switch to new opsi-script-test helpers
+  * new standalone tests: fileAllNtUser*
+  * test_files: more tests for files with alluser profiles
+
+-- detlef oertel <d.oertel@uib.de>  Mon,  26 Aug 2019 15:00:00 +0200
+
+opsi-script-test (4.12.1.5-2) stable; urgency=low
+
+  * add standalone: autoit_with_opsi-lib1.opsiscript as example for use of the opsi-autoit library
+
+-- detlef oertel <d.oertel@uib.de>  Mon,  22 Jul 2019 15:00:00 +0200
+
+opsi-script-test (4.12.1.5-1) stable; urgency=low
+
+  * fix removing of loopvar from empty loop
+
+-- detlef oertel <d.oertel@uib.de>  Thu,  06 Jun 2019 15:00:00 +0200
+
+opsi-script-test (4.12.1.4-1) stable; urgency=low
+
+  * comments on wmi test
+  * fix test getHWBiosInfoMap
+
+-- detlef oertel <d.oertel@uib.de>  Mon,  03 Jun 2019 15:00:00 +0200
 
 opsi-script-test (4.12.1.0-1) stable; urgency=low
 
