@@ -270,7 +270,7 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 
             Set $IncorrectFQDNs$ = CreateStringList("abcde", "uib.de", "www.uib", "www.uib.d", "-script.uib.de", "_script.uib.de", "www.uib.00", "a1b2.c3d4.e5f6", "aaa.-bbb.zz", "#aaa.bbb.zz", "a+a.bbb.zz", "a?a.bbb.zz")
 
-            DefFunc myFQDNTester($expected$ : string, $fqdn$ : string, ref $TestResult$ : string) : void
+            DefFunc myFQDNTester($expected$ : string, $fqdn$ : string, ref $TestResult$ : string) : string
                 DefVar $CompValue$
                 set $CompValue$ = booltostring(isValidFQDN($fqdn$))
                 if $CompValue$ = $expected$
@@ -281,8 +281,8 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
                 endif
             endfunc
 
-            for %s% in $CorrectFQDNs$ do  myFQDNTester("true","%s%",$TestResult$)
-            for %s% in $IncorrectFQDNs$ do  myFQDNTester("false","%s%",$TestResult$)
+            for %s% in $CorrectFQDNs$ do  set $tmp$ = myFQDNTester("true","%s%",$TestResult$)
+            for %s% in $IncorrectFQDNs$ do  set $tmp$ = myFQDNTester("false","%s%",$TestResult$)
 	endif	
 
 	sub_compareResult
