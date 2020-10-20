@@ -1,0 +1,45 @@
+[Actions]
+Message "Testing of randomstrWithParameters"
+;randomstrWithParameters(minLength,nLowerCases,nUpperCases,nDigits,nSpecialChars : Integer): string
+SetLogLevel=7
+
+DefVar $StringResult$
+DefVar $TestResult$
+DefVar $nLowerCases$
+DefVar $nUpperCases$
+DefVar $nDigits$
+DefVar $nSpecialChars$
+
+set $StringResult$ = randomstrWithParameters("10","2","3","4","1")
+
+DefFunc randomstrTester($i$ : string, ref $StringResult$ : string) : void
+    if contains("abcdefghijklmnopqrstuvwxyz",strPart($StringResult$,$i$,"1"))
+        set $nLowerCases$ = calculate($nLowerCases$+"+"+"1")
+    endif
+    if contains("ABCDEFGHIJKLMNOPQRSTUVWXYZ",strPart($StringResult$,$i$,"1"))
+        set $nUpperCases$ = calculate($nUpperCases$+"+"+"1")
+    endif
+    if isNumber(strPart($StringResult$,$i$,"1"))
+        set $nDigits$ = calculate($nDigits$+"+"+"1")
+    endif
+    if contains("!$()*+/;=?[]{}ß~§°",strPart($StringResult$,$i$,"1")) 
+        set $nSpecialChars$ = calculate($nSpecialChars$+"+"+"1")
+    endif
+endfunc
+
+if (strLength($StringResult$) INT >= "10")
+    set $nLowerCases$ = "0"
+    set $nUpperCases$ = "0"
+    set $nDigits$ = "0"
+    set $nSpecialChars$ = "0"
+    for %i% = "1" to strLength($StringResult$) do randomstrTester("%i%",$StringResult$)
+    if  ($nLowerCases$ = "2" AND  $nUpperCases$ = "3" AND  $nDigits$ = "4" AND $nSpecialChars$ = "1")
+        comment "Testing randomstrWithParameters succeeded"
+    else
+        set $TestResult$ = "not o.k."
+        LogWarning "Testing randomstrWithParameters failed"
+    endif
+else 
+    set $TestResult$ = "not o.k."
+    LogWarning "Testing randomstrWithParameters failed"
+endif
