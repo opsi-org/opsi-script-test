@@ -764,12 +764,13 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		endcase
 	endswitch
 	
-	;comment ">>not tested"
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
 	else
-		LogWarning "failed"
-		set $TestResult$ = "not o.k."
+		; removed from assesment because the use is diccouraged:
+		; %IPADDRESS% may be any IP-number of the system
+		;LogWarning "failed"
+		;set $TestResult$ = "not o.k."
 	endif
 
 	comment ""
@@ -2578,9 +2579,39 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			comment "-------------------------------------"
 			comment "Testing: "
 			message "getMyIpByTarget"
-			set $ConstTest$ = "%IPAddress%"
+			;set $ConstTest$ = "%IPAddress%"
+			switch $OS$
+				case "Windows_nt"
+					set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
+					;set $tmp$ = takeString(34, $list1$)
+					set $tmp$ = takeFirstStringContaining($list1$,"IPv4")
+					set $tmp$ = trim($tmp$)
+					set $CompValue$ = takeString(-1, splitString ($tmp$, ":"))
+					if contains($CompValue$, "(")
+						set $CompValue$ = trim(takeString(0, splitString ($CompValue$, "(")))
+						;trim(stringReplace($CompValue$,"(Preferred)",""))
+					endif
+				endcase
+				case "Linux"
+					set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
+					if $CompValue$ = "172.16.166.1"
+						set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
+					endif
+				endcase
+				case "macos"
+					set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
+					set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
+					set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en0"))
+					if not (isValidIP4 ($CompValue$))
+						set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en1"))
+					endif
+					if not (isValidIP4 ($CompValue$))
+						set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en5"))
+					endif
+				endcase
+			endswitch
 			set $string1$ = "%opsiServer%"
-			set $CompValue$ = getMyIpByTarget($string1$)
+			set $ConstTest$ = getMyIpByTarget($string1$)
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else

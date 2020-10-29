@@ -2,6 +2,9 @@
 opsi-script-test (4.12.4.4-1) stable; urgency=low
 
   * add isValidFQDN test
+  * deactivate assessment of constant %IPAddress%
+  * check getmyipbytarget against ipconfig (and not against %IPAddress%)
+  * opsi-script-test-helper update 4.1.0.1
   
 -- detlef oertel <d.oertel@uib.de>  Tue,  13 Oct 2020 15:00:00 +0200
 

@@ -290,7 +290,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
 	marktime
-	Winbatch_startprocess_with_child_nowait /WaitForProcessEnding  $helper_child_bin_name$ /TimeOutSeconds 2
+	Winbatch_startprocess_with_child_nowait8 /WaitForProcessEnding  $helper_child_bin_name$ /TimeOutSeconds 2
 	difftime
 	comment "difftime should be 2 seconds"
 	set $ConstTest$ = "2"
@@ -752,13 +752,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		
 			message "testing winbatch_start_helper_c /RunElevated"
 			winbatch_start_helper_c /RunElevated
-			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
+			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 			message "testing winbatch_start_helper_asadmin_c /RunElevated"
 			winbatch_start_helper_asadmin_c /RunElevated
-			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
+			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 			message "testing winbatch_start_helper_asinvoker_c /RunElevated"
 			winbatch_start_helper_asinvoker_c /RunElevated
-			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
+			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 		
 			marktime
 			message "testing Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
@@ -1399,6 +1399,9 @@ tasklist /FI "IMAGENAME eq $opsi_script_test_helper_bin_name$"
 [Winbatch_startprocess_with_child_nowait]
 "%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
 
+[Winbatch_startprocess_with_child_nowait8]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=8
+
 [Winbatch_startprocess_with_child_nowait_from_c]
 "$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=2
 
@@ -1469,13 +1472,16 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 ;"%WinstDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
 
 [winbatch_start_helper_asadmin_c]
-"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$"
 
 [winbatch_start_helper_asinvoker_c]
-"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$"
 
 [winbatch_start_helper_c]
-"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
+"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$"
 
 [Files_testFiles]
 checkTargetPath = "$HomeTestFiles$"
