@@ -260,7 +260,7 @@ switch $OS$
 		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
 		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac/opsiscripttesthelper"
 		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac/helperchild"
-
+		
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-mac"
 		set $pathDelim$ = "/"
 		set $ping5command$ = "ping -c 5 127.0.0.1"
@@ -363,7 +363,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 	Set $ExpectedResult$ = "o.k."
-
+	
 	if $OS$ = "Windows_NT"
 		if $language$ = "DE"
 			comment ""
@@ -372,7 +372,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			comment "%"+"AppdataDir" +"%"
 			comment "(the app data for the current user)"
 			DosInAnIcon_set
-  	
+			
 			if "%opsiserviceURL%" = ""
 				set $ConstTest$="%AppdataDir%"
 				if $NTVersion$ = "WinXP"
@@ -403,7 +403,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			comment "%"+"AppdataDir" +"%"
 			comment "(the app data for the current user)"
 			DosInAnIcon_set
-  	
+			
 			if "%opsiserviceURL%" = ""
 				set $ConstTest$="%CurrentAppdataDir%"
 				if $NTVersion$ = "WinXP"
@@ -429,8 +429,8 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 				endif
 			endif
 		endif  ; lang = de
-
-
+		
+		
 		message "Testing constants: "+"%"+"DefaultUserProfileDir"+"%"
 		set $ConstTest$="%DefaultUserProfileDir%"
 		;if $MsVersion$ < "6"
@@ -440,15 +440,15 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Default"),"%"+"SystemDrive"+"%"))
 		endif
-
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
-
+		
+		
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"AllUsersProfileDir"+"%"
@@ -460,14 +460,14 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Public"),"%"+"SystemDrive"+"%"))
 		endif
-
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		message "Testing constants: "+"%"+"CommonProfileDir"+"%"
 		set $ConstTest$="%CommonProfileDir%"
 		;if $MsVersion$ < "6"
@@ -477,100 +477,100 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Public"),"%"+"SystemDrive"+"%"))
 		endif
-
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
-
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"CommonStartMenuPath" +"%"
 		set $ConstTest$="%CommonStartMenuPath%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Start Menu")
-
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"CommonAppDataDir" +"%"
 		set $ConstTest$="%CommonAppDataDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common AppData")
-
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"CommonDesktopDir" +"%"
 		set $ConstTest$="%CommonDesktopDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Desktop")
-
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"CommonStartupDir" +"%"
 		set $ConstTest$="%CommonStartupDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Startup")
-
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"CommonProgramDir" +"%"
 		set $ConstTest$="%CommonProgramsDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Programs")
-
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
-
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"ProfileDir" +"%"
 		set $ConstTest$="%ProfileDir%"
 		set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] ProfilesDirectory"),"%"+"SystemDrive"+"%"))
-  	
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -585,15 +585,15 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 				set $CompValue$ = "C:\Program Files"
 			endif
 		endif
-  	
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
-  	
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -608,45 +608,45 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 				set $CompValue$ = "C:\Program Files"
 			endif
 		endif
-  	
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
-  	
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"ProgramFiles64Dir" +"%"
 		set $ConstTest$="%ProgramFiles64Dir%"
 		set $CompValue$ = GetRegistrystringvalue64("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion] ProgramFilesDir")
-  	
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
-  	
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"ProgramFilesSysnativeDir" +"%"
 		set $ConstTest$="%ProgramFilesSysnativeDir%"
 		set $CompValue$ = GetRegistrystringvalue64("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion] ProgramFilesDir")
-  	
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
-  	
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -657,15 +657,15 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $CompValue$= "C:\Windows"
 		endif
-  	
+		
 		if ($ConstTest$= $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
-  	
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -678,7 +678,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif ; windows
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -696,7 +696,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 	endif
 	
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -727,7 +727,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 		set $TestResult$ = "not o.k."
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -772,7 +772,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		;LogWarning "failed"
 		;set $TestResult$ = "not o.k."
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -796,9 +796,9 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;	LogWarning "failed"
 	;	set $TestResult$ = "not o.k."
 	;endif
-
+	
 	; the following constants are not in a script testable if not a specific execution environment can be guaranteed
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -809,7 +809,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= "")
 	;	set $TestResult$ = "not o.k."
 	;endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -820,7 +820,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= "%WinstDir%")
 	;	set $TestResult$ = "not o.k."
 	;endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -831,7 +831,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= "")
 	;	set $TestResult$ = "not o.k."
 	;endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -842,8 +842,8 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= EnvVar(""))
 	;	set $TestResult$ = "not o.k."
 	;endif
-
-
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -854,7 +854,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= EnvVar(""))
 	;	set $TestResult$ = "not o.k."
 	;endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -865,8 +865,8 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= EnvVar(""))
 	;	set $TestResult$ = "not o.k."
 	;endif
-
-
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -877,7 +877,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= EnvVar(""))
 	;	set $TestResult$ = "not o.k."
 	;endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -888,7 +888,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= EnvVar(""))
 	;	set $TestResult$ = "not o.k."
 	;endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -899,7 +899,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= EnvVar(""))
 	;	set $TestResult$ = "not o.k."
 	;endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -910,7 +910,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= EnvVar(""))
 	;	set $TestResult$ = "not o.k."
 	;endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -921,8 +921,8 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	;if not ($ConstTest$= EnvVar(""))
 	;	set $TestResult$ = "not o.k."
 	;endif
-
-
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -965,8 +965,8 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif
 	endif ; 4.12.3.6
-
-
+	
+	
 	set $ConstTest$ = "%CurrentAppdataDir%"
 	set $ConstTest$ = "%CurrentStartmenuDir%"
 	set $ConstTest$ = "%CurrentDesktopDir%"
@@ -997,7 +997,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 				set $CompValue$ = "/var/log/opsi-script"
 			else
 				set $CompValue$ = "/tmp"
-		endif
+			endif
 		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -1035,7 +1035,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.4")
-		if ($OS$ = "Windows_NT") 
+		if ($OS$ = "Windows_NT")
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 				comment " test stringlist"
 				set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
@@ -1073,7 +1073,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -1089,7 +1089,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -1121,8 +1121,8 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-	
-	
+		
+		
 		message "asConfidential"
 		set $ConstTest$ = asConfidential("hidden")
 		comment "This is a hidden string"
@@ -1143,7 +1143,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif ; 4.12.0.16
-
+	
 	if not ("%installingProdName%" = "")
 		comment "we are in opsi service mode"
 		message "IniVar ("key")"
@@ -1156,7 +1156,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "IniVar failed"
 		endif
-
+		
 		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
 		set $ConstTest$ = "off"
 		set $CompValue$ = GetProductProperty ("dummy","on")
@@ -1166,7 +1166,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "GetProductProperty failed"
 		endif
-
+		
 		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
 		set $ConstTest$ = "False"
 		set $CompValue$ = GetProductProperty ("dummybool","True")
@@ -1176,7 +1176,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "GetProductProperty failed"
 		endif
-
+		
 		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
 		comment "Attention: Reading a multi value property, gives you the"
 		comment "values comma separeted, so you get in trouble if a value contains a comma"
@@ -1188,9 +1188,9 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "GetProductProperty failed"
 		endif
-
-
-
+		
+		
+		
 		set $ConstTest$ = "True"
 		set $CompValue$ = GetProductProperty ("notexistingmulti","True")
 		if ($ConstTest$ = $CompValue$)
@@ -1199,7 +1199,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "GetProductProperty failed"
 		endif
-
+		
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
 			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
 			;set $list1$ = createStringList("ab", "cd", "ef", "g,h")
@@ -1210,7 +1210,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "GetProductPropertyList failed"
 			endif
-
+			
 			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
 			set $list$ = GetProductPropertyList ("notexistingmulti","True")
 			if not ("" = takeFirstStringContaining($list$,"True"))
@@ -1219,18 +1219,18 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "GetProductPropertyList failed"
 			endif
-
+			
 			comment "Testing include commands"
-
+			
 			include_append "sub-scripts\section_Files_del_tmp_dummy.opsiinc"
 			include_insert "sub-scripts\include-test1.opsiinc"
 			
 			comment "testing two sections with the same name"
 			include_append "sub-scripts\section_DosInAnIcon_echo.opsiinc"
 			DosInAnIcon_echo
-
+			
 		endif ; 4.11.3
-
+		
 	else
 		comment "we are not in opsi service mode"
 		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
@@ -1242,7 +1242,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "GetProductProperty failed"
 		endif
-
+		
 		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
 		set $ConstTest$ = "True"
 		set $CompValue$ = GetProductProperty ("dummybool","True")
@@ -1253,18 +1253,18 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "GetProductProperty failed"
 		endif
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.2") >= "0"
 		message "GetConfidentialProductProperty (<PropertyName>, <DefaultValue>)"
 		if not("%opsiserviceURL%" = "")
-		set $ConstTest$ = "This is confidential"
-		set $CompValue$ = GetConfidentialProductProperty ("confidentialstring","")
-		if ($ConstTest$ = $CompValue$)
-			comment "GetConfidentialProductProperty passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "GetConfidentialProductProperty failed"
-		endif
+			set $ConstTest$ = "This is confidential"
+			set $CompValue$ = GetConfidentialProductProperty ("confidentialstring","")
+			if ($ConstTest$ = $CompValue$)
+				comment "GetConfidentialProductProperty passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetConfidentialProductProperty failed"
+			endif
 		endif
 		set $ConstTest$ = "confidential test"
 		set $CompValue$ = GetConfidentialProductProperty ("not-existing-property","confidential test")
@@ -1290,9 +1290,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
-
+	
 	; Strings in Strings (Nested String Values)
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -1306,9 +1306,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	; String Concatenation
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -1318,16 +1318,16 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	Set $String2$ = "and"
 	Set $String3$ = "your text"
 	Set $CompValue$ = $String1$ + " " + $String2$ + " " + $String3$
-
+	
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	; String Functions which Return the OS Type
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -1358,7 +1358,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	; GetNtVersion is deprecated - not tested anymore - use GetMsVersionInfo or GetMSVersionMap
 	;comment ""
 	;comment "-------------------------------------"
@@ -1387,7 +1387,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	;	set $TestResult$ = "not o.k."
 	;	LogWarning "failed"
 	;endif
-
+	
 	if $OS$ = "Windows_NT"
 		comment ""
 		comment "-------------------------------------"
@@ -1406,7 +1406,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		;if $MsVersion$ <= "5.0"
 		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
 			comment "not tested at win2k  because wmic is needed"
@@ -1434,9 +1434,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 		endif
-
+		
 		;  String Functions for Retrieving Environment or Command Line Parameters
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -1466,18 +1466,18 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			;LogWarning "failed"
 		endif
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	comment "ParamStr"
 	comment ">> not tested yet"
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "GetLastExitCode"
-
+	
 	if $OS$ ="Windows_NT"
 		Winbatch_exitcode_43_noquote_with_param
 	else
@@ -1491,7 +1491,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "testing exitcode failed"
 	endif
-
+	
 	if $OS$ ="Windows_NT"
 		comment ""
 		comment "-------------------------------------"
@@ -1506,21 +1506,21 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.2") >= "0"
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GetLoggedInUser"
-			set $ConstTest$ = ""
-			set $CompValue$ = GetLoggedInUser
-			;if ($ConstTest$ = $CompValue$)
-			;	comment "passed"
-			;else
-			;	set $TestResult$ = "not o.k."
-			;	LogWarning "failed"
-			;endif
-
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GetLoggedInUser"
+		set $ConstTest$ = ""
+		set $CompValue$ = GetLoggedInUser
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -1534,11 +1534,11 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 	endif  ; 4.11.1.2
-
-
-
+	
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -1551,7 +1551,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -1565,7 +1565,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -1579,9 +1579,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -1627,8 +1627,8 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
-
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -1644,7 +1644,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
 		set $ConstTest$ = "NULL"
 		set $CompValue$ = getValueBySeparator("b", "=", $INST_Resultlist$)
@@ -1655,8 +1655,8 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
-
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -1716,7 +1716,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 	endif ; 4.11.2.1
 	
 	
@@ -1796,10 +1796,10 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif ; 4.11.5.2
-
-
+	
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.4") >= "0"
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -1875,7 +1875,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -1896,7 +1896,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
 		if saveTextFile($INST_Resultlist$, $testfile$)
 			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
@@ -1937,7 +1937,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
 		if saveTextFile($INST_Resultlist$, $testfile$)
 			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
@@ -1959,10 +1959,10 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif ; 4.11.4.4
-
-
+	
+	
 	; Additional String Functions
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -1975,14 +1975,92 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "RandomStr"
 	set $list$ = createStringList("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20")
 	for %c% in $list$ do sub_random_pass_test
-
+	
+	DefVar $nTotalChars$
+	DefVar $nLowerCases$
+	DefVar $nUpperCases$
+	DefVar $nDigits$
+	DefVar $nSpecialChars$
+	DefVar $inTotalChars$
+	DefVar $inLowerCases$
+	DefVar $inUpperCases$
+	DefVar $inDigits$
+	DefVar $inSpecialChars$
+	
+	
+	DefFunc randomCharTester($i$ : string, ref $StringResult$ : string) : void
+		if contains("abcdefghijklmnopqrstuvwxyz",strPart($StringResult$,$i$,"1"))
+			set $nLowerCases$ = calculate($nLowerCases$+"+"+"1")
+		endif
+		if contains("ABCDEFGHIJKLMNOPQRSTUVWXYZ",strPart($StringResult$,$i$,"1"))
+			set $nUpperCases$ = calculate($nUpperCases$+"+"+"1")
+		endif
+		if isNumber(strPart($StringResult$,$i$,"1"))
+			set $nDigits$ = calculate($nDigits$+"+"+"1")
+		endif
+		if contains("!$()*+/;=?[]{}ß~§°",strPart($StringResult$,$i$,"1"))
+			set $nSpecialChars$ = calculate($nSpecialChars$+"+"+"1")
+		endif
+	endfunc
+	
+	DefFunc randomstrTester($StringResult$ : string) :void
+		if (strLength($StringResult$) INT >= $inTotalChars$)
+			set $nLowerCases$ = "0"
+			set $nUpperCases$ = "0"
+			set $nDigits$ = "0"
+			set $nSpecialChars$ = "0"
+			for %i% = "1" to strLength($StringResult$) do randomCharTester("%i%",$StringResult$)
+			if  ($nLowerCases$ INT>= $inLowerCases$ AND  $nUpperCases$ = $inUpperCases$ AND  $nDigits$ = $inDigits$ AND $nSpecialChars$ = $inSpecialChars$)
+				comment "Testing randomstrWithParameters succeeded"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "Testing randomstrWithParameters failed"
+			endif
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing randomstrWithParameters failed"
+		endif
+	endfunc
+	
+	set $inTotalChars$ = "10"
+	set $inLowerCases$ = "3"
+	set $inUpperCases$ = "2"
+	set $inDigits$ = "4"
+	set $inSpecialChars$ = "1"
+	set $ConstTest$ = randomstrWithParameters($inTotalChars$,$inLowerCases$,$inUpperCases$,$inDigits$,$inSpecialChars$)
+	randomstrTester($ConstTest$)
+	
+	set $inTotalChars$ = "10"
+	set $inLowerCases$ = "0"
+	set $inUpperCases$ = "1"
+	set $inDigits$ = "1"
+	set $inSpecialChars$ = "8"
+	set $ConstTest$ = randomstrWithParameters($inTotalChars$,$inLowerCases$,$inUpperCases$,$inDigits$,$inSpecialChars$)
+	randomstrTester($ConstTest$)
+	
+	set $inTotalChars$ = "5"
+	set $inLowerCases$ = "0"
+	set $inUpperCases$ = "1"
+	set $inDigits$ = "1"
+	set $inSpecialChars$ = "8"
+	set $ConstTest$ = randomstrWithParameters($inTotalChars$,$inLowerCases$,$inUpperCases$,$inDigits$,$inSpecialChars$)
+	randomstrTester($ConstTest$)
+	
+	set $inTotalChars$ = "15"
+	set $inLowerCases$ = "0"
+	set $inUpperCases$ = "1"
+	set $inDigits$ = "1"
+	set $inSpecialChars$ = "8"
+	set $ConstTest$ = randomstrWithParameters($inTotalChars$,$inLowerCases$,$inUpperCases$,$inDigits$,$inSpecialChars$)
+	randomstrTester($ConstTest$)
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -2031,7 +2109,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "passed"
 	endif
-
+	
 	set $string1$ = "1.20.3.4.5"
 	set $string2$ = "1.2.30.4.5"
 	if CompareDotSeparatedNumbers($string1$, "<", $string2$)
@@ -2076,7 +2154,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $string1$ = "1.2.30.4.5"
 	set $string2$ = "1.20.30.4.5"
 	if CompareDotSeparatedNumbers($string1$, "<", $string2$)
@@ -2121,7 +2199,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "passed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -2170,7 +2248,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "passed"
 	endif
-
+	
 	set $string1$ = "1.a.cb.c.3"
 	set $string2$ = "1.a.b.c.3"
 	if CompareDotSeparatedStrings($string1$, "<", $string2$)
@@ -2215,7 +2293,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $string1$ = "1.a.ab.c.3"
 	set $string2$ = "1.a.b.c.3"
 	if CompareDotSeparatedStrings($string1$, "<", $string2$)
@@ -2260,8 +2338,8 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "passed"
 	endif
-
-
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -2277,7 +2355,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $string1$ = "1.2.31.4.5"
 	set $string2$ = "1.2.13.4.5"
 	set $ConstTest$ = "1"
@@ -2289,7 +2367,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $string1$ = "1.2.3.4.5"
 	set $string2$ = "1.2.13.4.5"
 	set $ConstTest$ = "-1"
@@ -2301,7 +2379,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -2317,7 +2395,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $string1$ = "1.a.b.c.3"
 	set $string2$ = "1.A.B.C.3"
 	set $ConstTest$ = "0"
@@ -2329,7 +2407,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $string1$ = "1.a.cb.c.3"
 	set $string2$ = "1.a.b.c.3"
 	set $ConstTest$ = "1"
@@ -2341,7 +2419,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $string1$ = "1.a.ab.c.3"
 	set $string2$ = "1.a.b.c.3"
 	set $ConstTest$ = "-1"
@@ -2353,7 +2431,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $string1$ = "1.2.13.4.5"
 	set $string2$ = "1.2.3.4.5"
 	set $ConstTest$ = "-1"
@@ -2366,7 +2444,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $string1$ = "1.2.3.4.5"
 	set $string2$ = "1.2.13.4.5"
 	set $ConstTest$ = "1"
@@ -2379,10 +2457,10 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
-
-
-
+	
+	
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -2395,7 +2473,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.2") >= "0"
 		comment ""
 		comment "-------------------------------------"
@@ -2405,9 +2483,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "getUserContext not tested, minimum winst needed: 4.11.1.2"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2420,7 +2498,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2440,7 +2518,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2463,7 +2541,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2486,7 +2564,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2533,7 +2611,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2573,7 +2651,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		if not ("%opsiserviceURL%" = "")
 			comment ""
 			comment "-------------------------------------"
@@ -2619,8 +2697,8 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 		endif ; opsi service
-			
-
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2659,9 +2737,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			endif
 			LogWarning "failed"
 		endif
-
-	
-
+		
+		
+		
 	else
 		comment "stringReplace not tested, minimum winst needed: 4.11.3.2"
 	endif
@@ -2680,8 +2758,8 @@ if ($Flag_calculate$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
-
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.5") >= "0"
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.5") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2926,7 +3004,7 @@ if ($Flag_calculate$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 	endif ; 4.11.3.5
-
+	
 	sub_compareResult
 	set $winst_calculate$ = $SubResult$
 endif
@@ -2942,17 +3020,17 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 	
 	
 	Set $ExpectedResult$ = "o.k."
-
+	
 	set $TestResult$ = "o.k."
-
+	
 	if $OS$ = "Windows_NT"
 		; Chapter 6.4.1 Info Maps
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "File Infos Test"
-  	
+		
 		comment "ask helper.exe for version info and catch it from output"
 		set $INST_ResultList$ = getOutStreamFromSection("DosInAnIcon_helper_version")
 		set $ConstTest$ = takeFirstStringContaining($INST_ResultList$,"Version")
@@ -2962,24 +3040,24 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 		set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 		set $example$ = getValue("language name 0", $INST_Resultlist$ )
 		set $CompValue$ = getValue("fileversion", $INST_Resultlist$ )
-  	
+		
 		for %line% in $INST_Resultlist$ do sub_showEntry
-  	
+		
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		set $InterestingFile$ = "%winstdir%\winst.exe"
 		if not (FileExists($InterestingFile$))
 			set $InterestingFile$ = "%winstdir%\winst32.exe"
 		endif
 		set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 		for %line% in $INST_Resultlist$ do sub_showEntry
-  	
-  	
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2996,7 +3074,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 		set $example$ = getValue("abbreviated_country_name", $INST_Resultlist$)
 		set $example$ = getValue("native_name_of_country", $INST_Resultlist$)
 		set $example$ = getValue("default_language_id", $INST_Resultlist$)
-  	
+		
 		comment ""
 		comment "all infos"
 		for %line% in $INST_Resultlist$ do sub_showEntry
@@ -3014,7 +3092,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 		endif
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -3054,7 +3132,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 	endif ; windows
 	
 	if $OS$ = "Linux"
-	comment ""
+		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "getLinuxVersionMap"
@@ -3072,7 +3150,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; Ubuntu
 	endif ; Linux
-
+	
 	if $OS$ = "macos"
 		comment ""
 		comment "-------------------------------------"
@@ -3096,10 +3174,10 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 	endif ; macos
-
-
+	
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
 		if not ("%installingProdName%" = "")
 			comment "we are in opsi service mode"
@@ -3143,8 +3221,8 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif
 	endif
-
-
+	
+	
 	;comment ""
 	;comment "-------------------------------------"
 	;comment "Testing: "
@@ -3155,14 +3233,14 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 	;for %line% in $INST_Resultlist$ do sub_showEntry
 	;set $CompValue$ = getValue("binaryname", $INST_Resultlist$)
 	;set $ConstTest$ = 'C:\Programme\FreePDF_XP\fpassist.exe'
-
+	
 	;if ($ConstTest$ = $CompValue$)
 	;	comment "passed"
 	;else
 	;	set $TestResult$ = "not o.k."
 	;	LogWarning "failed"
 	;endif
-
+	
 ;	set  $INST_Resultlist$ = getSlowInfoMap("OpenSSL-0.9.8h-1_is1","off")
 ;	comment ""
 ;	comment "all infos"
@@ -3177,10 +3255,10 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-
-
 	
-
+	
+	
+	
 	sub_compareResult
 	set $infostest$ = $SubResult$
 endif
@@ -3195,9 +3273,9 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
-
-
-
+	
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3205,7 +3283,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "c"
 	set $list1$ = createStringList ('a','b', 'c', 'd')
 	Set $CompValue$ = takeString(2, $list1$)
-
+	
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
 	else
@@ -3216,7 +3294,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "c"
 	set $list1$ = createStringList ('a','b', 'c', 'd')
 	Set $CompValue$ = takeString(2, $list1$)
-
+	
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
 	else
@@ -3227,7 +3305,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "c"
 	set $list1$ = createStringList ('a','', 'c', 'd')
 	Set $CompValue$ = takeString(2, $list1$)
-
+	
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
 	else
@@ -3254,7 +3332,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3262,14 +3340,14 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "server"
 	set $list1$ = splitString ("\\server\share\directory", "\")
 	Set $CompValue$ = takeString(2, $list1$)
-
+	
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3324,7 +3402,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -3366,9 +3444,9 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif
 		;setDebug_prog = false
 	endif ; 4.12.0.16
-
-
-
+	
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3377,14 +3455,14 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "line2"
 	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
 	Set $CompValue$ = takeString(2, $list1$)
-
+	
 	if ($ConstTest$ = $CompValue$)
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
 		comment ""
 		comment "-------------------------------------"
@@ -3399,7 +3477,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-8y.txt")
 		Set $CompValue$ = takeString(2, $list1$)
 		if ($ConstTest$ = $CompValue$)
@@ -3408,7 +3486,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		set $list1$ = loadUnicodeTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
 		Set $CompValue$ = takeString(2, $list1$)
 		if ($ConstTest$ = $CompValue$)
@@ -3417,7 +3495,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		if not($OS$ = 'macos')
 			set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
 			Set $CompValue$ = takeString(2, $list1$)
@@ -3430,9 +3508,9 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			logerror "macos todo"
 		endif
 	endif
-
-
-
+	
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3446,7 +3524,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3460,7 +3538,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "positive index failed"
 	endif
-
+	
 	set $ConstTest$ = "element2"
 	set $list1$ = createStringList ('element0', 'element1', 'element2')
 	set $CompValue$ = takeString(-1, $list1$)
@@ -3470,7 +3548,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "negative index failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3484,7 +3562,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $ConstTest$ = "element2"
 	set $CompValue$ = takeFirstStringContaining($list1$,'MENT2')
 	if ($ConstTest$ = $CompValue$)
@@ -3493,7 +3571,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	set $ConstTest$ = ""
 	set $CompValue$ = takeFirstStringContaining($list1$,'other string')
 	if ($ConstTest$ = $CompValue$)
@@ -3502,7 +3580,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3516,8 +3594,8 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
-
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3531,9 +3609,9 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	;set $list1$ = getOutStreamFromSection ('DosInAnIcon_netstat')
-
+	
 	;getReturnListFromSection (Sectionname)
 	;if $MsVersion$ <= "5.0"
 	if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
@@ -3553,8 +3631,8 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif
-
-
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3789,8 +3867,8 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "getSubList(1:-1, $list1$) failed"
 		endif
 	endif ; 4.12.0.34
-
-
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -3893,13 +3971,13 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		;	LogWarning "failed"
 		;endif
 		
-	;	  * new function : getSubListByMatch(<search string>, <target list>) :stringlist
-  ;* new function : getSubListByMatch(<search list>, <target list>) :stringlist
-  ;* new function : getSubListByContaining(<search string>, <target list>) :stringlist
-  ;* new function : getSubListByContaining(<search list>, <target list>) :stringlist
-  ;* new function : getSubListByKey(<search string>, <target list>) :stringlist
-  ;* new function : getSubListByKey(<search list>, <target list>) :stringlist
-  ;* new function : getKeyList(<list>) :stringlist
+		;	  * new function : getSubListByMatch(<search string>, <target list>) :stringlist
+		;* new function : getSubListByMatch(<search list>, <target list>) :stringlist
+		;* new function : getSubListByContaining(<search string>, <target list>) :stringlist
+		;* new function : getSubListByContaining(<search list>, <target list>) :stringlist
+		;* new function : getSubListByKey(<search string>, <target list>) :stringlist
+		;* new function : getSubListByKey(<search list>, <target list>) :stringlist
+		;* new function : getKeyList(<list>) :stringlist
 		message "getSubListByMatch..string ..."
 		set $tmp$ = "c"
 		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
@@ -4192,7 +4270,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif ; 4.12.0.16
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -4207,7 +4285,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -4222,7 +4300,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -4238,7 +4316,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	if $OS$ = "Windows_NT"
 		comment ""
 		comment "-------------------------------------"
@@ -4253,7 +4331,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -4270,9 +4348,9 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif ; windows
-
+	
 	; Iterating through String Lists
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -4287,7 +4365,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -4302,7 +4380,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -4341,7 +4419,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.2") >= "0"
 		comment ""
 		comment "-------------------------------------"
@@ -4383,7 +4461,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "getProcessList not tested, minimum winst needed: 4.11.1.2"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
 		comment ""
 		comment "-------------------------------------"
@@ -4419,7 +4497,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "processIsRunning not tested, minimum winst needed: 4.11.6.1"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
 		comment ""
 		comment "-------------------------------------"
@@ -4430,10 +4508,10 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $list2$ = getRegistryKeyListSysnative('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList')
 			set $list2$ = getListContaining($list2$,'S-1-5-')
 			set $list2$ = getListContaining($list2$,'-500')
-			;if ($MsVersion$ = "6.2") 
+			;if ($MsVersion$ = "6.2")
 			;	comment "we are on win8"
 			;	set $list2$ = getListContaining($list2$,'-1001')
-			;else 
+			;else
 			;	set $list2$ = getListContaining($list2$,'-500')
 			;endif
 			set $list2$ = reverse ($list2$)
@@ -4456,7 +4534,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "getProfilesDirList not tested, minimum winst needed: 4.11.3.2"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.4") >= "0"
 		set $ConstTest$ = "0"
 		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
@@ -4524,7 +4602,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		
 		set $ConstTest$ = "1"
 		set $list2$ = removeFromListByContaining("line", $list1$)
@@ -4546,7 +4624,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment "search with string function"
 		set $ConstTest$ = "10"
 		set $list2$ = removeFromListByContaining(trim(" line 5 "), $list1$)
@@ -4606,7 +4684,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "listFiles"
 		Files_copy_for_filelist ;initialize test directory
-
+		
 		comment "Search all  files in $HomeTestFiles$"
 		if $OS$ = "Windows_NT"
 			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
@@ -4615,7 +4693,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif
 		;set $list2$ = GetListContaining($list2$, ".")
 		set $list3$ = listFiles($HomeTestFiles$,"*.*","False")
-		if (count($list2$) = count($list3$))      
+		if (count($list2$) = count($list3$))
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
@@ -4650,7 +4728,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment "Search all exe files in $HomeTestFiles$ and subdirectories"
 		if $OS$ = "Windows_NT"
 			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test3')
@@ -4679,7 +4757,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
-		endif            
+		endif
 		
 		comment "Search file encode-cp866.opsiscript in $HomeTestFiles$"
 		if $OS$ = "Windows_NT"
@@ -4699,8 +4777,8 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		if $OS$ = "Windows_NT"
 			comment "Search file in %System% with redirection for 32bit programs to SysWOW64"
 			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6')
-			set $list3$ = listFiles("%System%","*.*","False")     
-			if (count($list2$) = count($list3$))          
+			set $list3$ = listFiles("%System%","*.*","False")
+			if (count($list2$) = count($list3$))
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -4720,7 +4798,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif ; windows
 		
 		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
-		
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -4748,7 +4826,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-	
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -4765,7 +4843,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-	
+			
 			set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
 			set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$,":")
 			set $ConstTest$ = "myvalue"
@@ -4780,9 +4858,9 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			
 		endif ; 4.12.3.9
 		
-		Files_empty_folder ;remove test files 
+		Files_empty_folder ;remove test files
 		;End of Testing listFiles
-	endif ; WinstVersion >= 4.12.3	        
+	endif ; WinstVersion >= 4.12.3
 	
 	sub_compareResult
 	set $winst_string_list$ = $SubResult$
@@ -4798,7 +4876,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
-
+	
 	if $OS$ = "Windows_NT"
 		;if $MsVersion$ <= "5.0"
 		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
@@ -4852,7 +4930,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 				comment "runningAsAdmin not tested, minimum winst needed: 4.11.1.1"
 			endif
 		endif
-
+		
 		;if $MsVersion$ <= "5.0"
 		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
 			comment "not tested at win2k  because tasklist is needed"
@@ -4879,9 +4957,9 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			includelog "%opsiLogDir%\au3.log" "200"
 			
 		endif
-
+		
 	endif ; windows
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.6") >= "0"
 		comment ""
 		comment "-------------------------------------"
@@ -4895,7 +4973,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endif
 		set $list1$ = getOutstreamfromSection($SectionName$)
 		set $tmp$ = takeString(0,$list1$)
-
+		
 		Set $ConstTest$ = "%ScriptPath%"
 		ChangeDirectory $ConstTest$
 		set $list1$ = getOutstreamfromSection($SectionName$)
@@ -4905,7 +4983,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment "restore actual working directory"
 		Set $ConstTest$ = $tmp$
 		ChangeDirectory $ConstTest$
@@ -4917,9 +4995,9 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif
-
-
-
+	
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -4995,7 +5073,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5") >= "0"
 		MaximizeWinst
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: SetSkinDirectory"
@@ -5045,7 +5123,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endif
 		diffTime
 	endif ; windows
-
+	
 	; Conditional Statements (if Statements)
 	comment ""
 	comment "-------------------------------------"
@@ -5060,9 +5138,9 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "else passed"
 	endif
-
+	
 	;  Boolean Expressions
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5084,13 +5162,13 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	if $OS$ = "Windows_NT"
 		Set $list$ = getOutStreamFromSection ('dosbatch_profiledir')
 		comment "loop over the result"
 		for $x$ in $list$ do sub_file_exists
 	endif ; windows
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5106,7 +5184,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5123,7 +5201,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	Files_empty_folder
-
+	
 	;if $MsVersion$ <= "5.0"
 	if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
 		comment "not tested at win2k  because wmic is needed"
@@ -5143,7 +5221,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5162,7 +5240,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 		set $TestResult$ = "not o.k."
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5181,8 +5259,8 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 		set $TestResult$ = "not o.k."
 	endif
-
-
+	
+	
 	if $OS$ = "Windows_NT"
 		comment ""
 		comment "-------------------------------------"
@@ -5209,7 +5287,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endif
 		killtask "autoit3.exe"
 	endif ; windows
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
 		comment ""
 		comment "-------------------------------------"
@@ -5250,12 +5328,12 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		else
 			logerror "macos todo"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "GetScriptMode"
-
+		
 		set $CompValue$ = GetScriptMode
 		set $ConstTest$ = "Machine"
 		if ($ConstTest$ = $CompValue$)
@@ -5265,7 +5343,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
 		comment ""
 		comment "-------------------------------------"
@@ -5329,10 +5407,10 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	endif ; 4.11.5
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.6")
-	
+		
 		forceLogInAppendMode = true
-	
-		forceLogInAppendMode = false 
+		
+		forceLogInAppendMode = false
 		
 	endif ; 4.12.3.6
 	
@@ -5366,10 +5444,10 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "runningOnUefi failed"
 		set $TestResult$ = "not o.k."
 	endif
-
-
+	
+	
 	sub_compareResult
-
+	
 	set $winst_controls$ = $SubResult$
 endif
 
@@ -5382,7 +5460,7 @@ if ($Flag_subtestsub$ = "on") or ($MasterFlag$ = "on")
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = ""
-
+	
 	set $AktTestSubScript$ = "%ScriptPath%\test-files\sub\subtestsub.ins"
 	sub_executeTest
 	set $subtestsub$ = $SubResult$
@@ -5401,14 +5479,14 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	;Set $HomeTestFiles$ = "C:\tmp\testFiles"
 	set $TestResult$ = "o.k."
-
+	
 	; Chapter 7.2 Patches Sectione
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	comment "add, set, addnew, change, del, replace"
-
+	
 	if $OS$ = "Linux"
 		ShellInAnIcon_create_ini
 	else
@@ -5428,7 +5506,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "add failed"
 		endif
-
+		
 		message "set"
 		set $ConstTest$ = "[secdummy]"
 		set $ConstTest2$ = "dummy2=set1"
@@ -5441,7 +5519,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "set failed"
 		endif
-
+		
 		message "addnew"
 		set $ConstTest$ = "[secdummy]"
 		set $ConstTest2$ = "dummy1=addnew1"
@@ -5454,7 +5532,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "addnew failed"
 		endif
-
+		
 		message "change"
 		set $ConstTest$ = "[secdummy]"
 		set $ConstTest2$ = "dummy3=change1"
@@ -5467,7 +5545,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "change failed"
 		endif
-
+		
 		message "delete"
 		set $ConstTest$ = "[secdummy]"
 		set $ConstTest2$ = "dummy5=add5"
@@ -5480,7 +5558,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "delete failed"
 		endif
-
+		
 		message "replace"
 		set $ConstTest$ = "[secdummy]"
 		set $ConstTest2$ = "replace1=replace1"
@@ -5498,7 +5576,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 		logError "Fatal: could not create .ini file"
 		isFatalError
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5513,7 +5591,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "GetValueFromInifile failed"
 		endif
-
+		
 		message "GetIni"
 		comment "GetIni is deprecated - use GetValueFromInifile)
 		set $ConstTest$ = "add1"
@@ -5529,8 +5607,8 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 		logError "Fatal: could not create .ini file"
 		isFatalError
 	endif
-
-
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5573,7 +5651,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	;		isFatalError
 	;	endif
 	;endif ; 4.12.1.0
-
+	
 	;Files_remove_folder
 	
 	if not($OS$ = "macos")
@@ -5587,8 +5665,8 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			for %s% in $list1$ do sub_check_profile_ini
 			Files_remove_profile_ini /AllNTUserProfiles
 		endif ; 4.11.3.2
-	endif 
-
+	endif
+	
 	sub_compareResult
 	set $winst_patches$ = $SubResult$
 endif
@@ -5602,14 +5680,14 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
-
+	
 ; 7.3 PatchHost s Sections
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	comment "setAddr, setname, setalias, setalias, setComment"
-
+	
 	switch $OS$
 		case "Windows_nt"
 			DosInAnIcon_create_hosts
@@ -5624,7 +5702,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 	
 	PatchHosts_add $HomeTestFiles$+"\hosts"
 	if (FileExists($HometestFiles$+"\hosts"))
-
+		
 		message "setAddr"
 		set $ConstTest$ = "111.111.111.111"
 		set $ConstTest2$ = "ServerNo1.mydom.org"
@@ -5637,7 +5715,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "setAddr failed"
 		endif
-
+		
 		message "setName"
 		set $ConstTest$ = "222.222.222.222"
 		set $ConstTest2$ = "ServerNo2.mydom.org"
@@ -5650,7 +5728,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "setName failed"
 		endif
-
+		
 		message "setAlias <hostname> <alias>"
 		set $ConstTest$ = "myServerNo1"
 		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
@@ -5661,7 +5739,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "setAlias <hostname> <alias> failed"
 		endif
-
+		
 		message "setAlias <ipadresse> <alias>"
 		set $ConstTest$ = "myServerNo2"
 		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
@@ -5672,7 +5750,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "setAlias <ipadresse> <alias> failed"
 		endif
-
+		
 		message "setComment"
 		set $ConstTest$ = "# Hello World"
 		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
@@ -5684,12 +5762,12 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "setComment failed"
 		endif
 	endif
-		
+	
 	comment "once again ....."
 	
 	PatchHosts_add $HomeTestFiles$+"\hosts"
 	if (FileExists($HometestFiles$+"\hosts"))
-
+		
 		message "setAddr"
 		set $ConstTest$ = "111.111.111.111"
 		set $ConstTest2$ = "ServerNo1.mydom.org"
@@ -5702,7 +5780,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "setAddr failed"
 		endif
-
+		
 		message "setName"
 		set $ConstTest$ = "222.222.222.222"
 		set $ConstTest2$ = "ServerNo2.mydom.org"
@@ -5715,7 +5793,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "setName failed"
 		endif
-
+		
 		message "setAlias <hostname> <alias>"
 		set $ConstTest$ = "myServerNo1"
 		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
@@ -5726,7 +5804,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "setAlias <hostname> <alias> failed"
 		endif
-
+		
 		message "setAlias <ipadresse> <alias>"
 		set $ConstTest$ = "myServerNo2"
 		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
@@ -5737,7 +5815,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "setAlias <ipadresse> <alias> failed"
 		endif
-
+		
 		message "setComment"
 		set $ConstTest$ = "# Hello World"
 		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
@@ -5750,7 +5828,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	Files_copy_vmnat_hosts 
+	Files_copy_vmnat_hosts
 	PatchHosts_vmnat $HomeTestFiles$+"\hosts_vmnat"
 	Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts_vmnat")
 	PatchHosts_vmnat $HomeTestFiles$+"\hosts_vmnat"
@@ -5759,8 +5837,8 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 	Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts_vmnat")
 	PatchHosts_vmnat $HomeTestFiles$+"\hosts_vmnat"
 	Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts_vmnat")
-
-	if runningAsAdmin			
+	
+	if runningAsAdmin
 		message "setAddr"
 		set $ConstTest$ = ""
 		PatchHosts_system_add
@@ -5786,8 +5864,8 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "setAddr failed"
 		endif
 	endif
-
-
+	
+	
 	sub_compareResult
 	set $winst_patch_hosts$ = $SubResult$
 endif
@@ -5800,11 +5878,11 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
-
+	
 	set $TestResult$ = "o.k."
 	Files_copy_patchtextfile
 ; 7.5 PatchTextFile Sections
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5819,7 +5897,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5834,7 +5912,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5873,7 +5951,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5888,9 +5966,9 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
-
-
+	
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5905,7 +5983,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5920,7 +5998,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5935,7 +6013,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5950,7 +6028,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5965,7 +6043,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5980,7 +6058,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5995,7 +6073,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -6010,7 +6088,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -6025,7 +6103,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -6040,7 +6118,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -6055,7 +6133,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -6075,7 +6153,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -6092,7 +6170,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.6") >= "0"
 		comment ""
 		comment "-------------------------------------"
@@ -6151,7 +6229,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
 	endif
-
+	
 	Files_empty_folder
 	
 	if not($OS$ = 'macos')
@@ -6177,7 +6255,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = "0"
 			set $list1$ = getProfilesDirList
 			for %s% in $list1$ do sub_check_profile_txt
-		
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -6187,7 +6265,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = "3"
 			set $list1$ = getProfilesDirList
 			for %s% in $list1$ do sub_check_profile_txt
-		
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -6197,7 +6275,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = "1"
 			set $list1$ = getProfilesDirList
 			for %s% in $list1$ do sub_check_profile_txt
-		
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -6207,7 +6285,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = "0"
 			set $list1$ = getProfilesDirList
 			for %s% in $list1$ do sub_check_profile_txt
-		
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -6217,7 +6295,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = "0"
 			set $list1$ = getProfilesDirList
 			for %s% in $list1$ do sub_check_profile_txt
-		
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -6227,7 +6305,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = "1"
 			set $list1$ = getProfilesDirList
 			for %s% in $list1$ do sub_check_profile_txt
-		
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -6237,7 +6315,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = "1"
 			set $list1$ = getProfilesDirList
 			for %s% in $list1$ do sub_check_profile_txt
-		
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -6247,7 +6325,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = "3"
 			set $list1$ = getProfilesDirList
 			for %s% in $list1$ do sub_check_profile_txt
-		
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -6257,7 +6335,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = "6"
 			set $list1$ = getProfilesDirList
 			for %s% in $list1$ do sub_check_profile_txt
-		  
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -6267,7 +6345,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $list1$ = getProfilesDirList
 			set $tmp$ = "0"
 			for %s% in $list1$ do sub_check_profile_txt
-		
+			
 			;comment ""
 			;comment "-------------------------------------"
 			;comment "Testing: "
@@ -6292,7 +6370,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			
 		endif ; 4.11.3.4
 	endif ; not macos
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.6") >= "0"
 		;Files_copy_patchtextfile_system /sysnative
 		; Patchtextfile is not sysnative enabled yet
@@ -6312,10 +6390,10 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-	
-		Files_empty_folder_system 
+		
+		Files_empty_folder_system
 	endif ; 4.11.3.6
-
+	
 	sub_compareResult
 	set $winst_patch_text_file$ = $SubResult$
 endif
@@ -6378,11 +6456,11 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 		comment ""
 		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		Set $ExpectedResult$ = "o.k."
-    	
+		
 		; start testing
 		;Set $HomeTestFiles$ = "C:\tmp\testFiles"
 		set $TestResult$ = "o.k."
-			
+		
 		if $OS$ = "windows_NT"
 			set $link_extension$ = ".LNK"
 			set $target$ = "C:\Programme\PuTTY\1234567890.exe"
@@ -6397,12 +6475,12 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 		comment "check if we running in opsi mode"
 		if not ("%installingProdName%" = "opsi-script-test")
 			comment "we not running in opsi mode - user specific link folder will be tested"
-    	
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
 			comment "linkFolder @ desktop, sendto, startmenu, startup, programs, desktopdirectory"
-    	
+			
 			if $OS$ = "windows_NT"
 				set $list1$ = createStringList ('desktop', 'sendto', 'startmenu', 'programs', 'startup', 'desktopdirectory')
 				set $link_subfolder$ = "Dummy"
@@ -6414,7 +6492,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 			
 			message "startup"
 			for $var$ in $list1$ do LinkFolder_Dummy
-    	
+			
 			if $OS$ = "windows_NT"
 				message "sendto"
 				if (FileExists("%CurrentSendToDir%\Dummy\Dummy"+$link_extension$))
@@ -6425,8 +6503,8 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 					set $TestResult$ = "not o.k."
 					LogWarning "sendto failed"
 				endif
-    		
-    		
+				
+				
 				message "startmenu"
 				if (FileExists("%CurrentStartmenuDir%\Dummy\Dummy"+$link_extension$))
 					comment "startmenu passed"
@@ -6447,7 +6525,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 					LogWarning "programs failed"
 				endif
 			endif ; windows
-    	
+			
 			
 			message "desktop"
 			if (FileExists("%CurrentDesktopDir%\"+$link_subfolder$+"\dummy"+$link_extension$))
@@ -6458,8 +6536,8 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "desktop failed"
 			endif
-    	
-    	
+			
+			
 			message "startup"
 			if (FileExists("%CurrentStartupDir%\"+$link_subfolder$+"\dummy"+$link_extension$))
 				comment "startup passed"
@@ -6469,10 +6547,10 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "startup failed"
 			endif
-    	
+			
 		endif ; opsi service mode
-    	
-    	
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6487,9 +6565,9 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 			set $list2$ = emptylist($list2$)
 			set $link_subfolder$ = ""
 		endif
-    	
+		
 		for $var$ in $list2$ do LinkFolder_Dummy
-    	
+		
 		if $OS$ = "windows_NT"
 			message "common_desktopdirectory"
 			if (FileExists("%CommonDesktopDir%\"+$link_subfolder$+"Dummy"+$link_extension$))
@@ -6500,7 +6578,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "common_desktopdirectory failed"
 			endif
-  		
+			
 			message "common_startmenu"
 			if (FileExists("%CommonStartMenuPath%\"+$link_subfolder$+"Dummy"+$link_extension$))
 				comment "common_startmenu passed"
@@ -6510,28 +6588,28 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "common_startmenu failed"
 			endif
-		
-		message "common_startup"
-		if (FileExists("%CommonStartupDir%\"+$link_subfolder$+"Dummy"+$link_extension$))
-			comment "common_startup passed"
-			set $tmp$ = "%CommonStartupDir%\"+$link_subfolder$
-			Files_delete_linkFolder
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "common_startup failed"
-		endif
-    	
-		message "common_programs"
-		if (FileExists("%CommonProgramsDir%\"+$link_subfolder$+"Dummy"+$link_extension$))
-			comment "common_programs passed"
-			set $tmp$ = "%CommonProgramsDir%\"+$link_subfolder$
-			Files_delete_linkFolder
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "common_programs failed"
-		endif
+			
+			message "common_startup"
+			if (FileExists("%CommonStartupDir%\"+$link_subfolder$+"Dummy"+$link_extension$))
+				comment "common_startup passed"
+				set $tmp$ = "%CommonStartupDir%\"+$link_subfolder$
+				Files_delete_linkFolder
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_startup failed"
+			endif
+			
+			message "common_programs"
+			if (FileExists("%CommonProgramsDir%\"+$link_subfolder$+"Dummy"+$link_extension$))
+				comment "common_programs passed"
+				set $tmp$ = "%CommonProgramsDir%\"+$link_subfolder$
+				Files_delete_linkFolder
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_programs failed"
+			endif
 		endif ; windows
-    	
+		
 		
 		if $OS$ = "windows_NT"
 			set $list2$ = createStringList ('common_startmenu', 'common_programs', 'common_startup', 'common_desktopdirectory')
@@ -6552,7 +6630,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "common_desktopdirectory failed"
 			endif
-  		
+			
 			message "common_startmenu"
 			if (FileExists("%CommonStartMenuPath%\Dummy"+$link_extension$))
 				comment "common_startmenu passed"
@@ -6563,7 +6641,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "common_startmenu failed"
 			endif
 		endif ; windows
-    	
+		
 		message "common_startup"
 		if (FileExists("%CommonStartupDir%\dummy"+$link_extension$))
 			comment "common_startup passed"
@@ -6573,7 +6651,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "common_startup failed"
 		endif
-    	
+		
 		message "common_programs"
 		if (FileExists("%CommonProgramsDir%\dummy"+$link_extension$))
 			comment "common_programs passed"
@@ -6594,7 +6672,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 		for $var$ in $list2$ do LinkFolder_Dummy2
 		set $string1$ = "dummy"
 		for $var$ in $list2$ do LinkFolder_del_Dummy
-    	
+		
 		if $OS$ = "windows_NT"
 			message "common_desktopdirectory"
 			if not (FileExists("%CommonDesktopDir%\Dummy"+$link_extension$))
@@ -6605,7 +6683,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 				set $tmp$ = "%CommonDesktopDir%\Dummy"+$link_extension$
 				Files_delete_linkFolder
 			endif
-  		
+			
 			message "common_startmenu"
 			if not(FileExists("%CommonStartMenuPath%\Dummy"+$link_extension$))
 				comment "common_startmenu passed"
@@ -6625,7 +6703,7 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 				set $tmp$ = "%CommonStartupDir%\Dummy"+$link_extension$
 				Files_delete_linkFolder
 			endif
-		  
+			
 			message "common_programs"
 			if not(FileExists("%CommonProgramsDir%\Dummy"+$link_extension$))
 				comment "common_programs passed"
@@ -6637,8 +6715,8 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ;windows
 	endif ; macos
-  
-  
+	
+	
 	sub_compareResult
 	set $winst_link_folder$ = $SubResult$
 	;else  ; windows
@@ -6655,16 +6733,16 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
-
+	
 	; start testing
 	set $TestResult$ = "o.k."
 	if $OS$ = "windows_NT"
 		Files_copy_xml
-  	
+		
 		;return
-  	
+		
 		; 6.7.3 Boolean Expressions
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6681,7 +6759,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6698,9 +6776,9 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		; 6.4.5 Producing String Lists from wInst Sections
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6715,7 +6793,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "XMLPatch_return_elements failed"
 		endif
-  	
+		
 		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributes "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = 'color="green"'
 		set $ConstTest2$ = 'count="65"'
@@ -6729,7 +6807,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "XMLPatch_return_attributes failed"
 		endif
-  	
+		
 		set $list1$ = getReturnListFromSection ('XMLPatch_return_elementnames "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "node_level-2_A"
 		set $tmp$ = takeString(0, $list1$)
@@ -6740,7 +6818,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "XMLPatch_return_elementnames failed"
 		endif
-  	
+		
 		set $list1$ = getReturnListFromSection ('XMLPatch_return_attributenames "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "color"
 		set $ConstTest2$ = "count"
@@ -6754,7 +6832,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "XMLPatch_return_attributenames failed"
 		endif
-  	
+		
 		set $list1$ = getReturnListFromSection ('XMLPatch_return_text "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "Hello World"
 		set $tmp$ = takeString(0, $list1$)
@@ -6765,7 +6843,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "XMLPatch_return_text failed"
 		endif
-  	
+		
 		set $list1$ = getReturnListFromSection ('XMLPatch_return_counting "'+$HomeTestFiles$+'\dummy.xml"')
 		set $ConstTest$ = "1"
 		set $ConstTest2$ = "2"
@@ -6779,9 +6857,9 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "XMLPatch_return_counting failed"
 		endif
-  	
+		
 		; 7.7 XMLPatch Sections
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6797,7 +6875,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6813,7 +6891,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6829,7 +6907,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6845,7 +6923,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6872,7 +6950,7 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "AddText failed"
 		endif
-  	
+		
 		XMLPatch_SetText_dummy2 $HomeTestFiles$+"\dummy2.xml"
 		set $ConstTest$ = '<VALUE>K1S120</VALUE>'
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy2.xml")
@@ -6884,8 +6962,8 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "SetText failed"
 		endif
-  	
-  	
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6898,9 +6976,9 @@ if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
 	else ; windows
 		set $TestResult$ = "not implemented"
 	endif ; windows
-
+	
 	sub_compareResult
-
+	
 	set $winst_xml$ = $SubResult$
 endif
 
@@ -6920,7 +6998,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 	if $OS$ = "Windows_NT"
 		;stop all running instances beforehand
 		killtask "autoit3.exe"
-  	
+		
 		;if $MsVersion$ <= "5.0"
 		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
 			comment "not tested at win2k  because tasklist is needed"
@@ -6943,7 +7021,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			killtask "opsiscripttesthelper.exe"
 			killtask "autoit3.exe"
 		endif
-  	
+		
 		set $list1$ = getOutStreamFromSection ('ExecWith_parameters cmd.exe /c pass p1 p2 p3 p4 p5')
 		set $CompValue$ = takeFirstStringContaining($list1$,"p5")
 		set $ConstTest$ = "param5= p5"
@@ -6953,7 +7031,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "Execwith assumed failed"
 		endif
-  	
+		
 		set $list1$ = getOutStreamFromSection ('ExecWith_parameters cmd.exe /c echo hello! hello pass')
 		set $CompValue$ = takeFirstStringContaining($list1$,"hello")
 		if not ("" = $CompValue$)
@@ -6962,7 +7040,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "Execwith assumed failed"
 		endif
-  	
+		
 		DefVar $UserName$
 		Set $UserName$ = "secours"
 		DefVar $UserPassWord$
@@ -6971,7 +7049,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 		Set $UserGroup$ = "Utilisateurs"
 		set $list1$ = getOutStreamFromSection ('Execwith_Autoit_param2 "%ScriptPath%\autoit3.exe" PASS $UserPassWord$ $UserName$ $UserGroup$')
 		killtask "autoit3.exe"
-  	
+		
 		
 		
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
@@ -6987,7 +7065,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "Execwith assumed failed"
 			endif
 		endif ; 4.11.5
-
+		
 	endif ; windows
 	
 	if $OS$ = "Linux"
@@ -7001,25 +7079,25 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "Execwith assumed failed"
 		endif
 	endif ; Linux
-
+	
 	sub_compareResult
 	set $execwith_test$ = $SubResult$
 endif
 
 ;if ($Flag_compare_to_python$ = "on") or ($MasterFlag$ = "on")
-if ($Flag_compare_to_python$ = "on") 
+if ($Flag_compare_to_python$ = "on")
 	Message "testing execPython"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
 	comment "testing execWith (/ execPython)"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-
+	
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
-
+	
 	message "comparing an execWith call to a should be identical execPython call"
-
+	
 	set $list1$ = getOutStreamFromSection('ExecWith_hello "python" PASS -a "option a" -b "option b" "there we are" WINST /EscapeStrings')
 	set $list2$ = getOutStreamFromSection('execpython_hello -a "option a" -b "option b" "there we are"')
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.1") >= "0"
@@ -7028,21 +7106,21 @@ if ($Flag_compare_to_python$ = "on")
 			comment "passed"
 		else
 			comment "failed"
-				set $TestResult$ = "not o.k."
+			set $TestResult$ = "not o.k."
 		endif
 	endif
-
+	
 	sub_compareResult
 	set $compare_to_python$ = $SubResult$
 endif
 
 ;if ($Flag_winst_ldap_search$ = "on") or ($MasterFlag$ = "on")
 if ($Flag_winst_ldap_search$ = "on")
-	; at linux we get an:  Error in LDAP login: 
+	; at linux we get an:  Error in LDAP login:
 	if $OS$ = "Windows_NT"
 		if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local")
 			comment "yes - we running in opsi mode at uib"
-  	
+			
 			Message "testing LDAP Search"
 			comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 			comment ""
@@ -7050,10 +7128,10 @@ if ($Flag_winst_ldap_search$ = "on")
 			comment ""
 			comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 			Set $ExpectedResult$ = "o.k."
-  	
+			
 			; start testing
 			set $TestResult$ = "o.k."
-  	
+			
 			set $LdapSearchDn$ = "ou=Groups,dc=uib,dc=local"
 			set $LdapSearchAttributes$ = ""
 			comment ""
@@ -7070,8 +7148,8 @@ if ($Flag_winst_ldap_search$ = "on")
 				comment "failed"
 				set $TestResult$ = "not o.k."
 			endif
-  	
-  	
+			
+			
 			set $LdapSearchDn$ = "cn=opsiadmin,ou=Groups,dc=uib,dc=local"
 			comment ""
 			comment "-------------------------------------"
@@ -7087,7 +7165,7 @@ if ($Flag_winst_ldap_search$ = "on")
 				comment "failed"
 				set $TestResult$ = "not o.k."
 			endif
-  	
+			
 			set $LdapSearchAttributes$ = "memberUid"
 			comment ""
 			comment "-------------------------------------"
@@ -7103,7 +7181,7 @@ if ($Flag_winst_ldap_search$ = "on")
 				comment "failed"
 				set $TestResult$ = "not o.k."
 			endif
-  	
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -7132,7 +7210,7 @@ if ($Flag_winst_ldap_search$ = "on")
 					Set $LdapSearchDn$ = "cn=Users,dc=uib,dc=local"
 					Set $LdapSearchAttributes$ = "name,objectClass"
 					Set $LdapFilter$ = "(&(objectclass=*))"
-  	            	
+					
 					markErrorNumber
 					set $list1$ = getReturnListFromSection("ldapsearch_users /" + $LdapResultType$)
 					if errorsOccuredSinceMark > 0
@@ -7143,7 +7221,7 @@ if ($Flag_winst_ldap_search$ = "on")
 					endif
 				endif
 			endif ; 4.12.3.4
-  	
+			
 			sub_compareResult
 			set $winst_ldap_search$ = $SubResult$
 		else
@@ -7157,7 +7235,7 @@ endif
 if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 	if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") or ("%opsiserver%" = "172.16.166.1")
 		comment "yes - we running in opsi mode at uib"
-
+		
 		Message "testing opsi service call"
 		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		comment ""
@@ -7174,8 +7252,8 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		;set $valuesListStr$ = '["Windows 10 Pro N","Windows 10 Home N","capture","capture1703"]'
 		;
 		;opsiServiceCall_set_imagelist
-
-
+		
+		
 		markErrorNumber
 		opsiservicecall_authenticated
 		if errorsOccuredSinceMark > 0
@@ -7211,9 +7289,9 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 				comment "logged in as admin"
 			endif ; uib office
 		endif ; windows
-
+		
 		;opsiservicecall_authenticated /interactive /serviceurl "https://bonifax:4447"
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -7230,7 +7308,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 			endif
 		endif
-
+		
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.1") >= "0"
 			comment ""
 			comment "-------------------------------------"
@@ -7255,7 +7333,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 			endif
 			
-
+			
 			comment "Testing service errors"
 			markErrorNumber
 			set $list1$ = getReturnListFromSection("opsiservicecall_getHostId")
@@ -7279,12 +7357,12 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 				set $TestResult$ = "not o.k."
 			endif
-
+			
 		else
 			comment "opsi-servicalls with wrong parameters not tested, minimum winst needed: 4.11.1.1"
 		endif
-
-
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -7311,7 +7389,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_productOnClient_getObjects')
-
+		
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.4") >= "0"
 			comment ""
 			comment "-------------------------------------"
@@ -7321,7 +7399,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 			comment if not crashed - ok
 			comment "passed"
 		endif ; 4.11.4.4
-
+		
 		;comment ""
 		;comment "-------------------------------------"
 		;comment "Testing: "
@@ -7343,7 +7421,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		;	LogWarning "failed"
 		;	set $TestResult$ = "not o.k."
 		;endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -7373,8 +7451,8 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 		endif ; uib offixe
-
-
+		
+		
 		if $OS$ = "Windows_NT"
 			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
 				comment ""
@@ -7445,8 +7523,8 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		endif ; windows
 		
 ;opsiservicecall_authenticated /preloginservice
-
-
+		
+		
 		sub_compareResult
 		set $winst_opsiServiceCall$ = $SubResult$
 	else
@@ -7461,10 +7539,10 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 	comment "testing licensemanagement functions"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-
+	
 	if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") or ("%opsiserver%" = "172.16.166.1")
-	;if "%opsiserver%" = "bonifax.uib.local"
-	;if "true"="true" 
+		;if "%opsiserver%" = "bonifax.uib.local"
+		;if "true"="true"
 		Set $ExpectedResult$ = "o.k."
 		; start testing
 		set $TestResult$ = "o.k."
@@ -7480,7 +7558,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -7519,7 +7597,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -7540,8 +7618,8 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
-
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -7571,8 +7649,8 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
-
+		
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -7585,9 +7663,9 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 ; Chapter 6.3.13 Retrieving Error Infos from Service Calls
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -7599,7 +7677,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -7611,11 +7689,11 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
 	endif
-
+	
 	; Chapter 6.3.13 Retrieving Error Infos from Service Calls
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -7626,7 +7704,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 		set $tmp$ = getLastServiceErrorClass
 		comment "$tmp$"
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -7637,8 +7715,8 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 		set $tmp$ = getLastServiceErrorMessage
 		comment "$tmp$"
 	endif
-
-
+	
+	
 	sub_compareResult
 	set $winst_licensemanagement$ = $SubResult$
 endif
@@ -7652,7 +7730,7 @@ if ($Flag_ProfileActions$ = "on") or ($MasterFlag$ = "on")
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
 		switch $OS$
 			case "Windows_nt"
@@ -7666,7 +7744,7 @@ if ($Flag_ProfileActions$ = "on") or ($MasterFlag$ = "on")
 			endcase
 		endswitch
 	endif
-
+	
 	sub_compareResult
 	set $winst_ProfileActions$ = $SubResult$
 endif
@@ -9408,7 +9486,7 @@ exit 43
 					 "%HostID%",
 					 "not_installed"
 					]
-					
+
 [opsiservicecall_productOnClient_getObjects]
 "method": "productOnClient_getObjects"
 "params": [
@@ -9422,7 +9500,7 @@ exit 43
 					"opsi-winst-test-followup",
 					"%opsiserviceUser%"
 					]
-					
+
 [opsiServiceCall_set_imagelist]
 "method": "productPropertyState_create"
 "params": [
