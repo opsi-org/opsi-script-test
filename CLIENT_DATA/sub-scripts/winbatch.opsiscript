@@ -220,8 +220,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	marktime 
 	Winbatch_startprocess_with_child_nowait /WaitForProcessEnding	$helper_child_bin_name$ /TimeOutSeconds 20
 	difftime
-	includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
-	includelog "%opsiLogDir%"+$pathDelim$+"helperchild.log" "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 	comment "difftime should be 5 seconds"
 	set $ConstTest$ = "5"
 	set $difftime$ = getDiffTimeSec
@@ -261,8 +261,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	marktime
 	Winbatch_startprocess_with_child_nowait /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
 	difftime
-	includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
-	includelog "%opsiLogDir%"+$pathDelim$+"helperchild.log" "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 	comment "difftime should be 5 seconds"
 	set $ConstTest$ = "5"
 	set $difftime$ = getDiffTimeSec
@@ -301,7 +301,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	killtask $opsi_script_test_helper_bin_name$
 	marktime
 	Winbatch_startprocess_with_child_nowait8 /WaitForProcessEnding  $helper_child_bin_name$ /TimeOutSeconds 2
-	includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 	
 	difftime
 	comment "difftime should be 2 seconds"
@@ -330,7 +330,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
-	includelog "%opsiLogDir%"+$pathDelim$+"helperchild.log" "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 	if ($ConstTest$ = $CompValue$)
 		comment "/WaitForProcessEnding assumed passed"
 	else
@@ -345,7 +345,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	marktime
 	Winbatch_startprocess_with_child_nowait
 	difftime
-	includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 	
 	comment "difftime should be 1 seconds"
 	if $OS$ = "Windows_NT"
@@ -377,7 +377,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endif
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
-	includelog "%opsiLogDir%"+$pathDelim$+"helperchild.log" "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 	if ($ConstTest$ = $CompValue$)
 		comment "/WaitForProcessEnding assumed passed"
 	else
@@ -390,7 +390,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		marktime
 		Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20
 		difftime
-		includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
+		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 	
 		comment "difftime should be 1 seconds"
 		if $OS$ = "Windows_NT"
@@ -423,7 +423,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		endif
 		killtask $helper_child_bin_name$
 		killtask $opsi_script_test_helper_bin_name$
-		includelog "%opsiLogDir%"+$pathDelim$+"helperchild.log" "100"
+		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 		if ($ConstTest$ = $CompValue$)
 			comment "/WaitForProcessEnding assumed passed"
 		else
@@ -772,21 +772,21 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			message "testing winbatch_start_helper_c /RunElevated"
 			winbatch_start_helper_c /RunElevated
 			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-			includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 			message "testing winbatch_start_helper_asadmin_c /RunElevated"
 			winbatch_start_helper_asadmin_c /RunElevated
 			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-			includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 			message "testing winbatch_start_helper_asinvoker_c /RunElevated"
 			winbatch_start_helper_asinvoker_c /RunElevated
 			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-			includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 		
 			marktime
 			message "testing Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
 			Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
 			difftime
-			includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 			comment "difftime should be 5 seconds"
 			set $tmp$ = getDiffTimeSec
 			if $tmp$ INT>= "10"
@@ -808,7 +808,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			endif
 			killtask "helperchild.exe"
 			killtask "opsiscripttesthelper.exe"
-			includelog "%opsiLogDir%"+$pathDelim$+"helperchild.log" "100"
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 		
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 				message "testing Winbatch_powercfg_hibernate_off "

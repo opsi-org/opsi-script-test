@@ -119,6 +119,8 @@ DefVar $opsi_script_test_helper_child_bin$
 DefVar $opsi_script_test_helper_path$
 DefVar $opsi_script_test_helper_bin_name$
 DefVar $helper_child_bin_name$
+DefVar $opsi_script_test_helper_bin_log$
+DefVar $helper_child_bin_log$
 
 
 DefVar $Flag_winst_constants$
@@ -232,7 +234,10 @@ switch $OS$
 		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-win\opsiscripttesthelper.exe"
 		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-win\helperchild.exe"
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-win"
+		set $helper_child_bin_log$ =  "helperchild.log"
+		set $opsi_script_test_helper_bin_log$ = "opsiscripttesthelper.log"
 		set $pathDelim$ = "\"
+		
 		; for ping parameters and errorcode see:
 		; https://superuser.com/questions/403905/ping-from-windows-7-get-no-reply-but-sets-errorlevel-to-0
 		set $ping5command$ = "ping -w 2999 -n 5 127.0.0.1"
@@ -243,9 +248,13 @@ switch $OS$
 		if $GUI$ = "true"
 			Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-lin/64/opsiscripttesthelper"
 			Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-lin/64/helperchild"
+			set $helper_child_bin_log$ =  "helperchild.log"
+			set $opsi_script_test_helper_bin_log$ = "opsiscripttesthelper.log"
 		else
 			Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-lin/64/opsiscripttesthelper_nogui"
 			Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-lin/64/helperchild_nogui"
+			set $helper_child_bin_log$ =  "helperchild_nogui.log"
+			set $opsi_script_test_helper_bin_log$ = "opsiscripttesthelper_nogui.log"
 		endif
 ;		set $helper_child_bin_name$ =  '%ScriptPath%/'+$opsi_script_test_helper_child_bin$
 ;		set $helper_child_bin_name$ =  ExtractFileName($opsi_script_test_helper_child_bin$)
@@ -260,7 +269,8 @@ switch $OS$
 		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
 		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac/opsiscripttesthelper"
 		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac/helperchild"
-		
+		set $helper_child_bin_log$ =  "helperchild.log"
+		set $opsi_script_test_helper_bin_log$ = "opsiscripttesthelper.log"
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-mac"
 		set $pathDelim$ = "/"
 		set $ping5command$ = "ping -c 5 127.0.0.1"
@@ -5853,6 +5863,13 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 		if not ($ConstTest$ = $CompValue$)
 			Set $list1$ = getoutstreamfromsection($SectionName$)
 			set $CompValue$ = takeFirstStringContaining($list1$, "1.2.3.4")
+			if $OS$ = "Linux"
+				if LineContaining_ExistsIn( "1.2.3.4","/etc/hosts")
+					set $CompValue$ = "failed"
+				else
+					set $CompValue$ = ""
+				endif
+			endif
 			if $ConstTest$ = $CompValue$
 				comment "setAddr passed"
 			else
@@ -8609,16 +8626,16 @@ setAlias 172.16.166.150 depotserver
 
 
 [PatchHosts_system_add]
-setAddr opsi-winst-test 1.2.3.4
+setAddr opsi-script-test 1.2.3.4
 
 [PatchHosts_system_delete]
-delhost opsi-winst-test
+delhost opsi-script-test
 
 [DosInAnIcon_hosts_ping]
-ping opsi-winst-test -n 1
+ping opsi-script-test -n 1
 
 [ShellInAnIcon_hosts_ping]
-ping -c 1 opsi-winst-test
+ping -c 1 opsi-script-test
 
 ;---------------- end sections for patch hosts test ---------------------------
 ;;---------------- start sections for idapiconfig test ---------------------------
