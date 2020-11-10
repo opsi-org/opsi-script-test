@@ -1,0 +1,51 @@
+[Actions]
+comment "Testing: "
+message "areStringlistsEqual"
+
+;function areStringlistsEqual(stringlist1 : TStringList; stringlist2 : TStringList; flag : string) : boolean;
+
+DefVar $StringResult$
+DefVar $TestResult$
+DefStringList $testlist0$
+DefStringList $testlist1$
+DefStringList $testlist2$
+DefStringList $testlist3$
+DefStringList $testlist4$
+DefStringList $testlist5$
+DefStringList $testlist6$
+DefStringList $testlist7$
+
+Set $testlist1$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4")
+
+Set $testlist1$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
+Set $testlist2$ = CreateStringList("KEY1 = value1", "key2= Value2", "key3 =value3", " Key4=value4 ", " key5=VALUE5 ")
+
+Set $testlist3$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
+
+Set $testlist4$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
+Set $testlist5$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
+Set $testlist6$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", " STRING5 ")
+Set $testlist7$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", "STRING5")
+
+DefFunc myAreStringlistEqualTester($list1$ : stringlist, $list2$ : stringlist, $flag$ : string, $expected$ : string) : void
+    DefVar $CompValue$
+    set $CompValue$ = booltostring(areListsEqual($list1$,$list2$,$flag$))
+    if $CompValue$ = $expected$
+            comment "Testing areStringlistsEqual succeeded"
+    else
+            set $TestResult$ = "not o.k."
+            LogWarning "Testing areStringlistsEqual failed"
+    endif
+endfunc
+
+myAreStringlistEqualTester($testlist0$,$testlist1$,"FLAG_AUTOMODE","false")
+
+myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTOMODE","true")
+myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTO_CS","false")
+myAreStringlistEqualTester($testlist1$,$testlist3$,"FLAG_STRING_CS","true")
+
+myAreStringlistEqualTester($testlist4$,$testlist5$,"FLAG_AUTOMODE","true")
+myAreStringlistEqualTester($testlist5$,$testlist6$,"FLAG_AUTO_CS","false")
+myAreStringlistEqualTester($testlist4$,$testlist6$,"FLAG_STRING_CS","false")
+myAreStringlistEqualTester($testlist6$,$testlist7$,"FLAG_AUTO_CS","false")
+
