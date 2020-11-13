@@ -1,4 +1,11 @@
 [Changelog]
+opsi-script-test (4.12.4.5-1) stable; urgency=low
+
+  * add test for GetSectionFromInifile
+  * add test for areListsEqual
+  
+-- jinene laajili <j.laajili@uib.de>  Tue,  13 Nov 2020 15:00:00 +0200
+
 opsi-script-test (4.12.4.4-2) stable; urgency=low
 
   * fixes for Linux in patchhost tests

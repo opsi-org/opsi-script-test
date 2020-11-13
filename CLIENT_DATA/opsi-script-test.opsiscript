@@ -167,6 +167,14 @@ DefStringList $list1$
 DefStringList $list2$
 DefStringList $list3$
 DefStringList $list4$
+DefStringList $test1list0$
+DefStringList $test1list1$
+DefStringList $test1list2$
+DefStringList $test1list3$
+DefStringList $test1list4$
+DefStringList $test1list5$
+DefStringList $test1list6$
+DefStringList $test1list7$
 DefStringList $INST_ResultList$
 DefStringList $INST_ResultList2$
 DefStringList $INST_ResultList3$
@@ -314,7 +322,7 @@ endif
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "on")
+set $MasterFlag$                   = GetProductProperty ("alltest", "off")
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
@@ -331,7 +339,7 @@ set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off"
 set $Flag_winst_macos$             = GetProductProperty ("macOS", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
-set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
+set $Flag_winst_patches$           = GetProductProperty ("Patches", "on")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
 set $Flag_powershell$              = GetProductProperty ("powershell", "off")
@@ -4868,6 +4876,43 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			
 		endif ; 4.12.3.9
 		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
+			Set $testlist0$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4")
+			
+			Set $testlist1$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
+			Set $testlist2$ = CreateStringList("KEY1 = value1", "key2= Value2", "key3 =value3", " Key4=value4 ", " key5=VALUE5 ")
+			
+			Set $testlist3$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
+			
+			Set $testlist4$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
+			Set $testlist5$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
+			Set $testlist6$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", " STRING5 ")
+			Set $testlist7$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", "STRING5")
+			
+			DefFunc myAreStringlistEqualTester($list1$ : stringlist, $list2$ : stringlist, $flag$ : string, $ConstTest$ : string) : void
+				DefVar $CompValue$
+				set $CompValue$ = booltostring(areListsEqual($list1$,$list2$,$flag$))
+				if $CompValue$ = $ConstTest$
+					comment "Testing areStringlistsEqual succeeded"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Testing areStringlistsEqual failed"
+				endif
+			endfunc
+			
+			myAreStringlistEqualTester($testlist0$,$testlist1$,"FLAG_AUTOMODE","false")
+			
+			myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTOMODE","true")
+			myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTO_CS","false")
+			myAreStringlistEqualTester($testlist1$,$testlist3$,"FLAG_STRING_CS","true")
+			
+			myAreStringlistEqualTester($testlist4$,$testlist5$,"FLAG_AUTOMODE","true")
+			myAreStringlistEqualTester($testlist5$,$testlist6$,"FLAG_AUTO_CS","false")
+			myAreStringlistEqualTester($testlist4$,$testlist6$,"FLAG_STRING_CS","false")
+			myAreStringlistEqualTester($testlist6$,$testlist7$,"FLAG_AUTO_CS","false")
+			
+		endif ; 4.12.4.5
+		
 		Files_empty_folder ;remove test files
 		;End of Testing listFiles
 	endif ; WinstVersion >= 4.12.3
@@ -5612,6 +5657,9 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "GetIni failed"
 		endif
+		
+		comment "Here comes the actual ini file:"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not create .ini file"
@@ -5676,6 +5724,43 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			Files_remove_profile_ini /AllNTUserProfiles
 		endif ; 4.11.3.2
 	endif
+	
+	
+	if $OS$ = "Linux"
+		ShellInAnIcon_create_ini
+	else
+		DosInAnIcon_create_ini
+	endif
+	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
+		if (FileExists($HometestFiles$+"\dummy.ini"))
+			;GetSectionFromInifile
+			
+			set $list1$ = createStringList ('dummy1=add1', 'dummy2=set1', 'dummy3=change1', 'dummy5=add5', 'replace1=replace1', 'dummy1=addnew1')
+			Set $CompValue1$ = GetSectionFromInifile("secdummy", $HometestFiles$+"\dummy.ini")
+			
+			set $list2$ = createStringList ('dümmy7=üöäßÜÖÄ')
+			Set $CompValue2$ = GetSectionFromInifile("secdüöä", $HometestFiles$+"\dummy.ini")
+			
+			set $test1list1$ = getSubListByMatch($list1$,$CompValue1$)
+			set $test2list1$ = getSubListByMatch($CompValue1$,$list1$)
+			
+			set $test1list2$ = getSubListByMatch($list2$,$CompValue2$)
+			set $test2list2$ = getSubListByMatch($CompValue2$,$list2$)
+			
+			if (count($test1list1$)=count($list1$) AND count($test2list1$)=count($CompValue1$) AND count($test1list2$)=count($list2$) AND count($test2list2$)=count($CompValue2$))
+				comment "GetSectionFromInifile passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetSectionFromInifile failed"
+			endif
+		else
+			set $TestResult$ = "not o.k."
+			logError "Fatal: could not create .ini file"
+			isFatalError
+		endif
+	endif;
+	
 	
 	sub_compareResult
 	set $winst_patches$ = $SubResult$
@@ -6410,6 +6495,8 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		
 		Files_empty_folder_system
 	endif ; 4.11.3.6
+	
+	
 	
 	sub_compareResult
 	set $winst_patch_text_file$ = $SubResult$
