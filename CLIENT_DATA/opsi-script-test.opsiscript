@@ -4814,108 +4814,112 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 		endif ; windows
+	endif ;4.12.3
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "setValueByKey (with default keyvalue separator: =)"
-			comment ""
-			set $INST_Resultlist$ = createStringList("a=1","b=2","c=2")
-			set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$)
-			set $ConstTest$ = "myvalue"
-			set $CompValue$ = getValue("mykey", $INST_Resultlist$)
-			comment "compare values"
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			set $INST_Resultlist$ = createStringList("a = 1","b = 2","c = 2")
-			set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$)
-			set $ConstTest$ = "myvalue"
-			set $CompValue$ = getValue("b", $INST_Resultlist$)
-			comment "compare values"
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "setValueByKey (with explicit set keyvalue separator)"
-			comment ""
-			set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
-			set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$,":")
-			set $ConstTest$ = "myvalue"
-			set $CompValue$ = getValueBySeparator("mykey", ":", $INST_Resultlist$)
-			comment "compare values"
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			
-			set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
-			set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$,":")
-			set $ConstTest$ = "myvalue"
-			set $CompValue$ = getValueBySeparator("b", ":", $INST_Resultlist$)
-			comment "compare values"
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-			
-		endif ; 4.12.3.9
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "setValueByKey (with default keyvalue separator: =)"
+		comment ""
+		set $INST_Resultlist$ = createStringList("a=1","b=2","c=2")
+		set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$)
+		set $ConstTest$ = "myvalue"
+		set $CompValue$ = getValue("mykey", $INST_Resultlist$)
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $INST_Resultlist$ = createStringList("a = 1","b = 2","c = 2")
+		set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$)
+		set $ConstTest$ = "myvalue"
+		set $CompValue$ = getValue("b", $INST_Resultlist$)
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
-			Set $testlist0$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4")
-			
-			Set $testlist1$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
-			Set $testlist2$ = CreateStringList("KEY1 = value1", "key2= Value2", "key3 =value3", " Key4=value4 ", " key5=VALUE5 ")
-			
-			Set $testlist3$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
-			
-			Set $testlist4$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
-			Set $testlist5$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
-			Set $testlist6$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", " STRING5 ")
-			Set $testlist7$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", "STRING5")
-			
-			DefFunc myAreStringlistEqualTester($list1$ : stringlist, $list2$ : stringlist, $flag$ : string, $ConstTest$ : string) : void
-				DefVar $CompValue$
-				set $CompValue$ = booltostring(areListsEqual($list1$,$list2$,$flag$))
-				if $CompValue$ = $ConstTest$
-					comment "Testing areStringlistsEqual succeeded"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "Testing areStringlistsEqual failed"
-				endif
-			endfunc
-			
-			myAreStringlistEqualTester($testlist0$,$testlist1$,"FLAG_AUTOMODE","false")
-			
-			myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTOMODE","true")
-			myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTO_CS","false")
-			myAreStringlistEqualTester($testlist1$,$testlist3$,"FLAG_STRING_CS","true")
-			
-			myAreStringlistEqualTester($testlist4$,$testlist5$,"FLAG_AUTOMODE","true")
-			myAreStringlistEqualTester($testlist5$,$testlist6$,"FLAG_AUTO_CS","false")
-			myAreStringlistEqualTester($testlist4$,$testlist6$,"FLAG_STRING_CS","false")
-			myAreStringlistEqualTester($testlist6$,$testlist7$,"FLAG_AUTO_CS","false")
-			
-		endif ; 4.12.4.5
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "setValueByKey (with explicit set keyvalue separator)"
+		comment ""
+		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+		set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$,":")
+		set $ConstTest$ = "myvalue"
+		set $CompValue$ = getValueBySeparator("mykey", ":", $INST_Resultlist$)
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 		
-		Files_empty_folder ;remove test files
-		;End of Testing listFiles
-	endif ; WinstVersion >= 4.12.3
+		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+		set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$,":")
+		set $ConstTest$ = "myvalue"
+		set $CompValue$ = getValueBySeparator("b", ":", $INST_Resultlist$)
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+	endif ; 4.12.3.9
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
+		
+		comment "Testing: "
+		message "areStringlistsEqual"
+		
+		Set $testlist0$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4")
+		
+		Set $testlist1$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
+		Set $testlist2$ = CreateStringList("KEY1 = value1", "key2= Value2", "key3 =value3", " Key4=value4 ", " key5=VALUE5 ")
+		
+		Set $testlist3$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
+		
+		Set $testlist4$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
+		Set $testlist5$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
+		Set $testlist6$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", " STRING5 ")
+		Set $testlist7$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", "STRING5")
+		
+		DefFunc myAreStringlistEqualTester($list1$ : stringlist, $list2$ : stringlist, $flag$ : string, $ConstTest$ : string) : void
+			DefVar $CompValue$
+			set $CompValue$ = booltostring(areListsEqual($list1$,$list2$,$flag$))
+			if $CompValue$ = $ConstTest$
+				comment "Testing areStringlistsEqual succeeded"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "Testing areStringlistsEqual failed"
+			endif
+		endfunc
+		
+		myAreStringlistEqualTester($testlist0$,$testlist1$,"FLAG_AUTOMODE","false")
+		
+		myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTOMODE","true")
+		myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTO_CS","false")
+		myAreStringlistEqualTester($testlist1$,$testlist3$,"FLAG_STRING_CS","true")
+		
+		myAreStringlistEqualTester($testlist4$,$testlist5$,"FLAG_AUTOMODE","true")
+		myAreStringlistEqualTester($testlist5$,$testlist6$,"FLAG_AUTO_CS","false")
+		myAreStringlistEqualTester($testlist4$,$testlist6$,"FLAG_STRING_CS","false")
+		myAreStringlistEqualTester($testlist6$,$testlist7$,"FLAG_AUTO_CS","false")
+		
+	endif ; 4.12.4.5
+	
+	Files_empty_folder ;remove test files
+	;End of Testing listFiles
 	
 	sub_compareResult
 	set $winst_string_list$ = $SubResult$
@@ -5733,6 +5737,10 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	endif
 	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
+		
+		comment "Testing: "
+		message "GetSectionFromInifile"
+		
 		if (FileExists($HometestFiles$+"\dummy.ini"))
 			;GetSectionFromInifile
 			
@@ -8259,7 +8267,7 @@ set $tmp$ = "%CurrentProgramsDir%"
 set $tmp$ = "%CurrentSendToDir%"
 
 [sub_check_key_value_constants]
-set $ConstTest$ = "%key%" 
+set $ConstTest$ = "%key%"
 set $CompValue$ = getValue("%key%",$list$)
 if ($ConstTest$ = $CompValue$)
 	comment "passed"
