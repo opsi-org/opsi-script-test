@@ -167,14 +167,21 @@ DefStringList $list1$
 DefStringList $list2$
 DefStringList $list3$
 DefStringList $list4$
-DefStringList $test1list0$
+DefStringList $testlist0$
+DefStringList $testlist1$
+DefStringList $testlist2$
+DefStringList $testlist3$
+DefStringList $testlist4$
+DefStringList $testlist5$
+DefStringList $testlist6$
+DefStringList $testlist7$
 DefStringList $test1list1$
+DefStringList $test2list1$
 DefStringList $test1list2$
-DefStringList $test1list3$
-DefStringList $test1list4$
-DefStringList $test1list5$
-DefStringList $test1list6$
-DefStringList $test1list7$
+DefStringList $test2list2$
+DefStringList $CompList1$
+DefStringList $CompList2$
+
 DefStringList $INST_ResultList$
 DefStringList $INST_ResultList2$
 DefStringList $INST_ResultList3$
@@ -4881,6 +4888,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		
 		comment "Testing: "
 		message "areStringlistsEqual"
+
 		
 		Set $testlist0$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4")
 		
@@ -5745,18 +5753,18 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			;GetSectionFromInifile
 			
 			set $list1$ = createStringList ('dummy1=add1', 'dummy2=set1', 'dummy3=change1', 'dummy5=add5', 'replace1=replace1', 'dummy1=addnew1')
-			Set $CompValue1$ = GetSectionFromInifile("secdummy", $HometestFiles$+"\dummy.ini")
+			Set $CompList1$ = GetSectionFromInifile("secdummy", $HometestFiles$+"\dummy.ini")
 			
 			set $list2$ = createStringList ('dümmy7=üöäßÜÖÄ')
-			Set $CompValue2$ = GetSectionFromInifile("secdüöä", $HometestFiles$+"\dummy.ini")
+			Set $CompList2$ = GetSectionFromInifile("secdüöä", $HometestFiles$+"\dummy.ini")
 			
-			set $test1list1$ = getSubListByMatch($list1$,$CompValue1$)
-			set $test2list1$ = getSubListByMatch($CompValue1$,$list1$)
+			set $test1list1$ = getSubListByMatch($list1$,$CompList1$)
+			set $test2list1$ = getSubListByMatch($CompList1$,$list1$)
 			
-			set $test1list2$ = getSubListByMatch($list2$,$CompValue2$)
-			set $test2list2$ = getSubListByMatch($CompValue2$,$list2$)
+			set $test1list2$ = getSubListByMatch($list2$,$CompList2$)
+			set $test2list2$ = getSubListByMatch($CompList2$,$list2$)
 			
-			if (count($test1list1$)=count($list1$) AND count($test2list1$)=count($CompValue1$) AND count($test1list2$)=count($list2$) AND count($test2list2$)=count($CompValue2$))
+			if (count($test1list1$)=count($list1$) AND count($test2list1$)=count($CompList1$) AND count($test1list2$)=count($list2$) AND count($test2list2$)=count($CompList2$))
 				comment "GetSectionFromInifile passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -5767,7 +5775,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			logError "Fatal: could not create .ini file"
 			isFatalError
 		endif
-	endif;
+	endif
 	
 	
 	sub_compareResult

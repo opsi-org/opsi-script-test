@@ -1,4 +1,13 @@
 [Changelog]
+opsi-script-test (4.12.4.8-1) stable; urgency=low
+
+  * corrected wrong variable names in definition (test1list1 to testlist1, etc.)
+  * add missing definitions for stringlist (test1list1, etc.)
+  * add missing variable definition ($CompValue1$)
+  
+-- jan werner <j.werner@uib.de>  Fri,  20 Nov 2020 15:09:00 +0200
+
+
 opsi-script-test (4.12.4.5-1) stable; urgency=low
 
   * add test for GetSectionFromInifile
