@@ -1,6 +1,7 @@
 [Actions]
 comment "Testing: "
 message "GetSectionFromInifile"
+encoding=utf8
 
 DefVar $TestResult$
 DefVar $OS$
