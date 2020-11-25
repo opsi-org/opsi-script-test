@@ -1,0 +1,65 @@
+[Actions]
+comment "Testing: "
+message "GetSectionFromInifile"
+
+DefVar $TestResult$
+DefVar $OS$
+DefVar $HomeTestFiles$
+DefStringList $list1$
+DefStringList $CompList1$
+DefStringList $list2$
+DefStringList $CompList2$
+DefStringList $test1list1$
+DefStringList $test2list1$
+DefStringList $test1list2$
+DefStringList $test2list2$
+
+
+; This test needs opsi-script-test.opsiscript to be run first
+; That will create the $HomeTestFiles$ file
+
+Set $OS$ = GetOS
+
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+	endcase
+endswitch
+
+Set $HomeTestFiles$ = "test-files/"
+
+if (FileExists($HomeTestFiles$+"dummy.ini"))
+	;GetSectionFromInifile
+
+	set $list1$ = createStringList ('dummy1=add1', 'dummy2=set1', 'dummy3=change1', 'dummy5=add5', 'replace1=replace1', 'dummy1=addnew1')
+	Set $CompList1$ = GetSectionFromInifile("secdummy", $HometestFiles$+"\dummy.ini")
+	
+	set $list2$ = createStringList ('dümmy7=üöäßÜÖÄ')
+	Set $CompList2$ = GetSectionFromInifile("secdüöä", $HometestFiles$+"\dummy.ini")
+	
+	set $test1list1$ = getSubListByMatch($list1$,$CompList1$)
+	set $test2list1$ = getSubListByMatch($CompList1$,$list1$)
+	
+	set $test1list2$ = getSubListByMatch($list2$,$CompList2$)
+	set $test2list2$ = getSubListByMatch($CompList2$,$list2$)
+	
+	if (count($test1list1$)=count($list1$) AND count($test2list1$)=count($CompList1$) AND count($test1list2$)=count($list2$) AND count($test2list2$)=count($CompList2$))
+		comment "GetSectionFromInifile passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "GetSectionFromInifile failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	logError "Fatal: could not create .ini file"
+	isFatalError
+endif
