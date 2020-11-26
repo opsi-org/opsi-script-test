@@ -1275,7 +1275,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			message "asConfidentialList"
 			set $list$ = asConfidentialList(createStringList('confidential-aa','confidential-bb', 'confidential-cc', 'confidential-dd'))
 			comment "This is a hidden stringlist"
-			comment "should be in the log file: This is a ***(confidential)*** string??"
+			comment "should be in the log file: This is a ***(confidential)*** stringlist"
 			if isConfidential("confidential-aa")
 				comment "passed"
 			else
@@ -1285,7 +1285,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 
 			set $list$ = asConfidentialList(addtolist($list$,"confidential-ee"))
 			comment "confidential-ee"
-			comment "should be in the log file:  ***(confidential)*** ??"
+			comment "should be in the log file:  ***(confidential)***"
 			if isConfidential("confidential-ee")
 				comment "passed"
 			else
