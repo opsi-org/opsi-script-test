@@ -1248,7 +1248,53 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			DosInAnIcon_echo
 			
 		endif ; 4.11.3
-		
+
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.12.4.6") >= "0"
+			message "GetConfidentialProductPropertyList (<PropertyName>, <DefaultValue>)"
+			set $list$ = GetConfidentialProductPropertyList ("dummyconfidentialmulti","True")
+			if not ("" = takeFirstStringContaining($list$,"confidential-g,h"))
+				if isConfidential("confidential-g,h")
+					comment "GetConfidentialProductPropertyList passed"
+				endif
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetConfidentialProductPropertyList failed"
+			endif
+
+			message "GetConfidentialProductPropertyList (<PropertyName>, <DefaultValue>)"
+			set $list$ = GetConfidentialProductPropertyList ("notexistingmulti","confidential-i")
+			if not ("" = takeFirstStringContaining($list$,"confidential-i"))
+				if isConfidential("confidential-i")
+					comment "GetConfidentialProductPropertyList passed"
+				endif
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetConfidentialProductPropertyList failed"
+			endif
+
+			message "asConfidentialList"
+			set $list$ = asConfidentialList(createStringList('confidential-aa','confidential-bb', 'confidential-cc', 'confidential-dd'))
+			comment "This is a hidden stringlist"
+			comment "should be in the log file: This is a ***(confidential)*** string??"
+			if isConfidential("confidential-aa")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+
+			set $list$ = asConfidentialList(addtolist($list$,"confidential-ee"))
+			comment "confidential-ee"
+			comment "should be in the log file:  ***(confidential)*** ??"
+			if isConfidential("confidential-ee")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+
+		endif ; 4.12.4.6
+
 	else
 		comment "we are not in opsi service mode"
 		message "GetProductProperty (<PropertyName>, <DefaultValue>)"

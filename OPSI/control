@@ -271,6 +271,15 @@ default: ["Test umlaut from prop: üöäÜÖÄß"]
 
 [ProductProperty]
 type: unicode
+name: dummyconfidentialmulti
+multivalue: True
+editable: False
+description: ProductProperty for GetConfidentialProductPropertyList test, leave default
+values: ["confidential-ab", "confidential-cd", "confidential-ef", "confidential-g,h"]
+default: ["confidential-ab", "confidential-cd", "confidential-ef", "confidential-g,h"]
+
+[ProductProperty]
+type: unicode
 name: runasloggedonadmin
 multivalue: False
 editable: False

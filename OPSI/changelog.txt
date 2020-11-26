@@ -1,4 +1,11 @@
 [Changelog]
+opsi-script-test (4.12.4.6-1) stable; urgency=low
+
+  * add test for GetConfidentialProductPropertyList
+  * add test for asConfidentialList
+
+-- terry strooband <t.strooband@dgip.nl>  Fri,  27 Nov 2020 00:02:04 +0200
+
 opsi-script-test (4.12.4.5-1) stable; urgency=low
 
   * add test for GetSectionFromInifile
