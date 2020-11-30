@@ -1,0 +1,37 @@
+[Actions]
+comment "Testing: "
+message "FileOrFolderExists"
+
+;function FileOrFolderExists(<file name> [, <access str>]) : boolean;
+
+DefVar $TestResult$
+
+DefFunc myFileOrFolderExistsWithOneParam($fileName$ : string, $expected$ : string) : void
+    DefVar $CompValue$
+    set $CompValue$ = booltostring(FileOrFolderExists($filename$))
+    if $CompValue$ = $expected$
+            comment "Testing FileOrFolderExists succeeded"
+    else
+            set $TestResult$ = "not o.k."
+            LogWarning "Testing FileOrFolderExists failed"
+    endif
+endfunc
+
+DefFunc myFileOrFolderExistsWithTwoParam($fileName$ : string, $accessStr$ : string, $expected$ : string) : void
+    DefVar $CompValue$
+    set $CompValue$ = booltostring(FileOrFolderExists($filename$, $accessStr$))
+    if $CompValue$ = $expected$
+            comment "Testing FileOrFolderExists succeeded"
+    else
+            set $TestResult$ = "not o.k."
+            LogWarning "Testing FileOrFolderExists failed"
+    endif
+endfunc
+
+myFileOrFolderExistsWithOneParam("osparser.pas","true")
+myFileOrFolderExistsWithOneParam("uib.txt","false")
+
+myFileOrFolderExistsWithTwoParam("osparser.pas","32bit","true")
+myFileOrFolderExistsWithTwoParam("osparser.pas","64bit","true")
+myFileOrFolderExistsWithTwoParam("osparser.pas","accessstr","false")
+myFileOrFolderExistsWithTwoParam("uib.txt","64bit","false")
