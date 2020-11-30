@@ -1,0 +1,22 @@
+[Actions]
+comment "Testing: "
+message "FileExists"
+
+;function FileExists(<file name>) : boolean;
+
+DefVar $TestResult$
+
+DefFunc myFileExistsTester($fileName$ : string, $expected$ : string) : void
+    DefVar $CompValue$
+    set $CompValue$ = booltostring(FileExists($fileName$))
+    if $CompValue$ = $expected$
+            comment "Testing FileExists succeeded"
+    else
+            set $TestResult$ = "not o.k."
+            LogWarning "Testing FileExists failed"
+    endif
+endfunc
+
+
+myFileExistsTester("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","true")
+myFileExistsTester("C:\Users\Jinene\Documents\gituib\uib.txt","false")
