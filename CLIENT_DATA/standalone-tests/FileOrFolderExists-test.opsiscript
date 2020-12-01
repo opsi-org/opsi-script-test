@@ -8,7 +8,7 @@ DefVar $TestResult$
 
 DefFunc myFileOrFolderExistsWithOneParam($fileName$ : string, $expected$ : string) : void
     DefVar $CompValue$
-    set $CompValue$ = booltostring(FileOrFolderExists($filename$))
+    set $CompValue$ = booltostring(FileOrFolderExists($fileName$))
     if $CompValue$ = $expected$
             comment "Testing FileOrFolderExists succeeded"
     else
@@ -17,9 +17,9 @@ DefFunc myFileOrFolderExistsWithOneParam($fileName$ : string, $expected$ : strin
     endif
 endfunc
 
-DefFunc myFileOrFolderExistsWithTwoParam($fileName$ : string, $accessStr$ : string, $expected$ : string) : void
+DefFunc myFileOrFolderExistsWithTwoParams($fileName$ : string, $accessStr$ : string, $expected$ : string) : void
     DefVar $CompValue$
-    set $CompValue$ = booltostring(FileOrFolderExists($filename$, $accessStr$))
+    set $CompValue$ = booltostring(FileOrFolderExists($fileName$, $accessStr$))
     if $CompValue$ = $expected$
             comment "Testing FileOrFolderExists succeeded"
     else
@@ -28,10 +28,10 @@ DefFunc myFileOrFolderExistsWithTwoParam($fileName$ : string, $accessStr$ : stri
     endif
 endfunc
 
-myFileOrFolderExistsWithOneParam("osparser.pas","true")
-myFileOrFolderExistsWithOneParam("uib.txt","false")
+myFileOrFolderExistsWithOneParam("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","true")
+myFileOrFolderExistsWithOneParam("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\uib.txt","false")
 
-myFileOrFolderExistsWithTwoParam("osparser.pas","32bit","true")
-myFileOrFolderExistsWithTwoParam("osparser.pas","64bit","true")
-myFileOrFolderExistsWithTwoParam("osparser.pas","accessstr","false")
-myFileOrFolderExistsWithTwoParam("uib.txt","64bit","false")
+myFileOrFolderExistsWithTwoParams("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","32bit","true")
+myFileOrFolderExistsWithTwoParams("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","64bit","true")
+myFileOrFolderExistsWithTwoParams("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","accessStr","false")
+myFileOrFolderExistsWithTwoParams("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\uib.txt","64bit","false")
