@@ -35,13 +35,13 @@ switch $OS$
 	case "Windows_nt"
 		comment "We are running on Windows"
 		myFileOrFolderExistsWithOneParam("","false")
-		myFileOrFolderExistsWithOneParam("C:\Users\","true")
-                myFileOrFolderExistsWithOneParam("C:\Users\uib.txt","false")
+		myFileOrFolderExistsWithOneParam("C:\Windows\","true")
+                myFileOrFolderExistsWithOneParam("C:\Windows\uib.txt","false")
 
-                myFileOrFolderExistsWithTwoParams("C:\Users\","32bit","true")
-                myFileOrFolderExistsWithTwoParams("C:\Users\,"64bit","true")
-                myFileOrFolderExistsWithTwoParams("C:\Users\","accessStr","false")
-                myFileOrFolderExistsWithTwoParams("C:\Users\uib.txt","64bit","false")
+                myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","32bit","true")
+                myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","64bit","true")
+                myFileOrFolderExistsWithTwoParams("C:\Windows\","accessStr","false")
+                myFileOrFolderExistsWithTwoParams("C:\Windows\uib.txt","64bit","false")
 	endcase
 	case "Linux"
 		comment "We are running on Linux"
