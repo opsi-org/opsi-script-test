@@ -741,7 +741,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 			set $CompValue$= takestring(0,splitstring($CompValue$, "."))
 		endcase
 		case "macos"
-			set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
+			set $CompValue$ = takeString(0,shellCall("hostname -s"))
 		endcase
 	endswitch
 	
@@ -2704,12 +2704,12 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 				case "macos"
 					set $list1$ = getOutStreamFromSection("ShellInAnIcon_ifconfig_all")
 					set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
-					set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en0"))
-					if not (isValidIP4 ($CompValue$))
-						set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en1"))
-					endif
+					set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en1"))
 					if not (isValidIP4 ($CompValue$))
 						set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en5"))
+					endif
+					if not (isValidIP4 ($CompValue$))
+						set $CompValue$ =  takestring(0,shellCall("ipconfig getifaddr en0"))
 					endif
 				endcase
 			endswitch
@@ -4450,39 +4450,59 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "getProcessList"
-		if $OS$ = "Windows_NT"
-			set $ConstTest$ = "helperchild.exe"
-			killtask $ConstTest$
-			Winbatch_startprocess_with_child_nowait
-			set $list1$ = getProcessList
-			set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
-			set $CompValue$ = takeString(0,splitString($CompValue$,";"))
-			killtask $ConstTest$
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-		else ; windows / linux
-			set $CompValue$ = ""
-			set $list1$ = getProcessList
-			set $ConstTest$ = "opsi-script-nogui"
-			comment " shortcommand gives only the first 15 chars)"
-			set $ConstTest$ = strPart($ConstTest$,"1","15")
-			set $list2$ = getListContaining($list1$,$ConstTest$)
-			if count($list2$) = "0"
-				set $ConstTest$ = "opsi-script"
+		switch $OS$
+			case "Windows_nt"
+				set $ConstTest$ = "helperchild.exe"
+				killtask $ConstTest$
+				Winbatch_startprocess_with_child_nowait
+				set $list1$ = getProcessList
+				set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				set $CompValue$ = takeString(0,splitString($CompValue$,";"))
+				killtask $ConstTest$
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endcase
+			case "Linux"
+				set $CompValue$ = ""
+				set $list1$ = getProcessList
+				set $ConstTest$ = "opsi-script-gui"
+				comment " shortcommand gives only the first 15 chars)"
+				set $ConstTest$ = strPart($ConstTest$,"1","15")
 				set $list2$ = getListContaining($list1$,$ConstTest$)
-			endif
-			for %aktprocess% in $list2$ do sub_getprocess_by_shortcommand
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
-		endif ; windows
+				if count($list2$) = "0"
+					set $ConstTest$ = "opsi-script"
+					set $list2$ = getListContaining($list1$,$ConstTest$)
+				endif
+				for %aktprocess% in $list2$ do sub_getprocess_by_shortcommand
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endcase
+			case "macos"
+				set $CompValue$ = ""
+				set $list1$ = getProcessList
+				set $ConstTest$ = "opsi-script-gui"
+				set $list2$ = getListContaining($list1$,$ConstTest$)
+				if count($list2$) = "0"
+					set $ConstTest$ = "opsi-script"
+					set $list2$ = getListContaining($list1$,$ConstTest$)
+				endif
+				for %aktprocess% in $list2$ do sub_getprocess_by_command
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endcase
+		endswitch
 	else
 		comment "getProcessList not tested, minimum winst needed: 4.11.1.2"
 	endif
@@ -8356,6 +8376,19 @@ echo %s%>> "$HomeTestFiles$/iteration.txt"
 [sub_getprocess_by_shortcommand]
 ;comment " shortcommand gives only the first 15 chars)"
 if strPart($ConstTest$,"1","15") = takeString(0,splitString("%aktprocess%",";"))
+	;comment "process found"
+	if "0" = strPos(takeString(3,splitString("%aktprocess%",";")),"<defunct>")
+		comment "process found that is not killed or defunct"
+		set $CompValue$ = takeString(0,splitString("%aktprocess%",";"))
+	else
+		comment "process is killed or defunct"
+		;set $CompValue$ = ""
+	endif
+endif
+
+[sub_getprocess_by_command]
+;comment " shortcommand gives only the first 15 chars)"
+if $ConstTest$ = takeString(0,splitString("%aktprocess%",";"))
 	;comment "process found"
 	if "0" = strPos(takeString(3,splitString("%aktprocess%",";")),"<defunct>")
 		comment "process found that is not killed or defunct"
