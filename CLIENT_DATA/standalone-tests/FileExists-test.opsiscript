@@ -4,6 +4,7 @@ message "FileExists"
 
 ;function FileExists(<file name>) : boolean;
 
+DefVar $OS$
 DefVar $TestResult$
 
 DefFunc myFileExistsTester($fileName$ : string, $expected$ : string) : void
@@ -17,6 +18,22 @@ DefFunc myFileExistsTester($fileName$ : string, $expected$ : string) : void
     endif
 endfunc
 
+Set $OS$ = GetOS
 
-myFileExistsTester("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","true")
-myFileExistsTester("C:\Users\Jinene\Documents\gituib\uib.txt","false")
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		myFileExistsTester("C:\Users\","true")
+                myFileExistsTester("C:\Users\uib.txt","false")
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		myFileExistsTester("/home/user/hwaudit.log","true")
+                myFileExistsTester("/home/user/uib.txt","false")
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		myFileExistsTester("/Users/","true")
+                myFileExistsTester("/Users/uib.txt","false")
+	endcase
+endswitch

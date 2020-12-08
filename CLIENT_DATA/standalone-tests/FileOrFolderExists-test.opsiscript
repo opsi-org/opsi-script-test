@@ -2,13 +2,14 @@
 comment "Testing: "
 message "FileOrFolderExists"
 
-;function FileOrFolderExists(<file name> [, <access str>]) : boolean;
+;function FileOrFolderExists(<file path> [, <access str>]) : boolean;
 
+DefVar $OS$
 DefVar $TestResult$
 
-DefFunc myFileOrFolderExistsWithOneParam($fileName$ : string, $expected$ : string) : void
+DefFunc myFileOrFolderExistsWithOneParam($filePath$ : string, $expected$ : string) : void
     DefVar $CompValue$
-    set $CompValue$ = booltostring(FileOrFolderExists($fileName$))
+    set $CompValue$ = booltostring(FileOrFolderExists($filePath$))
     if $CompValue$ = $expected$
             comment "Testing FileOrFolderExists succeeded"
     else
@@ -17,9 +18,9 @@ DefFunc myFileOrFolderExistsWithOneParam($fileName$ : string, $expected$ : strin
     endif
 endfunc
 
-DefFunc myFileOrFolderExistsWithTwoParams($fileName$ : string, $accessStr$ : string, $expected$ : string) : void
+DefFunc myFileOrFolderExistsWithTwoParams($filePath$ : string, $accessStr$ : string, $expected$ : string) : void
     DefVar $CompValue$
-    set $CompValue$ = booltostring(FileOrFolderExists($fileName$, $accessStr$))
+    set $CompValue$ = booltostring(FileOrFolderExists($filePath$, $accessStr$))
     if $CompValue$ = $expected$
             comment "Testing FileOrFolderExists succeeded"
     else
@@ -28,10 +29,33 @@ DefFunc myFileOrFolderExistsWithTwoParams($fileName$ : string, $accessStr$ : str
     endif
 endfunc
 
-myFileOrFolderExistsWithOneParam("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","true")
-myFileOrFolderExistsWithOneParam("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\uib.txt","false")
+Set $OS$ = GetOS
 
-myFileOrFolderExistsWithTwoParams("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","32bit","true")
-myFileOrFolderExistsWithTwoParams("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","64bit","true")
-myFileOrFolderExistsWithTwoParams("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\FileOrFolderExists-test.opsiscript","accessStr","false")
-myFileOrFolderExistsWithTwoParams("C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\standalone-tests\uib.txt","64bit","false")
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		myFileOrFolderExistsWithOneParam("","false")
+		myFileOrFolderExistsWithOneParam("C:\Users\","true")
+                myFileOrFolderExistsWithOneParam("C:\Users\uib.txt","false")
+
+                myFileOrFolderExistsWithTwoParams("C:\Users\","32bit","true")
+                myFileOrFolderExistsWithTwoParams("C:\Users\,"64bit","true")
+                myFileOrFolderExistsWithTwoParams("C:\Users\","accessStr","false")
+                myFileOrFolderExistsWithTwoParams("C:\Users\uib.txt","64bit","false")
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		myFileOrFolderExistsWithOneParam("","false")
+		myFileOrFolderExistsWithOneParam("/home/user/hwaudit.log","true")
+                myFileOrFolderExistsWithOneParam("/home/user/uib.txt","false")
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		myFileOrFolderExistsWithOneParam("","false")
+		myFileOrFolderExistsWithOneParam("/Users/","true")
+                myFileOrFolderExistsWithOneParam("/Users/uib.txt","false")
+	endcase
+endswitch
+
+
+
