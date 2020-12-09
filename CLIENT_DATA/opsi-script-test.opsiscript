@@ -332,7 +332,7 @@ setLoglevel=$ScriptLoglevel$
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
-set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
+set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "on")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
 set $Flag_encoding$                = GetProductProperty ("encoding", "off")
 set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "off")
@@ -346,7 +346,7 @@ set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off"
 set $Flag_winst_macos$             = GetProductProperty ("macOS", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
-set $Flag_winst_patches$           = GetProductProperty ("Patches", "on")
+set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
 set $Flag_powershell$              = GetProductProperty ("powershell", "off")
@@ -357,7 +357,7 @@ set $Flag_suburlparser$            = GetProductProperty ("Urlparser", "off")
 set $Flag_subregistry$             = GetProductProperty ("Registry", "off")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
-set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "on")
+set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
@@ -5235,6 +5235,96 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		comment "loop over the result"
 		for $x$ in $list$ do sub_file_exists
 	endif ; windows
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "FileExists"
+	
+            DefFunc myFileExistsTester($fileName$ : string, $expected$ : string) : void
+                DefVar $CompValue$
+                set $CompValue$ = booltostring(FileExists($fileName$))
+                if $CompValue$ = $expected$
+                        comment "Testing FileExists succeeded"
+                else
+                        set $TestResult$ = "not o.k."
+                        LogWarning "Testing FileExists failed"
+                endif
+            endfunc
+
+            switch $OS$
+                    case "Windows_nt"
+                            comment "We are running on Windows"
+                            myFileExistsTester("C:\Users\","true")
+                            myFileExistsTester("C:\Users\uib.txt","false")
+                    endcase
+                    case "Linux"
+                            comment "We are running on Linux"
+                            myFileExistsTester("/home/user/hwaudit.log","true")
+                            myFileExistsTester("/home/user/uib.txt","false")
+                    endcase
+                    case "macos"
+                            comment "We are running on macOS"
+                            myFileExistsTester("/Users/","true")
+                            myFileExistsTester("/Users/uib.txt","false")
+                    endcase
+            endswitch
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "FileOrFolderExists"
+	
+            
+            DefFunc myFileOrFolderExistsWithOneParam($filePath$ : string, $expected$ : string) : void
+                DefVar $CompValue$
+                set $CompValue$ = booltostring(FileOrFolderExists($filePath$))
+                if $CompValue$ = $expected$
+                        comment "Testing FileOrFolderExists succeeded"
+                else
+                        set $TestResult$ = "not o.k."
+                        LogWarning "Testing FileOrFolderExists failed"
+                endif
+            endfunc
+
+            DefFunc myFileOrFolderExistsWithTwoParams($filePath$ : string, $accessStr$ : string, $expected$ : string) : void
+                DefVar $CompValue$
+                set $CompValue$ = booltostring(FileOrFolderExists($filePath$, $accessStr$))
+                if $CompValue$ = $expected$
+                        comment "Testing FileOrFolderExists succeeded"
+                else
+                        set $TestResult$ = "not o.k."
+                        LogWarning "Testing FileOrFolderExists failed"
+                endif
+            endfunc
+
+            switch $OS$
+                    case "Windows_nt"
+                            comment "We are running on Windows"
+                            myFileOrFolderExistsWithOneParam("","false")
+                            myFileOrFolderExistsWithOneParam("C:\Windows\","true")
+                            myFileOrFolderExistsWithOneParam("C:\Windows\uib.txt","false")
+
+                            myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","32bit","true")
+                            myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","64bit","true")
+                            myFileOrFolderExistsWithTwoParams("C:\Windows\","accessStr","false")
+                            myFileOrFolderExistsWithTwoParams("C:\Windows\uib.txt","64bit","false")
+                    endcase
+                    case "Linux"
+                            comment "We are running on Linux"
+                            myFileOrFolderExistsWithOneParam("","false")
+                            myFileOrFolderExistsWithOneParam("/home/user/hwaudit.log","true")
+                            myFileOrFolderExistsWithOneParam("/home/user/uib.txt","false")
+                    endcase
+                    case "macos"
+                            comment "We are running on macOS"
+                            myFileOrFolderExistsWithOneParam("","false")
+                            myFileOrFolderExistsWithOneParam("/Users/","true")
+                            myFileOrFolderExistsWithOneParam("/Users/uib.txt","false")
+                    endcase
+            endswitch
+	
 	
 	comment ""
 	comment "-------------------------------------"
