@@ -250,10 +250,10 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 			endcase
 			case "macos"
 				if isPingReachable("0.0.0.0")
-					comment "isPingReachable passed"
-				else
 					set $TestResult$ = "not o.k."
 					LogWarning "testing isPingReachable failed"
+				else
+					comment "isPingReachable passed"
 				endif
 			endcase
 		endswitch

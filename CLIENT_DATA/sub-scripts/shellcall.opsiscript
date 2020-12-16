@@ -427,8 +427,20 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 		ShellInanIcon_cat_a_lot winst /showoutput
 	endif
 	difftime
+	switch $OS$
+		case "Windows_nt"
 	comment "difftime should be about 60 seconds"
 	set $ConstTest$ = "60"
+		endcase
+		case "Linux"
+			comment "difftime should be about 60 seconds"
+			set $ConstTest$ = "60"
+		endcase
+		case "macos"
+			comment "difftime should be about 100 seconds"
+			set $ConstTest$ = "100"
+		endcase
+	endswitch
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
 	if $ConstTest$ int>= $CompValue$
@@ -487,8 +499,20 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 		ShellInanIcon_cat_a_lot winst /showoutput
 	endif
 	difftime
+	switch $OS$
+		case "Windows_nt"
 	comment "difftime should be about 60 seconds"
 	set $ConstTest$ = "60"
+		endcase
+		case "Linux"
+			comment "difftime should be about 60 seconds"
+			set $ConstTest$ = "60"
+		endcase
+		case "macos"
+			comment "difftime should be about 90 seconds"
+			set $ConstTest$ = "90"
+		endcase
+	endswitch
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
 	if $ConstTest$ int>= $CompValue$
