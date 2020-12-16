@@ -121,6 +121,7 @@ DefVar $opsi_script_test_helper_bin_name$
 DefVar $helper_child_bin_name$
 DefVar $opsi_script_test_helper_bin_log$
 DefVar $helper_child_bin_log$
+DefVar $test_experimental$
 
 
 DefVar $Flag_winst_constants$
@@ -325,6 +326,8 @@ if "True" = GetProductProperty ("setfailed","False")
 	LogError "set to fatal by property"
 ;isFatalError
 endif
+
+set $test_experimental$ = GetProductProperty ("test_experimental","False")
 
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
@@ -4888,7 +4891,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		
 		comment "Testing: "
 		message "areStringlistsEqual"
-
+		
 		
 		Set $testlist0$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4")
 		
@@ -5744,7 +5747,8 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 		DosInAnIcon_create_ini
 	endif
 	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
+	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
+	if $test_experimental$ = "true"
 		
 		comment "Testing: "
 		message "GetSectionFromInifile"

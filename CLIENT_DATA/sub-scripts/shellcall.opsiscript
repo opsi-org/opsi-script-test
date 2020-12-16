@@ -8,14 +8,14 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
-
+	
 	; start testing
 	set $TestResult$ = "o.k."
 	
 	if $OS$ = "Windows_NT"
-
+		
 		;Chapter  7.10 DOSBatch/ShellBatch Sections
-  	
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -29,7 +29,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		Files_empty_folder
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -43,8 +43,8 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-  	
-  	
+		
+		
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.1") >= "0"
 			if $INST_SystemType$ = "64 Bit System"
 				comment ""
@@ -60,7 +60,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 					set $TestResult$ = "not o.k."
 				endif
 			endif
-  	
+			
 			Files_copy_test_to_system32 /sysnative
 			DosInAnIcon_remove_test_from_system32 winst /sysnative
 			if not(FileExistssysnative("%System%\dummy.txt"))
@@ -72,7 +72,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "Dosbatch winst /64bit not tested, minimum winst needed: 4.11.1.1"
 		endif
-  	
+		
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.1") >= "0"
 			message "DosBatch / DosInAnIcon  exitcode"
 			DosInAnIcon_exit42
@@ -179,7 +179,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			
 			message "shellCall  resultlist"
 			set $list$ = shellCall("tasklist")
-			if not( "" = takeFirstStringContaining($list$, "opsi")) 
+			if not( "" = takeFirstStringContaining($list$, "opsi"))
 				comment "ShellCall  resultlist passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -304,20 +304,20 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			
 			message "shellCall  resultlist"
 			set $list$ = shellCall("ps -ef")
-			if not( "" = takeFirstStringContaining($list$, "opsi")) 
+			if not( "" = takeFirstStringContaining($list$, "opsi"))
 				comment "ShellCall  resultlist passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "ShellCall  resultlist failed"
 			endif
 			set $list$ = shellCall("ps -ef | grep opsi")
-			if not( "" = takeFirstStringContaining($list$, "opsi")) 
+			if not( "" = takeFirstStringContaining($list$, "opsi"))
 				comment "ShellCall  resultlist passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "ShellCall  resultlist failed"
 			endif
-
+			
 			
 		endif ; 4.11.6
 		Files_empty_folder
@@ -330,7 +330,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			comment "Testing: "
 			message "/runelevated"
 			Files_copy_msi_exe_2_c
-		
+			
 			message "ShellInAnIcon testing local msiexec call /RunElevated /TimeoutSeconds 30"
 			ShellInAnIcon_msi_standard_from_c winst /RunElevated /TimeoutSeconds 30
 			set $ConstTest$ = "0"
@@ -346,16 +346,16 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "ShellInAnIcon testing msiexec call /RunElevated failed"
 			endif
-		
+			
 			comment "cleanup ..."
 			sleepseconds 5
 			if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
 				comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
 				ShellInAnIcon_msi_uninstall winst /RunElevated
 			endif
-		
+			
 			Files_copy_helper_2_c
-		
+			
 			message "testing ShellInAnIcon_start_helper_c /RunElevated"
 			ShellInAnIcon_start_helper_c winst /RunElevated
 			set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
@@ -365,7 +365,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			;message "testing winbatch_start_helper_asinvoker_c /RunElevated"
 			;ShellInAnIcon_start_helper_asinvoker_c winst /RunElevated
 			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
-		
+			
 			marktime
 			message "testing ShellInAnIcon_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
 			ShellInAnIcon_startprocess_with_child_nowait_from_c winst /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
@@ -391,7 +391,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			endif
 			killtask "helperchild.exe"
 			killtask "opsiscripttesthelper.exe"
-		
+			
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 				message "testing ShellInAnIcon_powercfg_hibernate_off "
 				ShellInAnIcon_powercfg_hibernate_off
@@ -415,7 +415,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 					LogWarning "testing /RunElevated failed"
 				endif
 			endif ; nt6
-		Files_clean_from_c
+			Files_clean_from_c
 		endif ; 4.12.4
 	endif ; windows
 	
@@ -556,11 +556,11 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/noshowoutput failed"
 	endif
-
+	
 	Files_empty_folder
-
+	
 	sub_compareResult
-
+	
 	set $winst_dos$ = $SubResult$
 endif
 

@@ -26,7 +26,7 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "testing isRegexMatch failed"
 	endif
-
+	
 	comment "Testing with non matching string"
 	
 	set $ConstTest$ = "false"
@@ -37,14 +37,36 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "testing isRegexMatch failed"
 	endif
-
-
+	
+	comment "Testing with empty string"
+	
+	set $ConstTest$ = "false"
+	set $CompValue$ = booltostring(isRegexMatch('', '.*abc.*'))
+	if ($ConstTest$ = $CompValue$)
+		comment "isRegexMatch passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isRegexMatch failed"
+	endif
+	
+	comment "Testing with empty expression"
+	
+	set $ConstTest$ = "false"
+	set $CompValue$ = booltostring(isRegexMatch('abc efg', ''))
+	if ($ConstTest$ = $CompValue$)
+		comment "isRegexMatch passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing isRegexMatch failed"
+	endif
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "getSubListByContainingRegex"
 	
-	comment "Searching with a single expression"	
+	comment "Searching with a single expression"
 	
 	set $string1$ = "\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}"
 	set $list1$ = createStringList('uib gmbh','example@xyz.com and example2@xyz.com', 'client')
@@ -52,76 +74,122 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 	
 	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
 	
-	set $CompValue$ = composeString ($list2$, " | ")	
-    if ($ConstTest$ = $CompValue$)
-        comment "getSubListByContainingRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing getSubListByContainingRegex failed"
-    endif
-    
-    comment "case sensitive"
-    set $string1$ = "\.pkg$"
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getSubListByContainingRegex failed"
+	endif
+	
+	comment "case sensitive"
+	set $string1$ = "\.pkg$"
 	set $list1$ = createStringList('hello.pkg','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none')
 	set $ConstTest$ = "hello.pkg"
 	
 	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
 	
-	set $CompValue$ = composeString ($list2$, " | ")	
-    if ($ConstTest$ = $CompValue$)
-        comment "getSubListByContainingRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing getSubListByContainingRegex failed"
-    endif
-    
-    comment "not case sensitive"
-    set $string1$ = "\.[pP][kK][gG]$"
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getSubListByContainingRegex failed"
+	endif
+	
+	comment "not case sensitive"
+	set $string1$ = "\.[pP][kK][gG]$"
 	set $list1$ = createStringList('hello.pkg','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none')
 	set $ConstTest$ = "hello.pkg | heLLo.pKg | hEl Lo.PKG"
 	
 	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
 	
-	set $CompValue$ = composeString ($list2$, " | ")	
-    if ($ConstTest$ = $CompValue$)
-        comment "getSubListByContainingRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing getSubListByContainingRegex failed"
-    endif
-    
-    comment "not case sensitive"
-    set $string1$ = "(?i)\.pkg$"
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getSubListByContainingRegex failed"
+	endif
+	
+	comment "not case sensitive"
+	set $string1$ = "(?i)\.pkg$"
 	set $list1$ = createStringList('hello.pkg','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none')
 	set $ConstTest$ = "hello.pkg | heLLo.pKg | hEl Lo.PKG"
 	
 	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
 	
-	set $CompValue$ = composeString ($list2$, " | ")	
-    if ($ConstTest$ = $CompValue$)
-        comment "getSubListByContainingRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing getSubListByContainingRegex failed"
-    endif
-       
-    comment "Searching with a list of expressions"
-    
-    set $list1$ = createStringList('uib gmbh','example@xyz.com and example2@xyz.com', 'client')
-    set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getSubListByContainingRegex failed"
+	endif
+	
+	comment "empty strings"
+	set $string1$ = "(?i)\.pkg$"
+	set $list1$ = createStringList('','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none')
+	set $ConstTest$ = "heLLo.pKg | hEl Lo.PKG"
+	
+	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getSubListByContainingRegex failed"
+	endif
+	
+	comment "empty expression"
+	set $string1$ = ""
+	set $list1$ = createStringList('hello.pkg','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none')
+	set $ConstTest$ = ""
+	
+	set $list2$ = getSubListByContainingRegex($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getSubListByContainingRegex failed"
+	endif
+	
+	comment "Searching with a list of expressions"
+	
+	set $list1$ = createStringList('uib gmbh','example@xyz.com and example2@xyz.com', 'client')
+	set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
 	set $ConstTest$ = "uib gmbh | example@xyz.com and example2@xyz.com"
 	
-	set $list2$ = getSubListByContainingRegex($list3$, $list1$)	
+	set $list2$ = getSubListByContainingRegex($list3$, $list1$)
 	
-	set $CompValue$ = composeString ($list2$, " | ")	
-    if ($ConstTest$ = $CompValue$)
-        comment "getSubListByContainingRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing getSubListByContainingRegex failed"
-    endif
-    
-    
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getSubListByContainingRegex failed"
+	endif
+	
+	comment "Searching with a list of expressions with empty strings"
+	
+	set $list1$ = createStringList('uib gmbh','','','example@xyz.com and example2@xyz.com', 'client')
+	set $list3$ = createStringList('','\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','','.*uib')
+	set $ConstTest$ = "uib gmbh | example@xyz.com and example2@xyz.com"
+	
+	set $list2$ = getSubListByContainingRegex($list3$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getSubListByContainingRegex failed"
+	endif
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -133,145 +201,214 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 	set $list1$ = createStringList('uib gmbh','client','example@xyz.com and example2@xyz.com')
 	set $ConstTest$ = "example@xyz.com | example2@xyz.com"
 	
-	set $list2$ = getRegexMatchList($string1$, $list1$)	
+	set $list2$ = getRegexMatchList($string1$, $list1$)
 	
-	set $CompValue$ = composeString ($list2$, " | ")	
-    if ($ConstTest$ = $CompValue$)
-        comment "getRegexMatchList passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing getRegexMatchList failed"
-    endif
-      
-    comment "Searching with a list of expressions"
-    
-    set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getRegexMatchList passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getRegexMatchList failed"
+	endif
+	
+	comment "Searching with a single expression and empty input"
+	
+	set $string1$ = "\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}"
+	set $list1$ = createStringList('','uib gmbh','','client','example@xyz.com and example2@xyz.com')
+	set $ConstTest$ = "example@xyz.com | example2@xyz.com"
+	
+	set $list2$ = getRegexMatchList($string1$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getRegexMatchList passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getRegexMatchList failed"
+	endif
+	
+	comment "Searching with a list of expressions"
+	
+	set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
 	set $ConstTest$ = "uib | example@xyz.com | example2@xyz.com"
 	
 	set $list2$ = getRegexMatchList($list3$, $list1$)
 	
-	set $CompValue$ = composeString ($list2$, " | ")	
-    if ($ConstTest$ = $CompValue$)
-        comment "getRegexMatchList passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing getRegexMatchList failed"
-    endif
-    
-    set $string1$ = "(?i)^.*\.pkg$"
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getRegexMatchList passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getRegexMatchList failed"
+	endif
+	
+	set $string1$ = "(?i)^.*\.pkg$"
 	set $list1$ = createStringList('hello.pkg','heLLo.pKg', 'hEl Lo.PKG', 'hello pkg','hello.pkg.none','hello.world.pkg','hello.pkg.world')
 	set $ConstTest$ = "hello.pkg | heLLo.pKg | hEl Lo.PKG | hello.world.pkg"
 	
 	set $list2$ = getRegexMatchList($string1$, $list1$)
 	
-	set $CompValue$ = composeString ($list2$, " | ")	
-    if ($ConstTest$ = $CompValue$)
-        comment "getSubListByContainingRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing getSubListByContainingRegex failed"
-    endif
-    
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getRegexMatchList failed"
+	endif
+	
+	comment "Searching with a list of expressions with empty expr"
+	
+	set $list3$ = createStringList('','\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','','.*uib')
+	set $ConstTest$ = "uib | example@xyz.com | example2@xyz.com"
+	
+	set $list2$ = getRegexMatchList($list3$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "getRegexMatchList passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing getRegexMatchList failed"
+	endif
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "removeFromListByContainingRegex"
-
-	comment "Searching with a single expression"
 	
-	set $string1$ = "\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}"
+	comment "Searching with a empty expression"
+	
+	set $string1$ = ""
 	set $list1$ = createStringList('uib gmbh','client','example@xyz.com and example2@xyz.com')
-	set $ConstTest$ = "uib gmbh | client"
+	set $ConstTest$ = ""
 	
 	set $list2$ = removeFromListByContainingRegex($string1$, $list1$)
 	
 	set $CompValue$ = composeString ($list2$, " | ")
-    if ($ConstTest$ = $CompValue$)
-        comment "removeFromListByContainingRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing removeFromListByContainingRegex failed"
-    endif    
-    
-    comment "Searching with a list of expressions"
-    
-    set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
+	if ($ConstTest$ = $CompValue$)
+		comment "removeFromListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing removeFromListByContainingRegex failed"
+	endif
+	
+	comment "Searching with a list of expressions"
+	
+	set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
 	set $ConstTest$ = "client"
 	
-	set $list2$ = removeFromListByContainingRegex($list3$, $list1$)	
+	set $list2$ = removeFromListByContainingRegex($list3$, $list1$)
 	
 	set $CompValue$ = composeString ($list2$, " | ")
-    if ($ConstTest$ = $CompValue$)
-        comment "removeFromListByContainingRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing removeFromListByContainingRegex failed"
-    endif 
-    
-
+	if ($ConstTest$ = $CompValue$)
+		comment "removeFromListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing removeFromListByContainingRegex failed"
+	endif
+	
+	comment "Searching with a list of expressions and empty input"
+	
+	set $list1$ = createStringList('','uib gmbh','client','','example@xyz.com and example2@xyz.com','')
+	set $list3$ = createStringList('\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','.*uib')
+	set $ConstTest$ = "client"
+	
+	set $list2$ = removeFromListByContainingRegex($list3$, $list1$)
+	
+	set $CompValue$ = composeString ($list2$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "removeFromListByContainingRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing removeFromListByContainingRegex failed"
+	endif
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "stringReplaceRegex"
 	
 	comment "Testing with a matching expression"
-    
+	
 	set $ConstTest$ = "xyz abc gmbh"
 	set $CompValue$ = stringReplaceRegex('uib gmbh','.*uib', 'xyz abc')
 	if ($ConstTest$ = $CompValue$)
-        comment "stringReplaceRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing stringReplaceRegex failed"
-    endif
-    
+		comment "stringReplaceRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing stringReplaceRegex failed"
+	endif
+	
 	comment "Testing with a non matching expression"
-    
+	
 	set $ConstTest$ = "uib gmbh"
 	set $CompValue$ = stringReplaceRegex('uib gmbh','.*abc', 'xyz abc')
 	if ($ConstTest$ = $CompValue$)
-        comment "stringReplaceRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing stringReplaceRegex failed"
-    endif
-    
+		comment "stringReplaceRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing stringReplaceRegex failed"
+	endif
+	
 	comment "Replacing with empty string"
-    
+	
 	set $ConstTest$ = " gmbh"
 	set $CompValue$ = stringReplaceRegex('uib gmbh','.*uib', '')
 	if ($ConstTest$ = $CompValue$)
-        comment "stringReplaceRegex passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing stringReplaceRegex failed"
-    endif
-    
-    
+		comment "stringReplaceRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing stringReplaceRegex failed"
+	endif
+	
+	comment "Testing with empty input string"
+	
+	set $ConstTest$ = ""
+	set $CompValue$ = stringReplaceRegex('','.*uib', '')
+	if ($ConstTest$ = $CompValue$)
+		comment "stringReplaceRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing stringReplaceRegex failed"
+	endif
+	
+	comment "Testing with empty expr"
+	
+	set $ConstTest$ = ""
+	set $CompValue$ = stringReplaceRegex('uib gmbh','', '')
+	if ($ConstTest$ = $CompValue$)
+		comment "stringReplaceRegex passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing stringReplaceRegex failed"
+	endif
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "stringReplaceRegexInList"
-    
+	
 	set $string1$ = "\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}"
 	set $string2$ = "MATCH REMOVED"
-	set $list1$ = createStringList('uib gmbh','client','example@xyz.com and example2@xyz.com')
+	set $list1$ = createStringList('','uib gmbh','','client','example@xyz.com and example2@xyz.com','')
 	set $ConstTest$ = 'uib gmbh | client | MATCH REMOVED and MATCH REMOVED'
 	
-	set $list2$ = stringReplaceRegexInList($list1$, $string1$, $string2$)	
+	set $list2$ = stringReplaceRegexInList($list1$, $string1$, $string2$)
 	
 	set $CompValue$ = composeString ($list2$, " | ")
-    if ($ConstTest$ = $CompValue$)
-        comment "stringReplaceRegexInList passed"
-    else
-        set $TestResult$ = "not o.k."
-        LogWarning "testing stringReplaceRegexInList failed"
-    endif
-  
-  
+	if ($ConstTest$ = $CompValue$)
+		comment "stringReplaceRegexInList passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "testing stringReplaceRegexInList failed"
+	endif
+	
+	
 	sub_compareResult
 	set $winst_regex$ = $SubResult$
-
+	
 endif
 
 

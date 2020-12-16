@@ -1,4 +1,14 @@
 [Changelog]
+opsi-script-test (4.12.4.12-1) stable; urgency=low
+
+  * new bool property test_experimental
+  * set GetSectionFromInifile as test_experimental
+  * macos opsi-script-test-helper update 4.1.0.1
+  * regex: more tests with empty strings
+  * files: add bir dir zip / unzip test
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  16 Dec 2020 15:00:00 +0200
+
 opsi-script-test (4.12.4.8-1) stable; urgency=low
 
   * corrected wrong variable names in definition (test1list1 to testlist1, etc.)

@@ -10,12 +10,12 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
-
-
+	
+	
 	Set $DirectorySubDirectory = $HomeTestFiles$+"\subDirectory"
 	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"
 	Set $FileCopyTestSubDirectory$ = $HomeTestFiles$+"\subDirectory\CopyTestSubDirectory.txt"
-
+	
 	if ($INST_SystemType$ = "64 Bit System") and ($OS$="Windows_NT")
 		comment ""
 		comment "-------------------------------------"
@@ -52,7 +52,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		Files_copy_test_to_programfiles
 		if FileExists("%ProgramFilesDir%\opsi.org\test\dummy.txt")
 			comment "passed"
@@ -73,7 +73,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		Files_copy_test_to_programfiles2
 		if FileExists("c:\program files\opsi.org\test\dummy.txt")
 			comment "passed"
@@ -104,7 +104,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -140,7 +140,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		Files_copy_test_to_programfiles
 		if FileExists32("%ProgramFilesDir%\opsi.org\test\dummy.txt")
 			comment "passed"
@@ -161,7 +161,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		Files_copy_test_to_programfiles2
 		if FileExists32("c:\program files\opsi.org\test\dummy.txt")
 			comment "passed"
@@ -193,38 +193,38 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
 		endif
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "delete -f -d[n] -s"
 	message "delete"
-
+	
 	if (FileExists($HomeTestFiles$))
 		Files_empty_folder_files
 	endif
-
+	
 	if not(FileExists($HomeTestFiles$))
 		if $OS$ = "Windows_NT"
 			DosInAnIcon_createDirectory
 		else
 			ShellInAnIcon_Linux_createDirectory
 		endif
-
+		
 		; delete
 		comment "delete deletes directories and the files in this directory"
 		if (FileExists($HomeTestFiles$))
 			Files_delete
 		endif
-
+		
 		if not (FileExists($HomeTestFiles$+"\subDirectory\subsubDirectory"))
 			comment "delete passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "delete failed"
 		endif
-
-				; delete
+		
+		; delete
 		comment "delete deletes also hidden files and if the filename starts with a dot"
 		if (FileExists($HomeTestFiles$))
 			Files_delete_hidden
@@ -235,20 +235,20 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "delete failed"
 		endif
-
+		
 		; -f
 		message "delete -f"
 		if (FileExists($HomeTestFiles$))
 			Files_delete_f
 		endif
-
+		
 		if not (FileExists($HomeTestFiles$+"\subDirectory\readonly"))
 			comment "-f passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "-f failed"
 		endif
-
+		
 		if $OS$ = "Windows_NT"
 			; -d [n] n = 2
 			message "delete -d[n]"
@@ -293,13 +293,13 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				endif
 			endif ; 4.12.4.3
 		endif ; windows
-
+		
 		; -s
 		message "delete -s"
 		if (FileExists($HomeTestFiles$))
 			Files_delete_s
 		endif
-
+		
 		if not (FileExists($HomeTestFiles$))
 			comment "-s passed"
 		else
@@ -311,18 +311,18 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		logError "Fatal: could not delete all files"
 		isFatalError
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "del -f -d[n] -s"
 		message "del"
-
+		
 		if (FileExists($HomeTestFiles$))
 			Files_del_empty_folder
 		endif
-
+		
 		if not(FileExists($HomeTestFiles$))
 			if $OS$ = "Windows_NT"
 				DosInAnIcon_createDirectory
@@ -330,21 +330,21 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				ShellInAnIcon_Linux_createDirectory
 			endif
 			
-
+			
 			; del
 			comment "del deletes directories and the files in this directory"
 			if (FileExists($HomeTestFiles$))
 				Files_del
 			endif
-
+			
 			if not (FileExists($HomeTestFiles$+"\subDirectory\subsubDirectory"))
 				comment "del passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "del failed"
 			endif
-
-					; del
+			
+			; del
 			comment "del deletes also hidden files and if the filename starts with a dot"
 			if (FileExists($HomeTestFiles$))
 				Files_del_hidden
@@ -355,22 +355,22 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "del failed"
 			endif
-
+			
 			; -f
 			message "del -f"
 			if (FileExists($HomeTestFiles$))
 				Files_del_f
 			endif
-
+			
 			if not (FileExists($HomeTestFiles$+"\subDirectory\readonly"))
 				comment "-f passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "-f failed"
 			endif
-
+			
 			if $OS$ = "Windows_NT"
-			; -d [n] n = 2
+				; -d [n] n = 2
 				message "del -d[n]"
 				Files_del_d
 				if not (FileExists($HomeTestFiles$+"\dummy.txt"))
@@ -385,13 +385,13 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 					LogWarning "-d[n] failed"
 				endif
 			endif ; windows
-
+			
 			; -s
 			message "del -s"
 			if (FileExists($HomeTestFiles$))
 				Files_del_s
 			endif
-
+			
 			if not (FileExists($HomeTestFiles$))
 				comment "-s passed"
 			else
@@ -404,17 +404,17 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			isFatalError
 		endif
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "copy -s -v -d -u"
 	message "copy "
-
+	
 	if (FileExists($HomeTestFiles$))
 		Files_empty_folder_files
 	endif
-
+	
 	if not(FileExists($HomeTestFiles$))
 		; copy -s
 		ShellInAnIcon_ls_testfiles
@@ -438,7 +438,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $FileInfo$ = getFileInfoMap($HomeTestFiles$+"\dummy.dll")
 				set $ConstTest$ = "2.3.4.0"
 				set $CompValue$ = getValue("FileVersion", $FileInfo$)
-    	
+				
 				if ($ConstTest$ = $CompValue$)
 					comment "-v passed"
 				else
@@ -450,7 +450,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				isFatalError
 				comment "could not copy file"
 			endif
-    	
+			
 			message "copy -c "
 			Files_empty_folder_files
 			Files_copy_c
@@ -466,7 +466,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
 			killtask "opsiwinsttesthelper.exe"
 		endif ; windows
-
+		
 		if $OS$ = "Windows_NT"
 			; copy -d
 			message "copy -d "
@@ -519,24 +519,24 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "-u failed"
 			endif
 		endif ; windows
-
+		
 		Files_empty_folder_files
 	else
 		set $TestResult$ = "not o.k."
 		logError "Fatal: could not delete all files"
 		isFatalError
 	endif
-
+	
 	if $OS$ = "Windows_NT"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "copy -x"
-  	
+		
 		if (FileExists($HomeTestFiles$))
 			Files_empty_folder_files
 		endif
-  	
+		
 		if not(FileExists($HomeTestFiles$))
 			; copy -x
 			Files_copy_x
@@ -553,16 +553,16 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			isFatalError
 		endif
 	endif ; windows
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "copy -e"
-
+	
 	if (FileExists($HomeTestFiles$))
 		Files_empty_folder_files
 	endif
-
+	
 	if not (FileExists($HomeTestFiles$))
 		Files_copy_e
 		if (FileExists($DirectorySubDirectory))
@@ -577,16 +577,16 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		logError "Fatal: could not delete all files"
 		isFatalError
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "copy -w"
-
+	
 	if (FileExists($HomeTestFiles$))
 		Files_empty_folder_files
 	endif
-
+	
 	if not (FileExists($HomeTestFiles$))
 		if $OS$ = "Windows_NT"
 			DosInAnIcon_prepare_copy_w
@@ -617,11 +617,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "copy -n"
-
+	
 	if (FileExists($HomeTestFiles$))
 		Files_empty_folder_files
 	endif
-
+	
 	if not (FileExists($HomeTestFiles$))
 		if $OS$ = "Windows_NT"
 			DosInAnIcon_prepare_copy_n
@@ -650,23 +650,23 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		logError "Fatal: could not delete all files"
 		isFatalError
 	endif
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	comment "copy -c"; ???
 	comment "not tested"
-
+	
 	if $OS$ = "Windows_NT"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "copy -r"
-  	
+		
 		if (FileExists($HomeTestFiles$))
 			Files_empty_folder_files
 		endif
-  	
+		
 		if not (FileExists($HomeTestFiles$))
 			if $OS$ = "Windows_NT"
 				DosInAnIcon_prepare_copy_r
@@ -722,11 +722,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "hardlink, symlink, move, rename"
-  	
+		
 		if (FileExists($HomeTestFiles$))
 			Files_empty_folder_files
 		endif
-  	
+		
 		if not (FileExists($HomeTestFiles$))
 			if $OS$ = "Windows_NT"
 				DosInAnIcon_prepare_copy_r
@@ -769,7 +769,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				Files_empty_folder2
 				Files_symlinklink
 			else
-				comment "symlink command is not available in win < NT6" 
+				comment "symlink command is not available in win < NT6"
 			endif
 			
 			Files_move
@@ -788,7 +788,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			endif
 			Files_move
 			if $dotest$ = 'true'
-				;comment "symlink command is only available in NT6 and up" 
+				;comment "symlink command is only available in NT6 and up"
 				if FileExists($HomeTestFiles$+"\files\symlink.txt")
 					comment "passed"
 				else
@@ -890,7 +890,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		if (FileExists($HomeTestFiles$))
 			Files_empty_folder_files
 		endif
-
+		
 		if not(FileExists($HomeTestFiles$))
 			if $OS$ = "Windows_NT"
 				DosInAnIcon_createDirectory
@@ -1030,17 +1030,31 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
+			
+			Files_del_empty_folder
+			Set  $list1$ = listFiles("%ScriptPath%\","*.*","True")
+			Files_zipfile_bigfolder
+			Files_unzipfile_bigfolder
+			Set  $list2$ = listFiles($HomeTestFiles$,"*.*","True")
+			set $ConstTest$ = count($list1$)
+			set $CompValue$ = count($list2$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
 			;Files_empty_folder
 		else
 			set $TestResult$ = "not o.k."
 			logError "Fatal: could not delete all files"
 			isFatalError
 		endif
-
+		
 	endif
-
-
-
+	
+	
+	
 	; the zip command is not supported anymore
 	; use a DosInAnIcon section with zip call
 	; eg:
@@ -1074,10 +1088,10 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	;	logError "Fatal: could not delete all files"
 	;	isFatalError
 	;endif
-
-
+	
+	
 	sub_compareResult
-
+	
 	set $winst_file$ = $SubResult$
 endif
 
@@ -1356,6 +1370,13 @@ unzipfile "%opsiTmpDir%\testdir.zip" "$HomeTestFiles$\"
 [Files_unzipfile_file]
 checktargetpath = "$HomeTestFiles$\"
 unzipfile "%opsiTmpDir%\testfile.zip" "$HomeTestFiles$\" 
+
+[Files_zipfile_bigfolder]
+zipfile "%ScriptPath%\" "%opsiTmpDir%\testbigdir.zip" 
+
+[Files_unzipfile_bigfolder]
+checktargetpath = "$HomeTestFiles$\"
+unzipfile "%opsiTmpDir%\testbigdir.zip" "$HomeTestFiles$\" 
 
 [Files_zip]
 zip "$HomeTestFiles$\files\zip" "$HomeTestFiles$\files\*.*"
