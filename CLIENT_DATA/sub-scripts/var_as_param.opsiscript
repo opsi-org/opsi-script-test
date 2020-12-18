@@ -187,8 +187,20 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	marktime 
 	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+ $helper_child_bin_name$+'" /TimeoutSeconds 20')
 	difftime
-	comment "difftime should be 5 seconds"
-	set $ConstTest$ = "5"
+	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+	switch $OS$
+		case 'Windows_NT'
+			set $ConstTest$ = "5"
+		endcase
+		case 'Linux'
+			set $ConstTest$ = "8"
+		endcase
+		case 'macos'
+			set $ConstTest$ = "5"
+		endcase
+	endswitch
+	comment "difftime should be "+$ConstTest$+" seconds"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
 	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
@@ -198,21 +210,38 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
 	sleepseconds 1
-	if $OS$ = "Windows_NT"
-		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-		set $ConstTest$ = ""
-		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-	else
-		set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
-		set $ConstTest$ = ""
-		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-		set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-		set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-	endif
-	killtask $helper_child_bin_name$
-	killtask $opsi_script_test_helper_bin_name$
+	sleepseconds 1
+		switch $OS$
+			case 'Windows_NT'
+				set $ConstTest$ = ""
+				;set $ConstTest$ = "helperchild.exe"
+				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+				set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			endcase
+			case 'Linux'
+				set $ConstTest$ = ""
+				;set $ConstTest$ = $helper_child_bin_name$
+				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+			endcase
+			case 'macos'
+				set $ConstTest$ = ""
+				;set $ConstTest$ = $helper_child_bin_name$
+				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+			endcase
+		endswitch
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
+		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 	if ($ConstTest$ = $CompValue$)
 		comment "/WaitForProcessEnding assumed passed"
 	else
@@ -224,8 +253,20 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	marktime
 	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+$helper_child_bin_name$+'" '+ $sTimeoutseconds$+' 20')
 	difftime
-	comment "difftime should be 5 seconds"
-	set $ConstTest$ = "5"
+	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+	switch $OS$
+		case 'Windows_NT'
+			set $ConstTest$ = "5"
+		endcase
+		case 'Linux'
+			set $ConstTest$ = "8"
+		endcase
+		case 'macos'
+			set $ConstTest$ = "5"
+		endcase
+	endswitch
+	comment "difftime should be "+$ConstTest$+" seconds"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
 	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
@@ -235,21 +276,37 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
 	sleepseconds 1
-	if $OS$ = "Windows_NT"
-		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-		set $ConstTest$ = ""
-		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-	else
-		set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
-		set $ConstTest$ = ""
-		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-		set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-		set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-	endif
+	switch $OS$
+		case 'Windows_NT'
+			set $ConstTest$ = ""
+			;set $ConstTest$ = "helperchild.exe"
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+		endcase
+		case 'Linux'
+			set $ConstTest$ = ""
+			;set $ConstTest$ = $helper_child_bin_name$
+			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		endcase
+		case 'macos'
+			set $ConstTest$ = ""
+			;set $ConstTest$ = $helper_child_bin_name$
+			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		endcase
+	endswitch
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
+	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 	if ($ConstTest$ = $CompValue$)
 		comment "/WaitForProcessEnding assumed passed"
 	else
@@ -261,6 +318,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	marktime
 	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+$helper_child_bin_name$+'" /TimeOutSeconds 2')
 	difftime
+	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 	comment "difftime should be 2 seconds"
 	set $ConstTest$ = "2"
 	set $difftime$ = getDiffTimeSec
@@ -272,21 +330,36 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
 	sleepseconds 1
-	if $OS$ = "Windows_NT"
-		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-		set $ConstTest$ = "helperchild.exe"
-		set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-	else
-		set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
-		set $ConstTest$ = $helper_child_bin_name$
-		set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-		set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-		set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-	endif
+	switch $OS$
+		case 'Windows_NT'
+			;set $ConstTest$ = ""
+			set $ConstTest$ = "helperchild.exe"
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+		endcase
+		case 'Linux'
+			;set $ConstTest$ = ""
+			set $ConstTest$ = $helper_child_bin_name$
+			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		endcase
+		case 'macos'
+			;set $ConstTest$ = ""
+			set $ConstTest$ = $helper_child_bin_name$
+			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		endcase
+	endswitch
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
+	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 	if ($ConstTest$ = $CompValue$)
 		comment "/WaitForProcessEnding assumed passed"
 	else

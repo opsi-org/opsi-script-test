@@ -2700,6 +2700,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 				endcase
 				case "Linux"
 					set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
+					if "vmnat.local" = takeString(0,shellCall("hostname -d"))
+						set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
+					endif
 					if $CompValue$ = "172.16.166.1"
 						set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
 					endif
@@ -2745,17 +2748,32 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			endif
 			LogWarning "failed"
 		endif
-		markErrorNumber
-		set $ConstTest$ = getMyIpByTarget(getIpByName("%HostID%"))
-		set $CompValue$ = getIpByName("%HostID%")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			if errorsOccuredSinceMark = 0
-				set $TestResult$ = "not o.k."
+		if not("%opsiServiceUser%" = "")
+			markErrorNumber
+			set $ConstTest$ = getMyIpByTarget(getIpByName("%opsiServiceUser%"))
+			set $CompValue$ = getIpByName("%opsiServiceUser%")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				if errorsOccuredSinceMark = 0
+					set $TestResult$ = "not o.k."
+				endif
+				LogWarning "failed"
 			endif
-			LogWarning "failed"
 		endif
+		
+		;markErrorNumber
+		;set $ConstTest$ = getMyIpByTarget(getIpByName("%PCName%"))
+		;set $CompValue$ = getIpByName("%PCName%")
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	if errorsOccuredSinceMark = 0
+		;		set $TestResult$ = "not o.k."
+		;	endif
+		;	LogWarning "failed"
+		;endif
+		
 		markErrorNumber
 		set $ConstTest$ = getMyIpByTarget(getIpByName("%PCName%"))
 		set $CompValue$ = getIpByName("%PCName%")
@@ -8105,14 +8123,14 @@ comment ""
 "method":"getLicenseKey"
 "params":[
 	"$Lic_ProductId$",
-	"%HostID%"
+	"%opsiServiceUser%"
 	]
 
 [opsiservicecall_licenseOnClient]
 "method": "licenseOnClient_getIdents"
 "params": [
 					'[]',
-					'{"clientId":"%HostId%","licensePoolId": "$licensepool$"}',
+					'{"clientId":"%opsiServiceUser%","licensePoolId": "$licensepool$"}',
 		]
 
 [opsiservicecall_getHostId]

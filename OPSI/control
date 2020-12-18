@@ -397,7 +397,7 @@ type: unicode
 name: var_as_param
 multivalue: False
 editable: False
-description: Variabe as Section Parameters
+description: Variabe as Section Parameters (executeSection call)
 values: ["off", "on"]
 default: ["off"]
 

@@ -258,6 +258,7 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 	
 	comment "Searching with a list of expressions with empty expr"
 	
+	set $list1$ = createStringList('','uib gmbh','','client','example@xyz.com and example2@xyz.com')
 	set $list3$ = createStringList('','\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}','','.*uib')
 	set $ConstTest$ = "uib | example@xyz.com | example2@xyz.com"
 	
@@ -351,7 +352,7 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing stringReplaceRegex failed"
 	endif
 	
-	comment "Replacing with empty string"
+	comment "Testing with a matching expression and empty replacement"
 	
 	set $ConstTest$ = " gmbh"
 	set $CompValue$ = stringReplaceRegex('uib gmbh','.*uib', '')
@@ -362,10 +363,10 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing stringReplaceRegex failed"
 	endif
 	
-	comment "Testing with empty input string"
+	comment "Replacing with empty expr"
 	
-	set $ConstTest$ = ""
-	set $CompValue$ = stringReplaceRegex('','.*uib', '')
+	set $ConstTest$ = "uib gmbh"
+	set $CompValue$ = stringReplaceRegex('uib gmbh','', 'xyz abc')
 	if ($ConstTest$ = $CompValue$)
 		comment "stringReplaceRegex passed"
 	else
@@ -373,10 +374,10 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing stringReplaceRegex failed"
 	endif
 	
-	comment "Testing with empty expr"
+	comment "Testing with empty input string"
 	
 	set $ConstTest$ = ""
-	set $CompValue$ = stringReplaceRegex('uib gmbh','', '')
+	set $CompValue$ = stringReplaceRegex('','.*uib', 'xyz abc')
 	if ($ConstTest$ = $CompValue$)
 		comment "stringReplaceRegex passed"
 	else
@@ -393,7 +394,7 @@ if ($Flag_subregex$ = "on") or ($MasterFlag$ = "on")
 	set $string1$ = "\w+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,6}"
 	set $string2$ = "MATCH REMOVED"
 	set $list1$ = createStringList('','uib gmbh','','client','example@xyz.com and example2@xyz.com','')
-	set $ConstTest$ = 'uib gmbh | client | MATCH REMOVED and MATCH REMOVED'
+	set $ConstTest$ = ' | uib gmbh |  | client | MATCH REMOVED and MATCH REMOVED | '
 	
 	set $list2$ = stringReplaceRegexInList($list1$, $string1$, $string2$)
 	
