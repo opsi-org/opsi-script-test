@@ -8,49 +8,62 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
-
+	
 	; start testing
 	set $TestResult$ = "o.k."
-
+	
 	Files_testFiles
-
+	
 	; WinBatch Sections
 	
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testting: "
 	comment "WinBatch"
 	message "Winbatch_testing /LetThemGo"
+	
 	Winbatch_testing /LetThemGo
 	sleepSeconds 1
+	;if $OS$ = "Windows_NT"
+	;	set $str1$ = "ping.exe"
+	;else
+	;	set $str1$ = "ping"
+	;endif
+	;if processIsRunning($str1$)
+	;	comment "/LetThemGo passed"
+	;else
+	;	set $TestResult$ = "not o.k."
+	;	LogWarning "/LetThemGo failed"
+	;endif
 	if $OS$ = "Windows_NT"
 		;;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
 		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
-		set $ConstTest$ = "ping.exe"
-		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+		set $ConstTest$ = $pingcommand$
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $list$ = splitStringOnWhitespace($tmp$)
-		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 		if isNumber($tmp$)
 			set $CompValue$ = takeString($tmp$, $list$)
 			set $CompValue$ = unquote2($CompValue$,"[]")
 		else
 			set $CompValue$ = ""
 		endif
-		killtask "ping.exe"
+		killtask $pingcommand$
 	else
-		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
-		set $ConstTest$ = "ping"
-		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $list1$ = shellCall('ps -Ao args | grep '+$pingcommand$)
+		set $list1$ = getSubListByContainingRegex($pingregex$, $list1$)
+		set $ConstTest$ = $pingcommand$
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $list$ = splitStringOnWhitespace($tmp$)
-		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 		if isNumber($tmp$)
 			set $CompValue$ = takeString($tmp$, $list$)
 			set $CompValue$ = unquote2($CompValue$,"[]")
 		else
 			set $CompValue$ = ""
 		endif
-		killtask "ping"
+		killtask $pingcommand$
 	endif
 	if ($ConstTest$ = $CompValue$)
 		comment "/LetThemGo passed"
@@ -59,30 +72,42 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/LetThemGo failed"
 	endif
 	
-  	
+	
 	message "Winbatch_testing /WaitOnClose"
 	Winbatch_testing /WaitOnClose
 	sleepseconds 1
+	;if $OS$ = "Windows_NT"
+	;	set $str1$ = "ping.exe"
+	;else
+	;	set $str1$ = "ping"
+	;endif
+	;if not(processIsRunning($str1$))
+	;	comment "/WaitOnClose passed"
+	;else
+	;	set $TestResult$ = "not o.k."
+	;	LogWarning "/WaitOnClose failed"
+	;endif
 	if $OS$ = "Windows_NT"
 		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
 		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
 		set $ConstTest$ = ""
-		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		killtask "ping.exe"
+		killtask $pingcommand$
 	else
-		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
-		set $ConstTest$ = "ping"
-		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $list1$ = shellCall('ps -Ao args | grep '+$pingcommand$)
+		set $list1$ = getSubListByContainingRegex($pingregex$, $list1$)
+		set $ConstTest$ = ""
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $list$ = splitStringOnWhitespace($tmp$)
-		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 		if isNumber($tmp$)
 			set $CompValue$ = takeString($tmp$, $list$)
 			set $CompValue$ = unquote2($CompValue$,"[]")
 		else
 			set $CompValue$ = ""
 		endif
-		killtask "ping"
+		killtask $pingcommand$
 	endif
 	if ($ConstTest$ = $CompValue$)
 		comment "/WaitOnClose passed"
@@ -90,32 +115,51 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitOnClose failed"
 	endif
-
-
+	
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.3")
 		message "Winbatch_testing /WaitOnClose /timeoutseconds 20"
 		Winbatch_testing /WaitOnClose /timeoutseconds 20
 		sleepseconds 1
+		;if $OS$ = "Windows_NT"
+		;	set $str1$ = "ping.exe"
+		;else
+		;	set $str1$ = "ping"
+		;endif
+		;if not(processIsRunning($str1$))
+		;	comment "/WaitOnClose passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "/WaitOnClose failed"
+		;endif
 		if $OS$ = "Windows_NT"
 			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
 			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
 			set $ConstTest$ = ""
-			set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			killtask "ping.exe"
-		else
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
-			set $ConstTest$ = "ping"
-			set $tmp$ = takeFirstStringContaining($list1$,"ping")
+			set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 			set $list$ = splitStringOnWhitespace($tmp$)
-			set $tmp$ = getIndexFromListByContaining($list$,"ping")
+			set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 			if isNumber($tmp$)
 				set $CompValue$ = takeString($tmp$, $list$)
 				set $CompValue$ = unquote2($CompValue$,"[]")
 			else
 				set $CompValue$ = ""
 			endif
-			killtask "ping"
+			killtask $pingcommand$
+		else
+			set $list1$ = shellCall('ps -Ao args | grep '+$pingcommand$)
+			set $list1$ = getSubListByContainingRegex($pingregex$, $list1$)
+			set $ConstTest$ = ""
+			set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
+			set $list$ = splitStringOnWhitespace($tmp$)
+			set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
+			if isNumber($tmp$)
+				set $CompValue$ = takeString($tmp$, $list$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+			else
+				set $CompValue$ = ""
+			endif
+			killtask $pingcommand$
 		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "/WaitOnClose passed"
@@ -123,30 +167,39 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "/WaitOnClose failed"
 		endif
-
+		
 		message "Winbatch_testing /WaitOnClose /timeoutseconds $seconds$"
 		set $tmp$ = "1"
-		Winbatch_testing /WaitOnClose /timeoutseconds $tmp$
+		;Winbatch_testing /WaitOnClose /timeoutseconds $tmp$
+		Winbatch_testing /timeoutseconds $tmp$
 		if $OS$ = "Windows_NT"
-			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
 			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
-			set $ConstTest$ = "ping.exe"
-			set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			killtask "ping.exe"
-		else
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
-			set $ConstTest$ = "ping"
-			set $tmp$ = takeFirstStringContaining($list1$,"ping")
+			set $ConstTest$ = $pingcommand$
+			set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 			set $list$ = splitStringOnWhitespace($tmp$)
-			set $tmp$ = getIndexFromListByContaining($list$,"ping")
+			set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 			if isNumber($tmp$)
 				set $CompValue$ = takeString($tmp$, $list$)
 				set $CompValue$ = unquote2($CompValue$,"[]")
 			else
 				set $CompValue$ = ""
 			endif
-			killtask "ping"
+			killtask $pingcommand$
+		else
+			set $list1$ = shellCall('ps -Ao args | grep ping')
+			set $list1$ = shellCall('ps -Ao args | grep '+$pingcommand$)
+			set $list1$ = getSubListByContainingRegex($pingregex$, $list1$)
+			set $ConstTest$ = $pingcommand$
+			set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
+			set $list$ = splitStringOnWhitespace($tmp$)
+			set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
+			if isNumber($tmp$)
+				set $CompValue$ = takeString($tmp$, $list$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+			else
+				set $CompValue$ = ""
+			endif
+			killtask $pingcommand$
 		endif
 		if ($ConstTest$ = lower($CompValue$))
 			comment "/WaitOnClose passed"
@@ -155,15 +208,15 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "/WaitOnClose failed"
 		endif
 	endif ; 4.11.3
-
-	if ($OS$ = "Windows_NT")
 	
-		comment " no more tests for winbatch /WaitForWindowAppearing 
+	if ($OS$ = "Windows_NT")
+		
+		comment " no more tests for winbatch /WaitForWindowAppearing
 		;message "Winbatch_testing /WaitForWindowAppearing"
 		;killtask $helper_child_bin_name$
 		;killtask $opsi_script_test_helper_bin_name$
 		;marktime
-		;Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild" 
+		;Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild"
 		;difftime
 		;includelog "%opsiLogDir%"+$pathDelim$+"opsiscripttesthelper.log" "100"
 		;
@@ -213,11 +266,11 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		;	LogWarning "/WaitForWindowAppearing assumed failed"
 		;endif
 	endif ; windows
-
+	
 	message "Winbatch_testing /WaitForProcessEnding"
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
-	marktime 
+	marktime
 	Winbatch_startprocess_with_child_nowait /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
 	difftime
 	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
@@ -280,7 +333,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
-
+	
 	message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 20"
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
@@ -347,7 +400,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
-
+	
 	message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 2"
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
@@ -400,7 +453,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
-
+	
 	comment "same test without /WaitForProcessEnding"
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
@@ -418,7 +471,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			set $ConstTest$ = "3"
 		endcase
 		case 'macos'
-			set $ConstTest$ = "3"
+			set $ConstTest$ = "1"
 		endcase
 	endswitch
 	comment "difftime should be "+$ConstTest$+" seconds"
@@ -466,14 +519,14 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
-
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.3")
 		comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
 		marktime
 		Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20
 		difftime
 		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-	
+		
 		switch $OS$
 			case 'Windows_NT'
 				set $ConstTest$ = "1"
@@ -530,8 +583,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "/WaitForProcessEnding assumed failed"
 		endif
 	endif ; 4.11.3
-
-
+	
+	
 	if $OS$ = "Windows_NT"
 		;/WaitForWindowVanish sees only Windows of 32 Bit applications
 		message "Winbatch_testing /WaitForWindowVanish"
@@ -562,7 +615,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "/WaitForWindowVanish assumed failed"
 		endif
 	endif ; windows
-
+	
 	message "Winbatch_testing /WaitSeconds"
 	comment "should be take 2 seconds even the program is finished before 2 seconds"
 	marktime
@@ -613,8 +666,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitSeconds assumed failed"
 	endif
-
-
+	
+	
 	comment "should be take longer than 2 seconds"
 	marktime
 	Winbatch_helper_wait2_showwindow1 /WaitSeconds 2
@@ -629,7 +682,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			set $ConstTest$ = "5"
 		endcase
 		case 'macos'
-			set $ConstTest$ = "1"
+			set $ConstTest$ = "4"
 		endcase
 	endswitch
 	comment "difftime should be "+$ConstTest$+" seconds"
@@ -678,7 +731,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitSeconds assumed failed"
 	endif
-
+	
 	comment "should be take exactly 2 seconds even if the program takes longer"
 	marktime
 	Winbatch_helper_wait2_showwindow5 /WaitSeconds 2 /LetThemgo
@@ -728,7 +781,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitSeconds assumed failed"
 	endif
-
+	
 	
 	message "Winbatch_testing exitcode"
 	marktime
@@ -799,7 +852,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "Winbatch_testing exitcode failed"
 	endif
-
+	
 	message "Winbatch_testing exitcode"
 	Winbatch_exitcode_43_doublequote_with_param
 	set $ConstTest$ = "43"
@@ -894,7 +947,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			comment "Testing: "
 			message "/runelevated"
 			Files_copy_msi_exe_2_c
-		
+			
 			message "Winbatch_testing local msiexec call /RunElevated /TimeoutSeconds 30"
 			Winbatch_msi_standard_from_c /RunElevated /TimeoutSeconds 30
 			set $ConstTest$ = "0"
@@ -910,16 +963,16 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "Winbatch_testing msiexec call /RunElevated failed"
 			endif
-		
+			
 			comment "cleanup ..."
 			sleepseconds 5
 			if not (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E19B367E-992C-4BD5-86D1-804C10184D71}] DisplayName") = "")
 				comment "MSI id {E19B367E-992C-4BD5-86D1-804C10184D71} (dummy.msi) found in registry, starting msiexec to uninstall"
 				Winbatch_msi_uninstall /RunElevated
 			endif
-		
+			
 			Files_copy_helper_2_c
-		
+			
 			message "testing winbatch_start_helper_c /RunElevated"
 			winbatch_start_helper_c /RunElevated
 			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
@@ -932,7 +985,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			winbatch_start_helper_asinvoker_c /RunElevated
 			;set $list1$ = loadTextFile ($HomeTestFiles$+"\testFiles\opsi-script-test-helper-win\admin.log")
 			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-		
+			
 			marktime
 			message "testing Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10"
 			Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
@@ -960,7 +1013,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			killtask "helperchild.exe"
 			killtask "opsiscripttesthelper.exe"
 			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-		
+			
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 				message "testing Winbatch_powercfg_hibernate_off "
 				Winbatch_powercfg_hibernate_off
@@ -984,7 +1037,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 					LogWarning "testing /RunElevated failed"
 				endif
 			endif ; nt6
-		Files_clean_from_c
+			Files_clean_from_c
 		endif ; 4.11.3
 	endif ; windows
 	
@@ -1040,7 +1093,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			killtask $helper_child_bin_name$
 			killtask $opsi_script_test_helper_bin_name$
 			marktime
-			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild" 
+			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild"
 			difftime
 			comment "difftime should be about 2 seconds"
 			if "20" = getDiffTimeSec
@@ -1094,7 +1147,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				set $ConstTest$ = "7"
 			endcase
 			case 'macos'
-				set $ConstTest$ = "1"
+				set $ConstTest$ = "5"
 			endcase
 		endswitch
 		comment "difftime should be "+$ConstTest$+" seconds"
@@ -1152,7 +1205,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
 		difftime
 		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-	
+		
 		switch $OS$
 			case 'Windows_NT'
 				set $ConstTest$ = "5"
@@ -1161,7 +1214,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				set $ConstTest$ = "9"
 			endcase
 			case 'macos'
-				set $ConstTest$ = "1"
+				set $ConstTest$ = "5"
 			endcase
 		endswitch
 		comment "difftime should be "+$ConstTest$+" seconds"
@@ -1333,7 +1386,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "processCall assumed failed"
 		endif
 		
-
+		
 		comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
 		killtask $helper_child_bin_name$
 		killtask $opsi_script_test_helper_bin_name$
@@ -1433,7 +1486,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'"') /WaitSeconds 2
 		difftime
 		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-	
+		
 		switch $OS$
 			case 'Windows_NT'
 				set $ConstTest$ = "2"
@@ -1500,7 +1553,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --wait=2 --showwindow=1') /WaitSeconds 2
 		difftime
 		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-	
+		
 		switch $OS$
 			case 'Windows_NT'
 				set $ConstTest$ = "4"
@@ -1573,33 +1626,33 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "processCall assumed failed"
 		endif
 		switch $OS$
-		case 'Windows_NT'
-			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
-			set $ConstTest$ = "opsiscripttesthelper.exe"
-			set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		endcase
-		case 'Linux'
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
-			set $ConstTest$ = $opsi_script_test_helper_bin_name$
-			set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
-			set $CompValue$ = unquote2($CompValue$,"[]")
-		endcase
-		case 'macos'
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
-			set $ConstTest$ = $opsi_script_test_helper_bin_name$
-			set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
-			set $CompValue$ = unquote2($CompValue$,"[]")
-		endcase
-	endswitch
-	killtask $helper_child_bin_name$
-	killtask $opsi_script_test_helper_bin_name$
-	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+			case 'Windows_NT'
+				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
+				set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
+				set $ConstTest$ = "opsiscripttesthelper.exe"
+				set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			endcase
+			case 'Linux'
+				set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
+				set $ConstTest$ = $opsi_script_test_helper_bin_name$
+				set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+			endcase
+			case 'macos'
+				set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
+				set $ConstTest$ = $opsi_script_test_helper_bin_name$
+				set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+			endcase
+		endswitch
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
+		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 		if ($ConstTest$ = $CompValue$)
 			comment "processCall assumed passed"
 		else
@@ -1607,8 +1660,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "processCall assumed failed"
 		endif
 		
-
-
+		
+		
 		;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 		
 		message "processCall exitcode"
@@ -1654,7 +1707,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "processCall exitcode failed"
 		endif
-
+		
 		if $OS$ = "Windows_NT"
 			message "processCall msiexec call"
 			;Winbatch_msi_standard
@@ -1675,7 +1728,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; windows
 	endif ; 4.11.6.0
-
+	
 	
 	if ($OS$ = "Linux") or ($OS$ = 'macos')
 		;set $TestResult$ = "not implemented"
@@ -1710,7 +1763,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 	endif ; Linux
-
+	
 	sub_compareResult
 	set $winst_winbatch$ = $SubResult$
 endif

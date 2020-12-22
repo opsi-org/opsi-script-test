@@ -8,7 +8,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
-
+	
 	; start testing
 	set $TestResult$ = "o.k."
 	
@@ -44,7 +44,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	set $sEscapeStrings$ = "/EscapeStrings"
 	set $ParamDelimiter$ = "WINST"
 	
-
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testting: "
@@ -55,30 +55,31 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	if $OS$ = "Windows_NT"
 		;;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
 		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
-		set $ConstTest$ = "ping.exe"
-		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+		set $ConstTest$ = $pingcommand$
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $list$ = splitStringOnWhitespace($tmp$)
-		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 		if isNumber($tmp$)
 			set $CompValue$ = takeString($tmp$, $list$)
 			set $CompValue$ = unquote2($CompValue$,"[]")
 		else
 			set $CompValue$ = ""
 		endif
-		killtask "ping.exe"
+		killtask $pingcommand$
 	else
-		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
-		set $ConstTest$ = "ping"
-		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $list1$ = shellCall('ps -Ao args | grep '+$pingcommand$)
+		set $list1$ = getSubListByContainingRegex($pingregex$, $list1$)
+		set $ConstTest$ = $pingcommand$
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $list$ = splitStringOnWhitespace($tmp$)
-		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 		if isNumber($tmp$)
 			set $CompValue$ = takeString($tmp$, $list$)
 			set $CompValue$ = unquote2($CompValue$,"[]")
 		else
 			set $CompValue$ = ""
 		endif
-		killtask "ping"
+		killtask $pingcommand$
 	endif
 	if ($ConstTest$ = $CompValue$)
 		comment "/LetThemGo passed"
@@ -87,7 +88,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/LetThemGo failed"
 	endif
 	
-  	
+	
 	message "Winbatch_testing /WaitOnClose"
 	executeSection('Winbatch_testing '+$sWaitOnClose$)
 	sleepseconds 1
@@ -95,22 +96,23 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
 		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
 		set $ConstTest$ = ""
-		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		killtask "ping.exe"
+		killtask $pingcommand$
 	else
-		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
-		set $ConstTest$ = "ping"
-		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $list1$ = shellCall('ps -Ao args | grep '+$pingcommand$)
+		set $list1$ = getSubListByContainingRegex($pingregex$, $list1$)
+		set $ConstTest$ = ""
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $list$ = splitStringOnWhitespace($tmp$)
-		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 		if isNumber($tmp$)
 			set $CompValue$ = takeString($tmp$, $list$)
 			set $CompValue$ = unquote2($CompValue$,"[]")
 		else
 			set $CompValue$ = ""
 		endif
-		killtask "ping"
+		killtask $pingcommand$
 	endif
 	if ($ConstTest$ = $CompValue$)
 		comment "/WaitOnClose passed"
@@ -118,8 +120,8 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitOnClose failed"
 	endif
-
-
+	
+	
 	message "Winbatch_testing /WaitOnClose /timeoutseconds 20"
 	set $seconds$ = "20"
 	executeSection('Winbatch_testing '+$sWaitOnClose$+' '+ $sTimeoutseconds$+' '+ $seconds$)
@@ -128,22 +130,30 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
 		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
 		set $ConstTest$ = ""
-		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
-		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		killtask "ping.exe"
-	else
-		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
-		set $ConstTest$ = "ping"
-		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $list$ = splitStringOnWhitespace($tmp$)
-		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 		if isNumber($tmp$)
 			set $CompValue$ = takeString($tmp$, $list$)
 			set $CompValue$ = unquote2($CompValue$,"[]")
 		else
 			set $CompValue$ = ""
 		endif
-		killtask "ping"
+		killtask $pingcommand$
+	else
+		set $list1$ = shellCall('ps -Ao args | grep '+$pingcommand$)
+		set $list1$ = getSubListByContainingRegex($pingregex$, $list1$)
+		set $ConstTest$ = ""
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
+		set $list$ = splitStringOnWhitespace($tmp$)
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
+		if isNumber($tmp$)
+			set $CompValue$ = takeString($tmp$, $list$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		else
+			set $CompValue$ = ""
+		endif
+		killtask $pingcommand$
 	endif
 	if ($ConstTest$ = $CompValue$)
 		comment "/WaitOnClose passed"
@@ -151,30 +161,38 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitOnClose failed"
 	endif
-
+	
 	message "Winbatch_testing /WaitOnClose /timeoutseconds $seconds$"
 	set $seconds$ = "1"
 	executeSection('Winbatch_testing '+$sWaitOnClose$+' '+ $sTimeoutseconds$+' '+ $seconds$)
 	if $OS$ = "Windows_NT"
-		;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq ping.exe"')
 		set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_ping")
-		set $ConstTest$ = "ping.exe"
-		set $tmp$ = takeFirstStringContaining($list1$,"ping.exe")
-		set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		killtask "ping.exe"
-	else
-		set $list1$ = shellCall('ps -Ao pid,user,args | grep ping"')
-		set $ConstTest$ = "ping"
-		set $tmp$ = takeFirstStringContaining($list1$,"ping")
+		set $ConstTest$ = $pingcommand$
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
 		set $list$ = splitStringOnWhitespace($tmp$)
-		set $tmp$ = getIndexFromListByContaining($list$,"ping")
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
 		if isNumber($tmp$)
 			set $CompValue$ = takeString($tmp$, $list$)
 			set $CompValue$ = unquote2($CompValue$,"[]")
 		else
 			set $CompValue$ = ""
 		endif
-		killtask "ping"
+		killtask $pingcommand$
+	else
+		set $list1$ = shellCall('ps -Ao args | grep ping')
+		set $list1$ = shellCall('ps -Ao args | grep '+$pingcommand$)
+		set $list1$ = getSubListByContainingRegex($pingregex$, $list1$)
+		set $ConstTest$ = $pingcommand$
+		set $tmp$ = takeFirstStringContaining($list1$,$pingcommand$)
+		set $list$ = splitStringOnWhitespace($tmp$)
+		set $tmp$ = getIndexFromListByContaining($list$,$pingcommand$)
+		if isNumber($tmp$)
+			set $CompValue$ = takeString($tmp$, $list$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		else
+			set $CompValue$ = ""
+		endif
+		killtask $pingcommand$
 	endif
 	if ($ConstTest$ = lower($CompValue$))
 		comment "/WaitOnClose passed"
@@ -182,9 +200,9 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitOnClose failed"
 	endif
-
+	
 	message "Winbatch_testing /WaitForProcessEnding"
-	marktime 
+	marktime
 	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+ $helper_child_bin_name$+'" /TimeoutSeconds 20')
 	difftime
 	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
@@ -210,45 +228,44 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
 	sleepseconds 1
-	sleepseconds 1
-		switch $OS$
-			case 'Windows_NT'
-				set $ConstTest$ = ""
-				;set $ConstTest$ = "helperchild.exe"
-				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-				set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			endcase
-			case 'Linux'
-				set $ConstTest$ = ""
-				;set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-			case 'macos'
-				set $ConstTest$ = ""
-				;set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-		endswitch
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+	switch $OS$
+		case 'Windows_NT'
+			set $ConstTest$ = ""
+			;set $ConstTest$ = "helperchild.exe"
+			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+		endcase
+		case 'Linux'
+			set $ConstTest$ = ""
+			;set $ConstTest$ = $helper_child_bin_name$
+			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		endcase
+		case 'macos'
+			set $ConstTest$ = ""
+			;set $ConstTest$ = $helper_child_bin_name$
+			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild"')
+			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+			set $CompValue$ = unquote2($CompValue$,"[]")
+		endcase
+	endswitch
+	killtask $helper_child_bin_name$
+	killtask $opsi_script_test_helper_bin_name$
+	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 	if ($ConstTest$ = $CompValue$)
 		comment "/WaitForProcessEnding assumed passed"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
-
+	
 	message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 20"
 	marktime
 	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+$helper_child_bin_name$+'" '+ $sTimeoutseconds$+' 20')
@@ -313,10 +330,10 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
-
+	
 	message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 2"
 	marktime
-	executeSection('Winbatch_startprocess_with_child_nowait '+$sWaitForProcessEnding$+' "'+$helper_child_bin_name$+'" /TimeOutSeconds 2')
+	executeSection('Winbatch_startprocess_with_child_nowait8 '+$sWaitForProcessEnding$+' "'+$helper_child_bin_name$+'" /TimeOutSeconds 2')
 	difftime
 	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 	comment "difftime should be 2 seconds"
@@ -369,7 +386,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	
 ;########################################################################################################
 ; ################   Registry
-
+	
 ;	;DefVar $Architecture$
 	if $OS$ = "Windows_NT"
 		DefVar $DisplayName$
@@ -522,7 +539,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 				endif
 			endif
 		endif
-  		
+		
 		if ($INST_SystemType$ = "64 Bit System")
 			set $regWriteValue$ = "64"
 			executeSection('Registry_hkcu_opsi_org_test '+$sAllNtUserDats$+' '+ $sBit64$)
@@ -537,18 +554,18 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$+' '+ $sBit64$)
 			executeSection('Registry_hkcu_opsi_org_deletekey '+$sAllNtUserDats$)
 		endif
-    	
+		
 		executeSection('Registry_TestVarAsParam_Delete')
 		executeSection('Registry_opsi_org_delete_test')
 		executeSection('Registry_opsi_org_delete_test /64bit')
 		Files_delete_SaveValueToFile_txt
 	endif ; windows
-
-
+	
+	
 ;########################################################################################################
 ; ################   ExecuteWith
-
-
+	
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testting: "
@@ -576,9 +593,9 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		killtask "helperchild.exe"
 		killtask "opsiscripttesthelper.exe"
 		killtask "autoit3.exe"
-    	
 		
-    	
+		
+		
 		if $INST_SystemType$ = "64 Bit System"
 			comment ""
 			comment "-------------------------------------"
@@ -593,7 +610,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 			endif
 		endif
-  		
+		
 		Files_copy_test_to_system32 /sysnative
 		executeSection('DosInAnIcon_remove_test_from_system32 winst '+$sBitSysnative$)
 		if not(FileExistssysnative("%System%\dummy.txt"))
@@ -603,14 +620,14 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 	endif ; windows
-
+	
 ;########################################################################################################
 ; ################   Files
-
+	
 	Set $DirectorySubDirectory = $HomeTestFiles$+"\subDirectory"
 	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"
 	Set $FileCopyTestSubDirectory$ = $HomeTestFiles$+"\subDirectory\CopyTestSubDirectory.txt"
-
+	
 	if ($INST_SystemType$ = "64 Bit System") and ($OS$="Windows_NT")
 		comment ""
 		comment "-------------------------------------"
@@ -646,7 +663,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		executeSection('Files_copy_test_to_programfiles')
 		if FileExists("%ProgramFilesDir%\opsi.org\test\dummy.txt")
 			comment "passed"
@@ -667,7 +684,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		executeSection('Files_copy_test_to_programfiles2')
 		if FileExists("c:\program files\opsi.org\test\dummy.txt")
 			comment "passed"
@@ -698,7 +715,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -734,7 +751,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		Files_copy_test_to_programfiles
 		if FileExists32("%ProgramFilesDir%\opsi.org\test\dummy.txt")
 			comment "passed"
@@ -755,7 +772,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
 		endif
-
+		
 		executeSection('Files_copy_test_to_programfiles2')
 		if FileExists32("c:\program files\opsi.org\test\dummy.txt")
 			comment "passed"
@@ -787,9 +804,9 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
 		endif
 	endif
-
-
-
+	
+	
+	
 	sub_compareResult
 	set $winst_var_as_param$ = $SubResult$
 endif
@@ -823,6 +840,10 @@ tasklist /FI "IMAGENAME eq $opsi_script_test_helper_bin_name$"
 
 [Winbatch_startprocess_with_child_nowait]
 "%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=2
+
+[Winbatch_startprocess_with_child_nowait8]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --fork-and-stop=8
+
 
 [Winbatch_startprocess_with_child_nowait_from_c]
 "$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --fork-and-stop=2
@@ -1164,38 +1185,38 @@ endif
 
 
 [Sub_TestVarAsParam_ExecWith]
-	Set $Architecture$ = "%Element%"
-	Set $sArchitecture$ = "/"+$Architecture$
+Set $Architecture$ = "%Element%"
+Set $sArchitecture$ = "/"+$Architecture$
 
-	;Most basic test I can come up with....
-	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_HelloWorld powershell.exe -ExecutionPolicy Bypass")
+;Most basic test I can come up with....
+Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_HelloWorld powershell.exe -ExecutionPolicy Bypass")
 
-	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /64Bit")
-	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass")
-	ExecWith_Powershell_SearchUninstallInfos "powershell.exe" winst /64Bit
-	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass" winst /64Bit
-	ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /64Bit
+Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /64Bit")
+Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass")
+ExecWith_Powershell_SearchUninstallInfos "powershell.exe" winst /64Bit
+;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass" winst /64Bit
+ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /64Bit
 
 
-	;Test with VarAsParams:
+;Test with VarAsParams:
 
-	;Set $ExecWith_Result$ = GetOutStreamFromSection(ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$)
-	;Fails with:
-	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 24 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 24): $ExecWith_Result$ = GetOutStreamFromSection(ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$) -> ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$) illegal String Expressionstr
+;Set $ExecWith_Result$ = GetOutStreamFromSection(ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$)
+;Fails with:
+;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 24 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 24): $ExecWith_Result$ = GetOutStreamFromSection(ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$) -> ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst "/" + $Architecture$) illegal String Expressionstr
 
-	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass winst /" + $Architecture$
-	;Fails with:
-	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 25 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 25): ExecWith_Powershell_SearchUninstallInfos -> winst option not recognized
+;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass winst /" + $Architecture$
+;Fails with:
+;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 25 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 25): ExecWith_Powershell_SearchUninstallInfos -> winst option not recognized
 
-	;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass winst /" + $Architecture$
-	;Fails with:
-	;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 33 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 33): ExecWith_Powershell_SearchUninstallInfos -> winst option not recognized
+;ExecWith_Powershell_SearchUninstallInfos "powershell.exe -ExecutionPolicy Bypass winst /" + $Architecture$
+;Fails with:
+;Syntax Error in Section: Sub_TestVarAsParam_ExecWith (Command in line 33 in section: Sub_TestVarAsParam_ExecWith; file: Test.opsiscript; section start at line: 22; origin: Test.opsiscript; line: 33): ExecWith_Powershell_SearchUninstallInfos -> winst option not recognized
 
-	Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass "+$ParamDelimiter$+" "+ $sArchitecture$)
-	set $str1$ = "powershell.exe -ExecutionPolicy Bypass "+$ParamDelimiter$+" "+ $sArchitecture$
-	executesection('ExecWith_Powershell_SearchUninstallInfos '+$str1$)
-	executesection('ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /'+$Architecture$)
-	
+Set $ExecWith_Result$ = GetOutStreamFromSection("ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass "+$ParamDelimiter$+" "+ $sArchitecture$)
+set $str1$ = "powershell.exe -ExecutionPolicy Bypass "+$ParamDelimiter$+" "+ $sArchitecture$
+executesection('ExecWith_Powershell_SearchUninstallInfos '+$str1$)
+executesection('ExecWith_Powershell_SearchUninstallInfos powershell.exe -ExecutionPolicy Bypass winst /'+$Architecture$)
+
 
 [ExecWith_Powershell_SearchUninstallInfos]
 	$RegKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"

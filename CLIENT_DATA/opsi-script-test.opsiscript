@@ -200,7 +200,9 @@ DefVar $NTVersion$
 DefVar $opsi_message_title$
 DefVar $exitcode$
 DefVar $pathDelim$
+DefVar $pingcommand$
 DefVar $ping5command$
+DefVar $pingregex$
 DefVar $difftime$
 
 DefVar $regWriteValue$
@@ -256,7 +258,9 @@ switch $OS$
 		
 		; for ping parameters and errorcode see:
 		; https://superuser.com/questions/403905/ping-from-windows-7-get-no-reply-but-sets-errorlevel-to-0
-		set $ping5command$ = "ping -w 2999 -n 5 127.0.0.1"
+		set $pingcommand$ = "ping.exe"
+		set $ping5command$ = $pingcommand$ +" -w 2999 -n 5 127.0.0.1"
+		set $pingregex$ = '^ping.exe .*'
 	endcase
 	case "Linux"
 		comment "We are running on Linux"
@@ -278,18 +282,29 @@ switch $OS$
 ;		set $opsi_script_test_helper_bin_name$ =  ExtractFileName($opsi_script_test_helper_bin$)
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-lin"
 		set $pathDelim$ = "/"
-		set $ping5command$ = "ping -c 5 127.0.0.1"
+		set $pingcommand$ = "ping"
+		set $ping5command$ = $pingcommand$ +" -c 5 127.0.0.1"
+		set $pingregex$ = '^ping .*'
 	endcase
 	case "macos"
 		comment "We are running on macOS"
 		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
-		Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac/opsiscripttesthelper"
-		Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac/helperchild"
-		set $helper_child_bin_log$ =  "helperchild.log"
-		set $opsi_script_test_helper_bin_log$ = "opsiscripttesthelper.log"
+		if $GUI$ = "true"
+			Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac/opsiscripttesthelper"
+			Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac/helperchild"
+			set $helper_child_bin_log$ =  "helperchild.log"
+			set $opsi_script_test_helper_bin_log$ = "opsiscripttesthelper.log"
+		else
+			Set $opsi_script_test_helper_bin$ = "opsi-script-test-helper-mac/opsiscripttesthelper_nogui"
+			Set $opsi_script_test_helper_child_bin$ = "opsi-script-test-helper-mac/helperchild_nogui"
+			set $helper_child_bin_log$ =  "helperchild_nogui.log"
+			set $opsi_script_test_helper_bin_log$ = "opsiscripttesthelper_nogui.log"
+		endif
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-mac"
 		set $pathDelim$ = "/"
-		set $ping5command$ = "ping -c 5 127.0.0.1"
+		set $pingcommand$ = "/sbin/ping"
+		set $ping5command$ = $pingcommand$ +" -c 5 127.0.0.1"
+		set $pingregex$ = '^\/sbin\/ping .*'
 	endcase
 endswitch
 set $helper_child_bin_name$ =  ExtractFileName ($opsi_script_test_helper_child_bin$)
@@ -1375,6 +1390,8 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		EndCase
 		Case "MACOS"
 			set $CompValue$ = takeString(0,shellCall("uname"))
+			set $ConstTest$ = "Darwin"
+			
 		EndCase
 		DefaultCase
 			set $CompValue$ = "notexisting"
@@ -2743,7 +2760,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
-			if errorsOccuredSinceMark = 0
+			if errorsOccuredSinceMark > 0
 				set $TestResult$ = "not o.k."
 			endif
 			LogWarning "failed"
@@ -2755,7 +2772,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
-				if errorsOccuredSinceMark = 0
+				if errorsOccuredSinceMark > 0
 					set $TestResult$ = "not o.k."
 				endif
 				LogWarning "failed"
@@ -2780,7 +2797,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
-			if errorsOccuredSinceMark = 0
+			if errorsOccuredSinceMark > 0
 				set $TestResult$ = "not o.k."
 			endif
 			LogWarning "failed"
