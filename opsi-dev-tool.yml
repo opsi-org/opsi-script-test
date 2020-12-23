@@ -1,20 +1,8 @@
 pull-binaries:
-  # opsi deployment script (as binary)
-  #- name: opsideployclientagent
-  #  server-type: binaryindex
-  #  destination: CLIENT_DATA
-  #  extract: true
-  #  post-script: []
-  #  os: linux
-  #  architecture: x64
-  #  version: 4.2.0.0
-  #  branch: development
-  #  server-url: http://binaryindex.uib.gmbh
-
   # opsi-script-test-helper-win
   - name: opsi-script-test-helper
     server-type: binaryindex
-    destination: CLIENT_DATA/opsi-script-test-helper-win
+    destination: CLIENT_DATA
     extract: true
     post-script: []
     os: windows
@@ -26,7 +14,7 @@ pull-binaries:
   # opsi-script-test-helper-lin
   - name: opsi-script-test-helper
     server-type: binaryindex
-    destination: CLIENT_DATA/opsi-script-test-helper-lin
+    destination: CLIENT_DATA
     extract: true
     post-script: []
     os: linux
@@ -38,7 +26,7 @@ pull-binaries:
   # opsi-script-test-helper-mac
   - name: opsi-script-test-helper
     server-type: binaryindex
-    destination: CLIENT_DATA/opsi-script-test-helper-mac
+    destination: CLIENT_DATA
     extract: true
     post-script: []
     os: darwin
@@ -47,3 +35,11 @@ pull-binaries:
     branch: development
     server-url: http://binaryindex.uib.gmbh
 
+project:
+  name: opsi-script-test-helper
+  version: 4.1.0.2
+  summary: opsi-script-test-helper
+  description: binary helpers for opsi-script-test
+  homepage: https://www.opsi.org
+  maintainer: uib GmbH info@uib.de
+  licenses: AGPL-3.0
