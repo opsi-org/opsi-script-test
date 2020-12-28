@@ -122,6 +122,7 @@ DefVar $helper_child_bin_name$
 DefVar $opsi_script_test_helper_bin_log$
 DefVar $helper_child_bin_log$
 DefVar $test_experimental$
+DefVar $test_speed$
 
 
 DefVar $Flag_winst_constants$
@@ -343,6 +344,7 @@ if "True" = GetProductProperty ("setfailed","False")
 endif
 
 set $test_experimental$ = GetProductProperty ("test_experimental","False")
+set $test_speed$ = GetProductProperty ("test_speed","False")
 
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$

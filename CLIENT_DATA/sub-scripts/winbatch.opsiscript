@@ -293,11 +293,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	comment "difftime should be "+$ConstTest$+" seconds"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-		comment "/WaitForProcessEnding assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitForProcessEnding assumed failed"
+	if $test_speed$ = "true"
+		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			comment "/WaitForProcessEnding assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/WaitForProcessEnding assumed failed"
+		endif
 	endif
 	sleepseconds 1
 	switch $OS$
@@ -359,12 +361,14 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	endswitch
 	comment "difftime should be "+$ConstTest$+" seconds"
 	set $difftime$ = getDiffTimeSec
-	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-		comment "/WaitForProcessEnding assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitForProcessEnding assumed failed"
+	if $test_speed$ = "true"
+		set $CompValue$ = $difftime$
+		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			comment "/WaitForProcessEnding assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/WaitForProcessEnding assumed failed"
+		endif
 	endif
 	sleepseconds 1
 	switch $OS$
@@ -423,6 +427,8 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
 	sleepseconds 1
+	set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
+	;set $list1$ = GetProcessList
 	switch $OS$
 		case 'Windows_NT'
 			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
@@ -463,7 +469,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	killtask $opsi_script_test_helper_bin_name$
 	
 	marktime
-	Winbatch_startprocess_with_child_nowait
+	Winbatch_startprocess_with_child_nowait8
 	difftime
 	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 	
@@ -482,13 +488,16 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-2')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
-		comment " assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning " assumed failed"
+	if $test_speed$ = "true"
+		if ($ConstTest$ int>= calculate($CompValue$+'-2')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
+			comment " assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning " assumed failed"
+		endif
 	endif
 	sleepseconds 1
+	set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
 	switch $OS$
 		case 'Windows_NT'
 			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
@@ -527,7 +536,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.3")
 		comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
 		marktime
-		Winbatch_startprocess_with_child_nowait /TimeOutSeconds 20
+		Winbatch_startprocess_with_child_nowait8 /TimeOutSeconds 20
 		difftime
 		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 		
@@ -545,13 +554,16 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		comment "difftime should be "+$ConstTest$+" seconds"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "/WaitForProcessEnding assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "/WaitForProcessEnding assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "/WaitForProcessEnding assumed failed"
+			endif
 		endif
 		sleepseconds 1
+		set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
 		switch $OS$
 			case 'Windows_NT'
 				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
@@ -601,11 +613,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = "5"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "/WaitForProcessEnding assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "/WaitForProcessEnding assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "/WaitForProcessEnding assumed failed"
+			endif
 		endif
 		sleepseconds 1
 		set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
@@ -629,11 +643,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "2"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-		comment "/WaitSeconds assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitSeconds assumed failed"
+	if $test_speed$ = "true"
+		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			comment "/WaitSeconds assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/WaitSeconds assumed failed"
+		endif
 	endif
 	sleepseconds 1
 	switch $OS$
@@ -692,11 +708,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	comment "difftime should be "+$ConstTest$+" seconds"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-		comment "/WaitSeconds assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitSeconds assumed failed"
+	if $test_speed$ = "true"
+		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			comment "/WaitSeconds assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/WaitSeconds assumed failed"
+		endif
 	endif
 	sleepseconds 1
 	switch $OS$
@@ -743,11 +761,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "2"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-		comment "/WaitForProcessEnding assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitForProcessEnding assumed failed"
+	if $test_speed$ = "true"
+		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			comment "/WaitForProcessEnding assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/WaitForProcessEnding assumed failed"
+		endif
 	endif
 	sleepseconds 1
 	switch $OS$
@@ -795,11 +815,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "0"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
-		comment "/WaitForProcessEnding assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitForProcessEnding assumed failed"
+	if $test_speed$ = "true"
+		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
+			comment "/WaitForProcessEnding assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/WaitForProcessEnding assumed failed"
+		endif
 	endif
 	set $ConstTest$ = "42"
 	set $CompValue$ = getLastExitCode
@@ -820,11 +842,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "0"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
-		comment "/Winbatch_testing assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/Winbatch_testing assumed failed"
+	if $test_speed$ = "true"
+		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
+			comment "/Winbatch_testing assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/Winbatch_testing assumed failed"
+		endif
 	endif
 	set $ConstTest$ = "42"
 	set $CompValue$ = getLastExitCode
@@ -842,11 +866,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "0"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
-		comment "/Winbatch_testing assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/Winbatch_testing assumed failed"
+	if $test_speed$ = "true"
+		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
+			comment "/Winbatch_testing assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/Winbatch_testing assumed failed"
+		endif
 	endif
 	set $ConstTest$ = "43"
 	set $CompValue$ = getLastExitCode
@@ -995,9 +1021,9 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			Winbatch_startprocess_with_child_nowait_from_c /RunElevated /WaitForProcessEnding "helperchild.exe" /TimeoutSeconds 10
 			difftime
 			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-			comment "difftime should be 5 seconds"
+			comment "difftime should be 10 seconds"
 			set $tmp$ = getDiffTimeSec
-			if $tmp$ INT>= "10"
+			if $tmp$ INT> "11"
 				set $TestResult$ = "not o.k."
 				LogWarning "/WaitForProcessEnding /RunElevated assumed failed"
 			else
@@ -1097,13 +1123,16 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			killtask $helper_child_bin_name$
 			killtask $opsi_script_test_helper_bin_name$
 			marktime
-			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2') /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild"
+			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=8') /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild"
 			difftime
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 			comment "difftime should be about 2 seconds"
 			if "20" = getDiffTimeSec
 				set $TestResult$ = "not o.k."
 				LogWarning "/WaitForWindowAppearing assumed failed"
 			endif
+			sleepseconds 1
+			set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
 			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
 			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
 			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
@@ -1133,6 +1162,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			endif
 			killtask "helperchild.exe"
 			killtask "opsiscripttesthelper.exe"
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 		endif ; windows
 		
 		message "processCall /WaitForProcessEnding"
@@ -1157,11 +1187,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		comment "difftime should be "+$ConstTest$+" seconds"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
+				comment "processCall assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "processCall assumed failed"
+			endif
 		endif
 		sleepseconds 1
 		switch $OS$
@@ -1224,11 +1256,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		comment "difftime should be "+$ConstTest$+" seconds"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "processCall assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "processCall assumed failed"
+			endif
 		endif
 		sleepseconds 1
 		switch $OS$
@@ -1280,13 +1314,16 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = "2"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "processCall assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "processCall assumed failed"
+			endif
 		endif
 		sleepseconds 1
+		set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
 		switch $OS$
 			case 'Windows_NT'
 				;set $ConstTest$ = ""
@@ -1345,13 +1382,16 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		comment "difftime should be "+$ConstTest$+" seconds"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "processCall assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "processCall assumed failed"
+			endif
 		endif
 		sleepseconds 1
+		set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
 		switch $OS$
 			case 'Windows_NT'
 				;set $ConstTest$ = ""
@@ -1412,13 +1452,16 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		comment "difftime should be "+$ConstTest$+" seconds"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "processCall assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "processCall assumed failed"
+			endif
 		endif
 		sleepseconds 1
+		set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
 		switch $OS$
 			case 'Windows_NT'
 				;set $ConstTest$ = ""
@@ -1505,11 +1548,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		comment "difftime should be "+$ConstTest$+" seconds"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "processCall assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "processCall assumed failed"
+			endif
 		endif
 		switch $OS$
 			case 'Windows_NT'
@@ -1572,11 +1617,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		comment "difftime should be "+$ConstTest$+" seconds"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "processCall assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "processCall assumed failed"
+			endif
 		endif
 		switch $OS$
 			case 'Windows_NT'
@@ -1623,11 +1670,13 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = "2"
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "processCall assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "processCall assumed failed"
+			endif
 		endif
 		switch $OS$
 			case 'Windows_NT'

@@ -443,3 +443,9 @@ name: test_experimental
 description: Test also experimental features
 default: False
 
+[ProductProperty]
+type: bool
+name: test_speed
+description: Test also run performance
+default: False
+

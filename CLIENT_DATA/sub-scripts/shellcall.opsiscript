@@ -429,8 +429,8 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	difftime
 	switch $OS$
 		case "Windows_nt"
-	comment "difftime should be about 60 seconds"
-	set $ConstTest$ = "60"
+			comment "difftime should be about 60 seconds"
+			set $ConstTest$ = "80"
 		endcase
 		case "Linux"
 			comment "difftime should be about 60 seconds"
@@ -443,12 +443,15 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	endswitch
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if $ConstTest$ int>= $CompValue$
-		comment "/showoutput  passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/showoutput failed"
+	if $test_speed$ = "true"
+		if $ConstTest$ int>= $CompValue$
+			comment "/showoutput  passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/showoutput failed"
+		endif
 	endif
+	
 	
 	message "Testing DosInAnIcon /noshowoutput speed ; log 7"
 	marktime
@@ -462,11 +465,13 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "1"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if $ConstTest$ int>= $CompValue$
-		comment "/noshowoutput  passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/noshowoutput failed"
+	if $test_speed$ = "true"
+		if $ConstTest$ int>= $CompValue$
+			comment "/noshowoutput  passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/noshowoutput failed"
+		endif
 	endif
 	
 	message "Testing shellcall /noshowoutput speed ; log 7"
@@ -481,11 +486,13 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "1"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if $ConstTest$ int>= $CompValue$
-		comment "/noshowoutput  passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/noshowoutput failed"
+	if $test_speed$ = "true"
+		if $ConstTest$ int>= $CompValue$
+			comment "/noshowoutput  passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/noshowoutput failed"
+		endif
 	endif
 	
 	set $tmp$ = getloglevel
@@ -501,8 +508,8 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	difftime
 	switch $OS$
 		case "Windows_nt"
-	comment "difftime should be about 60 seconds"
-	set $ConstTest$ = "60"
+			comment "difftime should be about 60 seconds"
+			set $ConstTest$ = "75"
 		endcase
 		case "Linux"
 			comment "difftime should be about 60 seconds"
@@ -515,11 +522,13 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	endswitch
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if $ConstTest$ int>= $CompValue$
-		comment "/showoutput  passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/showoutput failed"
+	if $test_speed$ = "true"
+		if $ConstTest$ int>= $CompValue$
+			comment "/showoutput  passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/showoutput failed"
+		endif
 	endif
 	
 	message "Testing DosInAnIcon /noshowoutput speed ; log 5"
@@ -534,11 +543,13 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "1"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if $ConstTest$ int>= $CompValue$
-		comment "/noshowoutput  passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/noshowoutput failed"
+	if $test_speed$ = "true"
+		if $ConstTest$ int>= $CompValue$
+			comment "/noshowoutput  passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/noshowoutput failed"
+		endif
 	endif
 	
 	message "Testing shellcall /noshowoutput speed ; log 5"
@@ -553,11 +564,13 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "1"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if $ConstTest$ int>= $CompValue$
-		comment "/noshowoutput  passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/noshowoutput failed"
+	if $test_speed$ = "true"
+		if $ConstTest$ int>= $CompValue$
+			comment "/noshowoutput  passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/noshowoutput failed"
+		endif
 	endif
 	
 	setloglevel = $tmp$
@@ -574,11 +587,13 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "1"
 	set $difftime$ = getDiffTimeSec
 	set $CompValue$ = $difftime$
-	if $ConstTest$ int>= $CompValue$
-		comment "/noshowoutput  passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/noshowoutput failed"
+	if $test_speed$ = "true"
+		if $ConstTest$ int>= $CompValue$
+			comment "/noshowoutput  passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/noshowoutput failed"
+		endif
 	endif
 	
 	Files_empty_folder
