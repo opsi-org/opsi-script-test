@@ -1119,50 +1119,50 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		message "processCall "
 		
 		if $OS$ = "Windows_NT"
-			message "processCall /WaitForWindowAppearing"
-			killtask $helper_child_bin_name$
-			killtask $opsi_script_test_helper_bin_name$
-			marktime
-			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=8') /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild"
-			difftime
-			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-			comment "difftime should be about 2 seconds"
-			if "20" = getDiffTimeSec
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForWindowAppearing assumed failed"
-			endif
-			sleepseconds 1
-			set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
-			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			set $ConstTest$ = "helperchild.exe"
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForWindowAppearing assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForWindowAppearing assumed failed"
-			endif
-			marktime
-			sleepSeconds 10
-			difftime
-			;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
-			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			set $ConstTest$ = ""
-			if ($ConstTest$ = $CompValue$)
-				comment "/WaitForWindowAppearing assumed passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForWindowAppearing assumed failed"
-			endif
-			killtask "helperchild.exe"
-			killtask "opsiscripttesthelper.exe"
-			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+			;message "processCall /WaitForWindowAppearing"
+			;killtask $helper_child_bin_name$
+			;killtask $opsi_script_test_helper_bin_name$
+			;marktime
+			;set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=8') /TimeOutSeconds 20 /WaitForWindowAppearing "helperchild"
+			;difftime
+			;includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+			;comment "difftime should be about 2 seconds"
+			;if "20" = getDiffTimeSec
+			;	set $TestResult$ = "not o.k."
+			;	LogWarning "/WaitForWindowAppearing assumed failed"
+			;endif
+			;sleepseconds 1
+			;set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
+			;;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
+			;;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+			;set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+			;set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			;set $ConstTest$ = "helperchild.exe"
+			;if ($ConstTest$ = $CompValue$)
+			;	comment "/WaitForWindowAppearing assumed passed"
+			;else
+			;	set $TestResult$ = "not o.k."
+			;	LogWarning "/WaitForWindowAppearing assumed failed"
+			;endif
+			;marktime
+			;sleepSeconds 10
+			;difftime
+			;;set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helperchild')
+			;;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+			;set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+			;set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+			;set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			;set $ConstTest$ = ""
+			;if ($ConstTest$ = $CompValue$)
+			;	comment "/WaitForWindowAppearing assumed passed"
+			;else
+			;	set $TestResult$ = "not o.k."
+			;	LogWarning "/WaitForWindowAppearing assumed failed"
+			;endif
+			;killtask "helperchild.exe"
+			;killtask "opsiscripttesthelper.exe"
+			;includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 		endif ; windows
 		
 		message "processCall /WaitForProcessEnding"

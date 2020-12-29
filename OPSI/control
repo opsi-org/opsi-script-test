@@ -8,7 +8,7 @@ id: opsi-script-test
 name: opsi-script test
 description: Test and example script for opsi-script
 advice: 
-version: 4.12.4.12
+version: 4.12.4.13
 priority: 0
 licenseRequired: False
 productClasses: 

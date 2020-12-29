@@ -350,6 +350,13 @@ set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
+if $MasterFlag$ = "on"
+	set $ScriptLoglevel$ = "5"
+	setLoglevel=$ScriptLoglevel$
+	comment "set loglevel to 5 because alltest=on and we want to get a log file that still can be handled."
+	comment "In order to get a higher loglevel use the opsi-script.global.force_min_loglevel config."
+endif
+
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
@@ -5597,253 +5604,258 @@ endif
 
 sub "%scriptpath%\sub-scripts\filestest.opsiscript"
 
-if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
-	Message "testing patches functions"
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	comment ""
-	comment "testing patches functions"
-	comment ""
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	Set $ExpectedResult$ = "o.k."
-	; start testing
-	;Set $HomeTestFiles$ = "C:\tmp\testFiles"
-	set $TestResult$ = "o.k."
-	
-	; Chapter 7.2 Patches Sectione
-	
-	comment ""
-	comment "-------------------------------------"
-	comment "Testing: "
-	comment "add, set, addnew, change, del, replace"
-	
-	if $OS$ = "Linux"
-		ShellInAnIcon_create_ini
-	else
-		DosInAnIcon_create_ini
-	endif
-	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
-	if (FileExists($HometestFiles$+"\dummy.ini"))
-		message "add"
-		set $ConstTest$ = "[secdummy]"
-		set $ConstTest2$ = "dummy1=add1"
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		Set $CompValue2$ = Trim(takeString(1, $list1$))
-		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-			comment "add passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "add failed"
-		endif
-		
-		message "set"
-		set $ConstTest$ = "[secdummy]"
-		set $ConstTest2$ = "dummy2=set1"
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		Set $CompValue2$ = Trim(takeString(2, $list1$))
-		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-			comment "set passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "set failed"
-		endif
-		
-		message "addnew"
-		set $ConstTest$ = "[secdummy]"
-		set $ConstTest2$ = "dummy1=addnew1"
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		Set $CompValue2$ = Trim(takeString(6, $list1$))
-		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-			comment "addnew passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "addnew failed"
-		endif
-		
-		message "change"
-		set $ConstTest$ = "[secdummy]"
-		set $ConstTest2$ = "dummy3=change1"
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		Set $CompValue2$ = Trim(takeString(3, $list1$))
-		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-			comment "change passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "change failed"
-		endif
-		
-		message "delete"
-		set $ConstTest$ = "[secdummy]"
-		set $ConstTest2$ = "dummy5=add5"
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		Set $CompValue2$ = Trim(takeString(4, $list1$))
-		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-			comment "delete passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "delete failed"
-		endif
-		
-		message "replace"
-		set $ConstTest$ = "[secdummy]"
-		set $ConstTest2$ = "replace1=replace1"
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-		Set $CompValue$ = Trim(takeString(0, $list1$))
-		Set $CompValue2$ = Trim(takeString(5, $list1$))
-		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-			comment "replace passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "replace failed"
-		endif
-	else
-		set $TestResult$ = "not o.k."
-		logError "Fatal: could not create .ini file"
-		isFatalError
-	endif
-	
-	comment ""
-	comment "-------------------------------------"
-	comment "Testing: "
-	message "GetValueFromInifile"
-	if (FileExists($HometestFiles$+"\dummy.ini"))
-		;GetValueFromInifile
-		set $ConstTest$ = "add1"
-		Set $CompValue$ = GetValueFromInifile($HometestFiles$+"\dummy.ini", "secdummy", "dummy1", "failed")
-		if ($ConstTest$ = $CompValue$)
-			comment "GetValueFromInifile passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "GetValueFromInifile failed"
-		endif
-		
-		message "GetIni"
-		comment "GetIni is deprecated - use GetValueFromInifile)
-		set $ConstTest$ = "add1"
-		Set $CompValue$ = GetIni($HometestFiles$+"\dummy.ini"[secdummy] dummy1)
-		if ($ConstTest$ = $CompValue$)
-			comment "GetIni passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "GetIni failed"
-		endif
-		
-		comment "Here comes the actual ini file:"
-		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-	else
-		set $TestResult$ = "not o.k."
-		logError "Fatal: could not create .ini file"
-		isFatalError
-	endif
-	
-	
-	comment ""
-	comment "-------------------------------------"
-	comment "Testing: "
-	message "delsec"
-	
-	set $SectionName$ ="[secdummy]"
-	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
-	;; encoding in patches has to be fixed
-	;	if (FileExists($HometestFiles$+"\dummy.ini"))
-	;		set $ConstTest$ = "[secdüöä]"
-	;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-	;		Set $CompValue$ = Trim(takeString(0, $list1$))
-	;		if ($ConstTest$ = $CompValue$)
-	;			comment "passed"
-	;		else
-	;			set $TestResult$ = "not o.k."
-	;			LogWarning "failed"
-	;		endif
-	;	else
-	;		set $TestResult$ = "not o.k."
-	;		logError "Fatal: could not find .ini file"
-	;		isFatalError
-	;	endif
-	;	set $SectionName$ ="[secdüöä]"
-	;	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-	;	if (FileExists($HometestFiles$+"\dummy.ini"))
-	;		set $ConstTest$ = ""
-	;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-	;		Set $CompValue$ = Trim(takeString(0, $list1$))
-	;		if ($ConstTest$ = $CompValue$)
-	;			comment "passed"
-	;		else
-	;			set $TestResult$ = "not o.k."
-	;			LogWarning "failed"
-	;		endif
-	;	else
-	;		set $TestResult$ = "not o.k."
-	;		logError "Fatal: could not find .ini file"
-	;		isFatalError
-	;	endif
-	;endif ; 4.12.1.0
-	
-	;Files_remove_folder
-	
-	if not($OS$ = "macos")
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "Patches /AllNTUserProfiles"
-			Patches_dummy_ini "%userprofiledir%\opsi-winst-test.ini" /AllNTUserProfiles
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_ini
-			Files_remove_profile_ini /AllNTUserProfiles
-		endif ; 4.11.3.2
-	endif
-	
-	
-	if $OS$ = "Linux"
-		ShellInAnIcon_create_ini
-	else
-		DosInAnIcon_create_ini
-	endif
-	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
-	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
-	if $test_experimental$ = "true"
-		
-		comment "Testing: "
-		message "GetSectionFromInifile"
-		
-		if (FileExists($HometestFiles$+"\dummy.ini"))
-			;GetSectionFromInifile
-			
-			set $list1$ = createStringList ('dummy1=add1', 'dummy2=set1', 'dummy3=change1', 'dummy5=add5', 'replace1=replace1', 'dummy1=addnew1')
-			Set $CompList1$ = GetSectionFromInifile("secdummy", $HometestFiles$+"\dummy.ini")
-			
-			set $list2$ = createStringList ('dümmy7=üöäßÜÖÄ')
-			Set $CompList2$ = GetSectionFromInifile("secdüöä", $HometestFiles$+"\dummy.ini")
-			
-			set $test1list1$ = getSubListByMatch($list1$,$CompList1$)
-			set $test2list1$ = getSubListByMatch($CompList1$,$list1$)
-			
-			set $test1list2$ = getSubListByMatch($list2$,$CompList2$)
-			set $test2list2$ = getSubListByMatch($CompList2$,$list2$)
-			
-			if (count($test1list1$)=count($list1$) AND count($test2list1$)=count($CompList1$) AND count($test1list2$)=count($list2$) AND count($test2list2$)=count($CompList2$))
-				comment "GetSectionFromInifile passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "GetSectionFromInifile failed"
-			endif
-		else
-			set $TestResult$ = "not o.k."
-			logError "Fatal: could not create .ini file"
-			isFatalError
-		endif
-	endif
-	
-	
-	sub_compareResult
-	set $winst_patches$ = $SubResult$
-endif
+;if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
+;	Message "testing patches functions"
+sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
+
+;if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
+;	Message "testing patches functions"
+;	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+;	comment ""
+;	comment "testing patches functions"
+;	comment ""
+;	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+;	Set $ExpectedResult$ = "o.k."
+;	; start testing
+;	;Set $HomeTestFiles$ = "C:\tmp\testFiles"
+;	set $TestResult$ = "o.k."
+;	
+;	; Chapter 7.2 Patches Sectione
+;	
+;	comment ""
+;	comment "-------------------------------------"
+;	comment "Testing: "
+;	comment "add, set, addnew, change, del, replace"
+;	
+;	if $OS$ = "Linux"
+;		ShellInAnIcon_create_ini
+;	else
+;		DosInAnIcon_create_ini
+;	endif
+;	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
+;	if (FileExists($HometestFiles$+"\dummy.ini"))
+;		message "add"
+;		set $ConstTest$ = "[secdummy]"
+;		set $ConstTest2$ = "dummy1=add1"
+;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+;		Set $CompValue$ = Trim(takeString(0, $list1$))
+;		Set $CompValue2$ = Trim(takeString(1, $list1$))
+;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+;			comment "add passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "add failed"
+;		endif
+;		
+;		message "set"
+;		set $ConstTest$ = "[secdummy]"
+;		set $ConstTest2$ = "dummy2=set1"
+;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+;		Set $CompValue$ = Trim(takeString(0, $list1$))
+;		Set $CompValue2$ = Trim(takeString(2, $list1$))
+;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+;			comment "set passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "set failed"
+;		endif
+;		
+;		message "addnew"
+;		set $ConstTest$ = "[secdummy]"
+;		set $ConstTest2$ = "dummy1=addnew1"
+;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+;		Set $CompValue$ = Trim(takeString(0, $list1$))
+;		Set $CompValue2$ = Trim(takeString(6, $list1$))
+;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+;			comment "addnew passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "addnew failed"
+;		endif
+;		
+;		message "change"
+;		set $ConstTest$ = "[secdummy]"
+;		set $ConstTest2$ = "dummy3=change1"
+;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+;		Set $CompValue$ = Trim(takeString(0, $list1$))
+;		Set $CompValue2$ = Trim(takeString(3, $list1$))
+;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+;			comment "change passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "change failed"
+;		endif
+;		
+;		message "delete"
+;		set $ConstTest$ = "[secdummy]"
+;		set $ConstTest2$ = "dummy5=add5"
+;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+;		Set $CompValue$ = Trim(takeString(0, $list1$))
+;		Set $CompValue2$ = Trim(takeString(4, $list1$))
+;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+;			comment "delete passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "delete failed"
+;		endif
+;		
+;		message "replace"
+;		set $ConstTest$ = "[secdummy]"
+;		set $ConstTest2$ = "replace1=replace1"
+;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+;		Set $CompValue$ = Trim(takeString(0, $list1$))
+;		Set $CompValue2$ = Trim(takeString(5, $list1$))
+;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+;			comment "replace passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "replace failed"
+;		endif
+;	else
+;		set $TestResult$ = "not o.k."
+;		logError "Fatal: could not create .ini file"
+;		isFatalError
+;	endif
+;	
+;	comment ""
+;	comment "-------------------------------------"
+;	comment "Testing: "
+;	message "GetValueFromInifile"
+;	if (FileExists($HometestFiles$+"\dummy.ini"))
+;		;GetValueFromInifile
+;		set $ConstTest$ = "add1"
+;		Set $CompValue$ = GetValueFromInifile($HometestFiles$+"\dummy.ini", "secdummy", "dummy1", "failed")
+;		if ($ConstTest$ = $CompValue$)
+;			comment "GetValueFromInifile passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "GetValueFromInifile failed"
+;		endif
+;		
+;		message "GetIni"
+;		comment "GetIni is deprecated - use GetValueFromInifile)
+;		set $ConstTest$ = "add1"
+;		Set $CompValue$ = GetIni($HometestFiles$+"\dummy.ini"[secdummy] dummy1)
+;		if ($ConstTest$ = $CompValue$)
+;			comment "GetIni passed"
+;		else
+;			set $TestResult$ = "not o.k."
+;			LogWarning "GetIni failed"
+;		endif
+;		
+;		comment "Here comes the actual ini file:"
+;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+;	else
+;		set $TestResult$ = "not o.k."
+;		logError "Fatal: could not create .ini file"
+;		isFatalError
+;	endif
+;	
+;	
+;	comment ""
+;	comment "-------------------------------------"
+;	comment "Testing: "
+;	message "delsec"
+;	
+;	set $SectionName$ ="[secdummy]"
+;	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
+;	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+;	;; encoding in patches has to be fixed
+;	;	if (FileExists($HometestFiles$+"\dummy.ini"))
+;	;		set $ConstTest$ = "[secdüöä]"
+;	;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+;	;		Set $CompValue$ = Trim(takeString(0, $list1$))
+;	;		if ($ConstTest$ = $CompValue$)
+;	;			comment "passed"
+;	;		else
+;	;			set $TestResult$ = "not o.k."
+;	;			LogWarning "failed"
+;	;		endif
+;	;	else
+;	;		set $TestResult$ = "not o.k."
+;	;		logError "Fatal: could not find .ini file"
+;	;		isFatalError
+;	;	endif
+;	;	set $SectionName$ ="[secdüöä]"
+;	;	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
+;	;	if (FileExists($HometestFiles$+"\dummy.ini"))
+;	;		set $ConstTest$ = ""
+;	;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+;	;		Set $CompValue$ = Trim(takeString(0, $list1$))
+;	;		if ($ConstTest$ = $CompValue$)
+;	;			comment "passed"
+;	;		else
+;	;			set $TestResult$ = "not o.k."
+;	;			LogWarning "failed"
+;	;		endif
+;	;	else
+;	;		set $TestResult$ = "not o.k."
+;	;		logError "Fatal: could not find .ini file"
+;	;		isFatalError
+;	;	endif
+;	;endif ; 4.12.1.0
+;	
+;	;Files_remove_folder
+;	
+;	if not($OS$ = "macos")
+;		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+;			comment ""
+;			comment "-------------------------------------"
+;			comment "Testing: "
+;			message "Patches /AllNTUserProfiles"
+;			Patches_dummy_ini "%userprofiledir%\opsi-winst-test.ini" /AllNTUserProfiles
+;			set $list1$ = getProfilesDirList
+;			for %s% in $list1$ do sub_check_profile_ini
+;			Files_remove_profile_ini /AllNTUserProfiles
+;		endif ; 4.11.3.2
+;	endif
+;	
+;	
+;	if $OS$ = "Linux"
+;		ShellInAnIcon_create_ini
+;	else
+;		DosInAnIcon_create_ini
+;	endif
+;	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
+;	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
+;	if $test_experimental$ = "true"
+;		
+;		comment "Testing: "
+;		message "GetSectionFromInifile"
+;		
+;		if (FileExists($HometestFiles$+"\dummy.ini"))
+;			;GetSectionFromInifile
+;			
+;			set $list1$ = createStringList ('dummy1=add1', 'dummy2=set1', 'dummy3=change1', 'dummy5=add5', 'replace1=replace1', 'dummy1=addnew1')
+;			Set $CompList1$ = GetSectionFromInifile("secdummy", $HometestFiles$+"\dummy.ini")
+;			
+;			set $list2$ = createStringList ('dümmy7=üöäßÜÖÄ')
+;			Set $CompList2$ = GetSectionFromInifile("secdüöä", $HometestFiles$+"\dummy.ini")
+;			
+;			set $test1list1$ = getSubListByMatch($list1$,$CompList1$)
+;			set $test2list1$ = getSubListByMatch($CompList1$,$list1$)
+;			
+;			set $test1list2$ = getSubListByMatch($list2$,$CompList2$)
+;			set $test2list2$ = getSubListByMatch($CompList2$,$list2$)
+;			
+;			if (count($test1list1$)=count($list1$) AND count($test2list1$)=count($CompList1$) AND count($test1list2$)=count($list2$) AND count($test2list2$)=count($CompList2$))
+;				comment "GetSectionFromInifile passed"
+;			else
+;				set $TestResult$ = "not o.k."
+;				LogWarning "GetSectionFromInifile failed"
+;			endif
+;		else
+;			set $TestResult$ = "not o.k."
+;			logError "Fatal: could not create .ini file"
+;			isFatalError
+;		endif
+;	endif
+;	
+;	
+;	sub_compareResult
+;	set $winst_patches$ = $SubResult$
+;endif
+
 
 if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 	Message "testing patchHosts functions"
