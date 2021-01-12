@@ -5260,7 +5260,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
                     endcase
                     case "Linux"
                             comment "We are running on Linux"
-                            myFileExistsTester("/home/user/hwaudit.log","true")
+                            myFileExistsTester("/home/user/","true")
                             myFileExistsTester("/home/user/uib.txt","false")
                     endcase
                     case "macos"
@@ -5299,31 +5299,33 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
                 endif
             endfunc
 
+            
             switch $OS$
-                    case "Windows_nt"
-                            comment "We are running on Windows"
-                            myFileOrFolderExistsWithOneParam("","false")
-                            myFileOrFolderExistsWithOneParam("C:\Windows\","true")
-                            myFileOrFolderExistsWithOneParam("C:\Windows\uib.txt","false")
+                case "Windows_nt"
+                    comment "We are running on Windows"
+                    myFileOrFolderExistsWithOneParam("","false")
+                    myFileOrFolderExistsWithOneParam("C:\Windows\","true")
+                    myFileOrFolderExistsWithOneParam("C:\Windows\uib.txt","false")
 
-                            myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","32bit","true")
-                            myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","64bit","true")
-                            myFileOrFolderExistsWithTwoParams("C:\Windows\","accessStr","false")
-                            myFileOrFolderExistsWithTwoParams("C:\Windows\uib.txt","64bit","false")
-                    endcase
-                    case "Linux"
-                            comment "We are running on Linux"
-                            myFileOrFolderExistsWithOneParam("","false")
-                            myFileOrFolderExistsWithOneParam("/home/user/hwaudit.log","true")
-                            myFileOrFolderExistsWithOneParam("/home/user/uib.txt","false")
-                    endcase
-                    case "macos"
-                            comment "We are running on macOS"
-                            myFileOrFolderExistsWithOneParam("","false")
-                            myFileOrFolderExistsWithOneParam("/Users/","true")
-                            myFileOrFolderExistsWithOneParam("/Users/uib.txt","false")
-                    endcase
+                    myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","32bit","true")
+                    myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","64bit","true")
+                    myFileOrFolderExistsWithTwoParams("C:\Windows\","accessStr","false")
+                    myFileOrFolderExistsWithTwoParams("C:\Windows\uib.txt","64bit","false")
+                endcase
+                case "Linux"
+                    comment "We are running on Linux"
+                    myFileOrFolderExistsWithOneParam("","false")
+                    myFileOrFolderExistsWithOneParam("/home/user/","true")
+                    myFileOrFolderExistsWithOneParam("/home/user/uib.txt","false")
+                endcase
+                case "macos"
+                    comment "We are running on macOS"
+                    myFileOrFolderExistsWithOneParam("","false")
+                    myFileOrFolderExistsWithOneParam("/Users/","true")
+                    myFileOrFolderExistsWithOneParam("/Users/uib.txt","false")
+                endcase
             endswitch
+
 	
 	
 	comment ""
