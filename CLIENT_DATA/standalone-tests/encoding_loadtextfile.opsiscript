@@ -1,34 +1,36 @@
 encoding=utf8
 [actions]
 DefVar $tmpdir$
-DefVar $filename$
-DefStringlist $list1$
+DefStringlist $list$
 set $tmpdir$ = "%scriptpath%/../test-files/encoding/"
 
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_cp1252.ini","cp1252")
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_utf8.ini","utf8")
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_ucs2le.ini","ucs2le")
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_ucs2be.ini","ucs2be")
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_utf16le.ini","ucs2le")
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_utf16be.ini","ucs2be")
+message "Testing loadTextFileWithEncoding with their original encodings"
 
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_ucs2le.ini","unicode")
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_utf16le.ini","unicode")
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_cp1252.ini","cp1252")
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_utf8.ini","utf8")
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_ucs2le.ini","ucs2le")
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_ucs2be.ini","ucs2be")
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_utf16le.ini","ucs2le")
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_utf16be.ini","ucs2be")
 
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_ucs2be.ini","unicode")
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_utf16be.ini","unicode")
+message "Testing loadTextFileWithEncoding to "unicode" encoding"
 
-Set $list1$ = loadTextFilewithencoding($tmpdir$+"test_utf8.ini","unicode")
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_utf8.ini","unicode")
 
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_ucs2le.ini","unicode")
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_utf16le.ini","unicode")
 
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_ucs2be.ini","unicode")
+Set $list$ = loadTextFilewithencoding($tmpdir$+"test_utf16be.ini","unicode")
 
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_ucs2le.ini")
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_utf16le.ini")
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_unicode.ini")
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_ucs2be.ini")
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_utf16be.ini")
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_utf32le.ini")
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_utf32be.ini")
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_utf8.ini")
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_utf8Y.ini")
+message "Testing loadUnicodeTextFile"
+
+Set $list$ = loadUnicodeTextFile($tmpdir$+"test_unicode.ini")
+Set $list$ = loadUnicodeTextFile($tmpdir$+"test_utf8.ini")
+Set $list$ = loadunicodeTextFile($tmpdir$+"test_utf8Y.ini")
+Set $list$ = loadUnicodeTextFile($tmpdir$+"test_ucs2le.ini")
+Set $list$ = loadUnicodeTextFile($tmpdir$+"test_utf16le.ini")
+Set $list$ = loadUnicodeTextFile($tmpdir$+"test_ucs2be.ini")
+Set $list$ = loadUnicodeTextFile($tmpdir$+"test_utf32le.ini")
+Set $list$ = loadUnicodeTextFile($tmpdir$+"test_utf32be.ini")
 Set $list1$ = loadunicodeTextFile($tmpdir$+"test_utf16be-bom.ini")
