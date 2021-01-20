@@ -2,5 +2,5 @@
 encoding=cp866
 
 [actions]
-comment "script is running "
+comment "script is running. cyrillic: Сегодня четверг"
 
