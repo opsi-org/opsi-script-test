@@ -13,7 +13,7 @@ Set $list$ = loadTextFilewithencoding($tmpdir$+"test_ucs2be.ini","ucs2be")
 Set $list$ = loadTextFilewithencoding($tmpdir$+"test_utf16le.ini","ucs2le")
 Set $list$ = loadTextFilewithencoding($tmpdir$+"test_utf16be.ini","ucs2be")
 
-message "Testing loadTextFileWithEncoding to "unicode" encoding"
+message "Testing loadTextFileWithEncoding to unicode encoding"
 
 Set $list$ = loadTextFilewithencoding($tmpdir$+"test_utf8.ini","unicode")
 
@@ -33,4 +33,4 @@ Set $list$ = loadUnicodeTextFile($tmpdir$+"test_utf16le.ini")
 Set $list$ = loadUnicodeTextFile($tmpdir$+"test_ucs2be.ini")
 Set $list$ = loadUnicodeTextFile($tmpdir$+"test_utf32le.ini")
 Set $list$ = loadUnicodeTextFile($tmpdir$+"test_utf32be.ini")
-Set $list1$ = loadunicodeTextFile($tmpdir$+"test_utf16be-bom.ini")
+;Set $list1$ = loadunicodeTextFile($tmpdir$+"test_utf16be-bom.ini")
