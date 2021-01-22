@@ -1,0 +1,6 @@
+
+encoding=utf8
+[actions]
+
+Message "testing encoding functions"
+comment "testing encoding functions  üöäßáéúí"

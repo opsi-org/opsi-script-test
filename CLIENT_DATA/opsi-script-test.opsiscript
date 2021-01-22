@@ -349,7 +349,7 @@ set $test_speed$ = GetProductProperty ("test_speed","False")
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "off")
+set $MasterFlag$                   = GetProductProperty ("alltest", "on")
 if $MasterFlag$ = "on"
 	set $ScriptLoglevel$ = "5"
 	setLoglevel=$ScriptLoglevel$
@@ -361,7 +361,7 @@ set $Flag_calculate$               = GetProductProperty ("calculate", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
-set $Flag_encoding$                = GetProductProperty ("encoding", "on")
+set $Flag_encoding$                = GetProductProperty ("encoding", "off")
 set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "off")
 set $Flag_winst_file$              = GetProductProperty ("files", "off")
 set $Flag_infostest$               = GetProductProperty ("infoFunctions", "off")
@@ -389,13 +389,13 @@ set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
-set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
 
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
 set $Flag_internalundocumented$    = GetProductProperty ("internalundocumented", "off")
 set $Flag_RunAsLoggedOnAdmin$      = GetProductProperty ("RunAsLoggedOnAdmin", "off")
+set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 ;--------------------------------------------------------
 ;set $Flag_winst_idapiconfig$       = GetProductProperty ("idapiconfig", "off")
 
@@ -6920,7 +6920,8 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 endif
 
 
-if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
+;if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
+if ($Flag_winst_xml$ = "on")
 	Message "testing XMLPatch functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
