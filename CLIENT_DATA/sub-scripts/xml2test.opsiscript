@@ -961,6 +961,18 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		endif
 		set $list1$ = loadTextFile($HomeTestFiles$+"\opensuse_software_start.xml")
 		
+		xml2_delnodestrict  $HomeTestFiles$+"\olb-office-plus-visio-plus-project-32bit.xml"
+		set $ConstTest$ = ''
+		set $list1$ = loadTextFile($HomeTestFiles$+"\olb-office-plus-visio-plus-project-32bit.xml")
+		set $tmp$ = takeFirstStringContaining($list1$,'<Product ID="ProjectProRetail">')
+		set $CompValue$ = Trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "delnodestrict passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "delnodestrict failed"
+		endif
+		
 		;todo
 		; xml2GetFirstChildNodeByNameAndAttributes
 		; xml2GetChildNodesByName(<node name>) : stinglist
@@ -1085,5 +1097,8 @@ set $xml2cmdLine7$ = ''
 set $xml2cmdLine8$ = ''
 set $xml2cmdLine9$ = ''
 
+[xml2_delnodestrict]
+strictMode = true
+deleteNode 'Add OfficeClientEdition="32" Channel="SemiAnnual" SourcePath="C:\Temp\o365install" AllowCdnFallback="FALSE" MigrateArch="TRUE" // Product ID="ProjectProRetail"'
 
 
