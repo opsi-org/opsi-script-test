@@ -1,0 +1,75 @@
+encoding=utf8
+[Actions]
+
+DefVar $OS$
+DefVar $HomeTestFiles$
+DefVar $workfile$
+DefVar $TestResult$
+DefVar $ConstTest$
+DefVar $CompValue$
+DefStringlist $list$
+
+
+deffunc myPatchtextfileTester($encoding$ : string) : string
+
+    set $workfile$ = "dümmy_"+$encoding$+".txt"
+    ;/encoding $encoding$
+
+    comment "Testing patchtextfile for encoding : "+$encoding$
+    
+    set $result$="false"
+    
+    if FileExists($HomeTestFiles$+$workfile$)
+        set $ConstTest$ = "Line containing umlaut: üöäßÜÖÄ."
+        Set $list$ = loadTextFileWithEncoding($HomeTestFiles$+$workfile$,$encoding$)
+        if LineExistsIn ($ConstTest$, $HomeTestFiles$ + $workfile$)
+            comment "Line exists in file"
+        else
+            set $result$="false"
+        endif
+        Set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
+        if ($ConstTest$ = $CompValue$)
+            comment "passed"
+            set $result$ = "true"
+        else
+            set $result$="false"
+        endif
+    endif
+
+endfunc
+
+Set $OS$ = GetOS
+
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+        set $HomeTestFiles$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/encoding/"
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+	endcase
+endswitch
+
+if stringToBool(myPatchtextfileTester("cp1252"))
+    comment "Testing patchtextfile with encoding passed"
+else
+    comment "Testing patchtextfile with encoding failed"
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf8"))
+    comment "Testing patchtextfile with encoding passed"
+else
+    comment "Testing patchtextfile with encoding failed"
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+
