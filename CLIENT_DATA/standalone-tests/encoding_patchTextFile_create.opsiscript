@@ -57,17 +57,33 @@ switch $OS$
 endswitch
 
 if stringToBool(myPatchtextfileTester("cp1252"))
-    comment "Testing patchtextfile with encoding passed"
+    comment "Testing patchtextfile with encoding "cp1252" passed"
 else
-    comment "Testing patchtextfile with encoding failed"
+    comment "Testing patchtextfile with encoding "cp1252" failed"
     set $TestResult$ = "not o.k."
     LogWarning "failed"
 endif
 
 if stringToBool(myPatchtextfileTester("utf8"))
-    comment "Testing patchtextfile with encoding passed"
+    comment "Testing patchtextfile with encoding "utf8" passed"
 else
-    comment "Testing patchtextfile with encoding failed"
+    comment "Testing patchtextfile with encoding "utf8" failed"
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf16le"))
+    comment "Testing patchtextfile with encoding "utf16le" passed"
+else
+    comment "Testing patchtextfile with encoding "utf16le" failed"
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf16lebom"))
+    comment "Testing patchtextfile with encoding "utf16lebom" passed"
+else
+    comment "Testing patchtextfile with encoding "utf16lebom" failed"
     set $TestResult$ = "not o.k."
     LogWarning "failed"
 endif
