@@ -349,7 +349,7 @@ set $test_speed$ = GetProductProperty ("test_speed","False")
 set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "on")
+set $MasterFlag$                   = GetProductProperty ("alltest", "off")
 if $MasterFlag$ = "on"
 	set $ScriptLoglevel$ = "5"
 	setLoglevel=$ScriptLoglevel$
@@ -375,7 +375,7 @@ set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
 set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
-set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
+set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "on")
 set $Flag_powershell$              = GetProductProperty ("powershell", "off")
 set $Flag_ProfileActions$          = GetProductProperty ("ProfileActions", "off")
 set $Flag_subregex$                = GetProductProperty ("Regex", "off")

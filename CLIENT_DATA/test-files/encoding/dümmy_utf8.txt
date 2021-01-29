@@ -5,4 +5,4 @@ Line without dummy2.
 Line2 with no sense
 Additional line containing nothing.
 Line3 with no sense
-Line containing umlaut: üöäßÜÖÄ.
+Line containing umlaut: üöäßÜÖÄ

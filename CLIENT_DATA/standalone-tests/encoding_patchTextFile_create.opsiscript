@@ -3,15 +3,16 @@ encoding=utf8
 
 DefVar $OS$
 DefVar $HomeTestFiles$
-DefVar $workfile$
 DefVar $TestResult$
-DefVar $ConstTest$
-DefVar $CompValue$
-DefStringlist $list$
+
 
 deffunc myPatchtextfileTester($encoding$ : string) : string
 
-    
+    DefVar $ConstTest$
+    DefVar $CompValue$
+    DefStringlist $list$
+    DefVar $workfile$
+
     set $result$="false"
     set $workfile$ = "dümmy_"+$encoding$+".txt"
     set $ConstTest$ = "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
@@ -55,7 +56,7 @@ Set $OS$ = GetOS
 ;		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles/"
 ;	endcase
 ;endswitch
-set $HomeTestFiles$ = "%opsiTmpDir%/opsi-scrpt-test/"
+set $HomeTestFiles$ = "%opsiTmpDir%/opsi-script-test/"
 
 Files_del_patchtextfile_tmp
 
@@ -138,9 +139,9 @@ else
 endif
 
 [Files_copy_patchtextfile_tmp]
-copy "%scriptpath%/../test-files/encoding/*.*" "%opsiTmpDir%/opsi-scrpt-test/"
+copy "%scriptpath%/../test-files/encoding/*.*" "%opsiTmpDir%/opsi-script-test/"
 
 [Files_del_patchtextfile_tmp]
-del -fs "%opsiTmpDir%/opsi-scrpt-test/"
+del -fs "%opsiTmpDir%/opsi-script-test/"
 
 
