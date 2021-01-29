@@ -1,4 +1,10 @@
 [Changelog]
+opsi-script-test (4.12.4.14-1) stable; urgency=low
+
+  * patche /encoding
+  * patchTextFile /encoding
+  
+-- detlef oertel <d.oertel@uib.de>  Tue,  29 Jan 2021 15:00:00 +0200
 
 opsi-script-test (4.12.4.13-1) stable; urgency=low
 

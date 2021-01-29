@@ -1,4 +1,4 @@
-Line to delete
+﻿Line to delete
 Line containing dummy1.
 Line1 with no sense
 Line without dummy2.
