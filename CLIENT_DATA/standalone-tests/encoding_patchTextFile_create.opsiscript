@@ -12,30 +12,32 @@ DefStringlist $list$
 
 deffunc myPatchtextfileTester($encoding$ : string) : string
 
-    set $workfile$ = "dümmy_"+$encoding$+".txt"
-    ;/encoding $encoding$
-
-    comment "Testing patchtextfile for encoding : "+$encoding$
+    comment "Testing patchtextfile for encoding : "+"$encoding$"
     
     set $result$="false"
-    
-    if FileExists($HomeTestFiles$+$workfile$)
-        set $ConstTest$ = "Line containing umlaut: üöäßÜÖÄ."
-        Set $list$ = loadTextFileWithEncoding($HomeTestFiles$+$workfile$,$encoding$)
-        if LineExistsIn ($ConstTest$, $HomeTestFiles$ + $workfile$)
-            comment "Line exists in file"
-        else
-            set $result$="false"
-        endif
-        Set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
-        if ($ConstTest$ = $CompValue$)
-            comment "passed"
-            set $result$ = "true"
-        else
-            set $result$="false"
-        endif
+    set $workfile$ = "dümmy_"+$encoding$+".txt"
+    set $ConstTest$ = "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
+
+    PatchTextFile_encoding $HomeTestFiles$+$workfile$ /encoding $encoding$
+    if LineExistsIn ($ConstTest$, $HomeTestFiles$ + $workfile$)
+        comment "Line exists in file"
+    else
+        set $result$="false"
     endif
 
+    Set $list$ = loadTextFileWithEncoding($HomeTestFiles$+$workfile$,$encoding$)            
+    Set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
+    if ($ConstTest$ = $CompValue$)
+        comment "passed"
+        set $result$ = "true"
+    else
+        set $result$="false"
+    endif
+    
+    [PatchTextFile_encoding]
+    GoToBottom
+    AppendLine "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
+    
 endfunc
 
 Set $OS$ = GetOS
@@ -43,16 +45,16 @@ Set $OS$ = GetOS
 switch $OS$
 	case "Windows_nt"
 		comment "We are running on Windows"
-		Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
+		Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles\"
 	endcase
 	case "Linux"
 		comment "We are running on Linux"
-		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles/"
         set $HomeTestFiles$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/encoding/"
 	endcase
 	case "macos"
 		comment "We are running on macOS"
-		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles/"
 	endcase
 endswitch
 
