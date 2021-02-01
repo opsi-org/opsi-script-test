@@ -1,8 +1,8 @@
-Line to delete
+﻿Line to delete
 Line containing dummy1.
 Line1 with no sense
 Line without dummy2.
 Line2 with no sense
 Additional line containing nothing.
 Line3 with no sense
-Line containing umlaut: üöäßÜÖÄ
+Line containing umlaut: üöäßÜÖÄ.

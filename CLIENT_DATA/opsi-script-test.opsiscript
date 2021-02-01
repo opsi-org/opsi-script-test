@@ -373,9 +373,9 @@ set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off"
 set $Flag_winst_macos$             = GetProductProperty ("macOS", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
-set $Flag_winst_patches$           = GetProductProperty ("Patches", "on")
+set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
-set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
+set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "on")
 set $Flag_powershell$              = GetProductProperty ("powershell", "off")
 set $Flag_ProfileActions$          = GetProductProperty ("ProfileActions", "off")
 set $Flag_subregex$                = GetProductProperty ("Regex", "off")
@@ -384,18 +384,18 @@ set $Flag_suburlparser$            = GetProductProperty ("Urlparser", "off")
 set $Flag_subregistry$             = GetProductProperty ("Registry", "off")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
-set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "on")
+set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
-set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
 
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
 set $Flag_internalundocumented$    = GetProductProperty ("internalundocumented", "off")
 set $Flag_RunAsLoggedOnAdmin$      = GetProductProperty ("RunAsLoggedOnAdmin", "off")
+set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 ;--------------------------------------------------------
 ;set $Flag_winst_idapiconfig$       = GetProductProperty ("idapiconfig", "off")
 
@@ -6920,7 +6920,8 @@ if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
 endif
 
 
-if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
+;if ($Flag_winst_xml$ = "on") or ($MasterFlag$ = "on")
+if ($Flag_winst_xml$ = "on")
 	Message "testing XMLPatch functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""

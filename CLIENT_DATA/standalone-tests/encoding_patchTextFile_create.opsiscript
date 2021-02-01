@@ -1,0 +1,147 @@
+encoding=utf8
+[Actions]
+
+DefVar $OS$
+DefVar $HomeTestFiles$
+DefVar $TestResult$
+
+
+deffunc myPatchtextfileTester($encoding$ : string) : string
+
+    DefVar $ConstTest$
+    DefVar $CompValue$
+    DefStringlist $list$
+    DefVar $workfile$
+
+    set $result$="false"
+    set $workfile$ = "dümmy_"+$encoding$+".txt"
+    set $ConstTest$ = "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
+
+    PatchTextFile_encoding $HomeTestFiles$+$workfile$ /encoding $encoding$
+    if LineExistsIn ($ConstTest$, $HomeTestFiles$ + $workfile$)
+        comment "Line exists in file"
+    else
+        set $result$="false"
+    endif
+
+    Set $list$ = loadTextFileWithEncoding($HomeTestFiles$+$workfile$,$encoding$)            
+    Set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
+    if ($ConstTest$ = $CompValue$)
+        comment "passed"
+        set $result$ = "true"
+    else
+        set $result$="false"
+    endif
+    
+    [PatchTextFile_encoding]
+    GoToBottom
+    AppendLine "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
+    
+endfunc
+
+Set $OS$ = GetOS
+
+;switch $OS$
+;	case "Windows_nt"
+;		comment "We are running on Windows"
+;		Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles\"
+;	endcase
+;	case "Linux"
+;		comment "We are running on Linux"
+;		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles/"
+;        set $HomeTestFiles$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/encoding/"
+;	endcase
+;	case "macos"
+;		comment "We are running on macOS"
+;		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles/"
+;	endcase
+;endswitch
+set $HomeTestFiles$ = "%opsiTmpDir%/opsi-script-test/"
+
+Files_del_patchtextfile_tmp
+
+Files_copy_patchtextfile_tmp
+
+comment "Testing patchtextfile by AppendLine with encoding "
+
+if stringToBool(myPatchtextfileTester("cp1252"))
+    comment "Testing patchtextfile with encoding cp1252 passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf8"))
+    comment "Testing patchtextfile with encoding utf8 passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf8bom"))
+    comment "Testing patchtextfile with encoding utf8bom passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf16le"))
+    comment "Testing patchtextfile with encoding utf16le passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf16lebom"))
+    comment "Testing patchtextfile with encoding utf16lebom passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+Files_del_patchtextfile_tmp
+
+comment "Testing patchtextfile by AppendLine with encoding on non existing files"
+
+if stringToBool(myPatchtextfileTester("cp1252"))
+    comment "Testing patchtextfile with encoding cp1252 passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf8"))
+    comment "Testing patchtextfile with encoding utf8 passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf8bom"))
+    comment "Testing patchtextfile with encoding utf8bom passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf16le"))
+    comment "Testing patchtextfile with encoding utf16le passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+if stringToBool(myPatchtextfileTester("utf16lebom"))
+    comment "Testing patchtextfile with encoding utf16lebom passed"
+else
+    set $TestResult$ = "not o.k."
+    LogWarning "failed"
+endif
+
+[Files_copy_patchtextfile_tmp]
+copy "%scriptpath%/../test-files/encoding/*.*" "%opsiTmpDir%/opsi-script-test/"
+
+[Files_del_patchtextfile_tmp]
+del -fs "%opsiTmpDir%/opsi-script-test/"
+
+

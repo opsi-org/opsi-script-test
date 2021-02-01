@@ -1,0 +1,87 @@
+encoding=utf8
+[actions]
+DefVar $tmpdir$
+DefVar $filename$
+set $tmpdir$ = "/tmp/initest"
+
+
+deffunc patchinitest($encoding$ : string) : string
+	
+	DefVar $ConstTest$ 
+	DefVar $ConstTest2$
+	DefVar $CompValue$ 
+	DefVar $CompValue2$
+	DefStringlist $list1$
+	
+	set $result$ = "false"
+	Patches_encoding_ini $tmpdir$+"\"+$encoding$+".ini" /encoding $encoding$
+	if FileExists($tmpdir$+"\"+$filename$)
+		message "add"
+		set $ConstTest$ = "[section1]"
+		set $ConstTest2$ = "key2=ädd1"
+		Set $list1$ = loadTextFilewithencoding($tmpdir$+"\"+$encoding$+".ini",$encoding$)
+		Set $CompValue$ = Trim(takeString(0, $list1$))
+		Set $CompValue2$ = Trim(takeString(2, $list1$))
+		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			comment "add passed"
+			set $result$ = "true"
+		else
+			;set $TestResult$ = "not o.k."
+			comment "add failed"
+			set $result$ = "false"
+		endif
+	
+		message "set"
+		set $ConstTest$ = "[section1]"
+		set $ConstTest2$ = "key1=sät1"
+		Set $list1$ = loadTextFilewithencoding($tmpdir$+"\"+$encoding$+".ini",$encoding$)
+		Set $CompValue$ = Trim(takeString(0, $list1$))
+		Set $CompValue2$ = Trim(takeString(1, $list1$))
+		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			comment "set passed"
+		else
+			;set $TestResult$ = "not o.k."
+			comment "set failed"
+			set $result$ = "false"
+		endif
+	endif
+	
+	[Patches_encoding_ini]
+	set [section1] key1=sät1 
+	add [section1] key2=ädd1
+
+endfunc
+
+Files_prepare
+
+if stringToBool(patchinitest("cp1252"))
+	comment "passed"
+else
+	comment "failed"
+endif
+
+if stringToBool(patchinitest("utf8"))
+	comment "passed"
+else
+	comment "failed"
+endif
+if stringToBool(patchinitest("ucs2le"))
+	comment "passed"
+else
+	comment "failed"
+endif
+if stringToBool(patchinitest("ucs2be"))
+	comment "passed"
+else
+	comment "failed"
+endif
+if stringToBool(patchinitest("unicode"))
+	comment "passed"
+else
+	comment "failed"
+endif
+
+
+[Files_prepare]
+del -s $tmpdir$/
+checktargetpath = $tmpdir$
