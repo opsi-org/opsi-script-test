@@ -1,0 +1,39 @@
+[Actions]
+comment "Testing: "
+message "FileExists"
+
+;function FileExists(<file name>) : boolean;
+
+DefVar $OS$
+DefVar $TestResult$
+
+DefFunc myFileExistsTester($fileName$ : string, $expected$ : string) : void
+    DefVar $CompValue$
+    set $CompValue$ = booltostring(FileExists($fileName$))
+    if $CompValue$ = $expected$
+            comment "Testing FileExists succeeded"
+    else
+            set $TestResult$ = "not o.k."
+            LogWarning "Testing FileExists failed"
+    endif
+endfunc
+
+Set $OS$ = GetOS
+
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		myFileExistsTester("C:\Users\","true")
+                myFileExistsTester("C:\Users\uib.txt","false")
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		myFileExistsTester("/home/user/hwaudit.log","true")
+                myFileExistsTester("/home/user/uib.txt","false")
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		myFileExistsTester("/Users/","true")
+                myFileExistsTester("/Users/uib.txt","false")
+	endcase
+endswitch
