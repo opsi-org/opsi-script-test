@@ -20,11 +20,17 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	comment "Testing: "
 	comment "add, set, addnew, change, del, replace"
 	
-	if $OS$ = "Linux"
-		ShellInAnIcon_create_ini
-	else
-		DosInAnIcon_create_ini
-	endif
+	switch $OS$
+		case "Windows_nt"
+			DosInAnIcon_create_ini
+		endcase
+		case "Linux"
+			ShellInAnIcon_create_ini
+		endcase
+		case "macos"
+			ShellInAnIcon_create_ini
+		endcase
+	endswitch
 	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
 	if (FileExists($HometestFiles$+"\dummy.ini"))
 		message "add"
@@ -203,12 +209,17 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 		endif ; 4.11.3.2
 	endif
 	
-	
-	if $OS$ = "Linux"
-		ShellInAnIcon_create_ini
-	else
-		DosInAnIcon_create_ini
-	endif
+	switch $OS$
+		case "Windows_nt"
+			DosInAnIcon_create_ini
+		endcase
+		case "Linux"
+			ShellInAnIcon_create_ini
+		endcase
+		case "macos"
+			ShellInAnIcon_create_ini
+		endcase
+	endswitch
 	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.13")
 	;if $test_experimental$ = "true"
