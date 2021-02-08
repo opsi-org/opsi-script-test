@@ -151,13 +151,13 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	
-	comment ""
-	comment "-------------------------------------"
-	comment "Testing: "
-	message "delsec"
+	;comment ""
+	;comment "-------------------------------------"
+	;comment "Testing: "
+	;message "delsec"
 	
-	set $SectionName$ ="[secdummy]"
-	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
+	;set $SectionName$ ="[secdummy]"
+	;Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
 	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
 	;; encoding in patches has to be fixed
 	;	if (FileExists($HometestFiles$+"\dummy.ini"))
@@ -220,15 +220,18 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			ShellInAnIcon_create_ini
 		endcase
 	endswitch
+	
 	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.13")
 	;if $test_experimental$ = "true"
 		
+		comment ""
+        comment "-------------------------------------"
 		comment "Testing: "
 		message "GetSectionFromInifile"
+		;GetSectionFromInifile
 		
 		if (FileExists($HometestFiles$+"\dummy.ini"))
-			;GetSectionFromInifile
 			
 			set $list1$ = createStringList ('dummy1=add1', 'dummy2=set1', 'dummy3=change1', 'dummy5=add5', 'replace1=replace1', 'dummy1=addnew1')
 			Set $CompList1$ = GetSectionFromInifile("secdummy", $HometestFiles$+"\dummy.ini")

@@ -407,7 +407,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 	set $list$ = loadTextFile($HomeTestFiles$ + $workfile$)
 	set $list$ = loadTextFileWithEncoding($HomeTestFiles$ + $workfile$, 'system')
 	
-	if LineExistsIn ("Line containing umlaut: üöäßÜÖÄ.", $HomeTestFiles$ + $workfile$)
+	if LineExistsIn ("Line containing umlaut: üöäßÜÖÄ", $HomeTestFiles$ + $workfile$)
 		comment "passed"
 	else
 		set $TestResult$ = "not o.k."
