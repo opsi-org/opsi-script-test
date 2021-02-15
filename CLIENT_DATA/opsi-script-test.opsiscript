@@ -1195,6 +1195,31 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
+		
+		; asConfidential - StringList
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.15")
+			message "asConfidential - StringList"
+			set $list$ = asConfidential(createStringList('confidential-aa','confidential-bb', 'confidential-cc', 'confidential-dd'))
+			comment "This is a hidden stringlist"
+			comment "should be in the log file: This is a ***(confidential)*** stringlist"
+			if isConfidential("confidential-aa")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+
+			set $list$ = asConfidential(addtolist($list$,"confidential-ee"))
+			comment "confidential-ee"
+			comment "should be in the log file:  ***(confidential)***"
+			if isConfidential("confidential-ee")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif		
+		endif ; 4.12.4.15 (asCofindential - StringList)
+		
 	endif ; 4.12.0.16
 	
 	if not ("%installingProdName%" = "")
