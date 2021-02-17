@@ -2,6 +2,7 @@
 opsi-script-test (4.12.4.15-1) stable; urgency=low
 
   * encodingtest: cleanup
+  * asConfidential: include test for asConfidential with stringlist (Jan Werner, provided by Terry Strooband)
   
 -- detlef oertel <d.oertel@uib.de>  Tue,  16 Feb 2021 15:00:00 +0200
 
