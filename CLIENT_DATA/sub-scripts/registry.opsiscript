@@ -1006,19 +1006,19 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 			
-			if RegKeyExists($tmp$+"\1031","64bit")
+			if RegKeyExists($tmp$,"64bit")
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			if RegKeyExists($tmp$+"\1031","32bit")
+			if RegKeyExists($tmp$,"32bit")
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			if RegKeyExists($tmp$+"\1031","sysnative")
+			if RegKeyExists($tmp$,"sysnative")
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
