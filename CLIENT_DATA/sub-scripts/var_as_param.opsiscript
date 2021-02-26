@@ -633,6 +633,12 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif ; windows
 	
+	if $OS$ = "Windows_NT"
+		executeSection('DosInanIcon_type_a_lot winst /showoutput')
+	else
+		executeSection('ShellInanIcon_cat_a_lot winst /showoutput')
+	endif
+	
 ;########################################################################################################
 ; ################   Files
 	
@@ -1297,3 +1303,9 @@ copy "%ScriptPath%\test-files\testFiles\dummy.txt" "c:\program files\opsi.org\te
 %SystemDrive%
 cd "c:\program files\opsi.org\test"
 del "dummy.txt"
+
+[DosInanIcon_type_a_lot]
+type "%scriptpath%\opsi-script-test.opsiscript"
+
+[ShellInanIcon_cat_a_lot]
+cat "%scriptpath%/opsi-script-test.opsiscript"
