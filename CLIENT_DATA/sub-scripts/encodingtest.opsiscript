@@ -327,6 +327,34 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 	
 	comment ""
 	comment "-------------------------------------"
+	comment "Testing: getFileBom"
+	
+	DefVar $tmpdir$
+	DefVar $encoding$
+
+	DefFunc myGetFileBomTester($filePath$ : string, $expected$ : string) : void
+        DefVar $CompValue$
+        set $CompValue$ = booltostring(getFileBom($filePath$,$encoding$))
+        if $CompValue$ = $expected$
+                comment "Testing getFileBom succeeded"
+        else
+                set $TestResult$ = "not o.k."
+                LogWarning "Testing getFileBom failed"
+        endif
+    endfunc
+
+    Set $tmpdir$ = "%scriptpath%/test-files/encoding/"
+    Set $encoding$ = ""
+
+    myGetFileBomTester($tmpdir$+"test_cp1252.ini","false")
+    myGetFileBomTester($tmpdir$+"test_utf8bom.opsiscript","true")
+    myGetFileBomTester($tmpdir$+"test_utf16be-bom.ini","true"))
+    myGetFileBomTester($tmpdir$+"test_utf16lebom.opsiscript","true"))
+    myGetFileBomTester($tmpdir$+"test_utf32be-bom.ini","true"))
+    myGetFileBomTester($tmpdir$+"test_utf32le-bom.ini","true"))
+	
+	comment ""
+	comment "-------------------------------------"
 	comment "Testing: umlaut patches ini"
 	comment " set"
 	
@@ -450,7 +478,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
                 GoToBottom
                 AppendLine "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
                 
-	            endfunc
+	 endfunc
 	
 	
 	set $HomeTestFiles$ = "%opsiTmpDir%/opsi-script-test/"
