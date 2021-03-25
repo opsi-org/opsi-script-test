@@ -3596,17 +3596,18 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		if not($OS$ = 'macos')
+		;if not($OS$ = 'macos')
 			set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
 			Set $CompValue$ = takeString(2, $list1$)
 			if ($ConstTest$ = $CompValue$)
-				LogWarning "Unexected passed"
-			else
 				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
 			endif
-		else
-			logerror "macos todo"
-		endif
+		;else
+		;	logerror "macos todo"
+		;endif
 	endif
 	
 	
@@ -4898,7 +4899,10 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			comment "Search file in %System% with redirection for 32bit programs to SysWOW64"
 			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6')
 			set $list3$ = listFiles("%System%","*.*","False")
-			if (count($list2$) = count($list3$))
+			set $ConstTest$ = count($list3$)
+			set $CompValue$ = count($list2$)
+			comment "compare values"
+			if $ConstTest$ = $CompValue$
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -4909,7 +4913,10 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 winst /64bit')
 			; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
 			set $list3$ = listFiles("%System%","*.*","False","64bit")
-			if (count($list2$) = count($list3$))
+			set $ConstTest$ = count($list3$)
+			set $CompValue$ = count($list2$)
+			comment "compare values"
+			if $ConstTest$ = $CompValue$
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
