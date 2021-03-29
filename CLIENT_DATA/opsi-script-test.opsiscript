@@ -5764,7 +5764,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
 		set $CompValue$ = "false"
 		set $list$ = parseUrl('%opsiserviceurl%')
-		set $tmp$ = getValue($list$,'host')
+		set $tmp$ = getValue('host',$list$)
 		if ($tmp$ = 'localhost') or ($tmp = '127.0.0.1') or ($tmp$ = '::1')
 			set $CompValue$ = "true"
 		endif
