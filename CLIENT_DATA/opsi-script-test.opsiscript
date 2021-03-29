@@ -1474,8 +1474,8 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		comment "getOSArchitecture"
 		set $ConstTest$ = getOSArchitecture
 		if $OS$ = "Windows_NT"
-			Set $systemarch$ = GetSystemType
-			if $systemarch$ = "64 Bit System"
+			Set $tmpstr$ = GetSystemType
+			if $tmpstr$ = "64 Bit System"
 				set $CompValue$ = "x86_64"
 			else
 				set $CompValue$ = "x86_32"
@@ -1488,8 +1488,8 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif
 		if $OS$ = "Linux"
-			Set $systemarch$ = GetSystemType
-			if $systemarch$ = "64 Bit System"
+			Set $tmpstr$ = GetSystemType
+			if $tmpstr$ = "64 Bit System"
 				set $CompValue$ = "x86_64"
 			else
 				set $CompValue$ = "x86_32"
@@ -1502,12 +1502,12 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif
 		if $OS$ = "macos"
-			Set $systemarch$ = takeString(0, shellCall('uname -m'))
-			if $systemarch$ = "arm64"
+			Set $tmpstr$ = takeString(0, shellCall('uname -m'))
+			if $tmpstr$ = "arm64"
 				set $CompValue$ = "arm_64"
 			else
 				set $CompValue$ = "x86_64"
-				if $systemarch$ = "x86_64" 
+				if $tmpstr$ = "x86_64" 
 					set $list$ = shellCall('sysctl -in sysctl.proc_translated')
 					if "1" = takestring(0, $list$)
 						set $CompValue$ = "arm_64"
