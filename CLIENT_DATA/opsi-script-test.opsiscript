@@ -5765,7 +5765,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		set $CompValue$ = "false"
 		set $list$ = parseUrl('%opsiserviceurl%')
 		set $tmp$ = getValue('host',$list$)
-		if ($tmp$ = 'localhost') or ($tmp = '127.0.0.1') or ($tmp$ = '::1')
+		if ($tmp$ = 'localhost') or ($tmp$ = '127.0.0.1') or ($tmp$ = '::1')
 			set $CompValue$ = "true"
 		endif
 		set $ConstTest$ = boolToString(runningInWANMode)
