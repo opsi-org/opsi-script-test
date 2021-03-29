@@ -1468,6 +1468,61 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	;	LogWarning "failed"
 	;endif
 	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
+		comment "-------------------------------------"
+		comment "Testing: "
+		comment "getOSArchitecture"
+		set $ConstTest$ = getOSArchitecture
+		if $OS$ = "Windows_NT"
+			Set $systemarch$ = GetSystemType
+			if $systemarch$ = "64 Bit System"
+				set $CompValue$ = "x86_64"
+			else
+				set $CompValue$ = "x86_32"
+			endif
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+		if $OS$ = "Linux"
+			Set $systemarch$ = GetSystemType
+			if $systemarch$ = "64 Bit System"
+				set $CompValue$ = "x86_64"
+			else
+				set $CompValue$ = "x86_32"
+			endif
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+		if $OS$ = "macos"
+			Set $systemarch$ = takeString(0, shellCall('uname -m'))
+			if $systemarch$ = "arm64"
+				set $CompValue$ = "arm_64"
+			else
+				set $CompValue$ = "x86_64"
+				if $systemarch$ = "x86_64" 
+					set $list$ = shellCall('sysctl -in sysctl.proc_translated')
+					if "1" = takestring(0, $list$)
+						set $CompValue$ = "arm_64"
+					endif
+				endif
+			endif
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+	endif ; "4.12.4.16"
+	
 	if $OS$ = "Windows_NT"
 		comment ""
 		comment "-------------------------------------"
@@ -1488,7 +1543,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		;if $MsVersion$ <= "5.0"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"<=","5.0")
 			comment "not tested at win2k  because wmic is needed"
 		else
 			comment ""
