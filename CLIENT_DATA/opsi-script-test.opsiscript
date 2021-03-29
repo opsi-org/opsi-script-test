@@ -5609,7 +5609,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "includelog"
-		if not($OS$ = 'macos')
+		;if not($OS$ = 'macos')
 			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
 			set $string2$ = "5"
 			;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
@@ -5641,9 +5641,9 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 				includelog $string1$ $string2$ "ucs2be"
 				includelog $string1$ $string2$ "utf32"
 			endif
-		else
-			logerror "macos todo"
-		endif
+		;else
+		;	logerror "macos todo"
+		;endif
 		
 		comment ""
 		comment "-------------------------------------"
@@ -5759,6 +5759,22 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	else
 		LogWarning "runningOnUefi failed"
 		set $TestResult$ = "not o.k."
+	endif
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
+		set $CompValue$ = "false"
+		set $list$ = parseUrl('%opsiserviceurl%')
+		set $tmp$ = getValue($list$,'host')
+		if ($tmp$ = 'localhost') or ($tmp = '127.0.0.1') or ($tmp$ = '::1')
+			set $CompValue$ = "true"
+		endif
+		set $ConstTest$ = boolToString(runningInWANMode)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			LogWarning "runningOnUefi failed"
+			set $TestResult$ = "not o.k."
+		endif
 	endif
 	
 	

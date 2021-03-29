@@ -5,6 +5,7 @@ opsi-script-test (4.12.4.16-1) stable; urgency=low
   * encoding tests hasbom
   * encoding tests opsiscript sub files with bom
   * getOSArchitecture
+  * runningInWANMode
   
 -- detlef oertel <d.oertel@uib.de>  Tue,  23 Mar 2021 15:00:00 +0200
 
