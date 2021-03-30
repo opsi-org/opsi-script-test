@@ -279,7 +279,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 					LogWarning "failed"
 					set $TestResult$ = "not o.k."
 				endif
-				killtask "helperchild.exe"
+				killtask $helper_child_bin_name$
 				if FileExists("%opsiTmpDir%\del_c_test\")
 					if FileExists("%opsiTmpDir%\del_c_test\helperchild.exe")
 						comment "del -c passed"
@@ -464,7 +464,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 				set $TestResult$ = "not o.k."
 			endif
-			killtask "opsiwinsttesthelper.exe"
+			killtask $helper_child_bin_name$
 		endif ; windows
 		
 		if $OS$ = "Windows_NT"
@@ -1168,6 +1168,8 @@ echo dummy > dummy2.txt
 cd "$HomeTestFiles$\files"
 echo Hello World > dummy.txt
 echo Hello World > dummy2.txt
+cd "%opsiTmpDir%"
+exit
 
 [ShellInAnIcon_Linux_prepare_copy_w]
 set -x
@@ -1195,6 +1197,8 @@ echo Hello World Files> dummy2.txt
 cd ..
 ping 127.0.0.1 -n 60
 echo Hello World > dummy2.txt
+cd "%opsiTmpDir%"
+exit
 
 [DosInAnIcon_prepare_copy_u_dir_main]
 @echo off
@@ -1216,6 +1220,8 @@ echo "Hello World Files"> dummy2.txt
 cd ..
 ping 127.0.0.1 -n 60
 echo "Hello World" > dummy2.txt
+cd "%opsiTmpDir%"
+exit
 
 [ShellInAnIcon_Linux_prepare_copy_u_dir_main]
 set -x
@@ -1238,6 +1244,8 @@ attrib +H "$HomeTestFiles$\.hidden.txt"
 dir
 cd "subDirectory\subsubDirectory"
 echo Hello World > dummyToday.txt
+cd "%opsiTmpDir%"
+exit
 
 [ShellInAnIcon_Linux_createDirectory]
 set -x

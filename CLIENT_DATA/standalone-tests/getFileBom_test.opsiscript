@@ -1,0 +1,30 @@
+encoding=utf8
+[Actions]
+comment "Testing: "
+
+DefVar $tmpdir$
+DefVar $encoding$
+DefVar $TestResult$
+
+DefFunc myGetFileBomTester($filePath$ : string, $expected$ : string) : void
+    DefVar $CompValue$
+    set $CompValue$ = booltostring(getFileBom($filePath$,$encoding$))
+    if $CompValue$ = $expected$
+            comment "Testing getFileBom succeeded"
+    else
+            set $TestResult$ = "not o.k."
+            LogWarning "Testing getFileBom failed"
+    endif
+endfunc
+
+Set $tmpdir$ = "%scriptpath%/../test-files/encoding/"
+Set $encoding$ = ""
+
+message "Testing getFileBom"
+
+myGetFileBomTester($tmpdir$+"test_cp1252.ini","false")
+myGetFileBomTester($tmpdir$+"test_utf8bom.opsiscript","true")
+myGetFileBomTester($tmpdir$+"test_utf16be-bom.ini","true"))
+myGetFileBomTester($tmpdir$+"test_utf16lebom.opsiscript","true"))
+myGetFileBomTester($tmpdir$+"test_utf32be-bom.ini","true"))
+myGetFileBomTester($tmpdir$+"test_utf32le-bom.ini","true"))

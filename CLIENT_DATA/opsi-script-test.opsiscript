@@ -1468,6 +1468,61 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	;	LogWarning "failed"
 	;endif
 	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
+		comment "-------------------------------------"
+		comment "Testing: "
+		comment "getOSArchitecture"
+		set $ConstTest$ = getOSArchitecture
+		if $OS$ = "Windows_NT"
+			Set $tmp$ = GetSystemType
+			if $tmp$ = "64 Bit System"
+				set $CompValue$ = "x86_64"
+			else
+				set $CompValue$ = "x86_32"
+			endif
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+		if $OS$ = "Linux"
+			Set $tmp$ = GetSystemType
+			if $tmp$ = "64 Bit System"
+				set $CompValue$ = "x86_64"
+			else
+				set $CompValue$ = "x86_32"
+			endif
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+		if $OS$ = "macos"
+			Set $tmp$ = takeString(0, shellCall('uname -m'))
+			if $tmp$ = "arm64"
+				set $CompValue$ = "arm_64"
+			else
+				set $CompValue$ = "x86_64"
+				if $tmp$ = "x86_64" 
+					set $list$ = shellCall('sysctl -in sysctl.proc_translated')
+					if "1" = takestring(0, $list$)
+						set $CompValue$ = "arm_64"
+					endif
+				endif
+			endif
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+	endif ; "4.12.4.16"
+	
 	if $OS$ = "Windows_NT"
 		comment ""
 		comment "-------------------------------------"
@@ -1488,7 +1543,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		;if $MsVersion$ <= "5.0"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"<=","5.0")
 			comment "not tested at win2k  because wmic is needed"
 		else
 			comment ""
@@ -3596,17 +3651,18 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		if not($OS$ = 'macos')
+		;if not($OS$ = 'macos')
 			set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
 			Set $CompValue$ = takeString(2, $list1$)
 			if ($ConstTest$ = $CompValue$)
-				LogWarning "Unexected passed"
-			else
 				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
 			endif
-		else
-			logerror "macos todo"
-		endif
+		;else
+		;	logerror "macos todo"
+		;endif
 	endif
 	
 	
@@ -4898,7 +4954,10 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			comment "Search file in %System% with redirection for 32bit programs to SysWOW64"
 			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6')
 			set $list3$ = listFiles("%System%","*.*","False")
-			if (count($list2$) = count($list3$))
+			set $ConstTest$ = count($list3$)
+			set $CompValue$ = count($list2$)
+			comment "compare values"
+			if $ConstTest$ = $CompValue$
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -4909,7 +4968,10 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 winst /64bit')
 			; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
 			set $list3$ = listFiles("%System%","*.*","False","64bit")
-			if (count($list2$) = count($list3$))
+			set $ConstTest$ = count($list3$)
+			set $CompValue$ = count($list2$)
+			comment "compare values"
+			if $ConstTest$ = $CompValue$
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -5547,7 +5609,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "includelog"
-		if not($OS$ = 'macos')
+		;if not($OS$ = 'macos')
 			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
 			set $string2$ = "5"
 			;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
@@ -5579,9 +5641,9 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 				includelog $string1$ $string2$ "ucs2be"
 				includelog $string1$ $string2$ "utf32"
 			endif
-		else
-			logerror "macos todo"
-		endif
+		;else
+		;	logerror "macos todo"
+		;endif
 		
 		comment ""
 		comment "-------------------------------------"
@@ -5697,6 +5759,22 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	else
 		LogWarning "runningOnUefi failed"
 		set $TestResult$ = "not o.k."
+	endif
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
+		set $CompValue$ = "false"
+		set $list$ = parseUrl('%opsiserviceurl%')
+		set $tmp$ = getValue('host',$list$)
+		if ($tmp$ = 'localhost') or ($tmp$ = '127.0.0.1') or ($tmp$ = '::1')
+			set $CompValue$ = "true"
+		endif
+		set $ConstTest$ = boolToString(runningInWANMode)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			LogWarning "runningOnUefi failed"
+			set $TestResult$ = "not o.k."
+		endif
 	endif
 	
 	

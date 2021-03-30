@@ -1,0 +1,7 @@
+﻿encoding=utf8bom
+[actions]
+ setDebug_prog=true 
+ setLogLevel = 8
+
+message "Testing loading opsiscript file with UTF8-BOM encoding"
+message "äüö"
