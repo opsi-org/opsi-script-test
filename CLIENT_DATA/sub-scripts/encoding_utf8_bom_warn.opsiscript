@@ -35,3 +35,19 @@ else
 	logError "Fatal: could not create .ini file"
 	isFatalError
 endif
+
+[Patches_dummy_ini]
+add [secdummy] dummy1=add1
+; will be overwritten by other functions
+add [secdummy] dummy2=add2
+add [secdummy] dummy3=add3
+add [secdummy] dummy4=add4
+add [secdummy] dummy5=add5
+add [secdummy] dummy6=add6
+add [secdüöä] dümmy7=üöäßÜÖÄ
+
+set [secdummy] dummy2=set1
+addnew [secdummy] dummy1=addnew1
+change [secdummy] dummy3=change1
+del [secdummy] dummy4
+Replace dummy6=add6 replace1=replace1
