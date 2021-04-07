@@ -362,7 +362,7 @@ set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
 set $Flag_encoding$                = GetProductProperty ("encoding", "off")
-set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "off")
+set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "on")
 set $Flag_winst_file$              = GetProductProperty ("files", "off")
 set $Flag_infostest$               = GetProductProperty ("infoFunctions", "off")
 set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
@@ -373,7 +373,7 @@ set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off"
 set $Flag_winst_macos$             = GetProductProperty ("macOS", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
-set $Flag_winst_patches$           = GetProductProperty ("Patches", "on")
+set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
 set $Flag_powershell$              = GetProductProperty ("powershell", "off")
@@ -384,7 +384,7 @@ set $Flag_suburlparser$            = GetProductProperty ("Urlparser", "off")
 set $Flag_subregistry$             = GetProductProperty ("Registry", "off")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
-set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "on")
+set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
@@ -393,7 +393,7 @@ set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
 
 ;--------------------------------------------------------
-set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
+set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "on")
 set $Flag_internalundocumented$    = GetProductProperty ("internalundocumented", "off")
 set $Flag_RunAsLoggedOnAdmin$      = GetProductProperty ("RunAsLoggedOnAdmin", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
@@ -7458,6 +7458,20 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; 4.11.5
 		
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.12.4.17") >= "0"
+			comment "Testing /encoding parameter for ExecWith"
+			set $tmp$ = "p5"
+			set $list1$ = getOutStreamFromSection ('ExecWith_parameters cmd.exe /c pass p1 p2 p3 p4 $tmp$ WINST /encoding "utf8"')
+			set $CompValue$ = takeFirstStringContaining($list1$,"p5")
+			set $ConstTest$ = "param5= p5"
+			if ($ConstTest$ = $CompValue$)
+				comment "Execwith with /encoding assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "Execwith with /encoding assumed failed"
+			endif
+		endif ; 4.11.5
+		
 	endif ; windows
 	
 	if $OS$ = "Linux"
@@ -7470,6 +7484,18 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "Execwith assumed failed"
 		endif
+		
+		comment "Testing /encoding parameter for ExecWith"
+		set $list1$ = getOutStreamFromSection ('ExecWith_parameters_bash /bin/bash pass p1 p2 p3 p4 p5 WINST /encoding "utf8"')
+		set $CompValue$ = takeFirstStringContaining($list1$,"p5")
+		set $ConstTest$ = "param5= p5"
+		if ($ConstTest$ = $CompValue$)
+			comment "Execwith with /encoding assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Execwith with /encoding assumed failed"
+		endif
+
 	endif ; Linux
 	
 	sub_compareResult
