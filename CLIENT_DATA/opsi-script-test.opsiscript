@@ -7461,7 +7461,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.12.4.17") >= "0"
 			comment "Testing /encoding parameter for ExecWith"
 			set $tmp$ = "p5"
-			set $list1$ = getOutStreamFromSection ('ExecWith_parameters cmd.exe /c pass p1 p2 p3 p4 $tmp$ WINST /encoding "utf8"')
+			set $list1$ = getOutStreamFromSection ('ExecWith_parameters cmd.exe /c pass p1 p2 p3 p4 $tmp$ WINST /encoding utf8')
 			set $CompValue$ = takeFirstStringContaining($list1$,"p5")
 			set $ConstTest$ = "param5= p5"
 			if ($ConstTest$ = $CompValue$)
@@ -7486,7 +7486,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		comment "Testing /encoding parameter for ExecWith"
-		set $list1$ = getOutStreamFromSection ('ExecWith_parameters_bash /bin/bash pass p1 p2 p3 p4 p5 WINST /encoding "utf8"')
+		set $list1$ = getOutStreamFromSection ('ExecWith_parameters_bash /bin/bash pass p1 p2 p3 p4 p5 WINST /encoding utf8')
 		set $CompValue$ = takeFirstStringContaining($list1$,"p5")
 		set $ConstTest$ = "param5= p5"
 		if ($ConstTest$ = $CompValue$)
