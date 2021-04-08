@@ -4981,14 +4981,14 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	endif ;4.12.3
 	
 	
+	if $OS$ = "Windows_NT"
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.17")
 	
         comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "DosInAnIcon with WINST /encoding parameter"
-		comment ""
-		if $OS$ = "Windows_NT"
+		comment ""	
             
             ;Files_copy_for_filelist
             
@@ -5003,9 +5003,9 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
                 set $TestResult$ = "not o.k."
                 LogWarning "failed"
             endif
-        endif ; windows
-    endif ;4.12.4.7
-		
+        
+    	endif ;4.12.4.7
+	endif ; windows		
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
 		
