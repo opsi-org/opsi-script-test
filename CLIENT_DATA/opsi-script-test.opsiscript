@@ -362,7 +362,7 @@ set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
 set $Flag_encoding$                = GetProductProperty ("encoding", "off")
-set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "on")
+set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "off")
 set $Flag_winst_file$              = GetProductProperty ("files", "off")
 set $Flag_infostest$               = GetProductProperty ("infoFunctions", "off")
 set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
@@ -384,7 +384,7 @@ set $Flag_suburlparser$            = GetProductProperty ("Urlparser", "off")
 set $Flag_subregistry$             = GetProductProperty ("Registry", "off")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
-set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
+set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "on")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
@@ -393,7 +393,7 @@ set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
 
 ;--------------------------------------------------------
-set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "on")
+set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
 set $Flag_internalundocumented$    = GetProductProperty ("internalundocumented", "off")
 set $Flag_RunAsLoggedOnAdmin$      = GetProductProperty ("RunAsLoggedOnAdmin", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
@@ -4979,6 +4979,33 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; windows
 	endif ;4.12.3
+	
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.17")
+	
+        comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DosInAnIcon with WINST /encoding parameter"
+		comment ""
+		if $OS$ = "Windows_NT"
+            
+            ;Files_copy_for_filelist
+            
+            set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 WINST /64bit /encoding utf8')
+            ; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+            set $list3$ = listFiles("%System%","*.*","False","64bit")
+            set $ConstTest$ = count($list3$)
+            set $CompValue$ = count($list2$)
+            if $ConstTest$ = $CompValue$
+                comment "passed"
+            else
+                set $TestResult$ = "not o.k."
+                LogWarning "failed"
+            endif
+        endif ; windows
+    endif ;4.12.4.7
+		
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
 		
