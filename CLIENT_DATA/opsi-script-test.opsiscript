@@ -205,6 +205,7 @@ DefVar $pingcommand$
 DefVar $ping5command$
 DefVar $pingregex$
 DefVar $difftime$
+DefVar $foundsubsection$
 
 DefVar $regWriteValue$
 
@@ -8341,6 +8342,9 @@ endif
 comment ""
 comment ""
 
+[sub_find_section_test]
+set $foundsubsection$ = "mainfile_sections_top"
+
 
 ; getOutStreamFromSection aufrufe
 [opsiservicecall_ServerIdsList]
@@ -9980,3 +9984,6 @@ copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%System%"
 				}
 			}
 		}
+
+[sub_find_section_test]
+set $foundsubsection$ = "mainfile_sections_bottom"
