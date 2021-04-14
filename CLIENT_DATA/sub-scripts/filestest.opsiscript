@@ -527,7 +527,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		isFatalError
 	endif
 	
-	if $OS$ = "Windows_NT"
+	;if $OS$ = "Windows_NT"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -552,7 +552,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			logError "Fatal: could not delete all files"
 			isFatalError
 		endif
-	endif ; windows
+	;endif ; windows
 	
 	comment ""
 	comment "-------------------------------------"
