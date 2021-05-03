@@ -6649,7 +6649,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	
 	Files_empty_folder
 	
-	if not($OS$ = 'macos')
+	;if not($OS$ = 'macos')
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.4") >= "0"
 			
 			Files_profile_copy /AllNTUserProfiles
@@ -6786,7 +6786,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			Files_profile_del /AllNTUserProfiles
 			
 		endif ; 4.11.3.4
-	endif ; not macos
+	;endif ; not macos
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.6") >= "0"
 		;Files_copy_patchtextfile_system /sysnative
