@@ -528,6 +528,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	;if $OS$ = "Windows_NT"
+	if ($OS$ = "Windows_NT") or (not($OS$ = "Windows_NT") and (CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.18")))
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -552,6 +553,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			logError "Fatal: could not delete all files"
 			isFatalError
 		endif
+    endif
 	;endif ; windows
 	
 	comment ""
