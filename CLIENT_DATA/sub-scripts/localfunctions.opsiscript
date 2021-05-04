@@ -631,6 +631,23 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		emptyloop()
 		
 	endif ; 4.12.1.5
+	
+	DefFunc findsubsection() : string
+	
+		sub_find_section_test
+	
+		[sub_find_section_test]
+		set $result$ = "localfunctions_func_findsubsection"
+	endfunc
+	
+	set $CompValue$ = "localfunctions_func_findsubsection"
+	set $ConstTest$ = findsubsection()
+	if ($ConstTest$ = $CompValue$)
+		comment "passed: find_section_test
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed: find_section_test"
+	endif
 
 	sub_compareResult
 	set $winst_local_functions$ = $SubResult$

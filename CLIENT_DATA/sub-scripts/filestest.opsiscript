@@ -527,7 +527,8 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		isFatalError
 	endif
 	
-	if $OS$ = "Windows_NT"
+	;if $OS$ = "Windows_NT"
+	if ($OS$ = "Windows_NT") or (not($OS$ = "Windows_NT") and (CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.18")))
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -552,7 +553,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			logError "Fatal: could not delete all files"
 			isFatalError
 		endif
-	endif ; windows
+	endif ; windows / 4.12.4.18
 	
 	comment ""
 	comment "-------------------------------------"
@@ -715,7 +716,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		Files_work_on_profiles_del_currp /AllNTUserProfiles
 		for %prof% in $list$ do sub_check_dir_not_exist_inprof
 		
-	endif ; windowsmarkErrorNumber
+	endif ; windows
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.1")
 		comment ""

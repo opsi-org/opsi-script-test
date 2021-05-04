@@ -1,4 +1,11 @@
 [Changelog]
+opsi-script-test (4.12.4.18-1) stable; urgency=low
+
+  * find sub section test
+  * /AllNTUserProfiles also for macos
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  14 Apr 2021 15:00:00 +0200
+
 opsi-script-test (4.12.4.17-1) stable; urgency=low
 
   * encoding tests filehasbom

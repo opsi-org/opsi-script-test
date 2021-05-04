@@ -196,7 +196,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	
 	Files_remove_folder
 	
-	if not($OS$ = "macos")
+	;if not($OS$ = "macos")
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
 			comment ""
 			comment "-------------------------------------"
@@ -207,7 +207,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 			for %s% in $list1$ do sub_check_profile_ini
 			Files_remove_profile_ini /AllNTUserProfiles
 		endif ; 4.11.3.2
-	endif
+	;endif
 	
 	switch $OS$
 		case "Windows_nt"

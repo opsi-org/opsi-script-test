@@ -205,6 +205,7 @@ DefVar $pingcommand$
 DefVar $ping5command$
 DefVar $pingregex$
 DefVar $difftime$
+DefVar $foundsubsection$
 
 DefVar $regWriteValue$
 
@@ -363,7 +364,7 @@ set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "of
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
 set $Flag_encoding$                = GetProductProperty ("encoding", "off")
 set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "off")
-set $Flag_winst_file$              = GetProductProperty ("files", "off")
+set $Flag_winst_file$              = GetProductProperty ("files", "on")
 set $Flag_infostest$               = GetProductProperty ("infoFunctions", "off")
 set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
 set $Flag_winst_ldap_search$       = GetProductProperty ("LdapSearch", "off")
@@ -373,7 +374,7 @@ set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "off"
 set $Flag_winst_macos$             = GetProductProperty ("macOS", "off")
 set $Flag_winst_opsiServiceCall$   = GetProductProperty ("opsiServiceCall", "off")
 set $Flag_winst_parametrizing$     = GetProductProperty ("parametrizing", "off")
-set $Flag_winst_patches$           = GetProductProperty ("Patches", "on")
+set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
 set $Flag_powershell$              = GetProductProperty ("powershell", "off")
@@ -384,7 +385,7 @@ set $Flag_suburlparser$            = GetProductProperty ("Urlparser", "off")
 set $Flag_subregistry$             = GetProductProperty ("Registry", "off")
 set $Flag_winst_dos$               = GetProductProperty ("ShellBatch", "off")
 set $Flag_winst_string$            = GetProductProperty ("stringFunctions", "off")
-set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "on")
+set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "off")
 set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
@@ -4980,6 +4981,33 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif ; windows
 	endif ;4.12.3
 	
+	
+	if $OS$ = "Windows_NT"
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.17")
+	
+        comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DosInAnIcon with WINST /encoding parameter"
+		comment ""	
+            
+            ;Files_copy_for_filelist
+            
+            set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 WINST /64bit /encoding utf8')
+            ; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+            set $list3$ = listFiles("%System%","*.*","False","64bit")
+            set $ConstTest$ = count($list3$)
+            set $CompValue$ = count($list2$)
+            if $ConstTest$ = $CompValue$
+                comment "passed"
+            else
+                set $TestResult$ = "not o.k."
+                LogWarning "failed"
+            endif
+        
+    	endif ;4.12.4.7
+	endif ; windows		
+	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
 		
 		comment ""
@@ -6621,7 +6649,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	
 	Files_empty_folder
 	
-	if not($OS$ = 'macos')
+	;if not($OS$ = 'macos')
 		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.4") >= "0"
 			
 			Files_profile_copy /AllNTUserProfiles
@@ -6758,7 +6786,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 			Files_profile_del /AllNTUserProfiles
 			
 		endif ; 4.11.3.4
-	endif ; not macos
+	;endif ; not macos
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.6") >= "0"
 		;Files_copy_patchtextfile_system /sysnative
@@ -7458,6 +7486,20 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; 4.11.5
 		
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.12.4.17") >= "0"
+			comment "Testing /encoding parameter for ExecWith"
+			set $tmp$ = "p5"
+			set $list1$ = getOutStreamFromSection ('ExecWith_parameters cmd.exe /c pass p1 p2 p3 p4 $tmp$ WINST /encoding utf8')
+			set $CompValue$ = takeFirstStringContaining($list1$,"p5")
+			set $ConstTest$ = "param5= p5"
+			if ($ConstTest$ = $CompValue$)
+				comment "Execwith with /encoding assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "Execwith with /encoding assumed failed"
+			endif
+		endif ; 4.11.5
+		
 	endif ; windows
 	
 	if $OS$ = "Linux"
@@ -7470,6 +7512,18 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "Execwith assumed failed"
 		endif
+		
+		comment "Testing /encoding parameter for ExecWith"
+		set $list1$ = getOutStreamFromSection ('ExecWith_parameters_bash /bin/bash pass p1 p2 p3 p4 p5 WINST /encoding utf8')
+		set $CompValue$ = takeFirstStringContaining($list1$,"p5")
+		set $ConstTest$ = "param5= p5"
+		if ($ConstTest$ = $CompValue$)
+			comment "Execwith with /encoding assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Execwith with /encoding assumed failed"
+		endif
+
 	endif ; Linux
 	
 	sub_compareResult
@@ -8340,6 +8394,9 @@ else
 endif
 comment ""
 comment ""
+
+[sub_find_section_test]
+set $foundsubsection$ = "mainfile_sections_top"
 
 
 ; getOutStreamFromSection aufrufe
@@ -9980,3 +10037,6 @@ copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%System%"
 				}
 			}
 		}
+
+[sub_find_section_test]
+set $foundsubsection$ = "mainfile_sections_bottom"
