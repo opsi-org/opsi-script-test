@@ -1,4 +1,12 @@
 [Changelog]
+opsi-script-test (4.12.4.19-1) stable; urgency=low
+
+  * Testing FileOrFolderExists with quoted filenames
+  * Testing FileExists with quoted filenames
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  5 Mai 2021 15:00:00 +0200
+
+
 opsi-script-test (4.12.4.18-1) stable; urgency=low
 
   * find sub section test
