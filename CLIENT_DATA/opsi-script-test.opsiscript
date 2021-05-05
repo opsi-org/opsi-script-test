@@ -1209,7 +1209,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-
+			
 			set $list$ = asConfidential(addtolist($list$,"confidential-ee"))
 			comment "confidential-ee"
 			comment "should be in the log file:  ***(confidential)***"
@@ -1218,7 +1218,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
-			endif		
+			endif
 		endif ; 4.12.4.15 (asCofindential - StringList)
 		
 	endif ; 4.12.0.16
@@ -1508,7 +1508,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 				set $CompValue$ = "arm_64"
 			else
 				set $CompValue$ = "x86_64"
-				if $tmp$ = "x86_64" 
+				if $tmp$ = "x86_64"
 					set $list$ = shellCall('sysctl -in sysctl.proc_translated')
 					if "1" = takestring(0, $list$)
 						set $CompValue$ = "arm_64"
@@ -3653,14 +3653,14 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		;if not($OS$ = 'macos')
-			set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
-			Set $CompValue$ = takeString(2, $list1$)
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
+		Set $CompValue$ = takeString(2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 		;else
 		;	logerror "macos todo"
 		;endif
@@ -4584,38 +4584,38 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		message "getProcessList"
 		switch $OS$
 			case "Windows_nt"
-			set $ConstTest$ = "helperchild.exe"
-			killtask $ConstTest$
-			Winbatch_startprocess_with_child_nowait
-			set $list1$ = getProcessList
-			set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
-			set $CompValue$ = takeString(0,splitString($CompValue$,";"))
-			killtask $ConstTest$
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
+				set $ConstTest$ = "helperchild.exe"
+				killtask $ConstTest$
+				Winbatch_startprocess_with_child_nowait
+				set $list1$ = getProcessList
+				set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				set $CompValue$ = takeString(0,splitString($CompValue$,";"))
+				killtask $ConstTest$
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
 			endcase
 			case "Linux"
-			set $CompValue$ = ""
-			set $list1$ = getProcessList
+				set $CompValue$ = ""
+				set $list1$ = getProcessList
 				set $ConstTest$ = "opsi-script-gui"
-			comment " shortcommand gives only the first 15 chars)"
-			set $ConstTest$ = strPart($ConstTest$,"1","15")
-			set $list2$ = getListContaining($list1$,$ConstTest$)
-			if count($list2$) = "0"
-				set $ConstTest$ = "opsi-script"
+				comment " shortcommand gives only the first 15 chars)"
+				set $ConstTest$ = strPart($ConstTest$,"1","15")
 				set $list2$ = getListContaining($list1$,$ConstTest$)
-			endif
-			for %aktprocess% in $list2$ do sub_getprocess_by_shortcommand
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
+				if count($list2$) = "0"
+					set $ConstTest$ = "opsi-script"
+					set $list2$ = getListContaining($list1$,$ConstTest$)
+				endif
+				for %aktprocess% in $list2$ do sub_getprocess_by_shortcommand
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
 			endcase
 			case "macos"
 				set $CompValue$ = ""
@@ -4629,7 +4629,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 				for %aktprocess% in $list2$ do sub_getprocess_by_command
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
-	else
+				else
 					set $TestResult$ = "not o.k."
 					LogWarning "failed"
 				endif
@@ -4983,30 +4983,30 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	
 	
 	if $OS$ = "Windows_NT"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.17")
-	
-        comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "DosInAnIcon with WINST /encoding parameter"
-		comment ""	
-            
-            ;Files_copy_for_filelist
-            
-            set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 WINST /64bit /encoding utf8')
-            ; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
-            set $list3$ = listFiles("%System%","*.*","False","64bit")
-            set $ConstTest$ = count($list3$)
-            set $CompValue$ = count($list2$)
-            if $ConstTest$ = $CompValue$
-                comment "passed"
-            else
-                set $TestResult$ = "not o.k."
-                LogWarning "failed"
-            endif
-        
-    	endif ;4.12.4.7
-	endif ; windows		
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.17")
+			
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "DosInAnIcon with WINST /encoding parameter"
+			comment ""
+			
+			;Files_copy_for_filelist
+			
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 WINST /64bit /encoding utf8')
+			; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+			set $list3$ = listFiles("%System%","*.*","False","64bit")
+			set $ConstTest$ = count($list3$)
+			set $CompValue$ = count($list2$)
+			if $ConstTest$ = $CompValue$
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+		endif ;4.12.4.7
+	endif ; windows
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
 		
@@ -5415,6 +5415,38 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	
+	comment "Testing fileexist with quoted filenames "
+	set $tmp1$ = '"'+$HomeTestFiles$+'\dummy.txt"'
+	set $tmp2$ = '"'+$HomeTestFiles$+'\dummy2.txt"'
+	
+	if FileExists($tmp1$)
+		if not(FileExists ($tmp2$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment "Testing fileexist with quoted filenames "
+	set $tmp1$ = "'"+$HomeTestFiles$+"\dummy.txt'"
+	set $tmp2$ = "'"+$HomeTestFiles$+"\dummy2.txt'"
+	
+	if FileExists($tmp1$)
+		if not(FileExists ($tmp2$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
 	if $OS$ = "Windows_NT"
 		Set $list$ = getOutStreamFromSection ('dosbatch_profiledir')
 		comment "loop over the result"
@@ -5426,34 +5458,46 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	comment "Testing: "
 	message "FileExists"
 	
-            DefFunc myFileExistsTester($fileName$ : string, $expected$ : string) : void
-                DefVar $CompValue$
-                set $CompValue$ = booltostring(FileExists($fileName$))
-                if $CompValue$ = $expected$
-                        comment "Testing FileExists succeeded"
-                else
-                        set $TestResult$ = "not o.k."
-                        LogWarning "Testing FileExists failed"
-                endif
-            endfunc
-
-            switch $OS$
-                    case "Windows_nt"
-                            comment "We are running on Windows"
-                            myFileExistsTester("C:\Users\","true")
-                            myFileExistsTester("C:\Users\uib.txt","false")
-                    endcase
-                    case "Linux"
-                            comment "We are running on Linux"
-                            myFileExistsTester("/home/user/","true")
-                            myFileExistsTester("/home/user/uib.txt","false")
-                    endcase
-                    case "macos"
-                            comment "We are running on macOS"
-                            myFileExistsTester("/Users/","true")
-                            myFileExistsTester("/Users/uib.txt","false")
-                    endcase
-            endswitch
+	DefFunc myFileExistsTester($fileName$ : string, $expected$ : string) : void
+		DefVar $CompValue$
+		set $CompValue$ = booltostring(FileExists($fileName$))
+		if $CompValue$ = $expected$
+			comment "Testing FileExists succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing FileExists failed"
+		endif
+	endfunc
+	
+	switch $OS$
+		case "Windows_nt"
+			comment "We are running on Windows"
+			myFileExistsTester("C:\Users\","true")
+			myFileExistsTester("C:\Users\uib.txt","false")
+		endcase
+		case "Linux"
+			comment "We are running on Linux"
+			myFileExistsTester("/home/user/","true")
+			myFileExistsTester("/home/user/uib.txt","false")
+		endcase
+		case "macos"
+			comment "We are running on macOS"
+			myFileExistsTester("/Users/","true")
+			myFileExistsTester("/Users/uib.txt","false")
+		endcase
+	endswitch
+	
+	comment "Testing fileexist with quoted filenames "
+	set $tmp1$ = "'"+$HomeTestFiles$+"\dummy.txt'"
+	set $tmp2$ = "'"+$HomeTestFiles$+"\dummy2.txt'"
+	myFileExistsTester($tmp1$,"true")
+	myFileExistsTester($tmp2$,"false")
+	
+	comment "Testing fileexist with quoted filenames "
+	set $tmp1$ = '"'+$HomeTestFiles$+'\dummy.txt"'
+	set $tmp2$ = '"'+$HomeTestFiles$+'\dummy2.txt"'
+	myFileExistsTester($tmp1$,"true")
+	myFileExistsTester($tmp2$,"false")
 	
 	
 	comment ""
@@ -5461,56 +5505,68 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	comment "Testing: "
 	message "FileOrFolderExists"
 	
-            
-            DefFunc myFileOrFolderExistsWithOneParam($filePath$ : string, $expected$ : string) : void
-                DefVar $CompValue$
-                set $CompValue$ = booltostring(FileOrFolderExists($filePath$))
-                if $CompValue$ = $expected$
-                        comment "Testing FileOrFolderExists succeeded"
-                else
-                        set $TestResult$ = "not o.k."
-                        LogWarning "Testing FileOrFolderExists failed"
-                endif
-            endfunc
-
-            DefFunc myFileOrFolderExistsWithTwoParams($filePath$ : string, $accessStr$ : string, $expected$ : string) : void
-                DefVar $CompValue$
-                set $CompValue$ = booltostring(FileOrFolderExists($filePath$, $accessStr$))
-                if $CompValue$ = $expected$
-                        comment "Testing FileOrFolderExists succeeded"
-                else
-                        set $TestResult$ = "not o.k."
-                        LogWarning "Testing FileOrFolderExists failed"
-                endif
-            endfunc
-
-            
-            switch $OS$
-                case "Windows_nt"
-                    comment "We are running on Windows"
-                    myFileOrFolderExistsWithOneParam("","false")
-                    myFileOrFolderExistsWithOneParam("C:\Windows\","true")
-                    myFileOrFolderExistsWithOneParam("C:\Windows\uib.txt","false")
-
-                    myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","32bit","true")
-                    myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","64bit","true")
-                    myFileOrFolderExistsWithTwoParams("C:\Windows\","accessStr","false")
-                    myFileOrFolderExistsWithTwoParams("C:\Windows\uib.txt","64bit","false")
-                endcase
-                case "Linux"
-                    comment "We are running on Linux"
-                    myFileOrFolderExistsWithOneParam("","false")
-                    myFileOrFolderExistsWithOneParam("/home/user/","true")
-                    myFileOrFolderExistsWithOneParam("/home/user/uib.txt","false")
-                endcase
-                case "macos"
-                    comment "We are running on macOS"
-                    myFileOrFolderExistsWithOneParam("","false")
-                    myFileOrFolderExistsWithOneParam("/Users/","true")
-                    myFileOrFolderExistsWithOneParam("/Users/uib.txt","false")
-                endcase
-            endswitch
-
+	
+	DefFunc myFileOrFolderExistsWithOneParam($filePath$ : string, $expected$ : string) : void
+		DefVar $CompValue$
+		set $CompValue$ = booltostring(FileOrFolderExists($filePath$))
+		if $CompValue$ = $expected$
+			comment "Testing FileOrFolderExists succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing FileOrFolderExists failed"
+		endif
+	endfunc
+	
+	DefFunc myFileOrFolderExistsWithTwoParams($filePath$ : string, $accessStr$ : string, $expected$ : string) : void
+		DefVar $CompValue$
+		set $CompValue$ = booltostring(FileOrFolderExists($filePath$, $accessStr$))
+		if $CompValue$ = $expected$
+			comment "Testing FileOrFolderExists succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing FileOrFolderExists failed"
+		endif
+	endfunc
+	
+	
+	switch $OS$
+		case "Windows_nt"
+			comment "We are running on Windows"
+			myFileOrFolderExistsWithOneParam("","false")
+			myFileOrFolderExistsWithOneParam("C:\Windows\","true")
+			myFileOrFolderExistsWithOneParam("C:\Windows\uib.txt","false")
+			
+			myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","32bit","true")
+			myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","64bit","true")
+			myFileOrFolderExistsWithTwoParams("C:\Windows\","accessStr","false")
+			myFileOrFolderExistsWithTwoParams("C:\Windows\uib.txt","64bit","false")
+		endcase
+		case "Linux"
+			comment "We are running on Linux"
+			myFileOrFolderExistsWithOneParam("","false")
+			myFileOrFolderExistsWithOneParam("/home/user/","true")
+			myFileOrFolderExistsWithOneParam("/home/user/uib.txt","false")
+		endcase
+		case "macos"
+			comment "We are running on macOS"
+			myFileOrFolderExistsWithOneParam("","false")
+			myFileOrFolderExistsWithOneParam("/Users/","true")
+			myFileOrFolderExistsWithOneParam("/Users/uib.txt","false")
+		endcase
+	endswitch
+	
+	comment "Testing FileOrFolderExists with quoted filenames "
+	set $tmp1$ = "'"+$HomeTestFiles$+"\dummy.txt'"
+	set $tmp2$ = "'"+$HomeTestFiles$+"\dummy2.txt'"
+	myFileOrFolderExistsWithOneParam($tmp1$,"true")
+	myFileOrFolderExistsWithOneParam($tmp2$,"false")
+	
+	comment "Testing FileOrFolderExists with quoted filenames "
+	set $tmp1$ = '"'+$HomeTestFiles$+'\dummy.txt"'
+	set $tmp2$ = '"'+$HomeTestFiles$+'\dummy2.txt"'
+	myFileOrFolderExistsWithOneParam($tmp1$,"true")
+	myFileOrFolderExistsWithOneParam($tmp2$,"false")
+	
 	
 	
 	comment ""
@@ -5638,37 +5694,37 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "includelog"
 		;if not($OS$ = 'macos')
-			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
-			set $string2$ = "5"
-			;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
+		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
+		set $string2$ = "5"
+		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
+		includelog $string1$ $string2$
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+			set $string2$ = "-5"
 			includelog $string1$ $string2$
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
-				set $string2$ = "-5"
-				includelog $string1$ $string2$
-				includelog $string1$ $string2$ "auto"
-			endif
-			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
-			set $string2$ = "5"
-			;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
+			includelog $string1$ $string2$ "auto"
+		endif
+		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
+		set $string2$ = "5"
+		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
+		includelog $string1$ $string2$
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+			set $string2$ = "-5"
 			includelog $string1$ $string2$
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
-				set $string2$ = "-5"
-				includelog $string1$ $string2$
-				includelog $string1$ $string2$ "auto"
-			endif
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.1") >= "0"
-				set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf16.txt"
-				set $string2$ = "5"
-				includelog $string1$ $string2$
-				includelog $string1$ $string2$ "auto"
-				includelog $string1$ $string2$ "UCS-2BE"
-				set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf32.txt"
-				set $string2$ = "5"
-				includelog $string1$ $string2$
-				includelog $string1$ $string2$ "auto"
-				includelog $string1$ $string2$ "ucs2be"
-				includelog $string1$ $string2$ "utf32"
-			endif
+			includelog $string1$ $string2$ "auto"
+		endif
+		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.1") >= "0"
+			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf16.txt"
+			set $string2$ = "5"
+			includelog $string1$ $string2$
+			includelog $string1$ $string2$ "auto"
+			includelog $string1$ $string2$ "UCS-2BE"
+			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf32.txt"
+			set $string2$ = "5"
+			includelog $string1$ $string2$
+			includelog $string1$ $string2$ "auto"
+			includelog $string1$ $string2$ "ucs2be"
+			includelog $string1$ $string2$ "utf32"
+		endif
 		;else
 		;	logerror "macos todo"
 		;endif
@@ -6650,142 +6706,142 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	Files_empty_folder
 	
 	;if not($OS$ = 'macos')
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.4") >= "0"
-			
-			Files_profile_copy /AllNTUserProfiles
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "DeleteTheLine / AdvanceLine"
-			PatchTextFile_AdvanceLine_DeleteTheLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $tmp$ = "0"
-			set $ConstTest$ = "Line containing dummy1."
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "FindLine"
-			PatchTextFile_findLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line1 with no sense"
-			set $tmp$ = "0"
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "FindLine_StartingWith"
-			PatchTextFile_FindLine_StartingWith "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line3 with no sense"
-			set $tmp$ = "3"
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "FindLine_Containing"
-			PatchTextFile_FindLine_Containing "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line2 with no sense"
-			set $tmp$ = "1"
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GoToTop"
-			PatchTextFile_GoToTop "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line2 with no sense"
-			set $tmp$ = "0"
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "GoToBottom"
-			PatchTextFile_GoToBottom "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line2 with no sense"
-			set $tmp$ = "0"
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "AddLine"
-			PatchTextFile_AddLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line added by winst"
-			set $tmp$ = "1"
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "InsertLine"
-			PatchTextFile_InsertLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line inserted by winst"
-			set $tmp$ = "1"
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "AppendLine"
-			PatchTextFile_AppendLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line appended by winst"
-			set $tmp$ = "3"
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "Append_File"
-			PatchTextFile_Append_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line3appendbyFile"
-			set $tmp$ = "6"
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "Subtract_File"
-			PatchTextFile_Subtract_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			set $ConstTest$ = "Line1appendbyFile"
-			set $list1$ = getProfilesDirList
-			set $tmp$ = "0"
-			for %s% in $list1$ do sub_check_profile_txt
-			
-			;comment ""
-			;comment "-------------------------------------"
-			;comment "Testing: "
-			;message "SaveToFile"
-			;PatchTextFile_SaveToFile "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
-			;set $ConstTest$ = "Line1appendbyFile"
-			;if (fileExists("%CurrentProfileDir%\opsi-winst-test\savetofile.txt"))
-			;	set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\savetofile.txt")
-			;	Set $CompValue$ = takeString(0, $list1$)
-			;	if ($ConstTest$ = $CompValue$)
-			;		comment "passed"
-			;	else
-			;		set $TestResult$ = "not o.k."
-			;		LogWarning "failed"
-			;	endif
-			;else
-			;	set $TestResult$ = "not o.k."
-			;	LogWarning "failed"
-			;endif
-			
-			Files_profile_del /AllNTUserProfiles
-			
-		endif ; 4.11.3.4
+	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.4") >= "0"
+		
+		Files_profile_copy /AllNTUserProfiles
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DeleteTheLine / AdvanceLine"
+		PatchTextFile_AdvanceLine_DeleteTheLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $tmp$ = "0"
+		set $ConstTest$ = "Line containing dummy1."
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "FindLine"
+		PatchTextFile_findLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line1 with no sense"
+		set $tmp$ = "0"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "FindLine_StartingWith"
+		PatchTextFile_FindLine_StartingWith "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line3 with no sense"
+		set $tmp$ = "3"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "FindLine_Containing"
+		PatchTextFile_FindLine_Containing "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line2 with no sense"
+		set $tmp$ = "1"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GoToTop"
+		PatchTextFile_GoToTop "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line2 with no sense"
+		set $tmp$ = "0"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GoToBottom"
+		PatchTextFile_GoToBottom "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line2 with no sense"
+		set $tmp$ = "0"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "AddLine"
+		PatchTextFile_AddLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line added by winst"
+		set $tmp$ = "1"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "InsertLine"
+		PatchTextFile_InsertLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line inserted by winst"
+		set $tmp$ = "1"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "AppendLine"
+		PatchTextFile_AppendLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line appended by winst"
+		set $tmp$ = "3"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Append_File"
+		PatchTextFile_Append_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line3appendbyFile"
+		set $tmp$ = "6"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Subtract_File"
+		PatchTextFile_Subtract_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line1appendbyFile"
+		set $list1$ = getProfilesDirList
+		set $tmp$ = "0"
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "SaveToFile"
+		;PatchTextFile_SaveToFile "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		;set $ConstTest$ = "Line1appendbyFile"
+		;if (fileExists("%CurrentProfileDir%\opsi-winst-test\savetofile.txt"))
+		;	set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\savetofile.txt")
+		;	Set $CompValue$ = takeString(0, $list1$)
+		;	if ($ConstTest$ = $CompValue$)
+		;		comment "passed"
+		;	else
+		;		set $TestResult$ = "not o.k."
+		;		LogWarning "failed"
+		;	endif
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
+		Files_profile_del /AllNTUserProfiles
+		
+	endif ; 4.11.3.4
 	;endif ; not macos
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.6") >= "0"
@@ -7523,7 +7579,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "Execwith with /encoding assumed failed"
 		endif
-
+		
 	endif ; Linux
 	
 	sub_compareResult
