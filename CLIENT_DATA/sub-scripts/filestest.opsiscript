@@ -774,7 +774,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 					LogWarning "failed"
 				endif
 				if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.21")
-					set $ConstTest$ = $HomeTestFiles$+"\files\dummy.txt"
+					set $ConstTest$ = forcePathDelims($HomeTestFiles$+"\files/dummy.txt")
 					set $CompValue$ = resolveSymlink($HomeTestFiles$+"\files\symlink.txt")
 					if ($ConstTest$ = $CompValue$)
 						comment "passed"
