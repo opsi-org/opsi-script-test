@@ -767,6 +767,52 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 					set $TestResult$ = "not o.k."
 					LogWarning "failed"
 				endif
+				if FileExists($HomeTestFiles$+"\files\symlink2.txt")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.21")
+					set $ConstTest$ = $HomeTestFiles$+"\files\dummy.txt"
+					set $CompValue$ = resolveSymlink($HomeTestFiles$+"\files\symlink.txt")
+					if ($ConstTest$ = $CompValue$)
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					set $CompValue$ = resolveSymlink($HomeTestFiles$+"\files\symlink2.txt")
+					if ($ConstTest$ = $CompValue$)
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					set $CompValue$ = resolveSymlink($ConstTest$)
+					if ($ConstTest$ = $CompValue$)
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					set $ConstTest$ = "nonsense"
+					set $CompValue$ = resolveSymlink("nonsense")
+					if ($ConstTest$ = $CompValue$)
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					set $ConstTest$ = ""
+					set $CompValue$ = resolveSymlink("")
+					if ($ConstTest$ = $CompValue$)
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+				endif ; OpsiscriptVersion 4.12.4.21
 				Files_empty_folder2
 				Files_symlinklink
 			else
@@ -1447,6 +1493,7 @@ hardlink "$HomeTestFiles$\files\dummy2.txt" "$HomeTestFiles$\files\hardlink.txt"
 [Files_symlinklink]
 ;del "$HomeTestFiles$\files\symlink.txt"
 symlink "$HomeTestFiles$\files\dummy.txt" "$HomeTestFiles$\files\symlink.txt"
+symlink "$HomeTestFiles$\files\symlink.txt" "$HomeTestFiles$\files\symlink2.txt"
 
 
 [Files_move]
