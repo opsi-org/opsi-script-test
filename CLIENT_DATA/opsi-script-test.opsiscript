@@ -364,7 +364,7 @@ set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "of
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
 set $Flag_encoding$                = GetProductProperty ("encoding", "off")
 set $Flag_execwith_test$           = GetProductProperty ("ExecWith", "off")
-set $Flag_winst_file$              = GetProductProperty ("files", "on")
+set $Flag_winst_file$              = GetProductProperty ("files", "off")
 set $Flag_infostest$               = GetProductProperty ("infoFunctions", "off")
 set $Flag_jsonfunctions$           = GetProductProperty ("jsonfunctions", "off")
 set $Flag_winst_ldap_search$       = GetProductProperty ("LdapSearch", "off")
@@ -391,7 +391,7 @@ set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
-set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
+set $Flag_winst_xml2$              = GetProductProperty ("XML2", "on")
 
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")

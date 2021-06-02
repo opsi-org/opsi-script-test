@@ -107,7 +107,13 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-
+		
+				
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "XML2 Sections with /encoding parameter"
+        XML2_dummy_xml $HomeTestFiles$+"\dummy.xml" /encoding "utf8"
 
 		comment ""
 		comment "-------------------------------------"
