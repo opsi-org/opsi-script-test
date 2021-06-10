@@ -113,7 +113,15 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "XML2 Sections with /encoding parameter"
+		
+		markErrorNumber
         XML2_dummy_xml $HomeTestFiles$+"\dummy.xml" /encoding "utf8"
+        if errorsOccuredSinceMark = 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+        endif
 
 		comment ""
 		comment "-------------------------------------"
