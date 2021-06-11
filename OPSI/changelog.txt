@@ -3,6 +3,7 @@ opsi-script-test (4.12.4.21-1) stable; urgency=low
 
   * Testing resolveSymlink
   * Testing forcePathDelims(<path string>) 
+  * fix test FileOrFolderExists and FileExists tests for linux
   
 -- detlef oertel <d.oertel@uib.de>  Wed,  19 Mai 2021 15:00:00 +0200
 

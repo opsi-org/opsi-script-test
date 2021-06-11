@@ -5477,8 +5477,8 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endcase
 		case "Linux"
 			comment "We are running on Linux"
-			myFileExistsTester("/home/user/","true")
-			myFileExistsTester("/home/user/uib.txt","false")
+			myFileExistsTester("/home/","true")
+			myFileExistsTester("/home/uib.txt","false")
 		endcase
 		case "macos"
 			comment "We are running on macOS"
@@ -5544,8 +5544,8 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		case "Linux"
 			comment "We are running on Linux"
 			myFileOrFolderExistsWithOneParam("","false")
-			myFileOrFolderExistsWithOneParam("/home/user/","true")
-			myFileOrFolderExistsWithOneParam("/home/user/uib.txt","false")
+			myFileOrFolderExistsWithOneParam("/home/","true")
+			myFileOrFolderExistsWithOneParam("/home/uib.txt","false")
 		endcase
 		case "macos"
 			comment "We are running on macOS"
