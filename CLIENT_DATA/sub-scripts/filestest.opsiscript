@@ -773,7 +773,11 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 					set $TestResult$ = "not o.k."
 					LogWarning "failed"
 				endif
-				if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.21")
+				if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.23")
+					comment ""
+					comment "-------------------------------------"
+					comment "Testing: "
+					message "forcePathDelims, resolveSymlink, fileIsSymlink"
 					set $ConstTest$ = forcePathDelims($HomeTestFiles$+"\files/dummy.txt")
 					set $CompValue$ = resolveSymlink($HomeTestFiles$+"\files\symlink.txt")
 					if ($ConstTest$ = $CompValue$)
@@ -812,7 +816,43 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 						set $TestResult$ = "not o.k."
 						LogWarning "failed"
 					endif
-				endif ; OpsiscriptVersion 4.12.4.21
+					
+					; Testing isSymLink(const filepath : string) : boolean
+					if fileIsSymlink($HomeTestFiles$+"\files\symlink.txt")
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					
+					if fileIsSymlink($HomeTestFiles$+"\files\symlink2.txt")
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					
+					if not (fileIsSymlink(forcePathDelims($HomeTestFiles$+"\files/dummy.txt")))
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					
+					if not (fileIsSymlink(""))
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					
+					if not (fileIsSymlink("nonsense"))
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+				endif ; OpsiscriptVersion 4.12.4.23
 				Files_empty_folder2
 				Files_symlinklink
 			else
@@ -1415,23 +1455,23 @@ cd $HomeTestFiles$
 find . -maxdepth 1 -perm 444 -ls
 
 [Files_zipfile]
-zipfile "$HomeTestFiles$\" "%opsiTmpDir%\testdir.zip" 
-zipfile "$HomeTestFiles$\dummy.msi" "%opsiTmpDir%\testfile.zip" 
+zipfile "$HomeTestFiles$\" "%opsiTmpDir%\testdir.zip"
+zipfile "$HomeTestFiles$\dummy.msi" "%opsiTmpDir%\testfile.zip"
 
 [Files_unzipfile_dir]
 checktargetpath = "$HomeTestFiles$\"
-unzipfile "%opsiTmpDir%\testdir.zip" "$HomeTestFiles$\" 
+unzipfile "%opsiTmpDir%\testdir.zip" "$HomeTestFiles$\"
 
 [Files_unzipfile_file]
 checktargetpath = "$HomeTestFiles$\"
-unzipfile "%opsiTmpDir%\testfile.zip" "$HomeTestFiles$\" 
+unzipfile "%opsiTmpDir%\testfile.zip" "$HomeTestFiles$\"
 
 [Files_zipfile_bigfolder]
-zipfile "%ScriptPath%\" "%opsiTmpDir%\testbigdir.zip" 
+zipfile "%ScriptPath%\" "%opsiTmpDir%\testbigdir.zip"
 
 [Files_unzipfile_bigfolder]
 checktargetpath = "$HomeTestFiles$\"
-unzipfile "%opsiTmpDir%\testbigdir.zip" "$HomeTestFiles$\" 
+unzipfile "%opsiTmpDir%\testbigdir.zip" "$HomeTestFiles$\"
 
 [Files_zip]
 zip "$HomeTestFiles$\files\zip" "$HomeTestFiles$\files\*.*"
