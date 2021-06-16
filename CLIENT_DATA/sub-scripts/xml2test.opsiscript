@@ -115,13 +115,42 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		message "XML2 Sections with /encoding parameter"
 		
 		markErrorNumber
-        XML2_dummy_xml $HomeTestFiles$+"\dummy.xml" /encoding "utf8"
+        XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding.xml" /encoding "utf8"
         if errorsOccuredSinceMark = 0
 			comment "passed"
 		else
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
         endif
+        
+        sub_clean_xml2cmdLines
+		set $xml2nodepath$ ='node_level-1 // node_level-2_B'
+		set $xml2changeValue$ = '"encoding" "äüöß"'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
+		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding.xml" /encoding "utf8"
+		set $ConstTest$ = "äüöß"
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy-encoding.xml")
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "äüöß"		
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+        
 
 		comment ""
 		comment "-------------------------------------"
