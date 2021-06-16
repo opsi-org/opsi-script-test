@@ -131,7 +131,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
 		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding.xml" /encoding "utf8"
 		set $ConstTest$ = "äüöß"
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy-encoding.xml")
+		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding.xml", "utf8")
 		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
 		if ($ConstTest$ = $CompValue$)
