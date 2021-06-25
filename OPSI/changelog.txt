@@ -1,4 +1,10 @@
 [Changelog]
+opsi-script-test (4.12.4.21-2) stable; urgency=low
+
+  * fixes asConfidential with stringlist working since 4.12.4.16
+  
+-- detlef oertel <d.oertel@uib.de>  Fri,  25 June 2021 15:00:00 +0200
+
 opsi-script-test (4.12.4.21-1) stable; urgency=low
 
   * Testing resolveSymlink
