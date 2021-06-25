@@ -1198,7 +1198,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		; asConfidential - StringList
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.15")
+		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
 			message "asConfidential - StringList"
 			set $list$ = asConfidential(createStringList('confidential-aa','confidential-bb', 'confidential-cc', 'confidential-dd'))
 			comment "This is a hidden stringlist"
