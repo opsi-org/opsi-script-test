@@ -19,13 +19,17 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 	DefVar $xml2cmdLine7$
 	DefVar $xml2cmdLine8$
 	DefVar $xml2cmdLine9$
+	DefVar $xml2strictMode$
 	
 	Set $ExpectedResult$ = "o.k."
 	
 	; start testing
 	set $TestResult$ = "o.k."
+	
+	; change back the following lines for not only encoding tests
+	; if stringToBool("false")
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
-		DefVar $xml2strictMode$
+		
 		set $xml2strictMode$ = 'false'
 		Files_copy_xml2
 		
@@ -101,182 +105,6 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $list2$ = xml2GetFirstChildNodeByName($list1$,"InstallTo")
 		set $list2$ = xml2GetFirstChildNodeByName($list2$,"DiskID")
 		set $CompValue$ = getXml2Text($list2$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "XML2 Sections with /encoding parameter"
-		
-		markErrorNumber
-		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf8.xml" /encoding "utf8"
-		if errorsOccuredSinceMark = 0
-			comment "passed"
-		else
-			LogWarning "failed"
-			set $TestResult$ = "not o.k."
-		endif
-	
-		message "Testing XML2 sections with /encoding utf8"
-		
-		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf8.xml" /encoding "utf8"
-		set $ConstTest$ = "äüöß"
-		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-utf8.xml", "utf8")
-		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = "äüöß"
-		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-utf8.xml")
-		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
-		set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		message "Testing XML2 sections with /encoding utf16le"
-				
-		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf16le.xml" /encoding "utf16le"
-		set $ConstTest$ = "äüöß"
-		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-utf16le.xml", "utf16le")
-		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = "äüöß"
-		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-utf16le.xml")
-		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
-		set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		message "Testing XML2 sections with /encoding cp1252"
-		
-		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-cp1252.xml" /encoding "cp1252"
-		set $ConstTest$ = "auoss"
-		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-cp1252.xml", "cp1252")
-		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = "auoss"
-		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-cp1252.xml")
-		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
-		set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		
-		message "Testing XML2 sections with unkown /encoding"
-		
-		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf8.xml" /encoding "xxx"
-		set $ConstTest$ = "äüöß"
-		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-utf8.xml", "utf8")
-		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = "äüöß"
-		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-utf8.xml")
-		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
-		set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		message "Testing XML2 sections with empty /encoding"
-		
-		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf8.xml" /encoding ""
-		set $ConstTest$ = "äüöß"
-		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-utf8.xml", "utf8")
-		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = "äüöß"
-		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-utf8.xml")
-		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
-		set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		comment "Testing: "
-		message "XML2 Sections with /AllNTUserProfiles parameter"
-		XML2_dummy_xml "%userprofiledir%\dummy-encoding-utf8.xml" /AllNTUserProfiles
-		set $list1$ = getProfilesDirList
-		for %s% in $list1$ do sub_check_profile_xml2
-		Files_remove_profile_xml2 /AllNTUserProfiles
-		
-		
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "opennode not existing node"
-		sub_clean_xml2cmdLines
-		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B // node_level-3_A'
-		set $xml2changeValue$ = '"color" "yellow"'
-		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
-		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
-		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
-		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = "yellow"
-		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
-		set $tmp$ = takeFirstStringContaining($list1$,"node_level-3_A")
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		set $ConstTest$ = "yellow"
-		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
-		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-3_A")
-		set $CompValue$ = getXml2AttributeValueByKey($list2$,"color")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -1125,7 +953,210 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		; gotoParentNode
 		;
 		;Files_cleanup_xml2
-	endif ; 4.11.7
+	endif ; 4.12.1.0
+	
+	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.20")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "XML2 Sections with /encoding parameter"
+		
+		Files_cleanup_xml2
+		Files_copy_xml2
+		sub_clean_xml2cmdLines
+		set $xml2strictMode$ = 'false'
+		
+		;set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green"'
+		set $xml2nodepath$ ='node_level-1 // node_level-2_A'
+		set $xml2changeValue$ = '"color" "yellow"'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
+		set $xml2cmdLine4$ = "rootnodeOnCreate = myrootnode"
+		
+		
+		markErrorNumber
+		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf8.xml" /encoding "utf8"
+		if errorsOccuredSinceMark = 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		
+		message "Testing XML2 sections with /encoding utf8"
+		
+		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf8.xml" /encoding "utf8"
+		set $ConstTest$ = "äüöß"
+		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-utf8.xml", "utf8")
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "äüöß"
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-utf8.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "Testing XML2 sections with /encoding utf16le"
+		
+		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf16le.xml" /encoding "utf16le"
+		set $ConstTest$ = "äüöß"
+		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-utf16le.xml", "utf16le")
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		;set $ConstTest$ = "äüöß"
+		;set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-utf16le.xml")
+		;set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		;set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
+		message "Testing XML2 sections with /encoding cp1252"
+		
+		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-cp1252.xml" /encoding "cp1252"
+		set $ConstTest$ = "äüöß"
+		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-cp1252.xml", "cp1252")
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		;set $ConstTest$ = "äüöß"
+		;set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-cp1252.xml")
+		;set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		;set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
+		
+		message "Testing XML2 sections with unkown /encoding"
+		
+		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf8.xml" /encoding "xxx"
+		set $ConstTest$ = "äüöß"
+		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-utf8.xml", "utf8")
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		;set $ConstTest$ = "äüöß"
+		;set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-utf8.xml")
+		;set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		;set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
+		message "Testing XML2 sections with empty /encoding"
+		
+		XML2_dummy_xml $HomeTestFiles$+"\dummy-encoding-utf8.xml" /encoding ""
+		set $ConstTest$ = "äüöß"
+		set $list1$ = loadTextFileWithEncoding($HomeTestFiles$+"\dummy-encoding-utf8.xml", "utf8")
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		;set $ConstTest$ = "äüöß"
+		;set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy-encoding-utf8.xml")
+		;set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+		;set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
+		comment "Testing: "
+		message "XML2 Sections with /AllNTUserProfiles parameter"
+		sub_clean_xml2cmdLines
+		set $xml2strictMode$ = 'false'
+		
+		;set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green"'
+		set $xml2nodepath$ ='node_level-1 // node_level-2_B'
+		set $xml2changeValue$ = '"encoding" "äüöß"'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
+		set $xml2cmdLine4$ = "rootnodeOnCreate = myrootnode"
+		XML2_dummy_xml "%userprofiledir%\dummy-encoding-utf8.xml" /AllNTUserProfiles
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_xml2
+		Files_remove_profile_xml2 /AllNTUserProfiles
+		
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "opennode not existing node"
+		sub_clean_xml2cmdLines
+		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B // node_level-3_A'
+		set $xml2changeValue$ = '"color" "yellow"'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
+		XML2_dummy_xml $HomeTestFiles$+"\dummy.xml"
+		set $ConstTest$ = "yellow"
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
+		set $tmp$ = takeFirstStringContaining($list1$,"node_level-3_A")
+		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "yellow"
+		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-3_A")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"color")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		Files_cleanup_xml2
+	endif ; 4.12.4.20
 	
 	sub_compareResult
 	
@@ -1247,24 +1278,30 @@ deleteNode 'Add OfficeClientEdition="32" Channel="SemiAnnual" SourcePath="C:\Tem
 
 [sub_check_profile_xml2]
 set $ConstTest$ = "äüöß"
-set $list1$ = loadTextFileWithEncoding("%s%\dummy-encoding-utf8.xml", "utf8")
-set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
-set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
-if ($ConstTest$ = $CompValue$)
-	comment "passed"
+if fileexists("%s%\dummy-encoding-utf8.xml")
+	set $list1$ = loadTextFileWithEncoding("%s%\dummy-encoding-utf8.xml", "utf8")
+	set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
+	set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	set $ConstTest$ = "äüöß"
+	
+	set $list1$ = getXml2DocumentFromFile("%s%\dummy-encoding-utf8.xml")
+	set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
+	set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
+	if ($ConstTest$ = $CompValue$)
+		comment "XML2 /AllNTUserProfiles passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "xml2 /AllNTUserProfiles failed"
+	endif
 else
-	set $TestResult$ = "not o.k."
-	LogWarning "failed"
-endif
-set $ConstTest$ = "äüöß"
-set $list1$ = getXml2DocumentFromFile("%s%\dummy-encoding-utf8.xml")
-set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
-set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
-if ($ConstTest$ = $CompValue$)
-	comment "XML2 /AllNTUserProfiles passed"
-else
-	set $TestResult$ = "not o.k."
-	LogWarning "xml2 /AllNTUserProfiles failed"
+	;set $TestResult$ = "not o.k."
+	LogWarning "xml2 /AllNTUserProfiles file not found: "+"%s%\dummy-encoding-utf8.xml"
 endif
 
 [Files_remove_profile_xml2]

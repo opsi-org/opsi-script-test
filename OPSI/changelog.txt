@@ -1,4 +1,10 @@
 [Changelog]
+opsi-script-test (4.12.4.24-1) stable; urgency=low
+
+  * xml2 encoding tests and /AllNTUserprofiles test
+  
+-- detlef oertel <d.oertel@uib.de>  Thu,  1 Jul 2021 15:00:00 +0200
+
 opsi-script-test (4.12.4.21-2) stable; urgency=low
 
   * fixes asConfidential with stringlist working since 4.12.4.16

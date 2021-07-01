@@ -278,10 +278,10 @@ switch $OS$
 			set $helper_child_bin_log$ =  "helperchild_nogui.log"
 			set $opsi_script_test_helper_bin_log$ = "opsiscripttesthelper_nogui.log"
 		endif
-;		set $helper_child_bin_name$ =  '%ScriptPath%/'+$opsi_script_test_helper_child_bin$
-;		set $helper_child_bin_name$ =  ExtractFileName($opsi_script_test_helper_child_bin$)
-;		set $opsi_script_test_helper_bin_name$ =  '%ScriptPath%/'+$opsi_script_test_helper_bin$
-;		set $opsi_script_test_helper_bin_name$ =  ExtractFileName($opsi_script_test_helper_bin$)
+		;		set $helper_child_bin_name$ =  '%ScriptPath%/'+$opsi_script_test_helper_child_bin$
+		;		set $helper_child_bin_name$ =  ExtractFileName($opsi_script_test_helper_child_bin$)
+		;		set $opsi_script_test_helper_bin_name$ =  '%ScriptPath%/'+$opsi_script_test_helper_bin$
+		;		set $opsi_script_test_helper_bin_name$ =  ExtractFileName($opsi_script_test_helper_bin$)
 		set $opsi_script_test_helper_path$ = "opsi-script-test-helper-lin"
 		set $pathDelim$ = "/"
 		set $pingcommand$ = "ping"
@@ -341,7 +341,7 @@ ShowBitmap "%scriptpath%\opsi.png" $ProductId$
 
 if "True" = GetProductProperty ("setfailed","False")
 	LogError "set to fatal by property"
-;isFatalError
+	;isFatalError
 endif
 
 set $test_experimental$ = GetProductProperty ("test_experimental","False")
@@ -391,7 +391,7 @@ set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
-set $Flag_winst_xml2$              = GetProductProperty ("XML2", "on")
+set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
 
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
@@ -3397,20 +3397,20 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 	;	LogWarning "failed"
 	;endif
 	
-;	set  $INST_Resultlist$ = getSlowInfoMap("OpenSSL-0.9.8h-1_is1","off")
-;	comment ""
-;	comment "all infos"
-;	for %line% in $INST_Resultlist$ do sub_showEntry
-;	set $CompValue$ = getValue("binaryname", $INST_Resultlist$)
-;	;set $ConstTest$ = '%ProgramFilesDir%\OpenSSL\bin\bftest.exe'
-;	set $ConstTest$ = '%ProgramFilesDir%\OpenSSL\bin\ssltest.exe'
-;
-;	if ($ConstTest$ = $CompValue$)
-;		comment "passed"
-;	else
-;		set $TestResult$ = "not o.k."
-;		LogWarning "failed"
-;	endif
+	;	set  $INST_Resultlist$ = getSlowInfoMap("OpenSSL-0.9.8h-1_is1","off")
+	;	comment ""
+	;	comment "all infos"
+	;	for %line% in $INST_Resultlist$ do sub_showEntry
+	;	set $CompValue$ = getValue("binaryname", $INST_Resultlist$)
+	;	;set $ConstTest$ = '%ProgramFilesDir%\OpenSSL\bin\bftest.exe'
+	;	set $ConstTest$ = '%ProgramFilesDir%\OpenSSL\bin\ssltest.exe'
+	;
+	;	if ($ConstTest$ = $CompValue$)
+	;		comment "passed"
+	;	else
+	;		set $TestResult$ = "not o.k."
+	;		LogWarning "failed"
+	;	endif
 	
 	
 	
@@ -5899,14 +5899,14 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;	; start testing
 ;	;Set $HomeTestFiles$ = "C:\tmp\testFiles"
 ;	set $TestResult$ = "o.k."
-;	
+;
 ;	; Chapter 7.2 Patches Sectione
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
 ;	comment "add, set, addnew, change, del, replace"
-;	
+;
 ;	if $OS$ = "Linux"
 ;		ShellInAnIcon_create_ini
 ;	else
@@ -5926,7 +5926,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;			set $TestResult$ = "not o.k."
 ;			LogWarning "add failed"
 ;		endif
-;		
+;
 ;		message "set"
 ;		set $ConstTest$ = "[secdummy]"
 ;		set $ConstTest2$ = "dummy2=set1"
@@ -5939,7 +5939,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;			set $TestResult$ = "not o.k."
 ;			LogWarning "set failed"
 ;		endif
-;		
+;
 ;		message "addnew"
 ;		set $ConstTest$ = "[secdummy]"
 ;		set $ConstTest2$ = "dummy1=addnew1"
@@ -5952,7 +5952,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;			set $TestResult$ = "not o.k."
 ;			LogWarning "addnew failed"
 ;		endif
-;		
+;
 ;		message "change"
 ;		set $ConstTest$ = "[secdummy]"
 ;		set $ConstTest2$ = "dummy3=change1"
@@ -5965,7 +5965,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;			set $TestResult$ = "not o.k."
 ;			LogWarning "change failed"
 ;		endif
-;		
+;
 ;		message "delete"
 ;		set $ConstTest$ = "[secdummy]"
 ;		set $ConstTest2$ = "dummy5=add5"
@@ -5978,7 +5978,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;			set $TestResult$ = "not o.k."
 ;			LogWarning "delete failed"
 ;		endif
-;		
+;
 ;		message "replace"
 ;		set $ConstTest$ = "[secdummy]"
 ;		set $ConstTest2$ = "replace1=replace1"
@@ -5996,7 +5996,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;		logError "Fatal: could not create .ini file"
 ;		isFatalError
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -6011,7 +6011,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;			set $TestResult$ = "not o.k."
 ;			LogWarning "GetValueFromInifile failed"
 ;		endif
-;		
+;
 ;		message "GetIni"
 ;		comment "GetIni is deprecated - use GetValueFromInifile)
 ;		set $ConstTest$ = "add1"
@@ -6022,7 +6022,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;			set $TestResult$ = "not o.k."
 ;			LogWarning "GetIni failed"
 ;		endif
-;		
+;
 ;		comment "Here comes the actual ini file:"
 ;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
 ;	else
@@ -6030,13 +6030,13 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;		logError "Fatal: could not create .ini file"
 ;		isFatalError
 ;	endif
-;	
-;	
+;
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
 ;	message "delsec"
-;	
+;
 ;	set $SectionName$ ="[secdummy]"
 ;	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
 ;	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
@@ -6074,9 +6074,9 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;	;		isFatalError
 ;	;	endif
 ;	;endif ; 4.12.1.0
-;	
+;
 ;	;Files_remove_folder
-;	
+;
 ;	if not($OS$ = "macos")
 ;		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
 ;			comment ""
@@ -6089,8 +6089,8 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;			Files_remove_profile_ini /AllNTUserProfiles
 ;		endif ; 4.11.3.2
 ;	endif
-;	
-;	
+;
+;
 ;	if $OS$ = "Linux"
 ;		ShellInAnIcon_create_ini
 ;	else
@@ -6099,25 +6099,25 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
 ;	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
 ;	if $test_experimental$ = "true"
-;		
+;
 ;		comment "Testing: "
 ;		message "GetSectionFromInifile"
-;		
+;
 ;		if (FileExists($HometestFiles$+"\dummy.ini"))
 ;			;GetSectionFromInifile
-;			
+;
 ;			set $list1$ = createStringList ('dummy1=add1', 'dummy2=set1', 'dummy3=change1', 'dummy5=add5', 'replace1=replace1', 'dummy1=addnew1')
 ;			Set $CompList1$ = GetSectionFromInifile("secdummy", $HometestFiles$+"\dummy.ini")
-;			
+;
 ;			set $list2$ = createStringList ('dümmy7=üöäßÜÖÄ')
 ;			Set $CompList2$ = GetSectionFromInifile("secdüöä", $HometestFiles$+"\dummy.ini")
-;			
+;
 ;			set $test1list1$ = getSubListByMatch($list1$,$CompList1$)
 ;			set $test2list1$ = getSubListByMatch($CompList1$,$list1$)
-;			
+;
 ;			set $test1list2$ = getSubListByMatch($list2$,$CompList2$)
 ;			set $test2list2$ = getSubListByMatch($CompList2$,$list2$)
-;			
+;
 ;			if (count($test1list1$)=count($list1$) AND count($test2list1$)=count($CompList1$) AND count($test1list2$)=count($list2$) AND count($test2list2$)=count($CompList2$))
 ;				comment "GetSectionFromInifile passed"
 ;			else
@@ -6130,8 +6130,8 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;			isFatalError
 ;		endif
 ;	endif
-;	
-;	
+;
+;
 ;	sub_compareResult
 ;	set $winst_patches$ = $SubResult$
 ;endif
@@ -6147,7 +6147,7 @@ if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
 	
-; 7.3 PatchHost s Sections
+	; 7.3 PatchHost s Sections
 	
 	comment ""
 	comment "-------------------------------------"
@@ -6354,7 +6354,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	
 	set $TestResult$ = "o.k."
 	Files_copy_patchtextfile
-; 7.5 PatchTextFile Sections
+	; 7.5 PatchTextFile Sections
 	
 	comment ""
 	comment "-------------------------------------"
@@ -8024,7 +8024,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; windows
 		
-;opsiservicecall_authenticated /preloginservice
+		;opsiservicecall_authenticated /preloginservice
 		
 		
 		sub_compareResult
@@ -8166,7 +8166,7 @@ if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-; Chapter 6.3.13 Retrieving Error Infos from Service Calls
+		; Chapter 6.3.13 Retrieving Error Infos from Service Calls
 		
 		comment ""
 		comment "-------------------------------------"
@@ -8463,16 +8463,16 @@ set $foundsubsection$ = "mainfile_sections_top"
 [opsiservicecall_get_licensekey]
 "method":"getLicenseKey"
 "params":[
-	"$Lic_ProductId$",
-	"%opsiServiceUser%"
-	]
+			"$Lic_ProductId$",
+			"%opsiServiceUser%"
+			]
 
 [opsiservicecall_licenseOnClient]
 "method": "licenseOnClient_getIdents"
 "params": [
-					'[]',
-					'{"clientId":"%opsiServiceUser%","licensePoolId": "$licensepool$"}',
-		]
+			'[]',
+			'{"clientId":"%opsiServiceUser%","licensePoolId": "$licensepool$"}',
+			]
 
 [opsiservicecall_getHostId]
 "method": "getHostId"
@@ -8481,8 +8481,8 @@ set $foundsubsection$ = "mainfile_sections_top"
 [opsiservicecall_getNetworkConfig_hash]
 "method": "getNetworkConfig_hash"
 "params": [
-	"$ErrorClientId$"
-	]
+			"$ErrorClientId$"
+			]
 
 [DosInAnIcon_read_cfg]
 $HomeTestFiles$\testfiles\read_alias.exe dummyalias
@@ -8974,10 +8974,10 @@ endif
 [opsiServiceCall_setFollowUp]
 "method": "setProductActionRequest"
 "params": [
-					 "opsi-winst-test-followup",
-					 "%HostID%",
-					 "setup"
-					]
+			"opsi-winst-test-followup",
+			"%HostID%",
+			"setup"
+			]
 
 
 ;----------------   end   sections for controls test ---------------------------------
@@ -9941,12 +9941,12 @@ exit 43
 [opsiservicecall_authenticated]
 "method": "authenticated"
 "params": [
-					]
+			]
 
 [opsiservicecall_userIsAdmin]
 "method": "userIsAdmin"
 "params": [
-					]
+			]
 
 
 [opsiservicecall_ServerIdsList]
@@ -9956,8 +9956,8 @@ exit 43
 [opsiservicecall_getDepotId]
 "method":"getDepotId"
 "params":[
-					"%opsiserviceuser%",
-					]
+			"%opsiserviceuser%",
+			]
 
 
 [opsiservicecall_getClientIds_list]
@@ -9968,65 +9968,65 @@ exit 43
 [opsiservicecall_getSoftwareInformation_hash]
 "method":"getSoftwareInformation_hash"
 "params":[
-					"pcbon4.uib.local",
-					]
+			"pcbon4.uib.local",
+			]
 
 [opsiservicecall_getProductInstallationStatus_listOfHashes]
 "method":"getProductInstallationStatus_listOfHashes"
 "params":[
-					"pcbon4.uib.local",
-					]
+			"pcbon4.uib.local",
+			]
 
 [opsiservicecall_getDepotshares]
 "method": "host_getIdents"
 "params": [
-					'[]',
-					'{"type":"OpsiDepotserver"}',
-		]
+			'[]',
+			'{"type":"OpsiDepotserver"}',
+			]
 
 [opsiservicecall_getDepot_properties]
 "method": "host_getObjects"
 "params": [
-					'filter:{type:OpsiDepotserver,id:bonifax.uib.local}',
-		]
+			'filter:{type:OpsiDepotserver,id:bonifax.uib.local}',
+			]
 
 [opsiservicecall_opsiclientd_start_helper]
 "method": "runCommand"
 "params": [
-					"$testfilepath$",
-					]
+			"$testfilepath$",
+			]
 
 
 [opsiServiceCall_setProductInstallationStatus]
 "method": "setProductInstallationStatus"
 "params": [
-					 "not-existing-product",
-					 "%HostID%",
-					 "not_installed"
-					]
+			"not-existing-product",
+			"%HostID%",
+			"not_installed"
+			]
 
 [opsiservicecall_productOnClient_getObjects]
 "method": "productOnClient_getObjects"
 "params": [
-					'[]',
-					'{"clientId":"%HostID%"}',
-		]
+			'[]',
+			'{"clientId":"%HostID%"}',
+			]
 
 [opsiservicecall_getProductProperties_hash]
 "method": "getProductProperties_hash"
 "params": [
-					"opsi-winst-test-followup",
-					"%opsiserviceUser%"
-					]
+			"opsi-winst-test-followup",
+			"%opsiserviceUser%"
+			]
 
 [opsiServiceCall_set_imagelist]
 "method": "productPropertyState_create"
 "params": [
-					"$captureproduct$",
-					"imagename",
-					"$depotid$",
-					'$valuesListStr$'
-					]
+			"$captureproduct$",
+			"imagename",
+			"$depotid$",
+			'$valuesListStr$'
+			]
 
 
 ;----------------   stop   sections for opsiservicecall tests ---------------------------------
