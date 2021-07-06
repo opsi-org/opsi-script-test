@@ -328,7 +328,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: fileHasBom"
-
+	
 	
 	DefFunc myFileHasBomTester($filePath$ : string, $expected$ : string) : void
 		DefVar $CompValue$
@@ -455,6 +455,8 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		set $workfile$ = "dümmy_"+$encoding$+".txt"
 		set $ConstTest$ = "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
 		
+		Set $list$ = loadTextFileWithEncoding($HomeTestFiles$+$workfile$,$encoding$)
+		
 		PatchTextFile_encoding $HomeTestFiles$+$workfile$ /encoding $encoding$
 		if LineExistsIn ($ConstTest$, $HomeTestFiles$ + $workfile$)
 			comment "Line exists in file"
@@ -475,7 +477,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		GoToBottom
 		AppendLine "Line appended by opsi-script with umlaut: üöäßÜÖÄ"
 		
-		endfunc
+	endfunc
 	
 	
 	set $HomeTestFiles$ = "%opsiTmpDir%/opsi-script-test/"
@@ -688,9 +690,9 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 			endif
 			
 			[Patches_encoding_ini_loc]
-				set [section1] key1=sät1 
-				add [section1] key2=ädd1
-									endfunc
+set [section1] key1=sät1
+add [section1] key2=ädd1
+				endfunc
 		
 		;Patches_encoding_ini $HomeTestFiles$+"\test_ucs2be.ini" /encoding "unicode"
 		;if (FileExists($HometestFiles$+"\test_ucs2be.ini"))
@@ -800,180 +802,6 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		
-		;Patches_encoding_ini $HomeTestFiles$+"\test_utf8.ini" /encoding "utf8"
-		;if (FileExists($HometestFiles$+"\test_utf8.ini"))
-		;	message "add"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key2=ädd1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_utf8.ini","utf8")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(2, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "add passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "add failed"
-		;	endif
-		;
-		;	message "set"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key1=sät1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_utf8.ini","utf8")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(1, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "set passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "set failed"
-		;	endif
-		;endif
-		
-		;Patches_encoding_ini $HomeTestFiles$+"\test_cp1252.ini" /encoding "cp1252"
-		;if (FileExists($HometestFiles$+"\test_cp1252.ini"))
-		;	message "add"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key2=ädd1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_cp1252.ini","cp1252")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(2, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "add passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "add failed"
-		;	endif
-		;
-		;	message "set"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key1=sät1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_cp1252.ini","cp1252")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(1, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "set passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "set failed"
-		;	endif
-		;endif
-		
-		;Patches_encoding_ini $HomeTestFiles$+"\test_ucs2le.ini" /encoding "unicode"
-		;if (FileExists($HometestFiles$+"\test_ucs2be.ini"))
-		;	message "add"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key2=ädd1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_ucs2le.ini","unicode")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(2, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "add passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "add failed"
-		;	endif
-		;
-		;	message "set"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key1=sät1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_ucs2le.ini","unicode")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(1, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "set passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "set failed"
-		;	endif
-		;endif
-		
-		;Patches_encoding_ini $HomeTestFiles$+"\test_ucs2le.ini" /encoding "ucs2le"
-		;if (FileExists($HometestFiles$+"\test_ucs2be.ini"))
-		;	message "add"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key2=ädd1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_ucs2le.ini","ucs2le")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(2, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "add passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "add failed"
-		;	endif
-		;
-		;	message "set"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key1=sät1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_ucs2le.ini","ucs2le")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(1, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "set passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "set failed"
-		;	endif
-		;endif
-		
-		;Patches_encoding_ini $HomeTestFiles$+"\test_utf16le.ini" /encoding "utf16le"
-		;if (FileExists($HometestFiles$+"\test_utf16le.ini"))
-		;	message "add"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key2=ädd1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_utf16le.ini","utf16le")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(2, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "add passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "add failed"
-		;	endif
-		;
-		;	message "set"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key1=sät1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_utf16le.ini","utf16le")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(1, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "set passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "set failed"
-		;	endif
-		;endif
-		
-		;Patches_encoding_ini $HomeTestFiles$+"\test_unicode.ini" /encoding "unicode"
-		;if (FileExists($HometestFiles$+"\test_unicode.ini"))
-		;	message "add"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key2=ädd1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_unicode.ini","unicode")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(2, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "add passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "add failed"
-		;	endif
-		;
-		;	message "set"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key1=sät1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_unicode.ini","unicode")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(1, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "set passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "set failed"
-		;	endif
-		;endif
-		
 		comment "now comes utf16-LE-BOM"
 		Patches_encoding_ini $HomeTestFiles$+"\i_view32.ini" /encoding "utf16le"
 		if (FileExists($HometestFiles$+"\i_view32.ini"))
@@ -1036,40 +864,6 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		Patches_encoding_ini_del $HomeTestFiles$+"\i_view32.ini" /encoding "unicode"
-		;
-		;; ############## bom tests ################
-		;comment "Now tests with bom"
-		
-		;Patches_encoding_ini $HomeTestFiles$+"\test_utf8-bom.ini" /encoding "utf8bom"
-		;if (FileExists($HometestFiles$+"\test_utf8-bom.ini"))
-		;	message "add"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key2=ädd1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_utf8-bom.ini","utf8bom")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(2, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "add passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "add failed"
-		;	endif
-		;
-		;	message "set"
-		;	set $ConstTest$ = "[section1]"
-		;	set $ConstTest2$ = "key1=sät1"
-		;	Set $list1$ = loadTextFilewithencoding($HomeTestFiles$+"\test_utf8-bom.ini","utf8bom")
-		;	Set $CompValue$ = Trim(takeString(0, $list1$))
-		;	Set $CompValue2$ = Trim(takeString(1, $list1$))
-		;	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-		;		comment "set passed"
-		;	else
-		;		set $TestResult$ = "not o.k."
-		;		LogWarning "set failed"
-		;	endif
-		;endif
-		
-		
 	endif ; 4.12.1.0
 	
 	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.10")
@@ -1146,7 +940,7 @@ deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\winst-test]
 
 
 [Files_copy_patchtextfile_tmp]
-copy "%scriptpath%/../test-files/encoding/*.*" "%opsiTmpDir%/opsi-script-test/"
+copy "%scriptpath%/test-files/encoding/*.*" "%opsiTmpDir%/opsi-script-test/"
 
 [Files_del_patchtextfile_tmp]
 del -fs "%opsiTmpDir%/opsi-script-test/"
@@ -1164,6 +958,7 @@ DeleteTheLine
 del -f "$HomeTestFiles$\*"
 copy "%ScriptPath%\test-files\encoding\dümmy_cp1252.txt" $HomeTestFiles$
 copy "%ScriptPath%\test-files\encoding\dümmy_utf8.txt" $HomeTestFiles$
+;copy "%ScriptPath%\test-files\encoding\*.txt" $HomeTestFiles$
 copy "%ScriptPath%\test-files\encoding\*.ini" $HomeTestFiles$
 copy "%ScriptPath%\test-files\encoding\*.conf" $HomeTestFiles$
 
@@ -1196,11 +991,11 @@ Replace dummy6=add6 replace1=replace1
 
 
 [Patches_encoding_ini]
-set [section1] key1=sät1 
+set [section1] key1=sät1
 add [section1] key2=ädd1
 
 [Patches_encoding_ini_del]
-delsec [section1] 
+delsec [section1]
 
 [Patches_opsiclientd_conf]
 set [event_default] dummy_message[de]=Wür ßingen äin Löd

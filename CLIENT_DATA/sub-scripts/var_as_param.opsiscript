@@ -396,10 +396,10 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
 	
-;########################################################################################################
-; ################   Registry
+	;########################################################################################################
+	; ################   Registry
 	
-;	;DefVar $Architecture$
+	;	;DefVar $Architecture$
 	if $OS$ = "Windows_NT"
 		DefVar $DisplayName$
 		
@@ -574,8 +574,8 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	endif ; windows
 	
 	
-;########################################################################################################
-; ################   ExecuteWith
+	;########################################################################################################
+	; ################   ExecuteWith
 	
 	
 	comment ""
@@ -639,8 +639,8 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		executeSection('ShellInanIcon_cat_a_lot winst /showoutput')
 	endif
 	
-;########################################################################################################
-; ################   Files
+	;########################################################################################################
+	; ################   Files
 	
 	Set $DirectorySubDirectory = $HomeTestFiles$+"\subDirectory"
 	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"
@@ -974,8 +974,8 @@ else
 endif
 
 [Registry_TestVarAsParam_Create]
-	OpenKey [HKLM\SOFTWARE\opsi.org\opsi-script-test\TestVarAsParam]
-	Set "bitByOpsiScript" = REG_SZ:"$Architecture$"
+OpenKey [HKLM\SOFTWARE\opsi.org\opsi-script-test\TestVarAsParam]
+Set "bitByOpsiScript" = REG_SZ:"$Architecture$"
 
 [Registry_TestVarAsParam_Delete]
 Deletekey [HKLM\SOFTWARE\opsi.org\opsi-script-test]

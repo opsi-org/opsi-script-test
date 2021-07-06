@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="cp1252"?>
+<rootnode>
+    <node_level-1>
+        <node_level-2_A>Hello World
+        </node_level-2_A>
+	
+        <node_level-2_B encoding="äüöß">
+        </node_level-2_B>
+	
+    </node_level-1>
+</rootnode>
