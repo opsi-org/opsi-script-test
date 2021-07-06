@@ -7769,27 +7769,27 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif
 		if $OS$ = "Windows_NT"
-			if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local")
-				if (takeString(0,$INST_ResultList$) = "false") or ($INST_error$ = "true")
-					comment "was not authenticated as admin-> retry scripted login by default user/password"
-					markErrorNumber
-					set $INST_error$ = "false"
-					opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password $adminuser_password$
-					if errorsOccuredSinceMark > 0
-						set $INST_error$ = "true"
-						comment "scripted login by default user/password failed -> retry interactive"
-						opsiservicecall_authenticated /interactive /serviceurl "https://bonifax:4447"
-					else
-						markErrorNumber
-						Set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_UserIsAdmin')
-						if errorsOccuredSinceMark > 0
-							set $INST_error$ = "true"
-							comment "check for user is admin failed failed -> retry interactive"
-						endif
-					endif
-				endif
-				comment "logged in as admin"
-			endif ; uib office
+			;if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local")
+			;	if (takeString(0,$INST_ResultList$) = "false") or ($INST_error$ = "true")
+			;		comment "was not authenticated as admin-> retry scripted login by default user/password"
+			;		markErrorNumber
+			;		set $INST_error$ = "false"
+			;		opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password $adminuser_password$
+			;		if errorsOccuredSinceMark > 0
+			;			set $INST_error$ = "true"
+			;			comment "scripted login by default user/password failed -> retry interactive"
+			;			opsiservicecall_authenticated /interactive /serviceurl "https://bonifax:4447"
+			;		else
+			;			markErrorNumber
+			;			Set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_UserIsAdmin')
+			;			if errorsOccuredSinceMark > 0
+			;				set $INST_error$ = "true"
+			;				comment "check for user is admin failed failed -> retry interactive"
+			;			endif
+			;		endif
+			;	endif
+			;	comment "logged in as admin"
+			;endif ; uib office
 		endif ; windows
 		
 		;opsiservicecall_authenticated /interactive /serviceurl "https://bonifax:4447"
