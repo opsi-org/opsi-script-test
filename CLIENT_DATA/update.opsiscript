@@ -11,7 +11,7 @@ DefVar $CompValue$
 setloglevel=7
 message "this is the update script"
 
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 		if not ("%installingProdName%" = "")
 			comment "we are in opsi service mode"
 			comment ""

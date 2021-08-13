@@ -10,7 +10,7 @@ else
 endif
 
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	Registry_opsi_org_delete_test
 	Registry_opsi_org_delete_test /64bit
 	Registry_createkeys /32bit

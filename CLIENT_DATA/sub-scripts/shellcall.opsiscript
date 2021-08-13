@@ -45,7 +45,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.1") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.1") >= "0"
 			if $INST_SystemType$ = "64 Bit System"
 				comment ""
 				comment "-------------------------------------"
@@ -73,7 +73,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			comment "Dosbatch winst /64bit not tested, minimum winst needed: 4.11.1.1"
 		endif
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.1") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.1") >= "0"
 			message "DosBatch / DosInAnIcon  exitcode"
 			DosInAnIcon_exit42
 			set $ConstTest$ = "42"
@@ -116,7 +116,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "ShellBatch parameter failed"
 		endif
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.1") >= "0"
 			comment "Testing parameters for ShellBatch"
 			set $ConstTest$ = "Hello world"
 			set $tmp$ = "world"
@@ -130,7 +130,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; 4.11.5
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
 			message "shellCall  exitcode"
 			set $list$ = shellCall("exit 43")
 			set $ConstTest$ = "43"
@@ -242,7 +242,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "ShellBatch parameter failed"
 		endif
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.1") >= "0"
 			comment "Testing parameters for ShellBatch"
 			set $ConstTest$ = "Hello world"
 			set $tmp$ = "world"
@@ -255,7 +255,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "ShellBatch parameter failed"
 			endif
 		endif ; 4.11.5
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
 			message "shellCall  exitcode"
 			set $list$ = shellCall("exit 43")
 			set $ConstTest$ = "43"
@@ -324,7 +324,7 @@ if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
 	endif ; windows / linux
 	
 	if $OS$ = "Windows_NT"
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "

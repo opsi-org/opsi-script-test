@@ -158,7 +158,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	
 	set $SectionName$ ="[secdummy]"
 	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
 	; encoding in patches has to be fixed
 		if (FileExists($HometestFiles$+"\dummy.ini"))
 			set $ConstTest$ = "[secdüöä]"
@@ -197,7 +197,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	Files_remove_folder
 	
 	;if not($OS$ = "macos")
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -222,7 +222,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	endswitch
 	
 	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.13")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.13")
 	;if $test_experimental$ = "true"
 		
 		comment ""

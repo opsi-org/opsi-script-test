@@ -38,7 +38,7 @@ switch $OS$
 endswitch
 
 ; Tests for WinstVersion >= 4.12.3
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3")
 comment ""
 comment "Tests for WinstVersion >= 4.12.3"
 comment ""

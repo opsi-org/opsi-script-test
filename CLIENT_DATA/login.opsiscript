@@ -29,7 +29,7 @@ Set $HomeTestFiles$ = "%CurrentProfileDir%\AppData\Local\Temp"
 
 Set $INST_SystemType$ = GetSystemType
 set $MsVersion$ = GetMsVersionInfo
-if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") < "0"
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") < "0"
 	message "Higher winstversion required (min 4.11.2.1) - aborting"
 else
 	if not(isLoginScript) 
@@ -144,7 +144,7 @@ else
 			set $regWriteValue$ = "64"
 			set $CompValue$ = $regWriteValue$
 			Registry_opsi_org_test /64Bit 
-			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 				ExecWith_opsi_org_test '%System%\cmd.exe' /C winst /64bit
 			else
 				ExecWith_opsi_org_test '%SystemRoot%\cmd64.exe' /C
@@ -310,7 +310,7 @@ else
 				Registry_currentuser_set
 			endif
 			
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -354,7 +354,7 @@ else
 			Files_profile_del
 		endif ; 4.11.3.2
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.4") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.4") >= "0"
 			Files_copy_helper_2_c
 			winbatch_start_helper_c /RunAsLoggedOnUser
 			includelog $HomeTestFiles$+"\testFiles\opsi-script-test-helper\admin.log" "100"
@@ -551,7 +551,7 @@ else
 			
 		endif ; 4.11.3.4
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.5") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.5") >= "0"
 
 			comment ""
 			comment "-------------------------------------"

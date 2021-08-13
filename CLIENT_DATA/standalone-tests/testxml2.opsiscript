@@ -222,7 +222,7 @@ set $Flag_winst_xml2$               = GetProductProperty ("XML2", "on")
 
 
 
-if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.7") >= "0"
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.7") >= "0"
 	AutoActivityDisplay = true
 endif
 

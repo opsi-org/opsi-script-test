@@ -102,7 +102,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -446,7 +446,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			set $regWriteValue$ = "64"
 			set $CompValue$ = $regWriteValue$
 			Registry_opsi_org_test /64Bit
-			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 				ExecWith_opsi_org_test '%System%\cmd.exe' /C winst /64bit
 			else
 				ExecWith_opsi_org_test '%SystemRoot%\cmd64.exe' /C
@@ -576,7 +576,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
 			set $regWriteValue$ = "32"
 			Registry_hkcu_opsi_org_test /AllNtUserDats
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 			 Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
 			 Registry_hkcu_opsi_org_deletekey /AllNtUserDats
 			endif
@@ -584,7 +584,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			set $regWriteValue$ = "32"
 			Registry_hkcu_opsi_org_test /AllNtUserDats
 			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 				Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
 				Registry_hkcu_opsi_org_deletekey /AllNtUserDats
 			endif
@@ -606,7 +606,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			comment "status is unknown"
 		endif
   	
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.7") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.7") >= "0"
 			if ($INST_SystemType$ = "64 Bit System")
 				set $regWriteValue$ = "64"
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
@@ -617,7 +617,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
 				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
   	
-				if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+				if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 					Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
 					Registry_hkcu_opsi_org_deletekey /AllNtUserDats
 				endif
@@ -627,14 +627,14 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
 				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
-				if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+				if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 					Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
 					Registry_hkcu_opsi_org_deletekey /AllNtUserDats
 				endif
 			endif
 		endif
   	
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.12.0.27") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.0.27") >= "0"
 			comment "Testing create registry key with /AllUsrClassDats"
 			set $ConstTest$ = ""
 			if ($INST_SystemType$ = "64 Bit System")
@@ -670,7 +670,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			Registry_hkcu_userclasses_delete_test /AllUsrClassDats
 		endif
 
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3") >= "0"
 			Registry_createkeys
 			comment ""
 			comment "-------------------------------------"
@@ -790,7 +790,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; 4.11.3
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5") >= "0"
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
 				message "Set Environment Variables and check for it...."
 				Registry_add_environment /sysnative
@@ -819,7 +819,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				Registry_set_quoted_string
 			endif ; NT6
 		endif ; 4.11.5
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.20")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.20")
 			Registry_createkeys_with_brackets
 			set $ConstTest$ = "myentry1"
 			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
@@ -867,7 +867,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			Registry_deletekeys_with_brackets /64bit
 		endif ; 4.12.0.10
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 			Registry_opsi_org_delete_test
 			Registry_opsi_org_delete_test /64bit
 			Registry_createkeys /32bit
@@ -982,7 +982,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.14")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.14")
 			; test fix to  #4625
 			; empty list because ACCESS DENIED:
 			Set $tmp$    = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"
@@ -1065,7 +1065,7 @@ endif
 
 [sub_retrieve_registry_data]
 if $INST_SystemType$ = "64 Bit System"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%System%\cmd.exe' /C winst /64bit")
 	else
 		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")

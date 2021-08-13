@@ -28,7 +28,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 	
 	; change back the following lines for not only encoding tests
 	; if stringToBool("false")
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
 		
 		set $xml2strictMode$ = 'false'
 		Files_copy_xml2
@@ -955,7 +955,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		;Files_cleanup_xml2
 	endif ; 4.12.1.0
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.20")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.20")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "

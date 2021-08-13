@@ -427,7 +427,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			set $regWriteValue$ = "64"
 			set $CompValue$ = $regWriteValue$
 			executeSection('Registry_opsi_org_test '+$sBit64$)
-			if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 				ExecWith_opsi_org_test '%System%\cmd.exe' /C winst /64bit
 			else
 				ExecWith_opsi_org_test '%SystemRoot%\cmd64.exe' /C
@@ -663,7 +663,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
@@ -676,7 +676,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
@@ -697,7 +697,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_programfiles '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
@@ -715,7 +715,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
@@ -728,7 +728,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
@@ -750,7 +750,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
@@ -764,7 +764,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		ExecWith_remove_test_from_system32 'cmd.exe' /C
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_system32 '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_system32 '%SystemRoot%\cmd64.exe' /C
@@ -785,7 +785,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_programfiles '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_programfiles '%SystemRoot%\cmd64.exe' /C
@@ -803,7 +803,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		else
 			comment "redirection for 32 bit"
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
@@ -816,7 +816,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 			set $TestResult$ = "not o.k."
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 			ExecWith_remove_test_from_programfiles2 '%System%\cmd.exe' /C winst /64bit
 		else
 			ExecWith_remove_test_from_programfiles2 '%SystemRoot%\cmd64.exe' /C
@@ -917,7 +917,7 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 "%ProgramFiles32Dir%\myinnosetup\unins000.exe" /silent
 
 [winbatch_wow_myinno]
-"%winstdir%\winst32.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+"%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 
 [Winbatch_regedit_s_64]
 "%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
@@ -926,11 +926,11 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 "%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
 
 [winbatch_wow_myinno_from_c]
-"%winstdir%\winst32.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+"%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 
 [Winbatch_msi_standard_from_c_indirect]
-;"%WinstDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
-;"%WinstDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
+;"%OpsiscriptDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
+;"%OpsiscriptDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
 
 [winbatch_start_helper_asadmin_c]
 "$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
@@ -984,7 +984,7 @@ Deletekey [HKLM\SOFTWARE\opsi.org\opsi-script-test]
 
 [sub_retrieve_registry_data]
 if $INST_SystemType$ = "64 Bit System"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
 		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%System%\cmd.exe' /C winst /64bit")
 	else
 		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")

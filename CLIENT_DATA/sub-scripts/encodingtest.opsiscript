@@ -15,7 +15,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.6.4")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.6.4")
 		set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-cp1251.txt"
 		comment "load with encoding"
 		set $list$ = loadTextFileWithEncoding($string1$, "cp1251")
@@ -37,7 +37,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		
 	endif ; 4.11.6.4
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.4.2")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.4.2")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -153,7 +153,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		set $list$ = loadTextFile($string1$)
 		set $list1$ = reencodestrlist($list$, "utf8", "system")
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5") >= "0"
 			comment "LoadTextFileWithEncoding"
 			set $string1$ = "%Scriptpath%\test-files\encoding\CyrillicText-cp1251.txt"
 			set $list$ = loadTextFileWithEncoding($string1$, "cp1251")
@@ -203,7 +203,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 	endif ; 4.11.4.2
 	message "testing getproductproperty dummyumlaut"
 	set $ConstTest$ = "Test umlaut from prop: üöäÜÖÄß"
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
 		set $CompValue$ = getProductProperty("dummyumlaut","Test umlaut from prop: üöäÜÖÄß")
 	else
 		set $CompValue$ = reencodestr(getProductProperty("dummyumlaut","Test umlaut from prop: üöäÜÖÄß"), "utf8", "system")
@@ -640,7 +640,7 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif ; windows
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
 		Files_copy_patchtextfile_umlaut
 		
 		deffunc test_patch_ini_with_encoding($testfile$ : string, $encoding$ : string) : string
@@ -866,7 +866,7 @@ add [section1] key2=ädd1
 		Patches_encoding_ini_del $HomeTestFiles$+"\i_view32.ini" /encoding "unicode"
 	endif ; 4.12.1.0
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.10")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.10")
 		Files_copy_patchtextfile_umlaut
 		
 		Patches_opsiclientd_conf $HomeTestFiles$+"\opsiclientd.conf" /encoding "utf8"
@@ -907,7 +907,7 @@ add [section1] key2=ädd1
 		endif
 	endif 4.12.0.10
 	;endif ; macos
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.16")
 		sub "%scriptpath%\sub-scripts\encoding_utf8_bom.opsiscript"
 		sub "%scriptpath%\sub-scripts\encoding_utf8_bom_warn.opsiscript"
 		sub "%scriptpath%\sub-scripts\encoding_utf16le_bom.opsiscript"

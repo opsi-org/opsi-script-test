@@ -11,7 +11,7 @@
 
 [Actions]
 requiredWinstVersion >= "4.11.4.1"
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.6")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.6")
 	requiredOpsiscriptVersion >= "4.12.3.6"
 endif
 ScriptErrorMessages = false
@@ -236,7 +236,7 @@ Set $OS$ = GetOS
 ; retrieve current language
 set $languageInfo$ = getLocaleInfoMap
 set $language$ = getValue("language_id_2chars", $languageInfo$)
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3")
 	set $GUI$ = booltostring(runningWithGui)
 else
 	set $GUI$ = "true"
@@ -402,7 +402,7 @@ set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 ;set $Flag_winst_idapiconfig$       = GetProductProperty ("idapiconfig", "off")
 
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.4.7")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.4.7")
 	AutoActivityDisplay = true
 endif
 
@@ -871,7 +871,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$="%ScriptDrive%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"ScriptDrive"+"%"+" is %ScriptDrive%"
-	;if not ($ConstTest$= "%WinstDir%")
+	;if not ($ConstTest$= "%OpsiscriptDir%")
 	;	set $TestResult$ = "not o.k."
 	;endif
 	
@@ -981,11 +981,11 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "Testing constants: "+"%"+"winstversion" +"%"
-	set $ConstTest$ = "%WinstVersion%"
+	set $ConstTest$ = "%OpsiscriptVersion%"
 	if $OS$ = "Windows_NT"
-		set $InterestingFile$ = "%winstdir%\winst.exe"
+		set $InterestingFile$ = "%OpsiscriptDir%\opsi-script.exe"
 		if not (FileExists($InterestingFile$))
-			set $InterestingFile$ = "%winstdir%\winst32.exe"
+			set $InterestingFile$ = "%OpsiscriptDir%\winst32.exe"
 		endif
 		set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 		set $CompValue$ = getValue("file version with dots", $INST_Resultlist$ )
@@ -998,14 +998,14 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.6")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.6")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"OpsiscriptVersion" +"%"
 		set $ConstTest$ = "%OpsiscriptVersion%"
 		if $OS$ = "Windows_NT"
-			set $InterestingFile$ = "%Opsiscriptdir%\winst.exe"
+			set $InterestingFile$ = "%Opsiscriptdir%\opsi-script.exe"
 			if not (FileExists($InterestingFile$))
 				set $InterestingFile$ = "%Opsiscriptdir%\winst32.exe"
 			endif
@@ -1027,10 +1027,10 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 	set $ConstTest$ = "%CurrentStartupDir%"
 	set $ConstTest$ = "%CurrentProgramsDir%"
 	set $ConstTest$ = "%CurrentSendToDir%"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.4")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.4")
 		set $ConstTest$ = "%opsiDepotId%"
 	endif
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.4.4")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.4.4")
 		set $ConstTest$ = "%opsiTmpDir%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "C:\opsi.org\tmp"
@@ -1061,7 +1061,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 		set $ConstTest$ = "%opsidata%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "C:\opsi.org\data"
@@ -1088,7 +1088,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.4")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.4")
 		if ($OS$ = "Windows_NT")
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 				comment " test stringlist"
@@ -1168,7 +1168,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 	SetConfidential "forbidden"
 	comment "This is a forbidden string"
 	comment "should be in the log file: This is a ***(confidential)*** string"
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 		if isConfidential("forbidden")
 			comment "passed"
 		else
@@ -1198,7 +1198,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		; asConfidential - StringList
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.16")
 			message "asConfidential - StringList"
 			set $list$ = asConfidential(createStringList('confidential-aa','confidential-bb', 'confidential-cc', 'confidential-dd'))
 			comment "This is a hidden stringlist"
@@ -1279,7 +1279,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "GetProductProperty failed"
 		endif
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3") >= "0"
 			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
 			;set $list1$ = createStringList("ab", "cd", "ef", "g,h")
 			set $list$ = GetProductPropertyList ("dummymulti","True")
@@ -1333,7 +1333,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.2") >= "0"
 		message "GetConfidentialProductProperty (<PropertyName>, <DefaultValue>)"
 		if not("%opsiserviceURL%" = "")
 			set $ConstTest$ = "This is confidential"
@@ -1469,7 +1469,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	;	LogWarning "failed"
 	;endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.16")
 		comment "-------------------------------------"
 		comment "Testing: "
 		comment "getOSArchitecture"
@@ -1643,7 +1643,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.2") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -1716,7 +1716,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 		
 		comment ""
 		comment "-------------------------------------"
@@ -1857,7 +1857,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	
 	
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.2")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.5.2")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -1934,7 +1934,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	endif ; 4.11.5.2
 	
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.4") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.4") >= "0"
 		
 		comment ""
 		comment "-------------------------------------"
@@ -1979,7 +1979,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
 				set $ConstTest$ = ""
 			else
 				comment "This is a bug in opsi-script < 4.11.6": should be empty string"
@@ -1993,7 +1993,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
 				set $ConstTest$ = ""
 			else
 				comment "This is a bug in opsi-script < 4.11.6": should be empty string"
@@ -2035,7 +2035,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		
 		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
 		if saveTextFile($INST_Resultlist$, $testfile$)
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
 				set $ConstTest$ = ""
 			else
 				comment "This is a bug in opsi-script < 4.11.6": should be empty string"
@@ -2055,7 +2055,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		endif
 		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
 		if saveTextFile($INST_Resultlist$, $testfile$)
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
 				set $ConstTest$ = ""
 			else
 				comment "This is a bug in opsi-script < 4.11.6": should be empty string"
@@ -2076,7 +2076,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		
 		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
 		if saveTextFile($INST_Resultlist$, $testfile$)
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
 				set $ConstTest$ = ""
 			else
 				comment "This is a bug in opsi-script < 4.11.6": should be empty string"
@@ -2610,7 +2610,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.2") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -2620,7 +2620,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		comment "getUserContext not tested, minimum winst needed: 4.11.1.2"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 		
 		comment ""
 		comment "-------------------------------------"
@@ -2915,7 +2915,7 @@ if ($Flag_calculate$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.5") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.5") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -3206,9 +3206,9 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		set $InterestingFile$ = "%winstdir%\winst.exe"
+		set $InterestingFile$ = "%OpsiscriptDir%\opsi-script.exe"
 		if not (FileExists($InterestingFile$))
-			set $InterestingFile$ = "%winstdir%\winst32.exe"
+			set $InterestingFile$ = "%OpsiscriptDir%\winst32.exe"
 		endif
 		set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 		for %line% in $INST_Resultlist$ do sub_showEntry
@@ -3334,7 +3334,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 	endif ; macos
 	
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 		if not ("%installingProdName%" = "")
 			comment "we are in opsi service mode"
 			comment ""
@@ -3360,7 +3360,7 @@ if ($Flag_infostest$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5.1")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.5.1")
 		if ($OS$ = "windows_nt")
 			comment ""
 			comment "-------------------------------------"
@@ -3518,7 +3518,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -3619,7 +3619,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -3877,7 +3877,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "getSubList(1:-1, $list1$) failed"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.34")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.34")
 		comment "Now with string variables  (no whitespace)...."
 		comment "-------------------------------------"
 		
@@ -4061,7 +4061,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 		message "getIndexFromListByContaining..string ..."
 		set $tmp$ = "c"
 		set $ConstTest$ = "2"
@@ -4577,7 +4577,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.2") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -4639,7 +4639,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		comment "getProcessList not tested, minimum winst needed: 4.11.1.2"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -4675,7 +4675,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		comment "processIsRunning not tested, minimum winst needed: 4.11.6.1"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -4712,7 +4712,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		comment "getProfilesDirList not tested, minimum winst needed: 4.11.3.2"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.4") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.4") >= "0"
 		set $ConstTest$ = "0"
 		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
 		set $list1$ = emptylist ($list1$)
@@ -4725,7 +4725,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif ; 4.11.4.4
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.1") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -4855,7 +4855,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	
 	
 	; Tests for WinstVersion >= 4.12.3
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -4983,7 +4983,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	
 	
 	if $OS$ = "Windows_NT"
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.17")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.17")
 			
 			comment ""
 			comment "-------------------------------------"
@@ -5008,7 +5008,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		endif ;4.12.4.7
 	endif ; windows
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.9")
 		
 		comment ""
 		comment "-------------------------------------"
@@ -5069,7 +5069,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		
 	endif ; 4.12.3.9
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.5")
 		
 		comment "Testing: "
 		message "areStringlistsEqual"
@@ -5140,7 +5140,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			message "Killtask"
 			WinBatch_prepare_killtask /LetThemGo
 			Set $ConstTest$ = ""
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.2") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.2") >= "0"
 				set $list1$ = getProcessList
 			endif
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_getTask")
@@ -5166,7 +5166,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endif ; windows
 		
 		if not ("%opsiserviceURL%" = "")
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.1") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.1") >= "0"
 				comment ""
 				comment "-------------------------------------"
 				comment "Testing: "
@@ -5212,7 +5212,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		
 	endif ; windows
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.6") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.6") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -5264,7 +5264,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	sleepseconds 1
 	ShowBitmap "%ScriptPath%\test-files\images\opsi.jpg" "jpeg"
 	sleepseconds 1
-	if "1" =CompareDotSeparatedNumbers("%WinstVersion%","4.11.0.0")
+	if "1" =CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.0.0")
 		ShowBitmap "%ScriptPath%\test-files\images\tortoisesvn_test.png" $ProductId$
 		sleepseconds 1
 	endif
@@ -5322,7 +5322,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	sleepseconds 1
 	RestoreWinst
 	sleepseconds 1
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5") >= "0"
 		MaximizeWinst
 	endif
 	
@@ -5667,7 +5667,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "tracemode"
 		set $opsi_message_title$ = "opsi-script Message"
-		if CompareDotSeparatedNumbers("%winstversion%","<","4.11.6.11")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","<","4.11.6.11")
 			comment "backward compatibility"
 			set $opsi_message_title$ = "opsi-winst Message"
 		endif
@@ -5681,14 +5681,14 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		comment "in trace window"
 		Tracemode=off
 		comment "not in trace window"
-		if CompareDotSeparatedNumbers("%winstversion%","4.10.8.9") = "1"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.10.8.9") = "1"
 			Tracemode=on
 			comment "should be turned off by autoit"
 		endif
 		killtask "autoit3.exe"
 	endif ; windows
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -5698,7 +5698,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		set $string2$ = "5"
 		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
 		includelog $string1$ $string2$
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 			set $string2$ = "-5"
 			includelog $string1$ $string2$
 			includelog $string1$ $string2$ "auto"
@@ -5707,12 +5707,12 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		set $string2$ = "5"
 		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
 		includelog $string1$ $string2$
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 			set $string2$ = "-5"
 			includelog $string1$ $string2$
 			includelog $string1$ $string2$ "auto"
 		endif
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.1") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.1") >= "0"
 			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf16.txt"
 			set $string2$ = "5"
 			includelog $string1$ $string2$
@@ -5744,7 +5744,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -5763,7 +5763,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.5")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.5")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -5806,7 +5806,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		opsiServiceCall_setFollowUp
 	endif ; 4.11.5
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.6")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.6")
 		
 		forceLogInAppendMode = true
 		
@@ -5845,7 +5845,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not o.k."
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.16")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.16")
 		set $CompValue$ = "false"
 		set $list$ = parseUrl('%opsiserviceurl%')
 		set $tmp$ = getValue('host',$list$)
@@ -6039,7 +6039,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;
 ;	set $SectionName$ ="[secdummy]"
 ;	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-;	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+;	;if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
 ;	;; encoding in patches has to be fixed
 ;	;	if (FileExists($HometestFiles$+"\dummy.ini"))
 ;	;		set $ConstTest$ = "[secdüöä]"
@@ -6078,7 +6078,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;	;Files_remove_folder
 ;
 ;	if not($OS$ = "macos")
-;		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.2") >= "0"
+;		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 ;			comment ""
 ;			comment "-------------------------------------"
 ;			comment "Testing: "
@@ -6097,7 +6097,7 @@ sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 ;		DosInAnIcon_create_ini
 ;	endif
 ;	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
-;	;if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.5")
+;	;if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.5")
 ;	if $test_experimental$ = "true"
 ;
 ;		comment "Testing: "
@@ -6644,7 +6644,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.6") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.6") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -6706,7 +6706,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	Files_empty_folder
 	
 	;if not($OS$ = 'macos')
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.4") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.4") >= "0"
 		
 		Files_profile_copy /AllNTUserProfiles
 		comment ""
@@ -6844,7 +6844,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	endif ; 4.11.3.4
 	;endif ; not macos
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3.6") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.6") >= "0"
 		;Files_copy_patchtextfile_system /sysnative
 		; Patchtextfile is not sysnative enabled yet
 		Files_copy_patchtextfile_system
@@ -7528,7 +7528,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 		
 		
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.5.1") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.1") >= "0"
 			comment "Testing parameters for ExecWith"
 			set $tmp$ = "p5"
 			set $list1$ = getOutStreamFromSection ('ExecWith_parameters cmd.exe /c pass p1 p2 p3 p4 $tmp$')
@@ -7542,7 +7542,7 @@ if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ; 4.11.5
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.12.4.17") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.4.17") >= "0"
 			comment "Testing /encoding parameter for ExecWith"
 			set $tmp$ = "p5"
 			set $list1$ = getOutStreamFromSection ('ExecWith_parameters cmd.exe /c pass p1 p2 p3 p4 $tmp$ WINST /encoding utf8')
@@ -7602,7 +7602,7 @@ if ($Flag_compare_to_python$ = "on")
 	
 	set $list1$ = getOutStreamFromSection('ExecWith_hello "python" PASS -a "option a" -b "option b" "there we are" WINST /EscapeStrings')
 	set $list2$ = getOutStreamFromSection('execpython_hello -a "option a" -b "option b" "there we are"')
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.1") >= "0"
 		set $list$ = getListContainingList($list1$,$list2$)
 		if count($list1$) = count($list$)
 			comment "passed"
@@ -7698,7 +7698,7 @@ if ($Flag_winst_ldap_search$ = "on")
 				set $TestResult$ = "not o.k."
 			endif
 			
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.12.3.4") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.3.4") >= "0"
 				comment ""
 				comment "-------------------------------------"
 				comment "Testing: "
@@ -7799,7 +7799,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "opsiservicecall"
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4") >= "0"
 			set $ConstTest$ = "%opsiDepotId%"
 			set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getDepotId')
 			;set $list1$ = getReturnListFromSection('opsiservicecall_ServerIdsList /serviceurl "%opsiserviceURL%" /username "%hostId%" /password "%opsiservicePassword%"')
@@ -7812,7 +7812,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.1.1") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.1") >= "0"
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -7871,7 +7871,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "opsiservicecall with opsi 4 method"
 		set $ConstTest$ = "bonifax.uib.local"
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4") >= "0"
 			set $ConstTest$ = "%opsiDepotId%"
 		endif
 		set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getDepotshares')
@@ -7893,7 +7893,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		
 		set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_productOnClient_getObjects')
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.4") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.4") >= "0"
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -7957,7 +7957,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		
 		
 		if $OS$ = "Windows_NT"
-			if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 				comment ""
 				comment "-------------------------------------"
 				comment "Testing: "
@@ -7986,7 +7986,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 				opsiservicecall_authenticated /preloginservice
 				opsiservicecall_authenticated
 				
-				if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.6.11")
+				if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.6.11")
 					set $ConstTest$ = "notepad.exe"
 					set $testfilepath$ = $ConstTest$
 					killtask $ConstTest$
@@ -8234,7 +8234,7 @@ if ($Flag_ProfileActions$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 		switch $OS$
 			case "Windows_nt"
 				ProfileActions
@@ -8272,37 +8272,37 @@ sub "%scriptpath%\sub-scripts\xml2test.opsiscript"
 
 sub "%scriptpath%\sub-scripts\registry.opsiscript"
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.0")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.0")
 	sub "%scriptpath%\sub-scripts\localfunctions.opsiscript"
 endif
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
 endif
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\regex.opsiscript"
 endif
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\networkcalc.opsiscript"
 endif
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\urlparser.opsiscript"
 endif
 
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
 	sub "%scriptpath%\sub-scripts\macos.opsiscript"
 endif
 
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
 	sub "%scriptpath%\sub-scripts\wmitest.opsiscript"
 endif
 
-if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.9")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.9")
 	sub "%scriptpath%\sub-scripts\var_as_param.opsiscript"
 endif
 
@@ -9779,25 +9779,13 @@ tasklist /FI "IMAGENAME eq helperchild.exe"
 ;
 [winbatch_myinno_from_c]
 "$HomeTestFiles$\testFiles\myinnosetup.exe" /silent
-;
-;[winbatch_myinno_uninstall]
-;"%ProgramFiles32Dir%\myinnosetup\unins000.exe" /silent
-;
-;[winbatch_wow_myinno]
-;"%winstdir%\winst32.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
-;
-;[Winbatch_regedit_s_64]
-;"%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
-;
-;[Winbatch_regedit_s_32]
-;"%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
-;
+
 [winbatch_wow_myinno_from_c]
-"%winstdir%\winst32.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+"%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 ;
 ;[Winbatch_msi_standard_from_c_indirect]
-;;"%WinstDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
-;;"%WinstDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
+;;"%OpsiscriptDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
+;;"%OpsiscriptDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
 ;
 ;[winbatch_start_helper_asadmin_c]
 ;"$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"

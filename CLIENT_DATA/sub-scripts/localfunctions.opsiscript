@@ -12,7 +12,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12")
 	
 		comment ""
 		comment "-------------------------------------"
@@ -194,7 +194,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			set $list1$ = myFunc8('echo %cd%')
 		endif
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.10")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.10")
 			comment " Testing repeated function call with local variables ..."
 			comment "should give no syntax error here"
 			if GetOS = 'Linux'
@@ -240,7 +240,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ;4.12.10
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.13")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.13")
 			importLib "%scriptpath%\standalone-tests\functionlib.opsiscript"
 			switch $OS$
 				case "Windows_nt"
@@ -276,7 +276,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not tested"
 	endif ; 4.12
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	
 		comment " Testing fuction with no (void) result ..."
 		DefFunc myNoResultFunc(ref $str1$ : string) : void
@@ -309,7 +309,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not tested"
 	endif ; 4.16
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.17")
 		comment " Testing function in loop ..."
 	
 		deffunc copy_str_to_list($srv_str$ : string, val $full_srv_list$ : stringlist, ref $dep_srv_list$ : stringlist) : void
@@ -341,7 +341,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif ; 4.17
 
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.17")
 		comment " Testing function with stringtobool ..."
 	
 		DefFunc myboolstrFunc1($str1$ : string, ref $str2$ : string, $list$: stringlist) : string
@@ -477,7 +477,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 
 	endif ; 4.12.0.20
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.36")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.36")
 		
 		comment "Recursive calls ...."
 		
@@ -553,7 +553,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		
 	endif ; 4.12.0.36
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
 	
 		DefFunc fakultaet_str($zahlstr$ : string) : string
 			DefVar $zahl2str$
@@ -622,7 +622,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 
 	endif ; 4.12.1.0
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.5")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.5")
 		; This test should not give a syntax error
 		Deffunc emptyloop() : void
 			DefStringlist $list$

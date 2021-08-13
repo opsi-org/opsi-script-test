@@ -190,7 +190,7 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "testing getDefaultNetmaskByIP4adr failed"
 	endif
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.3.4")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.4")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -260,7 +260,7 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		
 	endif ; 4.12.3.4
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.4.4")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.4")
 		
 		DefStringList $CorrectFQDNs$
 		DefStringList $IncorrectFQDNs$
