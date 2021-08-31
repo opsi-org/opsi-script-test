@@ -167,7 +167,7 @@ DefVar $LicensePool$
 DefVar $licensekey$
 
 
-set $ScriptLoglevel$ = GetProductProperty ("loglevel", "9")
+set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
 ; retrieve OS and NT Version
