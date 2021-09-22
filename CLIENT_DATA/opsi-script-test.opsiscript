@@ -2336,6 +2336,22 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		comment "passed"
 	endif
 	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.28")
+		if CompareDotSeparatedNumbers("4.2.2", ">", "4.2.00079")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		if CompareDotSeparatedNumbers("0.9.8h", ">", "0.9.8e")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.12.4.28
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "

@@ -195,6 +195,39 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "Execwith assumed failed"
 			endif
+			
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.28")
+				comment "testing exitcode"
+				ExecWith_powershell_exit42 "powershell.exe" set-ExecutionPolicy Bypass
+				if not (getlastexitcode = "42")
+				set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				set $exitcode$ = powershellCall('exit 42')
+				if not ($exitcode$ = "42")
+				set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				comment "testing hookscript"
+				set $tmp$ = "%SCRIPTPATH%\test-files\certificates\PowershellSignatureOntheFly.cmd"
+				ChangeDirectory "%SCRIPTPATH%\test-files\certificates"
+				ExecWith_powershell_exit42 "powershell.exe" set-executionpolicy winst /hookscript "$tmp$"
+				if not (getlastexitcode = "42")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				comment "testing powershellCall with optionstr"
+				set $tmp$ = "%SCRIPTPATH%\test-files\certificates\PowershellSignatureOntheFly.cmd"
+				ChangeDirectory "%SCRIPTPATH%\test-files\certificates"
+				set $list1$ = powershellCall('exit 42',"sysnative","true","/hookscript "+$tmp$)
+				if not (getlastexitcode = "42")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+			endif ; 4.12.4.28
 		endif ; NT6
 		sub_compareResult
 		set $winst_powershell$ = $SubResult$
@@ -224,3 +257,8 @@ $is64BitSystem
 $is64BitPowerShell
 exit $LASTEXITCODE
 
+[ExecWith_powershell_exit42]
+trap { write-output $_ ; exit 1 }
+set $myexitcode = 42
+echo $myexitcode
+exit $myexitcode

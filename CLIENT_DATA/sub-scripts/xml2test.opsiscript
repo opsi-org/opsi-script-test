@@ -1158,6 +1158,30 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		Files_cleanup_xml2
 	endif ; 4.12.4.20
 	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.28")
+		Files_copy_xml2
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "setNodePair"
+		sub_clean_xml2cmdLines
+		set $xml2nodepath$ ='dict'
+		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		; setNodePair <keyNodeName> <keyNodeTextContent> <valueNodeName> <valueNodeTextContent> 
+		set $xml2cmdLine3$ = 'setNodePair "key" "CFBundleShortVersionString" "value" "4.12.4.28"'
+		XML2_dummy_xml $HomeTestFiles$+"\info-osgui.plist"
+		set $list1$ = loadTextFile($HomeTestFiles$+"\info-osgui.plist")
+		set $ConstTest$ = takeFirstStringContaining($list1$,"4.12.4.28")
+		if not($ConstTest$ = "")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		Files_cleanup_xml2
+	endif ; 4.12.4.28
+	
 	sub_compareResult
 	
 	set $winst_xml2$ = $SubResult$

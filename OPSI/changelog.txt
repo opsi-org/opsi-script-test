@@ -1,4 +1,15 @@
 [Changelog]
+opsi-script-test (4.12.4.28-1) stable; urgency=low
+
+  * xml2: setNodePair
+  * execWith: powershell exitcode
+  * execWith: powershell hookscript
+  * CompareDotSeparatedNumbers 
+         4.2.00079 < 4.2.2
+         0.9.8e < 0.9.8h
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  22 Sep 2021 15:00:00 +0200
+
 opsi-script-test (4.12.4.27-1) stable; urgency=low
 
   * replace all calls of Winst32.exe with opsi-script-exe
