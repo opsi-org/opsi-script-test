@@ -1169,7 +1169,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
 		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
 		; setNodePair <keyNodeName> <keyNodeTextContent> <valueNodeName> <valueNodeTextContent> 
-		set $xml2cmdLine3$ = 'setNodePair "key" "CFBundleShortVersionString" "value" "4.12.4.28"'
+		set $xml2cmdLine3$ = 'setNodePair "key" "CFBundleShortVersionString" "string" "4.12.4.28"'
 		XML2_dummy_xml $HomeTestFiles$+"\info-osgui.plist"
 		set $list1$ = loadTextFile($HomeTestFiles$+"\info-osgui.plist")
 		set $ConstTest$ = takeFirstStringContaining($list1$,"4.12.4.28")

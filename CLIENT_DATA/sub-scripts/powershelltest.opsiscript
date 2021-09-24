@@ -198,7 +198,7 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 			
 			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.28")
 				comment "testing exitcode"
-				ExecWith_powershell_exit42 "powershell.exe" set-ExecutionPolicy Bypass
+				ExecWith_powershell_exit42 "powershell.exe" -ExecutionPolicy Bypass
 				if not (getlastexitcode = "42")
 				set $TestResult$ = "not o.k."
 					LogWarning "Execwith assumed failed"
@@ -213,7 +213,7 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				comment "testing hookscript"
 				set $tmp$ = "%SCRIPTPATH%\test-files\certificates\PowershellSignatureOntheFly.cmd"
 				ChangeDirectory "%SCRIPTPATH%\test-files\certificates"
-				ExecWith_powershell_exit42 "powershell.exe" set-executionpolicy winst /hookscript "$tmp$"
+				ExecWith_powershell_exit42 "powershell.exe" -Executionpolicy Bypass winst /hookscript "$tmp$"
 				if not (getlastexitcode = "42")
 					set $TestResult$ = "not o.k."
 					LogWarning "Execwith assumed failed"
@@ -259,6 +259,6 @@ exit $LASTEXITCODE
 
 [ExecWith_powershell_exit42]
 trap { write-output $_ ; exit 1 }
-set $myexitcode = 42
+$myexitcode = 42
 echo $myexitcode
 exit $myexitcode
