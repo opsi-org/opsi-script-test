@@ -1301,8 +1301,8 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			
 			comment "Testing include commands"
 			
-			include_append "sub-scripts\section_Files_del_tmp_dummy.opsiinc"
-			include_insert "sub-scripts\include-test1.opsiinc"
+			include_append "%scriptpath%\sub-scripts\section_Files_del_tmp_dummy.opsiinc"
+			include_insert "%scriptpath%\sub-scripts\include-test1.opsiinc"
 			
 			comment "testing two sections with the same name"
 			include_append "sub-scripts\section_DosInAnIcon_echo.opsiinc"
@@ -3787,21 +3787,23 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	
 	;getReturnListFromSection (Sectionname)
 	;if $MsVersion$ <= "5.0"
-	if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
-		comment "not tested at win2k  because wmic is needed"
-	else
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "getOutStreamFromSection"
-		set $ConstTest$ = "Microsoft Corporation"
-		set $list1$ = getOutStreamFromSection ('DosInAnIcon_dummy_getOutStreamFromSection')
-		set $CompValue$ = trim(takeString(2, $list1$))
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
+	if $OS$ = "Windows_NT"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"<=","5.0")
+			comment "not tested at win2k  because wmic is needed"
 		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "getOutStreamFromSection"
+			set $ConstTest$ = "Microsoft Corporation"
+			set $list1$ = getOutStreamFromSection ('DosInAnIcon_dummy_getOutStreamFromSection')
+			set $CompValue$ = trim(takeString(2, $list1$))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
 		endif
 	endif
 	
@@ -5619,21 +5621,23 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	Files_empty_folder
 	
 	;if $MsVersion$ <= "5.0"
-	if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
-		comment "not tested at win2k  because wmic is needed"
-	else
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "HasMinimumSpace"
-		set $list1$ = getOutStreamFromSection("DosInAnIcon_getFreeSpace")
-		set $tmp$ = takeString(2, $list1$)
-		if (HasMinimumSpace ("%Systemdrive%", "100"))
-			if ($tmp$ > "100")
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
+	if $OS$ = "Windows_NT"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+			comment "not tested at win2k  because wmic is needed"
+		else
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "HasMinimumSpace"
+			set $list1$ = getOutStreamFromSection("DosInAnIcon_getFreeSpace")
+			set $tmp$ = takeString(2, $list1$)
+			if (HasMinimumSpace ("%Systemdrive%", "100"))
+				if ($tmp$ > "100")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
 			endif
 		endif
 	endif
