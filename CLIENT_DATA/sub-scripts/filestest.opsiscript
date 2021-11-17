@@ -408,7 +408,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
-	message "copy -s -v -d -u"
+	comment "copy -s -v -d -u"
 	message "copy "
 	
 	if (FileExists($HomeTestFiles$))
@@ -417,7 +417,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	
 	if not(FileExists($HomeTestFiles$))
 		; copy -s
-		ShellInAnIcon_ls_testfiles
+		; ShellInAnIcon_ls_testfiles
 		message "copy -s"
 		Files_copy_s
 		if (FileExists($FileCopyTest$) AND FileExists($FileCopyTestSubDirectory$))
@@ -873,6 +873,20 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
+			
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.31")
+				Files_prep_move_dir
+				if DirectoryExists($HomeTestFiles$+"\files\subDirectory")
+					Files_move_dir
+				endif
+				if DirectoryExists($HomeTestFiles$+"\files\renamedsubDirectory")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "move dir failed"
+				endif
+			endif
+			
 			Files_move
 			if $dotest$ = 'true'
 				;comment "symlink command is only available in NT6 and up"
@@ -1138,6 +1152,36 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			isFatalError
 		endif
 		
+	endif
+	
+	if $test_speed$ = "true"
+		message "speed test: copy big dir"
+		Files_del_empty_folder
+		marktime
+		Files_bigdir
+		difftime
+		switch $OS$
+			case "Windows_nt"
+				set $ConstTest$ = "95"
+			endcase
+			case "Linux"
+				set $ConstTest$ = "95"
+			endcase
+			case "macos"
+				set $ConstTest$ = "95"
+			endcase
+		endswitch
+		comment "difftime should be about "+$ConstTest$+" seconds"
+		set $difftime$ = getDiffTimeSec
+		comment "difftime is about "+$difftime$+" seconds"
+		set $CompValue$ = $difftime$
+		if $ConstTest$ int>= $CompValue$
+			comment "files copy speed  passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "files copy speed failed"
+		endif
+		Files_del_empty_folder
 	endif
 	
 	
@@ -1537,13 +1581,20 @@ symlink "$HomeTestFiles$\files\symlink.txt" "$HomeTestFiles$\files\symlink2.txt"
 
 
 [Files_move]
-;del "$HomeTestFiles$\files\temp\rename.txt"
-;del "$HomeTestFiles$\files\temp\move.txt"
+del "$HomeTestFiles$\files\temp\rename.txt"
+del "$HomeTestFiles$\files\temp\move.txt"
 copy "$HomeTestFiles$\files\dummy2.txt" "$HomeTestFiles$\files\temp\"
 rename "$HomeTestFiles$\files\temp\dummy2.txt" "$HomeTestFiles$\files\temp\rename.txt"
 copy "$HomeTestFiles$\files\dummy2.txt" "$HomeTestFiles$\files\temp\"
 move "$HomeTestFiles$\files\temp\dummy2.txt" "$HomeTestFiles$\files\temp\move.txt"
 
+[Files_prep_move_dir]
+copy -se "%ScriptPath%\test-files\testfiles\*.*" "$HomeTestFiles$\files"
 
+[Files_move_dir]
+rename "$HomeTestFiles$\files\subDirectory" "$HomeTestFiles$\files\renamedsubDirectory"
+
+[Files_bigdir]
+copy -sec "%ScriptPath%\test-files\bigdir\*.*" $HomeTestFiles$
 ;----------------   end   sections for files test ---------------------------------
 

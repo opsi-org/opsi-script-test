@@ -101,6 +101,7 @@ DefVar $LdapHost$
 DefVar $LdapPort$
 DefVar $LdapUser$
 DefVar $LdapPassword$
+DefVar $LDAPBaseDN$
 DefVar $LdapResultType$
 DefVar $LdapFilter$
 DefVar $SectionName$
@@ -7636,8 +7637,10 @@ if ($Flag_compare_to_python$ = "on")
 	set $compare_to_python$ = $SubResult$
 endif
 
-sub "%scriptpath%\sub-scripts\ldap_search.opsiscript"
 
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.29")
+	sub "%scriptpath%\sub-scripts\ldap_search.opsiscript"
+endif
 
 if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 	if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") or ("%opsiserver%" = "172.16.166.1")
@@ -8392,21 +8395,6 @@ set $foundsubsection$ = "mainfile_sections_top"
 
 [DosInAnIcon_read_cfg]
 $HomeTestFiles$\testfiles\read_alias.exe dummyalias
-
-[ldapsearch_groups]
-targethost: bonifax
-dn: $LdapSearchDn$
-;dn: cn=opsiadmin,ou=Groups,dc=uib,dc=local
-attributes: $LdapSearchAttributes$
-
-[ldapsearch_users]
-targethost: $LdapHost$
-targetport: $LdapPort$
-user: $LdapUser$
-password: $LdapPassword$
-dn: $LdapSearchDn$
-attributes: $LdapSearchAttributes$
-filter: $LdapFilter$
 
 
 [XMLPatch_return_elements]
