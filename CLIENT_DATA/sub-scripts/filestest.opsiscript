@@ -1145,6 +1145,16 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
+			
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
+				markErrorNumber
+				Files_unzipfile_to_profiles /AllNTUserProfiles
+				if errorsOccuredSinceMark > 0
+					LogWarning "failed"
+					set $TestResult$ = "not o.k."
+				endif
+				Files_work_on_profiles_del_userp /AllNTUserProfiles
+			endif
 			;Files_empty_folder
 		else
 			set $TestResult$ = "not o.k."
@@ -1509,6 +1519,9 @@ unzipfile "%opsiTmpDir%\testdir.zip" "$HomeTestFiles$\"
 [Files_unzipfile_file]
 checktargetpath = "$HomeTestFiles$\"
 unzipfile "%opsiTmpDir%\testfile.zip" "$HomeTestFiles$\"
+
+[Files_unzipfile_to_profiles]
+unzipfile "%ScriptPath%\test-files\zips\opsi-script-0.1.2.vsix" "%UserProfileDir%\opsi-script-test"
 
 [Files_zipfile_bigfolder]
 zipfile "%ScriptPath%\" "%opsiTmpDir%\testbigdir.zip"

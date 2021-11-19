@@ -1,4 +1,10 @@
 [Changelog]
+opsi-script-test (4.12.4.32-1) stable; urgency=low
+
+  * files unzip to profiles
+  
+-- detlef oertel <d.oertel@uib.de>  Fri,  19 Nov 2021 15:00:00 +0200
+
 opsi-script-test (4.12.4.31-1) stable; urgency=low
 
   * files speed test (Files_bigdir)
