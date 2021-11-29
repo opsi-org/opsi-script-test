@@ -1,0 +1,11 @@
+[actions]
+DefStringlist $list$
+DefStringlist $listvarinittest$ = '["list","init","value"]'
+if areListsEqual($listvarinittest$,'["list","init","value"]', "FLAG_AUTOMODE")
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+
+[stop]

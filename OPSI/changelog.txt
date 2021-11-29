@@ -2,6 +2,14 @@
 opsi-script-test (4.12.4.32-1) stable; urgency=low
 
   * files unzip to profiles
+  * todo 
+  * DefVar / DefStringlist with initialization
+  * set <stringlist> = <json type stringlist literal>
+  * files section: unzip create target dir
+    * new void function ImportCertToSystem(<cert file name>)
+    * Linux: waitforpackagelock
+    * standalone test for: GetProductProperty: 
+      if no service context, tries to find property in %scriptpah%/properties.conf
   
 -- detlef oertel <d.oertel@uib.de>  Fri,  19 Nov 2021 15:00:00 +0200
 

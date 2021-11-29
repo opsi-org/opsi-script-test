@@ -3506,6 +3506,55 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "failed"
 	endif
 	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "set stringlist json style"
+		
+		set $ConstTest$ = "c"
+		set $list1$ = '["a","b", "c", "d"]'
+		Set $CompValue$ = takeString(2, $list1$)
+		
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "c"
+		set $list1$ = '["a","", "c", "d"]'
+		Set $CompValue$ = takeString(2, $list1$)
+		
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = ""
+		set $list1$ = '["a","", "c", "d"]'
+		Set $CompValue$ = takeString(1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "0"
+		set $list1$ = '[]'
+		Set $CompValue$ = count($list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif
+	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
@@ -5709,7 +5758,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		killtask "autoit3.exe"
 	endif ; windows
 	
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.2.1")
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -5881,6 +5930,32 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Variable declaration with initialization"
+		
+		DefVar $strvarinittest$ = "str init value"
+		set $ConstTest$ = "str init value"
+		set $CompValue$ = $strvarinittest$
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefStringlist $listvarinittest$ = '["list","init","value"]'
+		if areListsEqual($listvarinittest$,'["list","init","value"]', "FLAG_AUTOMODE")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif
+	
 	
 	
 	sub_compareResult

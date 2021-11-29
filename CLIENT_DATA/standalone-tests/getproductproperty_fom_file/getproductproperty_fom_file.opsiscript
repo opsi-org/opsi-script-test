@@ -1,0 +1,17 @@
+[Actions]
+DefStringList $list$
+DefVar $str$
+
+set $str$ = GetProductProperty('propstr','')
+if $str$ = "from file"
+	comment "got it"
+else
+	comment "failed"
+endif
+
+set $list$ = GetProductPropertyList('proplist','')
+if takeString(0,$list$) = "from file"
+	comment "got it"
+else
+	comment "failed"
+endif
