@@ -1,0 +1,25 @@
+
+comment "called from subsub_getoutstream_master"
+
+
+
+
+sub_level2
+
+[sub_level2]
+;setloglevel = 9
+;setdebug_prog = true
+set $ConstTest$ = 'hello'
+set $list$ = getoutstreamfromsection('shellInAnIcon_hello')
+set $list$ = getSubListByMatch ($ConstTest$, $list$)
+set $CompValue$ = takestring(0,$list$)
+if ($ConstTest$ = $CompValue$)
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+
+[shellInAnIcon_hello]
+echo $ConstTest$
+

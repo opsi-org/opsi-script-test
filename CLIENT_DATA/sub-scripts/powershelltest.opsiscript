@@ -14,7 +14,7 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 		Set $ExpectedResult$ = "o.k."
 		; start testing
 		set $TestResult$ = "o.k."
-    	
+		
 		if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.1")
 			comment "backup old powershell executionpolicy (sysnative)"
 			set $list$ = shellCall('powershell.exe get-executionpolicy')
@@ -82,9 +82,9 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "Execwith assumed failed"
 			endif
-    	
-    	
-    	
+			
+			
+			
 			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
@@ -103,7 +103,7 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "testing powershellCall failed"
 			endif
-    	
+			
 			message "powershellcall (32bit)"
 			set $list1$ = powershellCall('echo "powershell opsi-winst-test"',"32bit")
 			if not (getlastexitcode = "0")
@@ -200,13 +200,13 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				comment "testing exitcode"
 				ExecWith_powershell_exit42 "powershell.exe" -ExecutionPolicy Bypass
 				if not (getlastexitcode = "42")
-				set $TestResult$ = "not o.k."
+					set $TestResult$ = "not o.k."
 					LogWarning "Execwith assumed failed"
 				endif
 				
 				set $exitcode$ = powershellCall('exit 42')
 				if not ($exitcode$ = "42")
-				set $TestResult$ = "not o.k."
+					set $TestResult$ = "not o.k."
 					LogWarning "Execwith assumed failed"
 				endif
 				
@@ -232,11 +232,220 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				endif
 				ExecWith_powershell_delete_test_cert "powershell.exe" -Executionpolicy Bypass
 			endif ; 4.12.4.28
+			
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.34")
+				message "powershellcall (AllSigned)"
+				comment "switch to powershell AllSigned"
+				set $orgpolicy$ = takestring(0,shellCall('powershell.exe get-executionpolicy'))
+				shellCall('powershell.exe set-executionpolicy AllSigned')
+				shellCall('powershell.exe get-executionpolicy -list')
+				
+				
+				comment "testing exitcode"
+				ExecWith_powershell_exit42 "powershell.exe" -ExecutionPolicy Bypass
+				if not (getlastexitcode = "42")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				set $exitcode$ = powershellCall('exit 42')
+				if not ($exitcode$ = "42")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				comment "testing hookscript"
+				; https://docs.microsoft.com/de-de/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7.1
+				ExecWith_powershell_create_test_cert "powershell.exe" -Executionpolicy Bypass
+				set $tmp$ = "%SCRIPTPATH%\test-files\certificates\PowershellSignatureOntheFly.cmd"
+				ChangeDirectory "%SCRIPTPATH%\test-files\certificates"
+				ExecWith_powershell_exit42 "powershell.exe" -Executionpolicy Bypass winst /hookscript "$tmp$"
+				if not (getlastexitcode = "42")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				comment "testing powershellCall with optionstr"
+				set $tmp$ = "%SCRIPTPATH%\test-files\certificates\PowershellSignatureOntheFly.cmd"
+				ChangeDirectory "%SCRIPTPATH%\test-files\certificates"
+				comment "this should not fail because executionpolicy Restricted and policy handling set to false"
+				set $list1$ = powershellCall('exit 42',"sysnative","false","/hookscript "+$tmp$)
+				if not (getlastexitcode = "42")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				ExecWith_powershell_delete_test_cert "powershell.exe" -Executionpolicy Bypass
+				
+				Message "testing powershell functions"
+				comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+				comment ""
+				comment "testing powershell functions"
+				comment ""
+				comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+				
+				
+				comment "backup old powershell executionpolicy (sysnative)"
+				set $list$ = shellCall('powershell.exe get-executionpolicy')
+				if not (getlastexitcode = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				set $pspolicy$ = takestring(0,$list$)
+				comment "set new powershell executionpolicy (sysnative)"
+				set $exitcode$ = shellCall('powershell.exe set-executionpolicy RemoteSigned')
+				if not ($exitcode$ = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				set $list1$ = getOutStreamFromSection ('ExecWith_powershell "powershell.exe" winst /sysnative')
+				if not (getlastexitcode = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				comment "check if the script was executed..."
+				set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
+				if ("" = $CompValue$)
+					comment "check if the script was not executed because powershell is not activated..."
+					set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				else
+					comment "Execwith assumed passed"
+				endif
+				
+				if $architecture$ = "32"
+					set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "powershell.exe" winst /32bit')
+					comment "check if the script was executed..."
+					set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
+					if ("" = $CompValue$)
+						comment "check if the script was not executed because powershell is not activated..."
+						set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
+					endif
+					if not ("" = $CompValue$)
+						comment "Execwith assumed passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "Execwith assumed failed"
+					endif
+				endif
+				
+				set $list1$ = getOutStreamFromSection ('execwith_powershell_architecture "powershell.exe" winst /sysnative')
+				comment "check if the script was executed..."
+				set $CompValue$ = takeFirstStringContaining($list1$,"powershell opsi-winst-test")
+				if ("" = $CompValue$)
+					comment "check if the script was not executed because powershell is not activated..."
+					set $CompValue$ = takeFirstStringContaining($list1$,"PSSecurityException")
+				endif
+				if not ("" = $CompValue$)
+					comment "Execwith assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				comment "restore old powershell executionpolicy"
+				set $exitcode$ = shellCall('powershell.exe set-executionpolicy '+$pspolicy$)
+				if not ($exitcode$ = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				
+				
+				comment ""
+				comment "-------------------------------------"
+				comment "Testing: "
+				message "powershellcall (default)"
+				set $list1$ = powershellCall('echo "powershell opsi-winst-test"')
+				if not (getlastexitcode = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				comment "check if the script was executed..."
+				set $ConstTest$ = "powershell opsi-winst-test"
+				set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "powershellCall passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing powershellCall failed"
+				endif
+				
+				message "powershellcall (32bit)"
+				set $list1$ = powershellCall('echo "powershell opsi-winst-test"',"32bit")
+				if not (getlastexitcode = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				comment "check if the script was executed..."
+				set $ConstTest$ = "powershell opsi-winst-test"
+				set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "powershellCall passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing powershellCall failed"
+				endif
+				
+				message "powershellcall (sysnative)"
+				set $list1$ = powershellCall('echo "powershell opsi-winst-test"',"sysnative")
+				if not (getlastexitcode = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				comment "check if the script was executed..."
+				set $ConstTest$ = "powershell opsi-winst-test"
+				set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "powershellCall passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing powershellCall failed"
+				endif
+				
+				message "powershellcall (64bit)"
+				set $list1$ = powershellCall('echo "powershell opsi-winst-test"',"64bit")
+				if not (getlastexitcode = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				comment "check if the script was executed..."
+				set $ConstTest$ = "powershell opsi-winst-test"
+				set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "powershellCall passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing powershellCall failed"
+				endif
+				
+				message "powershellcall (sysnative) (true)"
+				set $list1$ = powershellCall('echo "powershell opsi-winst-test"',"sysnative","true")
+				if not (getlastexitcode = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				comment "check if the script was executed..."
+				set $ConstTest$ = "powershell opsi-winst-test"
+				set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "powershellCall passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing powershellCall failed"
+				endif
+				
+				
+				comment "switch back from powershell AllSigned"
+				shellCall('powershell.exe set-executionpolicy '+$orgpolicy$)
+				shellCall('powershell.exe get-executionpolicy -list')
+			endif ; 4.12.4.34
 		endif ; NT6
 		sub_compareResult
 		set $winst_powershell$ = $SubResult$
 	endif ; windows
-
+	
 endif
 
 

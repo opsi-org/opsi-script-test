@@ -8,4 +8,6 @@ else
 	LogWarning "failed"
 endif
 
+set $list$ = '[]'
+
 [stop]

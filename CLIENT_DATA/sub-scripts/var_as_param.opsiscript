@@ -827,6 +827,24 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.34")
+		if $OS$="Windows_NT"
+			message "execwith powershell (AllSigned)"
+			comment "switch to powershell AllSigned"
+			set $orgpolicy$ = takestring(0,shellCall('powershell.exe get-executionpolicy'))
+			shellCall('powershell.exe set-executionpolicy AllSigned')
+			shellCall('powershell.exe get-executionpolicy -list')
+			
+			for %Element% in $Architectures$ do Sub_TestVarAsParam_ExecWith
+			
+			
+			comment "switch back from powershell AllSigned"
+			shellCall('powershell.exe set-executionpolicy '+$orgpolicy$)
+			shellCall('powershell.exe get-executionpolicy -list')
+			
+		endif ; windows
+	endif ; 4.12.4.34
+	
 	
 	
 	sub_compareResult

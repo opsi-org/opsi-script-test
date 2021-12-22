@@ -1,4 +1,13 @@
 [Changelog]
+opsi-script-test (4.12.4.34-1) stable; urgency=low
+
+  * powershell: AllSigned Hack in PowershellCall / execwith
+  * varasparam: AllSigned Hack in PowershellCall / execwith
+  * subsub getoutstreamfromsection
+  * opsiservicecall test timeout command
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  22 Dec 2021 15:00:00 +0200
+
 opsi-script-test (4.12.4.32-1) stable; urgency=low
 
   * files unzip to profiles
