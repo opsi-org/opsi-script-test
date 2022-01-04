@@ -1,0 +1,23 @@
+[actions]
+
+DefVar $orgpolicy$
+setloglevel = 8
+
+set $orgpolicy$ = takestring(0,shellCall('powershell.exe get-executionpolicy'))
+shellCall('powershell.exe set-executionpolicy AllSigned')
+shellCall('powershell.exe get-executionpolicy -list')
+
+ExecWith_powershell_loop_test powershell.exe -ExecutionPolicy Bypass
+
+comment "switch back from powershell AllSigned"
+shellCall('powershell.exe set-executionpolicy '+$orgpolicy$)
+shellCall('powershell.exe get-executionpolicy -list')
+
+
+[ExecWith_powershell_loop_test]
+echo "just started"
+for ($i=0; $i -le 1; $i++){
+    echo "inloop"
+}
+echo "ending"
+Exit 42

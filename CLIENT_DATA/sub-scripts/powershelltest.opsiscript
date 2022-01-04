@@ -441,6 +441,38 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				shellCall('powershell.exe set-executionpolicy '+$orgpolicy$)
 				shellCall('powershell.exe get-executionpolicy -list')
 			endif ; 4.12.4.34
+			
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.35")
+				message "powershellcall (AllSigned)"
+				comment "switch to powershell AllSigned"
+				set $orgpolicy$ = takestring(0,shellCall('powershell.exe get-executionpolicy'))
+				shellCall('powershell.exe set-executionpolicy AllSigned')
+				shellCall('powershell.exe get-executionpolicy -list')
+				
+				comment "testing exitcode"
+				set $list1$ = getOutStreamFromSection ('ExecWith_powershell_loop_test "powershell.exe" -ExecutionPolicy Bypass')
+				if not (getlastexitcode = "42")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				if count($list1$) int>= "4"
+					set $ConstTest$ = "ending"
+					set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+					if ($ConstTest$ = $CompValue$)
+						comment "Execwith passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "testing Execwith failed"
+					endif
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
+				comment "switch back from powershell AllSigned"
+				shellCall('powershell.exe set-executionpolicy '+$orgpolicy$)
+				shellCall('powershell.exe get-executionpolicy -list')
+			endif ; 4.12.4.35
 		endif ; NT6
 		sub_compareResult
 		set $winst_powershell$ = $SubResult$
@@ -494,3 +526,11 @@ $store.Open('ReadWrite')
 $certs = @(dir cert:\LocalMachine\my | ? { $_.Subject -like '*opsi-script-test*' })
 foreach ($cert in $certs) {$store.Remove($cert); "removed"}
 $store.close() 
+
+[ExecWith_powershell_loop_test]
+echo "just started"
+for ($i=0; $i -le 1; $i++){
+    echo "inloop"
+}
+echo "ending"
+Exit 42
