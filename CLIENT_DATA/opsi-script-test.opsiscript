@@ -6261,11 +6261,12 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 		endif ; windows
 		
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.34")
-		   opsiServiceCall_opsiclientd_wait /opsiclientd-once
+			message "opsiservicecall timeout test - takes about 100 seconds - please wait"
+			opsiServiceCall_opsiclientd_wait /opsiclientd-once
 		endif
-
-
-
+		
+		
+		
 		
 		;opsiservicecall_authenticated /preloginservice
 		
@@ -8159,11 +8160,11 @@ exit 43
 
 [opsiServiceCall_opsiclientd_wait]
 "timeout" : 200
-   "method": "wait"
-   "params":	[
-      '120'
-   ]
-   
+"method": "wait"
+"params":	[
+			'100'
+			]
+
 [opsiservicecall_authenticated]
 "method": "authenticated"
 "params": [
