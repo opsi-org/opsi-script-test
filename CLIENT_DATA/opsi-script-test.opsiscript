@@ -1550,11 +1550,12 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		comment "GetMSVersionName"
 		set $ConstTest$ = GetMSVersionName
-		set $INST_Resultlist$ = getMSVersionMap
-		if getValue("build_number", $INST_Resultlist$) int>= "22000"
-			set $CompValue$ = "11.0"
-		else
-			set $CompValue$ = GetMSVersionInfo
+		set $CompValue$ = GetMSVersionInfo
+		if $CompValue$ = "10.0"
+			set $INST_Resultlist$ = getMSVersionMap
+			if getValue("build_number", $INST_Resultlist$) int>= "22000"
+				set $CompValue$ = "11.0"
+			endif			
 		endif 
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
