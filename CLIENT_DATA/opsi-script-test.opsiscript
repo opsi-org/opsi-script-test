@@ -80,7 +80,7 @@ DefVar $winst_crypt$
 DefVar $winst_xml2$
 DefVar $winst_macos$
 DefVar $winst_wmi$
-
+DefVar $winst_processinfo$
 DefVar $winst_local_functions$
 DefVar $winst_powershell$
 DefVar $winst_regex$
@@ -164,6 +164,7 @@ DefVar $Flag_subnetworkcalc$
 DefVar $Flag_suburlparser$
 DefVar $Flag_subwmi$
 DefVar $Flag_var_as_param$
+DefVar $Flag_processinfo$
 
 DefStringList $list$
 DefStringList $list1$
@@ -380,6 +381,7 @@ set $Flag_winst_patches$           = GetProductProperty ("Patches", "off")
 set $Flag_winst_patch_hosts$       = GetProductProperty ("PatchHosts", "off")
 set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "off")
 set $Flag_powershell$              = GetProductProperty ("powershell", "off")
+set $Flag_processinfo$              = GetProductProperty ("processinfo", "off")
 set $Flag_ProfileActions$          = GetProductProperty ("ProfileActions", "off")
 set $Flag_subregex$                = GetProductProperty ("Regex", "off")
 set $Flag_subnetworkcalc$          = GetProductProperty ("NetworkCalc", "off")
@@ -6525,6 +6527,8 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
 endif
 
+sub "%scriptpath%\sub-scripts\processinfotest.opsiscript"
+
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	sub "%scriptpath%\sub-scripts\regex.opsiscript"
 endif
@@ -6592,6 +6596,7 @@ resultoutput("winst_patches",$winst_patches$)
 resultoutput("winst_patch_hosts",$winst_patch_hosts$)
 resultoutput("winst_patch_text_file",$winst_patch_text_file$)
 resultoutput("winst_powershell",$winst_powershell$)
+resultoutput("winst_processinfo",$winst_processinfo$)
 resultoutput("winst_ProfileActions",$winst_ProfileActions$)
 resultoutput("winst_regex",$winst_regex$)
 resultoutput("winst_networkcalc",$winst_networkcalc$)

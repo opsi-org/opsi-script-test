@@ -1,0 +1,150 @@
+encoding=utf8
+
+if ($Flag_processinfo$ = "on") or ($MasterFlag$ = "on")
+	Message "testing processinfo functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing processinfo functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.1.2")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "getProcessList"
+		switch $OS$
+			case "Windows_nt"
+				set $ConstTest$ = "helperchild.exe"
+				killtask $ConstTest$
+				Winbatch_startprocess_with_child_nowait
+				set $list1$ = getProcessList
+				set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				set $CompValue$ = takeString(0,splitString($CompValue$,";"))
+				killtask $ConstTest$
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endcase
+			case "Linux"
+				set $CompValue$ = ""
+				set $list1$ = getProcessList
+				set $ConstTest$ = "opsi-script-gui"
+				comment " shortcommand gives only the first 15 chars)"
+				set $ConstTest$ = strPart($ConstTest$,"1","15")
+				set $list2$ = getListContaining($list1$,$ConstTest$)
+				if count($list2$) = "0"
+					set $ConstTest$ = "opsi-script"
+					set $list2$ = getListContaining($list1$,$ConstTest$)
+				endif
+				for %aktprocess% in $list2$ do sub_getprocess_by_shortcommand
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endcase
+			case "macos"
+				set $CompValue$ = ""
+				set $list1$ = getProcessList
+				set $ConstTest$ = "opsi-script-gui"
+				set $list2$ = getListContaining($list1$,$ConstTest$)
+				if count($list2$) = "0"
+					set $ConstTest$ = "opsi-script"
+					set $list2$ = getListContaining($list1$,$ConstTest$)
+				endif
+				for %aktprocess% in $list2$ do sub_getprocess_by_command
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endcase
+		endswitch
+	else
+		comment "getProcessList not tested, minimum winst needed: 4.11.1.2"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.6.1")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "processIsRunning"
+		if $OS$ = "Windows_NT"
+			set $ConstTest$ = "helperchild.exe"
+			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
+			set $list1$ = getProcessList
+			if processIsRunning($ConstTest$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			killtask $ConstTest$
+			
+			if not(processIsRunning("not-expected-process.exe"))
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		else ; windows / linux
+			set $ConstTest$ = "opsi-script"
+			if processIsRunning("opsi-script") or processIsRunning("opsi-script-gui")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; windows / linux
+	else
+		comment "processIsRunning not tested, minimum winst needed: 4.11.6.1"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.35")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "isProcessChildOf"
+		set $ConstTest$ = $helper_child_bin_name$
+		set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
+		set $list1$ = getProcessList
+		if isProcessChildOf($ConstTest$,'%opsiscriptprocname%')
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		killtask $ConstTest$
+		
+		if not(isProcessChildOf("not-expected-process.exe",'%opsiscriptprocname%'))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		Winbatch_testing /LetThemGo
+		if isProcessChildOf($pingcommand$,'%opsiscriptprocname%')
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	else
+		comment "processIsRunning not tested, minimum winst needed: 4.11.6.1"
+	endif
+	
+	
+	sub_compareResult
+	set $winst_processinfo$ = $SubResult$
+endif
+
+
+[WinBatch_testing]
+$ping5command$
