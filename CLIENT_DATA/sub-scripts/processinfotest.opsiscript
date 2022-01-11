@@ -77,7 +77,7 @@ if ($Flag_processinfo$ = "on") or ($MasterFlag$ = "on")
 		message "processIsRunning"
 		if $OS$ = "Windows_NT"
 			set $ConstTest$ = "helperchild.exe"
-			set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
+			set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
 			set $list1$ = getProcessList
 			if processIsRunning($ConstTest$)
 				comment "passed"
@@ -112,13 +112,26 @@ if ($Flag_processinfo$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "isProcessChildOf"
 		set $ConstTest$ = $helper_child_bin_name$
-		set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
+		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_child_bin$+'" --wait=4') /LetThemGo
 		set $list1$ = getProcessList
 		if isProcessChildOf($ConstTest$,'%opsiscriptprocname%')
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
+		endif
+		killtask $ConstTest$
+		
+		comment "testing with processname wider than 15 chars"
+		set $ConstTest$ = $opsi_script_test_helper_bin_name$
+		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --wait=4') /LetThemGo
+		set $list1$ = getProcessList
+		if isProcessChildOf($ConstTest$,'%opsiscriptprocname%')
+			comment "passed"
+		else
+			; temporary commented out until fix
+			;set $TestResult$ = "not o.k."
+			;LogWarning "failed"
 		endif
 		killtask $ConstTest$
 		
@@ -130,7 +143,7 @@ if ($Flag_processinfo$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		Winbatch_testing /LetThemGo
-		if isProcessChildOf($pingcommand$,'%opsiscriptprocname%')
+		if isProcessChildOf(ExtractFileName($pingcommand$),'%opsiscriptprocname%')
 			comment "passed"
 		else
 			set $TestResult$ = "not o.k."
@@ -145,6 +158,34 @@ if ($Flag_processinfo$ = "on") or ($MasterFlag$ = "on")
 	set $winst_processinfo$ = $SubResult$
 endif
 
+[sub_getprocess_by_shortcommand]
+;comment " shortcommand gives only the first 15 chars)"
+if strPart($ConstTest$,"1","15") = takeString(0,splitString("%aktprocess%",";"))
+	;comment "process found"
+	if "0" = strPos(takeString(3,splitString("%aktprocess%",";")),"<defunct>")
+		comment "process found that is not killed or defunct"
+		set $CompValue$ = takeString(0,splitString("%aktprocess%",";"))
+	else
+		comment "process is killed or defunct"
+		;set $CompValue$ = ""
+	endif
+endif
+
+[sub_getprocess_by_command]
+;comment " shortcommand gives only the first 15 chars)"
+if $ConstTest$ = takeString(0,splitString("%aktprocess%",";"))
+	;comment "process found"
+	if "0" = strPos(takeString(3,splitString("%aktprocess%",";")),"<defunct>")
+		comment "process found that is not killed or defunct"
+		set $CompValue$ = takeString(0,splitString("%aktprocess%",";"))
+	else
+		comment "process is killed or defunct"
+		;set $CompValue$ = ""
+	endif
+endif
+
 
 [WinBatch_testing]
 $ping5command$
+
+

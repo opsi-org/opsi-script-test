@@ -1961,4 +1961,31 @@ powercfg /hibernate off
 
 [Registry_opsi_org_delete_test]
 deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+
+[sub_getprocess_by_shortcommand]
+;comment " shortcommand gives only the first 15 chars)"
+if strPart($ConstTest$,"1","15") = takeString(0,splitString("%aktprocess%",";"))
+	;comment "process found"
+	if "0" = strPos(takeString(3,splitString("%aktprocess%",";")),"<defunct>")
+		comment "process found that is not killed or defunct"
+		set $CompValue$ = takeString(0,splitString("%aktprocess%",";"))
+	else
+		comment "process is killed or defunct"
+		;set $CompValue$ = ""
+	endif
+endif
+
+[sub_getprocess_by_command]
+;comment " shortcommand gives only the first 15 chars)"
+if $ConstTest$ = takeString(0,splitString("%aktprocess%",";"))
+	;comment "process found"
+	if "0" = strPos(takeString(3,splitString("%aktprocess%",";")),"<defunct>")
+		comment "process found that is not killed or defunct"
+		set $CompValue$ = takeString(0,splitString("%aktprocess%",";"))
+	else
+		comment "process is killed or defunct"
+		;set $CompValue$ = ""
+	endif
+endif
+
 ;----------------   stop   sections for dosbatch/winbatch tests ---------------------------------

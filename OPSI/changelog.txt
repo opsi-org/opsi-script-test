@@ -6,6 +6,8 @@ opsi-script-test (4.12.4.35-1) stable; urgency=low
   * new property processinfo
     tests for getprocesslist and processIsRunning moved from stringlist to here
   * test isProcessChildOf in processinfo
+  * test getMSVersionName in stringtest
+  * varasparam: fixes for waitforprocessending at macos
   
 -- detlef oertel <d.oertel@uib.de>  Tue,  04 Jan 2022 15:00:00 +0200
 
