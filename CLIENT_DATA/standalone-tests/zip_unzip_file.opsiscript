@@ -1,0 +1,66 @@
+[actions]
+
+comment "Testing zipfile and unzipfile"
+
+DefVar $ZipFileName_ManySmallFiles$ = "128x128.zip"
+DefVar $FolderName_ManySmallFiles$ = "128x128"
+DefVar $ZipFileName_OneBigFile$ = "128x128zip_in_folder.zip"
+DefVar $FolderName_OneBigFile$ = "128x128zip_in_folder"
+DefVar $ZipFileName_Mixed$ = "128x128mixed.zip"
+DefVar $FolderName_Mixed$ = "128x128mixed"
+DefVar $BigDir$ = "%scriptpath%/../test-files/bigdir/"
+DefVar $ZipsDir$ = "%scriptpath%/../test-files/zips/"
+
+comment $ZipFileDir$$ZipFileName$
+message "Zip and unzip in 3"
+sleepSeconds 1
+message "Zip and unzip in 2"
+sleepSeconds 1
+message "Zip and unzip in 1"
+sleepSeconds 1
+
+message "zipping many small files"
+Files_zipManySmallFiles
+message "zipping one big file"
+Files_zipOneBigFile
+message "zipping mixed files"
+Files_zipMixed
+
+message "unzipping many small files"
+Files_unzipManySmallFiles
+message "unzipping one big file"
+Files_unzipOneBigFile
+message "unzipping mixed files"
+Files_unzipMixed
+
+; delete zip files again for smaller repo
+Files_deleteZips
+
+
+[Files_zipManySmallFiles]
+
+zipfile $BigDir$$FolderName_ManySmallFiles$ $ZipsDir$$ZipFileName_ManySmallFiles$
+
+[Files_zipOneBigFile]
+zipfile $BigDir$$FolderName_OneBigFile$ $ZipsDir$$ZipFileName_OneBigFile$
+
+[Files_zipMixed]
+zipfile $BigDir$$FolderName_Mixed$ $ZipsDir$$ZipFileName_Mixed$
+
+
+[Files_unzipManySmallFiles]
+unzipfile $ZipsDir$$ZipFileName_ManySmallFiles$ $BigDir$$FolderName_ManySmallFiles$
+
+[Files_unzipOneBigFile]
+unzipfile $ZipsDir$$ZipFileName_OneBigFile$ $BigDir$$FolderName_OneBigFile$
+
+[Files_unzipMixed]
+unzipfile $ZipsDir$$ZipFileName_Mixed$ $BigDir$$FolderName_Mixed$
+
+[Files_deleteZips]
+delete $ZipsDir$$ZipFileName_ManySmallFiles$
+delete $ZipsDir$$ZipFileName_OneBigFile$
+delete $ZipsDir$$ZipFileName_Mixed$
+
+
+[stop]
