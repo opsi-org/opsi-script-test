@@ -1,9 +1,14 @@
 [actions]
-
+setloglevel=8
+setdebug_prog = true
 ;opsiservicecall_authenticated  /serviceurl "https://sepiella:4447" /username "adminuser" /password "linux123"
 ;opsiservicecall_authenticated  /serviceurl "https://sepia:4447" /username "adminuser" /password "linux123"
-opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+;opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+;opsiservicecall_authenticated  /serviceurl "https://10.202.10.167:4447" /username "adminuser" /password "linux123"
+opsiservicecall_authenticated  /serviceurl "https://10.202.10.130:4447" /username "adminuser" /password "linux123"
 
 [opsiservicecall_authenticated]
 "method":"backend_info"
 "params":[ ]
+
+[stop]
