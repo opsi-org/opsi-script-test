@@ -1283,7 +1283,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "GetProductProperty failed"
 		endif
 		
-		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.11.3")
 			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
 			;set $list1$ = createStringList("ab", "cd", "ef", "g,h")
 			set $list$ = GetProductPropertyList ("dummymulti","True")
@@ -1302,7 +1302,28 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "GetProductPropertyList failed"
 			endif
-			
+			set $list1$ = createStringList("ab", "cd", "ef", "g,h")
+			set $list$ = GetProductPropertyList ("notexistingmulti",$list1$)
+			if not ("" = takeFirstStringContaining($list$,"g,h"))
+				comment "GetProductPropertyList passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetProductPropertyList failed"
+			endif
+		endif ; 4.11.3
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.12.4.32")
+			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
+			set $list$ = GetProductPropertyList ("notexistingmulti",'["ab", "cd", "ef", "g,h"]')
+			if not ("" = takeFirstStringContaining($list$,"g,h"))
+				comment "GetProductPropertyList passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetProductPropertyList failed"
+			endif
+		endif ; 4.12.4.32
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.11.3")
 			comment "Testing include commands"
 			
 			include_append "%scriptpath%\sub-scripts\section_Files_del_tmp_dummy.opsiinc"
@@ -1337,7 +1358,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.5.2")
 		message "GetConfidentialProductProperty (<PropertyName>, <DefaultValue>)"
 		if not("%opsiserviceURL%" = "")
 			set $ConstTest$ = "This is confidential"
@@ -1358,6 +1379,45 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "GetConfidentialProductProperty failed"
 		endif
 	endif ; 4.11.5.2
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.36")
+		message "GetProductProperty / list - with properties.conf"
+		set $ConstTest$ = "from file"
+		set $CompValue$ = GetProductProperty('propstr','')
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty from properties.conf failed"
+		endif
+		
+		set $ConstTest$ = "from default"
+		set $CompValue$ = GetProductProperty('not_existing',$ConstTest$)
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty from properties.conf failed"
+		endif
+		
+		set $ConstTest$ = "from file"
+		set $CompValue$ = takeString(0,GetProductPropertyList('proplist',''))
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductPropertyList from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductPropertyList from properties.conf failed"
+		endif
+		
+		set $ConstTest$ = "from default"
+		set $CompValue$ = takeString(0,GetProductPropertyList('not_existing',$ConstTest$))
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductPropertyList from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductPropertyList from properties.conf failed"
+		endif
+	endif : 4.12.4.36
 	
 	sub_compareResult
 	set $winst_parametrizing$ = $SubResult$
@@ -4191,6 +4251,11 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endcase
 		case "Linux"
 			set $tmp$ = shellCall('efibootmgr -v')
+			if DirectoryExists('/sys/firmware/efi/')
+				set $tmp$ = "0"
+			else
+				set $tmp$ = "-1"
+			endif
 		endcase
 		case "macos"
 			set $tmp$ = "0"

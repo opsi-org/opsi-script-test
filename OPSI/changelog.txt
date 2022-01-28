@@ -1,4 +1,13 @@
 [Changelog]
+opsi-script-test (4.12.4.36-1) stable; urgency=low
+
+  * getProductpropertylist(<propertyname>,<json type stringlist literal>)
+  * GetProductProperty / list - with properties.conf
+  * new test for runningOnUefi in Linux
+  
+  
+-- detlef oertel <d.oertel@uib.de>  Mon,  24 Jan 2022 15:00:00 +0200
+
 opsi-script-test (4.12.4.35-1) stable; urgency=low
 
   * powershell: AllSigned Hack in PowershellCall / execwith with loops
