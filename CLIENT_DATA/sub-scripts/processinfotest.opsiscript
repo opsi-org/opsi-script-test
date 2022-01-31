@@ -7,6 +7,9 @@ if ($Flag_processinfo$ = "on") or ($MasterFlag$ = "on")
 	comment "testing processinfo functions"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.1.2")
 		comment ""

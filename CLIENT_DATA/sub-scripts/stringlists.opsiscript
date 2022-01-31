@@ -1,3 +1,5 @@
+encoding=utf8
+
 if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	Message "testing string list functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"

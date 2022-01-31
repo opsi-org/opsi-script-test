@@ -2926,10 +2926,15 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 				case "Linux"
 					set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
 					if "vmnat.local" = takeString(0,shellCall("hostname -d"))
-						set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
+						if takeString(0,shellCall("hostname")) = "sepiella"
+							set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
+						endif
 					endif
 					if $CompValue$ = "172.16.166.1"
 						set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
+					endif
+					if ($CompValue$ = "127.0.0.1") or ($CompValue$ = "127.0.1.1")
+						set $CompValue$ = getMyIpByTarget(getMyIpByTarget("%opsiServer%"))
 					endif
 				endcase
 				case "macos"
@@ -2965,6 +2970,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $string1$ = "localhost"
 		markErrorNumber
 		set $CompValue$ = getIpByName($string1$)
+		if $CompValue$ = "127.0.1.1"
+			set $CompValue$ = "127.0.0.1"
+		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -2977,6 +2985,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			markErrorNumber
 			set $ConstTest$ = getMyIpByTarget(getIpByName("%opsiServiceUser%"))
 			set $CompValue$ = getIpByName("%opsiServiceUser%")
+			if $CompValue$ = "127.0.1.1"
+				set $CompValue$ = "127.0.0.1"
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -3002,6 +3013,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		markErrorNumber
 		set $ConstTest$ = getMyIpByTarget(getIpByName("%PCName%"))
 		set $CompValue$ = getIpByName("%PCName%")
+		if $CompValue$ = "127.0.1.1"
+			set $CompValue$ = "127.0.0.1"
+		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
