@@ -186,7 +186,8 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 			comment "this should fail because executionpolicy Resticted and policy handling set to false"
 			set $list1$ = powershellCall('echo "powershell opsi-winst-test"',"sysnative","false")
 			if getlastexitcode = "0"
-				if not ("" =  getIndexFromListByContaining($list1$,"RuntimeException"))
+				; even if we have exitcode 0 (win7) we should find the exception message
+				if "" =  getIndexFromListByContaining($list1$,"RuntimeException")
 					set $TestResult$ = "not o.k."
 					LogWarning "Execwith assumed failed"
 				endif
