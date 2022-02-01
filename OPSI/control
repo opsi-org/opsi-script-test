@@ -4,9 +4,9 @@ depends:
 
 [Product]
 type: localboot
-id: opsi-script-test
-name: opsi-script test
-description: Test and example script for opsi-script
+id: opsi-script-test_testumgebung
+name: opsi-script-test testumgebung 
+description: Test for Testumgebung (debugging)
 advice: 
 version: 4.12.4.36
 priority: 0
