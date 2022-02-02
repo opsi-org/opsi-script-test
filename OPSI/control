@@ -1,12 +1,12 @@
 [Package]
-version: 1
+version: 2
 depends: 
 
 [Product]
 type: localboot
-id: opsi-script-test_testumgebung
-name: opsi-script-test testumgebung 
-description: Test for Testumgebung (debugging)
+id: opsi-script-test
+name: opsi-script-test 
+description: tests for opsi-script
 advice: 
 version: 4.12.4.36
 priority: 0
