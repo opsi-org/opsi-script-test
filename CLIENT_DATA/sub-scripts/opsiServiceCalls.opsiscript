@@ -1,0 +1,308 @@
+  
+  if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") or ("%opsiserver%" = "172.16.166.1")
+		comment "yes - we running in opsi mode at uib"
+		
+		Message "testing opsi service call"
+		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		comment ""
+		comment "testing opsi service call"
+		comment ""
+		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		Set $ExpectedResult$ = "o.k."
+		set $TestResult$ = "o.k."
+		set $adminuser_password$   = GetProductProperty ("adminuser_password", "linux123")
+		
+		;set $depotid$ = "bonifax.uib.local"
+		;set $captureproduct$ = "win10-x64-1607-captured"
+		;set $imagename$ = "imagename"
+		;set $valuesListStr$ = '["Windows 10 Pro N","Windows 10 Home N","capture","capture1703"]'
+		;
+		;opsiServiceCall_set_imagelist
+		
+		
+		markErrorNumber
+		opsiservicecall_authenticated
+		if errorsOccuredSinceMark > 0
+			set $INST_error$ = "true"
+			comment "was not authenticated "
+		else
+			Set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_UserIsAdmin')
+			if errorsOccuredSinceMark > 0
+				set $INST_error$ = "true"
+				comment "was not admin - normal if running as product (maschine account)"
+			endif
+		endif
+		if $OS$ = "Windows_NT"
+			; not tested any more : actual no adminuser at bonifax
+			;if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local")
+			;	if (takeString(0,$INST_ResultList$) = "false") or ($INST_error$ = "true")
+			;		comment "was not authenticated as admin-> retry scripted login by default user/password"
+			;		markErrorNumber
+			;		set $INST_error$ = "false"
+			;		opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password $adminuser_password$
+			;		if errorsOccuredSinceMark > 0
+			;			set $INST_error$ = "true"
+			;			comment "scripted login by default user/password failed -> retry interactive"
+			;			opsiservicecall_authenticated /interactive /serviceurl "https://bonifax:4447"
+			;		else
+			;			markErrorNumber
+			;			Set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_UserIsAdmin')
+			;			if errorsOccuredSinceMark > 0
+			;				set $INST_error$ = "true"
+			;				comment "check for user is admin failed failed -> retry interactive"
+			;			endif
+			;		endif
+			;	endif
+			;	comment "logged in as admin"
+			;endif ; uib office
+		endif ; windows
+		
+		;opsiservicecall_authenticated /interactive /serviceurl "https://bonifax:4447"
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "opsiservicecall"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4") >= "0"
+			set $ConstTest$ = "%opsiDepotId%"
+			set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getDepotId')
+			;set $list1$ = getReturnListFromSection('opsiservicecall_ServerIdsList /serviceurl "%opsiserviceURL%" /username "%hostId%" /password "%opsiservicePassword%"')
+			set $CompValue$ = takeString(0, $INST_ResultList$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				LogWarning "failed"
+				set $TestResult$ = "not o.k."
+			endif
+		endif
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.1") >= "0"
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "opsi-servicalls with wrong parameters - should not crash opsi-winst"
+			set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getClientIds_list')
+			set $CompValue$ = takeString(0, $INST_ResultList$)
+			set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getSoftwareInformation_hash')
+			set $CompValue$ = takeString(0, $INST_ResultList$)
+			set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getProductInstallationStatus_listOfHashes')
+			set $CompValue$ = takeString(0, $INST_ResultList$)
+			comment "Testing setting installation state for not existing product"
+			markErrorNumber
+			set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_setProductInstallationStatus')
+			set $CompValue$ = takeString(0, $INST_ResultList$)
+			if errorsOccuredSinceMark > 0
+				comment $CompValue$
+				comment "passed (expected Backend missing data error)"
+			else
+				LogWarning "unexpected behavior"
+				LogWarning "failed"
+				set $TestResult$ = "not o.k."
+			endif
+			
+			
+			comment "Testing service errors"
+			markErrorNumber
+			set $list1$ = getReturnListFromSection("opsiservicecall_getHostId")
+			set $ErrorClientId$ = takestring(0, $list1$)
+			if errorsOccuredSinceMark > 0
+				comment $ErrorClientId$
+				comment "passed (expected Hostname not given)"
+			else
+				LogWarning "unexpected behavior"
+				LogWarning "failed"
+				set $TestResult$ = "not o.k."
+			endif
+			markErrorNumber
+			set $list1$ = getReturnListFromSection('opsiservicecall_getNetworkConfig_hash')
+			set $ErrorClientId$ = takestring(0, $list1$)
+			if errorsOccuredSinceMark > 0
+				comment $ErrorClientId$
+				comment "passed (expected Bad object id)"
+			else
+				LogWarning "unexpected behavior"
+				LogWarning "failed"
+				set $TestResult$ = "not o.k."
+			endif
+			
+		else
+			comment "opsi-servicalls with wrong parameters not tested, minimum winst needed: 4.11.1.1"
+		endif
+		
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "opsiservicecall with opsi 4 method"
+		set $ConstTest$ = "bonifax.uib.local"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4") >= "0"
+			set $ConstTest$ = "%opsiDepotId%"
+		endif
+		set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getDepotshares')
+		comment " take the string :"
+		set $CompValue$ = takeString(0, $INST_ResultList$)
+		comment " remove trailing brackets and quote :"
+		set $CompValue$ = takeString(0, splitstring($CompValue$,'"]'))
+		comment " remove heading brackets and quote :"
+		set $CompValue$ = takeString(1, splitstring($CompValue$,'["'))
+		comment " split servers in to list :"
+		set $INST_ResultList$ = splitstring($CompValue$,'","')
+		set $CompValue$ = takefirststringcontaining($INST_ResultList$,$ConstTest$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		
+		set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_productOnClient_getObjects')
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.4") >= "0"
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "opsiservicecall with output and without getReturnListFromSection"
+			opsiservicecall_getClientIds_list
+			comment if not crashed - ok
+			comment "passed"
+		endif ; 4.11.4.4
+		
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "opsiservicecall with opsi 4 method"
+		;set $ConstTest$ = "bonifax"
+		;set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getDepot_properties')
+		;comment " take the string :"
+		;set $CompValue$ = takeString(0, $INST_ResultList$)
+		;comment " remove trailing brackets and quote :"
+		;set $CompValue$ = takeString(0, splitstring($CompValue$,'"]'))
+		;comment " remove heading brackets and quote :"
+		;set $CompValue$ = takeString(1, splitstring($CompValue$,'["'))
+		;comment " split servers in to list :"
+		;set $INST_ResultList$ = splitstring($CompValue$,'","')
+		;set $CompValue$ = takefirststringcontaining($INST_ResultList$,"bonifax")
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	LogWarning "failed"
+		;	set $TestResult$ = "not o.k."
+		;endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "opsiservicecall"
+		set $list1$ = getOutStreamFromSection('DosInAnIcon_nslookup')
+		set $ConstTest$ = takeFirstStringContaining($list1$,"Name:")
+		set $ConstTest$ = takeString(1,splitstringOnWhitespace($ConstTest$))
+		set $list1$ = getReturnListFromSection("opsiservicecall_ServerIdsList")
+		set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		
+		if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local")
+			comment "We will get the property value from product: opsi-winst-test-followup and property: do_not_change"
+			set $ConstTest$ = "expected value"
+			Set $list$ = getReturnListFromSection('opsiservicecall_getProductProperties_hash')
+			set $CompValue$ = takeFirstStringContaining($list$,"do_not_change")
+			set $CompValue$ = takeString(1,splitString($CompValue$,'='))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; uib offixe
+		
+		
+		if $OS$ = "Windows_NT"
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
+				comment ""
+				comment "-------------------------------------"
+				comment "Testing: "
+				message "opsiservicecall /opsiclientd"
+				; that does not work: The file will not be found
+				;set $testfilepath$ = "%scriptpath%\'+$opsi_script_test_helper_bin$+'"
+				;set $tmp$ = Convert2JsonStr($testfilepath$)
+				;set $testfilepath$ = regstring($testfilepath$)
+				;set $ConstTest$ = "opsiscripttesthelper.exe"
+				;
+				set $ConstTest$ = "notepad.exe"
+				set $testfilepath$ = $ConstTest$
+				killtask $ConstTest$
+				opsiservicecall_opsiclientd_start_helper /opsiclientd
+				set $list1$ = getProcessList
+				set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				set $CompValue$ = takeString(0,splitString($CompValue$,";"))
+				killtask $ConstTest$
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				DosInAnIcon_kill_notepad
+				opsiservicecall_authenticated /preloginservice
+				opsiservicecall_authenticated
+				
+				if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.6.11")
+					set $ConstTest$ = "notepad.exe"
+					set $testfilepath$ = $ConstTest$
+					killtask $ConstTest$
+					opsiservicecall_opsiclientd_start_helper /opsiclientd-once
+					set $list1$ = getProcessList
+					set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+					set $CompValue$ = takeString(0,splitString($CompValue$,";"))
+					killtask $ConstTest$
+					if ($ConstTest$ = $CompValue$)
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					DosInAnIcon_kill_notepad
+					opsiservicecall_authenticated
+					
+					set $ConstTest$ = "notepad.exe"
+					set $testfilepath$ = $ConstTest$
+					killtask $ConstTest$
+					opsiservicecall_opsiclientd_start_helper /opsiclientd
+					set $list1$ = getProcessList
+					set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+					set $CompValue$ = takeString(0,splitString($CompValue$,";"))
+					killtask $ConstTest$
+					if ($ConstTest$ = $CompValue$)
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+					DosInAnIcon_kill_notepad
+					opsiservicecall /preloginservice
+					opsiservicecall_authenticated
+				endif
+			endif
+		endif ; windows
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.34")
+			message "opsiservicecall timeout test - takes about 100 seconds - please wait"
+			opsiServiceCall_opsiclientd_wait /opsiclientd-once
+		endif
+		
+				
+		;opsiservicecall_authenticated /preloginservice
+		
+		
+		sub_compareResult
+		set $winst_opsiServiceCall$ = $SubResult$
+	else
+		comment "not running in opsi mode: opsi-servicecall not tested"
+	endif
+	
+	
+	
