@@ -1,0 +1,74 @@
+[actions]
+
+;setDebug_prog=true
+FatalOnSyntaxError = false
+importlib "servicecall_auth_lib.opsiscript"
+ImportLib "uib_strlistutils"
+
+authenticate()
+
+DefStringList $ConstTestList$
+DefStringList $CompValueList$
+DefVar $TestResult$
+
+markErrorNumber	
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_write_Test')
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_write_Comp')
+if errorsOccuredSinceMark > 0
+	set $TestResult$ = "not o.k."
+	LogWarning "Boolean value in params failed in OpsiServiceCall!"
+else
+	comment "Boolean value in params passed OpsiServiceCall"	
+endif
+
+markErrorNumber
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_Test')
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Comp')
+if errorsOccuredSinceMark > 0
+	set $TestResult$ = "not o.k."
+	LogWarning "Numeric value in params failed in OpsiServiceCall!"
+else
+	if stringToBool(compareLists($ConstTestList$,$CompValueList$))
+		comment "Numeric value in params passed OpsiServiceCall"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Numeric value in params passed OpsiServiceCall but gives a different result!"
+	endif
+endif
+
+
+[opsiServiceCall_log_write_Test]
+"method": "log_write"
+"params": [
+"userlogin",
+"test",
+"%HostID%",
+false
+]
+
+[opsiServiceCall_log_write_Comp]
+"method": "log_write"
+"params": [
+"userlogin",
+"test",
+"%HostID%",
+"false"
+]
+
+[opsiServiceCall_log_read_Test]
+"method": "log_read"
+"params": [
+"userlogin",
+"%HostID%",
+0
+]
+
+[opsiServiceCall_log_read_Comp]
+"method": "log_read"
+"params": [
+"userlogin",
+"%HostID%",
+"0"
+]
+
+[stop]
