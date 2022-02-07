@@ -1,4 +1,4 @@
-  
+ 
   if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") or ("%opsiserver%" = "172.16.166.1")
 		comment "yes - we running in opsi mode at uib"
 		
@@ -300,38 +300,71 @@
 			comment "-------------------------------------"
 			comment "Testing: "
 			message "opsiservicecall with numeric and boolean values in params"
-			markErrorNumber	
-			Set $list1$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
-			Set $list2$=getReturnListFromSection('opsiServiceCall_getServiceTime_Comp')
-			; take only date, not time
-			Set $list1$=splitStringOnWhiteSpace(takeString(0,$list1$))
-			Set $list2$=splitStringOnWhiteSpace(takeString(0,$list2$))
-			if errorsOccuredSinceMark > 0
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			else
-				if takeString(0,$list1$) = takeString(0,$list2$)
-					comment "passed"
-				else
+			
+			DefFunc opsiservicecallTestBooleanValue():void
+				markErrorNumber	
+				DefStringList $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
+				DefStringList $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
+				; take only date, not time
+				Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
+				Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
+				if errorsOccuredSinceMark > 0
 					set $TestResult$ = "not o.k."
 					LogWarning "failed"
-				endif	
-			endif
-
-			markErrorNumber
-			Set $list1$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
-			Set $list2$=getReturnListFromSection('opsiServiceCall_log_read_Comp')
-			if errorsOccuredSinceMark > 0
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			else
-				if stringToBool(compareLists($list1$,$list2$))
-					comment "passed"
 				else
+					if takeString(0,$ConstTestList$) = takeString(0,$CompValueList$)
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif	
+				endif				
+				[opsiServiceCall_getServiceTime_TestBoolean]
+				"method": "getServiceTime"
+				"params": [
+					false
+				]
+				[opsiServiceCall_getServiceTime_Compare]
+				"method": "getServiceTime"
+				"params": [
+					"false"
+				]		
+			endfunc
+			
+			DefFunc opsiservicecallTestNumericValue():void
+				markErrorNumber
+				DefStringList $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
+				DefStringList $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare')
+				if errorsOccuredSinceMark > 0
 					set $TestResult$ = "not o.k."
 					LogWarning "failed"
-				endif
-			endif
+				else
+					if stringToBool(compareLists($ConstTestList$,$CompValueList$))
+						comment "passed"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "failed"
+					endif
+				endif				
+				[opsiServiceCall_log_read_TestNumeric]
+				"method": "log_read"
+				"params": [
+					"userlogin",
+					"%HostID%",
+					1000
+				]
+				[opsiServiceCall_log_read_Compare]
+				"method": "log_read"
+				"params": [
+					"userlogin",
+					"%HostID%",
+					"1000"
+				]
+			endfunc
+			
+			opsiservicecallTestBooleanValue
+			opsiservicecallTestNumericValue
+			;TODO: array test!
 		endif
 				
 		;opsiservicecall_authenticated /preloginservice
@@ -342,6 +375,101 @@
 	else
 		comment "not running in opsi mode: opsi-servicecall not tested"
 	endif
-	
-	
-	
+		
+[opsiServiceCall_opsiclientd_wait]
+"timeout" : 200
+"method": "wait"
+"params":	[
+			'100'
+			]
+
+[opsiservicecall_authenticated]
+"method": "authenticated"
+"params": [
+			]
+
+[opsiservicecall_userIsAdmin]
+"method": "userIsAdmin"
+"params": [
+			]
+
+
+[opsiservicecall_ServerIdsList]
+"method":"getServerIds_list"
+"params":[]
+
+[opsiservicecall_getDepotId]
+"method":"getDepotId"
+"params":[
+			"%opsiserviceuser%",
+			]
+
+
+[opsiservicecall_getClientIds_list]
+"method":"getClientIds_list"
+"params":[]
+
+
+[opsiservicecall_getSoftwareInformation_hash]
+"method":"getSoftwareInformation_hash"
+"params":[
+			"pcbon4.uib.local",
+			]
+
+[opsiservicecall_getProductInstallationStatus_listOfHashes]
+"method":"getProductInstallationStatus_listOfHashes"
+"params":[
+			"pcbon4.uib.local",
+			]
+
+[opsiservicecall_getDepotshares]
+"method": "host_getIdents"
+"params": [
+			'[]',
+			'{"type":"OpsiDepotserver"}',
+			]
+
+[opsiservicecall_getDepot_properties]
+"method": "host_getObjects"
+"params": [
+			'filter:{type:OpsiDepotserver,id:bonifax.uib.local}',
+			]
+
+[opsiservicecall_opsiclientd_start_helper]
+"method": "runCommand"
+"params": [
+			"$testfilepath$",
+			]
+
+
+[opsiServiceCall_setProductInstallationStatus]
+"method": "setProductInstallationStatus"
+"params": [
+			"not-existing-product",
+			"%HostID%",
+			"not_installed"
+			]
+
+[opsiservicecall_productOnClient_getObjects]
+"method": "productOnClient_getObjects"
+"params": [
+			'[]',
+			'{"clientId":"%HostID%"}',
+			]
+
+[opsiservicecall_getProductProperties_hash]
+"method": "getProductProperties_hash"
+"params": [
+			"opsi-winst-test-followup",
+			"%opsiserviceUser%"
+			]
+
+[opsiServiceCall_set_imagelist]
+"method": "productPropertyState_create"
+"params": [
+			"$captureproduct$",
+			"imagename",
+			"$depotid$",
+			'$valuesListStr$'
+			]
+		

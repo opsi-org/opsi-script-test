@@ -7893,12 +7893,6 @@ exit 43
 ;
 ;----------------   stop   sections for dosbatch/winbatch tests ---------------------------------
 
-;----------------   start   sections for opsiservicecall tests ---------------------------------
-
-sub "%scriptpath%\sub-scripts\opsiServiceCalls_secondarySections.opsiscript"
-
-;----------------   stop   sections for opsiservicecall tests ---------------------------------
-
 ;----------------   start  ProfileActions tests ---------------------------------
 [ProfileActions]
 comment "we are in profile actions"
