@@ -96,3 +96,31 @@
 			'$valuesListStr$'
 			]
 			
+[opsiServiceCall_getServiceTime_TestBoolean]
+"method": "getServiceTime"
+"params": [
+			false
+			]
+
+[opsiServiceCall_getServiceTime_Comp]
+"method": "getServiceTime"
+"params": [
+			"false"
+			]
+
+[opsiServiceCall_log_read_TestNumeric]
+"method": "log_read"
+"params": [
+			"userlogin",
+			"%HostID%",
+			1000
+			]
+
+[opsiServiceCall_log_read_Comp]
+"method": "log_read"
+"params": [
+			"userlogin",
+			"%HostID%",
+			"1000"
+			]
+			

@@ -294,6 +294,45 @@
 			opsiServiceCall_opsiclientd_wait /opsiclientd-once
 		endif
 		
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "opsiservicecall with numeric and boolean values in params"
+			markErrorNumber	
+			Set $list1$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
+			Set $list2$=getReturnListFromSection('opsiServiceCall_getServiceTime_Comp')
+			; take only date, not time
+			Set $list1$=splitStringOnWhiteSpace(takeString(0,$list1$))
+			Set $list2$=splitStringOnWhiteSpace(takeString(0,$list2$))
+			if errorsOccuredSinceMark > 0
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			else
+				if takeString(0,$list1$) = takeString(0,$list2$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif	
+			endif
+
+			markErrorNumber
+			Set $list1$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
+			Set $list2$=getReturnListFromSection('opsiServiceCall_log_read_Comp')
+			if errorsOccuredSinceMark > 0
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			else
+				if stringToBool(compareLists($list1$,$list2$))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
+		endif
 				
 		;opsiservicecall_authenticated /preloginservice
 		
