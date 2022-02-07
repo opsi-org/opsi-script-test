@@ -12,55 +12,57 @@ DefStringList $CompValueList$
 DefVar $TestResult$
 
 markErrorNumber	
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_write_Test')
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_write_Comp')
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Comp')
+; take only date, not time
+Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
+Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
-	LogWarning "Boolean value in params failed in OpsiServiceCall!"
+	LogWarning "Boolean value in params failed in OpsiServiceCall 'getServiceTime'!"
 else
-	comment "Boolean value in params passed OpsiServiceCall"	
+	if takeString(0,$ConstTestList$) = takeString(0,$CompValueList$)
+		comment "Boolean value in params passed OpsiServiceCall 'getServiceTime'"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Boolean value in params passed OpsiServiceCall 'getServiceTime' but gives a different date!"
+	endif	
 endif
 
 markErrorNumber
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_Test')
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
 Set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Comp')
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
-	LogWarning "Numeric value in params failed in OpsiServiceCall!"
+	LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
 else
 	if stringToBool(compareLists($ConstTestList$,$CompValueList$))
-		comment "Numeric value in params passed OpsiServiceCall"
+		comment "Numeric value in params passed OpsiServiceCall 'log_read'"
 	else
 		set $TestResult$ = "not o.k."
-		LogWarning "Numeric value in params passed OpsiServiceCall but gives a different result!"
+		LogWarning "Numeric value in params passed OpsiServiceCall 'log_read' but gives a different result!"
 	endif
 endif
 
 
-[opsiServiceCall_log_write_Test]
-"method": "log_write"
+[opsiServiceCall_getServiceTime_TestBoolean]
+"method": "getServiceTime"
 "params": [
-"userlogin",
-"test",
-"%HostID%",
 false
 ]
 
-[opsiServiceCall_log_write_Comp]
-"method": "log_write"
+[opsiServiceCall_getServiceTime_Comp]
+"method": "getServiceTime"
 "params": [
-"userlogin",
-"test",
-"%HostID%",
 "false"
 ]
 
-[opsiServiceCall_log_read_Test]
+[opsiServiceCall_log_read_TestNumeric]
 "method": "log_read"
 "params": [
 "userlogin",
 "%HostID%",
-0
+1000
 ]
 
 [opsiServiceCall_log_read_Comp]
@@ -68,7 +70,7 @@ false
 "params": [
 "userlogin",
 "%HostID%",
-"0"
+"1000"
 ]
 
 [stop]
