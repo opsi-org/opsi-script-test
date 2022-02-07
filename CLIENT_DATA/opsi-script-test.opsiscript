@@ -87,6 +87,7 @@ DefVar $winst_regex$
 DefVar $winst_networkcalc$
 DefVar $winst_urlparser$
 DefVar $winst_var_as_param$
+DefVar $winst_certificates$
 DefVar $InterestingFile$
 DefVar $key$
 DefVar $value$
@@ -165,6 +166,7 @@ DefVar $Flag_suburlparser$
 DefVar $Flag_subwmi$
 DefVar $Flag_var_as_param$
 DefVar $Flag_processinfo$
+DefVar $Flag_certificates$
 
 DefStringList $list$
 DefStringList $list1$
@@ -362,6 +364,7 @@ if $MasterFlag$ = "on"
 endif
 
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
+set $Flag_certificates$            = GetProductProperty ("certificate_test", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
@@ -6672,6 +6675,10 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.9")
 	sub "%scriptpath%\sub-scripts\var_as_param.opsiscript"
 endif
 
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
+	sub "%scriptpath%\sub-scripts\certificates.opsiscript"
+endif
+
 DefFunc resultoutput( $name$ : string, $value$ : string) : void
 	DefVar $space$
 	DefVar $spacelength$
@@ -6727,7 +6734,8 @@ resultoutput("winst_var_as_param",$winst_var_as_param$)
 resultoutput("winst_winbatch",$winst_winbatch$)
 resultoutput("winst_wmi",$winst_wmi$)
 resultoutput("winst_xml",$winst_xml$)
-resultoutput("winst_xml2",$winst_xml2$)
+resultoutput("winst_xml2",$winst_xml2$) 
+resultoutput("winst_certificates",$winst_certificates$)
 comment "--------------------------------"
 resultoutput("compare_to_python",$compare_to_python$)
 resultoutput("winst_internalundocumented",$winst_internalundocumented$)
