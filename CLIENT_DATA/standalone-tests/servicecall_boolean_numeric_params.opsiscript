@@ -2,19 +2,20 @@
 
 ;setDebug_prog=true
 FatalOnSyntaxError = false
-importlib "servicecall_auth_lib.opsiscript"
 ImportLib "uib_strlistutils"
 
-authenticate()
+DefVar $service$ = "https://bonifax.uib.local:4447/rpc"
+DefVar $UserFQDN$ ; define before execution!
+DefVar $opsiHostKey$ ; define before execution!
 
 DefStringList $ConstTestList$
 DefStringList $CompValueList$
 DefVar $TestResult$
 
+DefFunc TestBooleanInOpsiServiceCall():void
 markErrorNumber	
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Comp')
-; take only date, not time
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
 Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
 Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
 if errorsOccuredSinceMark > 0
@@ -28,49 +29,105 @@ else
 		LogWarning "Boolean value in params passed OpsiServiceCall 'getServiceTime' but gives a different date!"
 	endif	
 endif
+[opsiServiceCall_getServiceTime_TestBoolean]
+"method": "getServiceTime"
+"params": [
+false
+]
+[opsiServiceCall_getServiceTime_Compare]
+"method": "getServiceTime"
+"params": [
+"false"
+]
+endfunc
 
+DefFunc TestNumericInOpsiServiceCall():void
 markErrorNumber
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Comp')
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
 else
 	if stringToBool(compareLists($ConstTestList$,$CompValueList$))
 		comment "Numeric value in params passed OpsiServiceCall 'log_read'"
+		
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "Numeric value in params passed OpsiServiceCall 'log_read' but gives a different result!"
 	endif
 endif
-
-
-[opsiServiceCall_getServiceTime_TestBoolean]
-"method": "getServiceTime"
-"params": [
-false
-]
-
-[opsiServiceCall_getServiceTime_Comp]
-"method": "getServiceTime"
-"params": [
-"false"
-]
-
 [opsiServiceCall_log_read_TestNumeric]
 "method": "log_read"
 "params": [
-"userlogin",
-"%HostID%",
+"instlog",
+"$UserFQDN$",
 1000
 ]
-
-[opsiServiceCall_log_read_Comp]
+[opsiServiceCall_log_read_Compare]
 "method": "log_read"
 "params": [
-"userlogin",
-"%HostID%",
+"instlog",
+"$UserFQDN$",
 "1000"
 ]
+endfunc
+
+DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
+markErrorNumber
+opsiServiceCall_setProductProperty_TestArray /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
+opsiServiceCall_setProductProperty_Compare /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
+if errorsOccuredSinceMark > 0
+	set $TestResult$ = "not o.k."
+	LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
+else
+	if stringToBool(compareLists($ConstTestList$,$CompValueList$))
+		comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
+		opsiServiceCall_deleteProductPropertyChanges /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty' but gives a different result!"
+		opsiServiceCall_deleteProductPropertyChanges /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+	endif
+endif
+[opsiServiceCall_setProductProperty_TestArray]
+"method": "setProductProperty"
+"params": [
+"opsi-script-test",
+"dummymulti",
+"$SectionTestEntry$",
+"$UserFQDN$"
+]
+[opsiServiceCall_setProductProperty_Compare]
+"method": "setProductProperty"
+"params": [
+"opsi-script-test",
+"dummymulti",
+"$SectionCompareEntry$",
+"$UserFQDN$"
+]
+[opsiServiceCall_getProductProperty]
+"method": "productPropertyState_getObjects"
+"params": [
+"[]",
+'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummymulti"}'
+]
+[opsiServiceCall_deleteProductPropertyChanges]
+"method": "productPropertyState_delete"
+"params": [
+"opsi-script-test",
+"dummymulti",
+"$UserFQDN$"
+]
+endfunc
+
+
+TestBooleanInOpsiServiceCall()
+TestNumericInOpsiServiceCall()
+TestArrayInOpsiServiceCall("numeric","[0,15,6.789]","['0','15','6.789']")
+TestArrayInOpsiServiceCall("boolean","[true,false]","['True','False']")
+
 
 [stop]
