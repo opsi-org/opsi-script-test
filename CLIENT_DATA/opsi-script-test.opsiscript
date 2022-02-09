@@ -3817,7 +3817,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
-	message "if / else"
+	message "if / else / endif"
 	if ("1" = "1")
 		comment "if passed"
 	endif
@@ -3827,6 +3827,40 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "else passed"
 	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
+		message "if / else / elseif / endif"
+		if "true" = "true"
+			comment "then branch"
+			comment "if passed"
+		elseif "true" = "true"
+			comment "elseif branch1"
+			comment "elseif passed"
+		elseif "false" = "true"
+			comment "elseif branch2"
+			LogWarning "elseif failed"
+			set $TestResult$ = "not o.k."
+		else
+			comment "else branch"
+			comment "else passed"
+		endif
+		
+		if "true" = "true"
+			comment "then branch"
+			comment "if passed"
+		elseif "false" = "true"
+			comment "elseif branch1"
+			LogWarning "elseif failed"
+			set $TestResult$ = "not o.k."
+		elseif "true" = "true"
+			comment "elseif branch2"
+			comment "elseif passed"
+		else
+			comment "else branch"
+			LogWarning "elseif failed"
+			set $TestResult$ = "not o.k."
+		endif
+	endif ; 4.12.4.37
 	
 	;  Boolean Expressions
 	
@@ -6734,7 +6768,7 @@ resultoutput("winst_var_as_param",$winst_var_as_param$)
 resultoutput("winst_winbatch",$winst_winbatch$)
 resultoutput("winst_wmi",$winst_wmi$)
 resultoutput("winst_xml",$winst_xml$)
-resultoutput("winst_xml2",$winst_xml2$) 
+resultoutput("winst_xml2",$winst_xml2$)
 resultoutput("winst_certificates",$winst_certificates$)
 comment "--------------------------------"
 resultoutput("compare_to_python",$compare_to_python$)
