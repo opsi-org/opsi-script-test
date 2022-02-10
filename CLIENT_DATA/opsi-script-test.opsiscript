@@ -87,6 +87,7 @@ DefVar $winst_regex$
 DefVar $winst_networkcalc$
 DefVar $winst_urlparser$
 DefVar $winst_var_as_param$
+DefVar $winst_certificates$
 DefVar $InterestingFile$
 DefVar $key$
 DefVar $value$
@@ -165,6 +166,7 @@ DefVar $Flag_suburlparser$
 DefVar $Flag_subwmi$
 DefVar $Flag_var_as_param$
 DefVar $Flag_processinfo$
+DefVar $Flag_certificates$
 
 DefStringList $list$
 DefStringList $list1$
@@ -362,6 +364,7 @@ if $MasterFlag$ = "on"
 endif
 
 set $Flag_calculate$               = GetProductProperty ("calculate", "off")
+set $Flag_certificates$            = GetProductProperty ("certificate_test", "off")
 set $Flag_winst_constants$         = GetProductProperty ("constants", "off")
 set $Flag_winst_controls$          = GetProductProperty ("controlFunctions", "off")
 set $Flag_crypt$                   = GetProductProperty ("cryptfunctions", "off")
@@ -1283,7 +1286,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "GetProductProperty failed"
 		endif
 		
-		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3") >= "0"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.11.3")
 			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
 			;set $list1$ = createStringList("ab", "cd", "ef", "g,h")
 			set $list$ = GetProductPropertyList ("dummymulti","True")
@@ -1302,7 +1305,28 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 				set $TestResult$ = "not o.k."
 				LogWarning "GetProductPropertyList failed"
 			endif
-			
+			set $list1$ = createStringList("ab", "cd", "ef", "g,h")
+			set $list$ = GetProductPropertyList ("notexistingmulti",$list1$)
+			if not ("" = takeFirstStringContaining($list$,"g,h"))
+				comment "GetProductPropertyList passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetProductPropertyList failed"
+			endif
+		endif ; 4.11.3
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.12.4.32")
+			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
+			set $list$ = GetProductPropertyList ("notexistingmulti",'["ab", "cd", "ef", "g,h"]')
+			if not ("" = takeFirstStringContaining($list$,"g,h"))
+				comment "GetProductPropertyList passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetProductPropertyList failed"
+			endif
+		endif ; 4.12.4.32
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.11.3")
 			comment "Testing include commands"
 			
 			include_append "%scriptpath%\sub-scripts\section_Files_del_tmp_dummy.opsiinc"
@@ -1337,7 +1361,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.5.2")
 		message "GetConfidentialProductProperty (<PropertyName>, <DefaultValue>)"
 		if not("%opsiserviceURL%" = "")
 			set $ConstTest$ = "This is confidential"
@@ -1358,6 +1382,45 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "GetConfidentialProductProperty failed"
 		endif
 	endif ; 4.11.5.2
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.36")
+		message "GetProductProperty / list - with properties.conf"
+		set $ConstTest$ = "from file"
+		set $CompValue$ = GetProductProperty('propstr','')
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty from properties.conf failed"
+		endif
+		
+		set $ConstTest$ = "from default"
+		set $CompValue$ = GetProductProperty('not_existing',$ConstTest$)
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty from properties.conf failed"
+		endif
+		
+		set $ConstTest$ = "from file"
+		set $CompValue$ = takeString(0,GetProductPropertyList('proplist',''))
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductPropertyList from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductPropertyList from properties.conf failed"
+		endif
+		
+		set $ConstTest$ = "from default"
+		set $CompValue$ = takeString(0,GetProductPropertyList('not_existing',$ConstTest$))
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductPropertyList from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductPropertyList from properties.conf failed"
+		endif
+	endif : 4.12.4.36
 	
 	sub_compareResult
 	set $winst_parametrizing$ = $SubResult$
@@ -2866,10 +2929,15 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 				case "Linux"
 					set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname -f")))
 					if "vmnat.local" = takeString(0,shellCall("hostname -d"))
-						set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
+						if takeString(0,shellCall("hostname")) = "sepiella"
+							set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
+						endif
 					endif
 					if $CompValue$ = "172.16.166.1"
 						set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
+					endif
+					if ($CompValue$ = "127.0.0.1") or ($CompValue$ = "127.0.1.1")
+						set $CompValue$ = getMyIpByTarget(getMyIpByTarget("%opsiServer%"))
 					endif
 				endcase
 				case "macos"
@@ -2905,6 +2973,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		set $string1$ = "localhost"
 		markErrorNumber
 		set $CompValue$ = getIpByName($string1$)
+		if $CompValue$ = "127.0.1.1"
+			set $CompValue$ = "127.0.0.1"
+		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -2917,6 +2988,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 			markErrorNumber
 			set $ConstTest$ = getMyIpByTarget(getIpByName("%opsiServiceUser%"))
 			set $CompValue$ = getIpByName("%opsiServiceUser%")
+			if $CompValue$ = "127.0.1.1"
+				set $CompValue$ = "127.0.0.1"
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -2942,6 +3016,9 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 		markErrorNumber
 		set $ConstTest$ = getMyIpByTarget(getIpByName("%PCName%"))
 		set $CompValue$ = getIpByName("%PCName%")
+		if $CompValue$ = "127.0.1.1"
+			set $CompValue$ = "127.0.0.1"
+		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -3550,10 +3627,11 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			comment "-------------------------------------"
 			comment "Testing: "
 			message "ShowMessageFile"
-			Killtask "autoit3.exe"
+			; Killtask "autoit3.exe"
+			sleepseconds 5
 			Execwith_autoit_close_showmessage "%SCRIPTPATH%\autoit3.exe" WINST /letThemGo
+			sleepseconds 30
 			ShowMessageFile "%SCRIPTPATH%\test-files\testmessage.txt"
-			sleepseconds 2
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_getTask_autoit3")
 			set $tmp$ = takeFirstStringContaining($list1$,"autoit3.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -3739,7 +3817,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
-	message "if / else"
+	message "if / else / endif"
 	if ("1" = "1")
 		comment "if passed"
 	endif
@@ -3749,6 +3827,40 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 	else
 		comment "else passed"
 	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
+		message "if / else / elseif / endif"
+		if "true" = "true"
+			comment "then branch"
+			comment "if passed"
+		elseif "true" = "true"
+			comment "elseif branch1"
+			comment "elseif passed"
+		elseif "false" = "true"
+			comment "elseif branch2"
+			LogWarning "elseif failed"
+			set $TestResult$ = "not o.k."
+		else
+			comment "else branch"
+			comment "else passed"
+		endif
+		
+		if "true" = "true"
+			comment "then branch"
+			comment "if passed"
+		elseif "false" = "true"
+			comment "elseif branch1"
+			LogWarning "elseif failed"
+			set $TestResult$ = "not o.k."
+		elseif "true" = "true"
+			comment "elseif branch2"
+			comment "elseif passed"
+		else
+			comment "else branch"
+			LogWarning "elseif failed"
+			set $TestResult$ = "not o.k."
+		endif
+	endif ; 4.12.4.37
 	
 	;  Boolean Expressions
 	
@@ -4191,6 +4303,11 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endcase
 		case "Linux"
 			set $tmp$ = shellCall('efibootmgr -v')
+			if DirectoryExists('/sys/firmware/efi/')
+				set $tmp$ = "0"
+			else
+				set $tmp$ = "-1"
+			endif
 		endcase
 		case "macos"
 			set $tmp$ = "0"
@@ -6287,6 +6404,10 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.9")
 	sub "%scriptpath%\sub-scripts\var_as_param.opsiscript"
 endif
 
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
+	sub "%scriptpath%\sub-scripts\certificates.opsiscript"
+endif
+
 DefFunc resultoutput( $name$ : string, $value$ : string) : void
 	DefVar $space$
 	DefVar $spacelength$
@@ -6343,6 +6464,7 @@ resultoutput("winst_winbatch",$winst_winbatch$)
 resultoutput("winst_wmi",$winst_wmi$)
 resultoutput("winst_xml",$winst_xml$)
 resultoutput("winst_xml2",$winst_xml2$)
+resultoutput("winst_certificates",$winst_certificates$)
 comment "--------------------------------"
 resultoutput("compare_to_python",$compare_to_python$)
 resultoutput("winst_internalundocumented",$winst_internalundocumented$)
@@ -6896,11 +7018,10 @@ $mylog = FileOpen("%opsiLogDir%\au3.log", 2)
 FileWriteLine($mylog,"auto-it started - waiting for the window")
 FileClose($mylog)
 opsiLogWinList("%opsiLogDir%\au3.log")
-opsiwinwait("Systeminfo" , "", 30, "%opsiLogDir%\au3.log")
-$winhandle = opsiwinactivate("Systeminfo" , "", 20, "%opsiLogDir%\au3.log")
+opsiwinwait("SystemInfo" , "", 60, "%opsiLogDir%\au3.log")
+$winhandle = opsiwinactivate("SystemInfo" , "", 20, "%opsiLogDir%\au3.log")
 WinSetState($winhandle, "",@SW_MAXIMIZE)
-opsiControlClick("Systeminfo" , "", "[CLASS:Button; INSTANCE:1]", 10, "%opsiLogDir%\au3.log")
-opsiLogWinList("%opsiLogDir%\au3.log")
+opsiControlClick("SystemInfo" , "", "[CLASS:Button; INSTANCE:1]", 10, "%opsiLogDir%\au3.log")
 Sleep(500)
 ;and good bye
 Exit

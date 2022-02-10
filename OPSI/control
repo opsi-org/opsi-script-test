@@ -5,10 +5,10 @@ depends:
 [Product]
 type: localboot
 id: opsi-script-test
-name: opsi-script test
-description: Test and example script for opsi-script
+name: opsi-script-test
+description: tests for opsi-script
 advice: 
-version: 4.12.4.35
+version: 4.12.4.37
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -491,6 +491,15 @@ name: processinfo
 multivalue: False
 editable: False
 description: process functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: certificate_test
+multivalue: False
+editable: False
+description: handle CA certificates
 values: ["off", "on"]
 default: ["off"]
 

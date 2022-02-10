@@ -1,0 +1,76 @@
+encoding=utf8
+
+if ($Flag_certificates$ = "on") or ($MasterFlag$ = "on")
+	Message "testing certificate functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing certificate functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	
+	set $testfilepath$ = "%Scriptpath%\test-files\certificates"
+	if DirectoryExists ($testfilepath$)
+		set $list$ = listFiles($testfilepath$,"*.pem","False")
+		set $list$ = addListToList($list$,listFiles($testfilepath$,"*.crt","False"))
+		if count($list$) int> "0"
+			
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "ImportCertToSystem"
+			for %cert% in $list$ do ImportCertToSystem('%cert%')
+			
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "listCertificatesFromSystem"
+			set $list$ = listCertificatesFromSystem
+			if "" = takeFirstStringContaining($list$,"opsi-script-test test CA")
+				set $TestResult$ = "not o.k."
+				LogWarning "No CA found - ImportCertToSystem / listCertificatesFromSystem failed"
+			else
+				comment "CA found - passed"
+			endif
+			
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "isCertInstalledInSystem"
+			if isCertInstalledInSystem("opsi-script-test test CA")
+				
+				comment "-------------------------------------"
+				comment "Testing: "
+				message "removeCertFromSystem"
+				removeCertFromSystem("opsi-script-test test CA")
+				if isCertInstalledInSystem("opsi-script-test test CA")
+					comment "CA found - remove failed"
+					set $TestResult$ = "not o.k."
+					LogWarning "removeCertFromSystem / listCertificatesFromSystem failed"
+				else
+					comment "CA not found - successful removed - test passed"
+				endif
+			else
+				comment "CA not found"
+				set $TestResult$ = "not o.k."
+				LogWarning "ImportCertToSystem / isCertInstalledInSystem failed"
+			endif
+			set $list$ = listCertificatesFromSystem
+		else
+			Logerror "No certificates found in directory: "+$testfilepath$
+			set $TestResult$ = "not o.k."
+		endif
+	else
+		Logerror "Cert directory missing - no: "+$testfilepath$
+		set $TestResult$ = "not o.k."
+	endif
+	
+	sub_compareResult
+	set $winst_certificates$ = $SubResult$
+	
+endif
+
+
+
