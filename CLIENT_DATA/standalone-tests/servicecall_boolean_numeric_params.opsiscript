@@ -5,15 +5,15 @@ FatalOnSyntaxError = false
 ImportLib "uib_strlistutils"
 
 DefVar $service$ = "https://bonifax.uib.local:4447/rpc"
-DefVar $UserFQDN$ ; define before execution!
-DefVar $opsiHostKey$ ; define before execution!
-opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+;define before execution!
+DefVar $UserFQDN$
+DefVar $opsiHostKey$
 
+opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
 
 DefStringList $ConstTestList$
 DefStringList $CompValueList$
 DefVar $TestResult$
-
 
 DefFunc TestBooleanInOpsiServiceCall():void
 markErrorNumber	
