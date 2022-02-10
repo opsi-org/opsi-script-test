@@ -143,17 +143,16 @@ DefFunc GetServiceCallValuesAsString($JsonResult$:StringList):string
 	set $Values$=jsonAsObjectGetValueByKey($Values$,"values")
 	set $result$=GetServiceCallValuesFirstValueAsString($Values$)
 endfunc
-
-DefFunc LogGetProdPropResult($ExpectedResult$:string):void
+DefFunc LogGetProdPropResult($Message$:string,$ExpectedResult$:string):void
 	DefStringList $JsonResult$
 	DefVar $FirstValue$
 	set $JsonResult$=getReturnListFromSection('opsiServiceCall_getProductProperty')
 	set $FirstValue$=GetServiceCallValuesAsString($JsonResult$)
 	if($FirstValue$=$ExpectedResult$)
-		comment "passed"
+		comment $Message$+" passed"
 	else
 		set $TestResult$ = "not o.k."
-		LogWarning "failed"
+		LogWarning $Message$+" failed"
 	endif
 	[opsiServiceCall_getProductProperty]
 "method": "productPropertyState_getObjects"
@@ -162,25 +161,31 @@ DefFunc LogGetProdPropResult($ExpectedResult$:string):void
 			'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
 			]
 endfunc
-
 DefFunc TestNumericBooleanServiceArrival():void	
+	; Test if numeric and boolean values arrive at service correctly by
+	; setting opsi-script-test property dummybool which expects a boolean value.
+	; Therefore strings are converted: "","false" -> false, everything other string -> true.
+	; Numbers are converted: 0 -> false, everything other number -> true.
+	; With this we can test the arrival because e.g. 0 -> false but "0" -> true
+	; and false is correctly converted to the string "false".
 	markErrorNumber	
 	opsiServiceCall_setProductProperty_0
-	LogGetProdPropResult("false")
+	LogGetProdPropResult("Test 0->false","false")
 	
 	opsiServiceCall_setProductProperty_1
-	LogGetProdPropResult("true")
+	LogGetProdPropResult("Test 1->true","true")
 	
 	opsiServiceCall_setProductProperty_false
-	LogGetProdPropResult("false")
+	LogGetProdPropResult("Test false->false","false")
 	
-	opsiServiceCall_deleteProductPropertyChanges
+	opsiServiceCall_deleteProductPropertyChanges	
 	if errorsOccuredSinceMark > 0
 		set $TestResult$ = "not o.k."
 		LogWarning "TestNumericBooleanServiceArrival failed"
 	else
 		comment "TestNumericBooleanServiceArrival passed"
 	endif
+	
 	[opsiServiceCall_setProductProperty_0]
 "method": "setProductProperty"
 "params": [
