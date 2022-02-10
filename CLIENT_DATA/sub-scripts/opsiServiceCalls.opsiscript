@@ -387,7 +387,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 			"opsi-script-test",
 			"dummymulti",
 			"$SectionTestEntry$",
-			"$UserFQDN$"
+			"%HostID%"
 			]
 			[opsiServiceCall_setProductProperty_Compare]
 			"method": "setProductProperty"
@@ -395,20 +395,20 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 			"opsi-script-test",
 			"dummymulti",
 			"$SectionCompareEntry$",
-			"$UserFQDN$"
+			"%HostID%"
 			]
 			[opsiServiceCall_getProductProperty]
 			"method": "productPropertyState_getObjects"
 			"params": [
 			"[]",
-			'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummymulti"}'
+			'{"objectId":"%HostID%","productId":"opsi-script-test","propertyId":"dummymulti"}'
 			]
 			[opsiServiceCall_deleteProductPropertyChanges]
 			"method": "productPropertyState_delete"
 			"params": [
 			"opsi-script-test",
 			"dummymulti",
-			"$UserFQDN$"
+			"%HostID%"
 			]
 		endfunc
 		
