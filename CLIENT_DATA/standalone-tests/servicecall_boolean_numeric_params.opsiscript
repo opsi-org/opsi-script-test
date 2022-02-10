@@ -7,15 +7,18 @@ ImportLib "uib_strlistutils"
 DefVar $service$ = "https://bonifax.uib.local:4447/rpc"
 DefVar $UserFQDN$ ; define before execution!
 DefVar $opsiHostKey$ ; define before execution!
+opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+
 
 DefStringList $ConstTestList$
 DefStringList $CompValueList$
 DefVar $TestResult$
 
+
 DefFunc TestBooleanInOpsiServiceCall():void
 markErrorNumber	
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
 Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
 Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
 if errorsOccuredSinceMark > 0
@@ -43,8 +46,8 @@ endfunc
 
 DefFunc TestNumericInOpsiServiceCall():void
 markErrorNumber
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare')
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
@@ -75,21 +78,21 @@ endfunc
 
 DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
 markErrorNumber
-opsiServiceCall_setProductProperty_TestArray /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
-opsiServiceCall_setProductProperty_Compare /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$')
+opsiServiceCall_setProductProperty_TestArray
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+opsiServiceCall_setProductProperty_Compare
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
 else
 	if stringToBool(compareLists($ConstTestList$,$CompValueList$))
 		comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
-		opsiServiceCall_deleteProductPropertyChanges /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+		opsiServiceCall_deleteProductPropertyChanges
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty' but gives a different result!"
-		opsiServiceCall_deleteProductPropertyChanges /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+		opsiServiceCall_deleteProductPropertyChanges
 	endif
 endif
 [opsiServiceCall_setProductProperty_TestArray]
@@ -123,11 +126,99 @@ endif
 ]
 endfunc
 
+DefFunc GetServiceCallValuesFirstValueAsString($Values$:string):string
+	DefVar $FirstValue$
+	set $FirstValue$=jsonAsArrayGetElementByIndex($Values$,"0")
+	set $result$=$FirstValue$
+endfunc
+
+DefFunc GetServiceCallValuesAsString($JsonResult$:StringList):string
+	DefVar $Values$
+	set $Values$=jsonAsArrayGetElementByIndex(jsonStringListToJsonArray($JsonResult$),"0")
+	set $Values$=jsonAsArrayGetElementByIndex($Values$,"0")
+	set $Values$=jsonAsObjectGetValueByKey($Values$,"values")
+	set $result$=GetServiceCallValuesFirstValueAsString($Values$)
+endfunc
+
+DefFunc LogGetProdPropResult($ExpectedResult$:string):void
+	DefStringList $JsonResult$
+	DefVar $FirstValue$
+	set $JsonResult$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+	set $FirstValue$=GetServiceCallValuesAsString($JsonResult$)
+	if($FirstValue$=$ExpectedResult$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	[opsiServiceCall_getProductProperty]
+"method": "productPropertyState_getObjects"
+"params": [
+			"[]",
+			'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
+			]
+endfunc
+
+DefFunc TestNumericBooleanServiceArrival():void	
+	markErrorNumber	
+	opsiServiceCall_setProductProperty_0
+	LogGetProdPropResult("false")
+	
+	opsiServiceCall_setProductProperty_1
+	LogGetProdPropResult("true")
+	
+	opsiServiceCall_setProductProperty_false
+	LogGetProdPropResult("false")
+	
+	opsiServiceCall_deleteProductPropertyChanges
+	if errorsOccuredSinceMark > 0
+		set $TestResult$ = "not o.k."
+		LogWarning "TestNumericBooleanServiceArrival failed"
+	else
+		comment "TestNumericBooleanServiceArrival passed"
+	endif
+	[opsiServiceCall_setProductProperty_0]
+"method": "setProductProperty"
+"params": [
+			"opsi-script-test",
+			"dummybool",
+			0,
+			"$UserFQDN$"
+			]
+	[opsiServiceCall_setProductProperty_1]
+"method": "setProductProperty"
+"params": [
+			"opsi-script-test",
+			"dummybool",
+			1,
+			"$UserFQDN$"
+			]
+	[opsiServiceCall_setProductProperty_false]
+"method": "setProductProperty"
+"params": [
+			"opsi-script-test",
+			"dummybool",
+			false,
+			"$UserFQDN$"
+			]
+	[opsiServiceCall_deleteProductPropertyChanges]
+"method": "productPropertyState_delete"
+"params": [
+			"opsi-script-test",
+			"dummybool",
+			"$UserFQDN$"
+			]
+endfunc
 
 TestBooleanInOpsiServiceCall()
 TestNumericInOpsiServiceCall()
 TestArrayInOpsiServiceCall("numeric","[0,15,6.789]","['0','15','6.789']")
 TestArrayInOpsiServiceCall("boolean","[true,false]","['True','False']")
+TestNumericBooleanServiceArrival()
 
+[opsiservicecall_authenticated]
+"method": "authenticated"
+"params": [
+			]
 
 [stop]
