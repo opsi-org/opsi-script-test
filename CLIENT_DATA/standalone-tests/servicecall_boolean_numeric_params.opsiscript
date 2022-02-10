@@ -126,12 +126,16 @@ endif
 ]
 endfunc
 
+
 DefFunc GetServiceCallValuesFirstValueAsString($Values$:string):string
 	DefVar $FirstValue$
-	set $FirstValue$=jsonAsArrayGetElementByIndex($Values$,"0")
-	set $result$=$FirstValue$
+	if($Values$="")
+	  set $result$= ""
+	else
+		set $FirstValue$=jsonAsArrayGetElementByIndex($Values$,"0")
+		set $result$=$FirstValue$
+	endif
 endfunc
-
 DefFunc GetServiceCallValuesAsString($JsonResult$:StringList):string
 	DefVar $Values$
 	set $Values$=jsonAsArrayGetElementByIndex(jsonStringListToJsonArray($JsonResult$),"0")
