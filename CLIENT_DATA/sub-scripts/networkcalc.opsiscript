@@ -285,7 +285,7 @@ if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 		for %s% in $IncorrectFQDNs$ do  set $tmp$ = myFQDNTester("false","%s%",$TestResult$)
 	endif
 
-if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.36")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
     
     DefFunc addResultsToLists($IP$: string, ref $theResult_isValidIP6$: stringlist, ref $theResult_isValidIP$: stringlist): void
          Set $theResult_isValidIP6$ = AddToList($theResult_isValidIP6$, BoolToString(isValidIP6($IP$)))
