@@ -367,9 +367,9 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 		DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
 			markErrorNumber
 			opsiServiceCall_setProductProperty_TestArray
-			Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+			DefStringList $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
 			opsiServiceCall_setProductProperty_Compare
-			Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+			DefStringList $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
 			if errorsOccuredSinceMark > 0
 				set $TestResult$ = "not o.k."
 				LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
