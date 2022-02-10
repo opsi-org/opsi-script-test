@@ -11,14 +11,12 @@ DefVar $opsiHostKey$
 
 opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
 
-DefStringList $ConstTestList$
-DefStringList $CompValueList$
 DefVar $TestResult$
 
 DefFunc TestBooleanInOpsiServiceCall():void
 markErrorNumber	
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
+DefStringList $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
+DefStringList $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
 Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
 Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
 if errorsOccuredSinceMark > 0
@@ -46,8 +44,8 @@ endfunc
 
 DefFunc TestNumericInOpsiServiceCall():void
 markErrorNumber
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare')
+DefStringList $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
+DefStringList $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare')
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
@@ -79,9 +77,9 @@ endfunc
 DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
 markErrorNumber
 opsiServiceCall_setProductProperty_TestArray
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+DefStringList $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
 opsiServiceCall_setProductProperty_Compare
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+DefStringList $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
