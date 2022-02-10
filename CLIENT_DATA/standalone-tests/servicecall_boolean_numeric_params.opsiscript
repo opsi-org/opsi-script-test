@@ -14,9 +14,11 @@ opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /passwo
 DefVar $TestResult$
 
 DefFunc TestBooleanInOpsiServiceCall():void
-markErrorNumber	
-DefStringList $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
-DefStringList $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
+markErrorNumber
+DefStringList $ConstTestList$
+DefStringList $CompValueList$	
+Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
+Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
 Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
 Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
 if errorsOccuredSinceMark > 0
@@ -44,8 +46,10 @@ endfunc
 
 DefFunc TestNumericInOpsiServiceCall():void
 markErrorNumber
-DefStringList $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
-DefStringList $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare')
+DefStringList $ConstTestList$
+DefStringList $CompValueList$
+set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
+set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare')
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
@@ -76,10 +80,12 @@ endfunc
 
 DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
 markErrorNumber
+DefStringList $ConstTestList$
+DefStringList $CompValueList$
 opsiServiceCall_setProductProperty_TestArray
-DefStringList $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
 opsiServiceCall_setProductProperty_Compare
-DefStringList $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
