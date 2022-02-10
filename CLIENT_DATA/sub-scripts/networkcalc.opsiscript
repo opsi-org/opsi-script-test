@@ -1,5 +1,4 @@
 encoding=utf8
-[Actions]
 
 if ($Flag_subnetworkcalc$ = "on") or ($MasterFlag$ = "on")
 	Message "testing networkcalc functions"
