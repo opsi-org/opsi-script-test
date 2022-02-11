@@ -3630,7 +3630,6 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			; Killtask "autoit3.exe"
 			sleepseconds 5
 			Execwith_autoit_close_showmessage "%SCRIPTPATH%\autoit3.exe" WINST /letThemGo
-			sleepseconds 30
 			ShowMessageFile "%SCRIPTPATH%\test-files\testmessage.txt"
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_getTask_autoit3")
 			set $tmp$ = takeFirstStringContaining($list1$,"autoit3.exe")
