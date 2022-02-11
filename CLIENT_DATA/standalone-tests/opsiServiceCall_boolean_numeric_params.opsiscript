@@ -16,16 +16,16 @@ DefVar $TestResult$
 DefFunc TestBooleanInOpsiServiceCall():void
 markErrorNumber
 DefStringList $ConstTestList$
-DefStringList $CompValueList$	
-Set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
-Set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
+DefStringList $CompValueList$
+set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
+set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
 Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
 Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
 if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Boolean value in params failed in OpsiServiceCall 'getServiceTime'!"
 else
-	if takeString(0,$ConstTestList$) = takeString(0,$CompValueList$)
+	if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$)) and not (takeString(0,$ConstTestList$)="")
 		comment "Boolean value in params passed OpsiServiceCall 'getServiceTime'"
 	else
 		set $TestResult$ = "not o.k."
@@ -54,7 +54,7 @@ if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
 else
-	if stringToBool(compareLists($ConstTestList$,$CompValueList$))
+	if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not (count($ConstTestList$)="0"))
 		comment "Numeric value in params passed OpsiServiceCall 'log_read'"
 		
 	else
@@ -90,7 +90,7 @@ if errorsOccuredSinceMark > 0
 	set $TestResult$ = "not o.k."
 	LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
 else
-	if stringToBool(compareLists($ConstTestList$,$CompValueList$))
+	if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not (count($ConstTestList$)="0"))
 		comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
 		opsiServiceCall_deleteProductPropertyChanges
 	else
