@@ -315,7 +315,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 				set $TestResult$ = "not o.k."
 				LogWarning "Boolean value in params failed in OpsiServiceCall 'getServiceTime'!"
 			else
-				if takeString(0,$ConstTestList$) = takeString(0,$CompValueList$)
+				if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$)) and not (takeString(0,$ConstTestList$)="")
 					comment "Boolean value in params passed OpsiServiceCall 'getServiceTime'"
 				else
 					set $TestResult$ = "not o.k."
@@ -344,7 +344,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 				set $TestResult$ = "not o.k."
 				LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
 			else
-				if stringToBool(compareLists($ConstTestList$,$CompValueList$))
+				if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not (count($ConstTestList$)="0"))
 					comment "Numeric value in params passed OpsiServiceCall 'log_read'"
 					
 				else
@@ -380,7 +380,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 				set $TestResult$ = "not o.k."
 				LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
 			else
-				if stringToBool(compareLists($ConstTestList$,$CompValueList$))
+				if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not (count($ConstTestList$)="0"))
 					comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
 					opsiServiceCall_deleteProductPropertyChanges
 				else
