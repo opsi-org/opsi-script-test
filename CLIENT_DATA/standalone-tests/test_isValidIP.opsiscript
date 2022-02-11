@@ -1,54 +1,46 @@
 [Actions]
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
-    
+
     DefFunc addResultsToLists($IP$: string, ref $theResult_isValidIP6$: stringlist, ref $theResult_isValidIP$: stringlist): void
          Set $theResult_isValidIP6$ = AddToList($theResult_isValidIP6$, BoolToString(isValidIP6($IP$)))
          Set $theResult_isValidIP$ = AddToList($theResult_isValidIP$, BoolToString(isValidIP($IP$)))
     EndFunc
     
-    ; DefFunc test_isValidIP_isValidIP6(): string
-    DefStringList $IPAddresses$
-    Set $IPAddresses$ = createStringList("1200:0000:AB00:1234:0000:2552:7777:1313", "21DA:D3:0:2F3B:2AA:FF:FE28:9C5A", "1200:0000:AB00:1234:O000:2552:7777:1313", "192.186.234.22", "2001:0db8:0000:08d3:0000:8a2e:0070:7344", "2001:db8:0:8d3:0:8a2e:70:7344", "2001:db8:0:0:0:0:1428:57ab", "2001:db8::1428:57ab", "2001:db8::8d3::", "::ffff:127.0.0.1", "::1", "::")
+    DefFunc test_isValidIP_isValidIP6(): string
+        DefStringList $IPAddresses$
+        Set $IPAddresses$ = createStringList("1200:0000:AB00:1234:0000:2552:7777:1313", "21DA:D3:0:2F3B:2AA:FF:FE28:9C5A", "1200:0000:AB00:1234:O000:2552:7777:1313", "192.186.234.22", "2001:0db8:0000:08d3:0000:8a2e:0070:7344", "2001:db8:0:8d3:0:8a2e:70:7344", "2001:db8:0:0:0:0:1428:57ab", "2001:db8::1428:57ab", "2001:db8::8d3::", "::ffff:127.0.0.1", "::1", "::")
 
-    DefStringList $ExpectedResult_isValidIP6$
-    Set $ExpectedResult_isValidIP6$ = createStringList("True", "True", "False", "False", "True", "True", "True", "True", "False", "True", "True", "True") 
-    DefStringList $ExpectedResult_isValidIP$
-    Set $ExpectedResult_isValidIP$ = createStringList("True", "True", "False", "True", "True", "True", "True", "True", "False", "True", "True", "True") 
+        DefStringList $ExpectedResult_isValidIP6$
+        Set $ExpectedResult_isValidIP6$ = createStringList("True", "True", "False", "False", "True", "True", "True", "True", "False", "True", "True", "True") 
+        DefStringList $ExpectedResult_isValidIP$
+        Set $ExpectedResult_isValidIP$ = createStringList("True", "True", "False", "True", "True", "True", "True", "True", "False", "True", "True", "True") 
 
-    DefStringList $Result_isValidIP$
-    DefStringList $Result_isValidIP6$
+        DefStringList $Result_isValidIP$
+        DefStringList $Result_isValidIP6$
 
-    for %s% in $IPAddresses$ do addResultsToLists("%s%", $Result_isValidIP6$, $Result_isValidIP$)
-    ; for %s% in $IPAddresses$ do sub_addtolist
+        for %s% in $IPAddresses$ do addResultsToLists("%s%", $Result_isValidIP6$, $Result_isValidIP$)
+  
+        DefVar $TestResult$
+        Set $TestResult$ = "o.k."
+        if areListsEqual($ExpectedResult_isValidIP6$, $Result_isValidIP6$, "FLAG_AUTOMODE")
+            comment "Test isValidIP6: passed" 
+        else
+            Set $TestResult$ = "not o.k."
+            LogWarning "Testing isValidIP6 failed"
+        endif
+
+        if areListsEqual($ExpectedResult_isValidIP$, $Result_isValidIP$, "FLAG_AUTOMODE")
+            comment "Test isValidIP: passed"
+        else
+            Set $TestResult$ = "not o.k."
+            LogWarning "Testing isValidIP failed"
+        endif
+        Set $Result$ = $TestResult$
+     EndFunc
 
     DefVar $TestResult$
-    Set $TestResult$ = "o.k."
-    if areListsEqual($ExpectedResult_isValidIP6$, $Result_isValidIP6$, "FLAG_AUTOMODE")
-        comment "Test isValidIP6: passed" 
-    else
-        Set $TestResult$ = "not o.k."
-        LogWarning "Testing isValidIP6 failed"
-    endif
-
-    if areListsEqual($ExpectedResult_isValidIP$, $Result_isValidIP$, "FLAG_AUTOMODE")
-        comment "Test isValidIP: passed"
-    else
-        Set $TestResult$ = "not o.k."
-        LogWarning "Testing isValidIP failed"
-    endif
+    Set $TestResult$ = test_isValidIP_isValidIP6()
 
 endif
-     ;    Set $Result$ = $TestResult$
-    ; EndFunc
-
-    ; DefVar $TestResult$
-    ; Set $TestResult$ = test_isValidIP_isValidIP6
-
-; endif
-
-
-[sub_addtolist]
-Set $Result_isValidIP6$ = AddToList($Result_isValidIP6$, BoolToString(isValidIP6("%s%")))
-Set $Result_isValidIP$ = AddToList($Result_isValidIP$,BoolToString(isValidIP("%s%")))
 
