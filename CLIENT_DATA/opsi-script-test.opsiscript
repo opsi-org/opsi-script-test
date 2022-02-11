@@ -3998,6 +3998,145 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		
+		if "false" = "true"
+			comment "then branch"
+			LogWarning "if failed"
+			set $TestResult$ = "not o.k."
+		elseif "true" = "true"
+			comment "elseif branch1"
+			comment "elseif passed"
+			if "false" = "true"
+				comment "then branch"
+				LogWarning "if failed"
+				set $TestResult$ = "not o.k."
+			elseif "true" = "true"
+				comment "elseif branch1"
+				comment "elseif passed"
+				Switch "2"
+					Case "1"
+						LogWarning "case failed"
+						set $TestResult$ = "not o.k."
+					EndCase
+					Case "2"
+						comment "case passed"
+						if "true" = "true"
+							comment "then branch"
+							comment "if passed"
+						elseif "true" = "true"
+							comment "elseif branch1"
+							LogWarning "elseif failed"
+							set $TestResult$ = "not o.k."
+						elseif "false" = "true"
+							comment "elseif branch2"
+							LogWarning "elseif failed"
+							set $TestResult$ = "not o.k."
+						else
+							comment "else branch"
+							LogWarning "else failed"
+							set $TestResult$ = "not o.k."
+						endif
+					EndCase
+					DefaultCase
+						LogWarning "case failed"
+						set $TestResult$ = "not o.k."
+					EndCase
+				EndSwitch
+				
+				if "false" = "true"
+					comment "then branch"
+					LogWarning "if failed"
+					set $TestResult$ = "not o.k."
+				elseif "true" = "true"
+					comment "elseif branch1"
+					comment "elseif passed"
+					Switch "2"
+						Case "1"
+							LogWarning "case failed"
+							set $TestResult$ = "not o.k."
+						EndCase
+						Case "2"
+							comment "case passed"
+							if "true" = "true"
+								comment "then branch"
+								comment "if passed"
+							elseif "true" = "true"
+								comment "elseif branch1"
+								LogWarning "elseif failed"
+								set $TestResult$ = "not o.k."
+							elseif "false" = "true"
+								comment "elseif branch2"
+								LogWarning "elseif failed"
+								set $TestResult$ = "not o.k."
+							else
+								comment "else branch"
+								LogWarning "else failed"
+								set $TestResult$ = "not o.k."
+							endif
+						EndCase
+						DefaultCase
+							LogWarning "case failed"
+							set $TestResult$ = "not o.k."
+						EndCase
+					EndSwitch
+					
+				elseif "true" = "true"
+					comment "elseif branch2"
+					LogWarning "elseif failed"
+					set $TestResult$ = "not o.k."
+				else
+					comment "else branch"
+					LogWarning "else failed"
+					set $TestResult$ = "not o.k."
+				endif
+			elseif "true" = "true"
+				comment "elseif branch2"
+				LogWarning "elseif failed"
+				set $TestResult$ = "not o.k."
+			else
+				comment "else branch"
+				LogWarning "else failed"
+				set $TestResult$ = "not o.k."
+			endif
+			
+		elseif "true" = "true"
+			comment "elseif branch2"
+			LogWarning "elseif failed"
+			set $TestResult$ = "not o.k."
+		else
+			comment "else branch"
+			LogWarning "else failed"
+			set $TestResult$ = "not o.k."
+		endif
+		
+		Switch "2"
+			Case "1"
+				LogWarning "case failed"
+				set $TestResult$ = "not o.k."
+			EndCase
+			Case "2"
+				comment "case passed"
+				if "true" = "true"
+					comment "then branch"
+					comment "if passed"
+				elseif "true" = "true"
+					comment "elseif branch1"
+					LogWarning "elseif failed"
+					set $TestResult$ = "not o.k."
+				elseif "false" = "true"
+					comment "elseif branch2"
+					LogWarning "elseif failed"
+					set $TestResult$ = "not o.k."
+				else
+					comment "else branch"
+					LogWarning "else failed"
+					set $TestResult$ = "not o.k."
+				endif
+			EndCase
+			DefaultCase
+				LogWarning "case failed"
+				set $TestResult$ = "not o.k."
+			EndCase
+		EndSwitch
 		
 		
 	endif ; 4.12.4.37
