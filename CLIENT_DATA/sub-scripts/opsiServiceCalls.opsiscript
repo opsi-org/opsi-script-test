@@ -353,7 +353,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 					set $TestResult$ = "not o.k."
 					LogWarning "Numeric value in params produced empty return in OpsiServiceCall 'log_read'!"
 				else
-					if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not (count($ConstTestList$)="0"))
+					if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
 						comment "Numeric value in params passed OpsiServiceCall 'log_read'"
 						
 					else
@@ -394,7 +394,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 					set $TestResult$ = "not o.k."
 					LogWarning "Array with " + $type$ + " values in params produced empty return in OpsiServiceCall 'setProductProperty'!"
 				else
-					if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not )
+					if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
 						comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
 						opsiServiceCall_deleteProductPropertyChanges
 					else
