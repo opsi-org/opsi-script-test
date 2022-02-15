@@ -315,23 +315,28 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 				set $TestResult$ = "not o.k."
 				LogWarning "Boolean value in params failed in OpsiServiceCall 'getServiceTime'!"
 			else
-				if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$)) and not (takeString(0,$ConstTestList$)="")
-					comment "Boolean value in params passed OpsiServiceCall 'getServiceTime'"
-				else
+				if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
 					set $TestResult$ = "not o.k."
-					LogWarning "Boolean value in params passed OpsiServiceCall 'getServiceTime' but gives a different date!"
+					LogWarning "Boolean value in params produced empty return in OpsiServiceCall 'getServiceTime'!"
+				else
+					if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$)) and not (takeString(0,$ConstTestList$)="")
+						comment "Boolean value in params passed OpsiServiceCall 'getServiceTime'"
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "Boolean value in params passed OpsiServiceCall 'getServiceTime' but gives a different date!"
+					endif
 				endif
 			endif
 			[opsiServiceCall_getServiceTime_TestBoolean]
-			"method": "getServiceTime"
-			"params": [
-						false
-						]
+"method": "getServiceTime"
+"params": [
+			false
+			]
 			[opsiServiceCall_getServiceTime_Compare]
-			"method": "getServiceTime"
-			"params": [
-						"false"
-						]
+"method": "getServiceTime"
+"params": [
+			"false"
+			]
 		endfunc
 		
 		DefFunc TestNumericInOpsiServiceCall():void
@@ -344,28 +349,33 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 				set $TestResult$ = "not o.k."
 				LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
 			else
-				if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not (count($ConstTestList$)="0"))
-					comment "Numeric value in params passed OpsiServiceCall 'log_read'"
-					
-				else
+				if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
 					set $TestResult$ = "not o.k."
-					LogWarning "Numeric value in params passed OpsiServiceCall 'log_read' but gives a different result!"
+					LogWarning "Numeric value in params produced empty return in OpsiServiceCall 'log_read'!"
+				else
+					if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not (count($ConstTestList$)="0"))
+						comment "Numeric value in params passed OpsiServiceCall 'log_read'"
+						
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "Numeric value in params passed OpsiServiceCall 'log_read' but gives a different result!"
+					endif
 				endif
 			endif
 			[opsiServiceCall_log_read_TestNumeric]
-			"method": "log_read"
-			"params": [
-						"instlog",
-						"%HostID%",
-						1000
-						]
+"method": "log_read"
+"params": [
+			"instlog",
+			"%HostID%",
+			1000
+			]
 			[opsiServiceCall_log_read_Compare]
-			"method": "log_read"
-			"params": [
-						"instlog",
-						"%HostID%",
-						"1000"
-						]
+"method": "log_read"
+"params": [
+			"instlog",
+			"%HostID%",
+			"1000"
+			]
 		endfunc
 		
 		DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
@@ -380,44 +390,49 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 				set $TestResult$ = "not o.k."
 				LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
 			else
-				if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not (count($ConstTestList$)="0"))
-					comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
-					opsiServiceCall_deleteProductPropertyChanges
-				else
+				if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
 					set $TestResult$ = "not o.k."
-					LogWarning "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty' but gives a different result!"
-					opsiServiceCall_deleteProductPropertyChanges
+					LogWarning "Array with " + $type$ + " values in params produced empty return in OpsiServiceCall 'setProductProperty'!"
+				else
+					if (stringToBool(compareLists($ConstTestList$,$CompValueList$)))) and not )
+						comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
+						opsiServiceCall_deleteProductPropertyChanges
+					else
+						set $TestResult$ = "not o.k."
+						LogWarning "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty' but gives a different result!"
+						opsiServiceCall_deleteProductPropertyChanges
+					endif
 				endif
 			endif
 			[opsiServiceCall_setProductProperty_TestArray]
-			"method": "setProductProperty"
-			"params": [
-						"opsi-script-test",
-						"dummymulti",
-						"$SectionTestEntry$",
-						"%HostID%"
-						]
+"method": "setProductProperty"
+"params": [
+			"opsi-script-test",
+			"dummymulti",
+			"$SectionTestEntry$",
+			"%HostID%"
+			]
 			[opsiServiceCall_setProductProperty_Compare]
-			"method": "setProductProperty"
-			"params": [
-						"opsi-script-test",
-						"dummymulti",
-						"$SectionCompareEntry$",
-						"%HostID%"
-						]
+"method": "setProductProperty"
+"params": [
+			"opsi-script-test",
+			"dummymulti",
+			"$SectionCompareEntry$",
+			"%HostID%"
+			]
 			[opsiServiceCall_getProductProperty]
-			"method": "productPropertyState_getObjects"
-			"params": [
-						"[]",
-						'{"objectId":"%HostID%","productId":"opsi-script-test","propertyId":"dummymulti"}'
-						]
+"method": "productPropertyState_getObjects"
+"params": [
+			"[]",
+			'{"objectId":"%HostID%","productId":"opsi-script-test","propertyId":"dummymulti"}'
+			]
 			[opsiServiceCall_deleteProductPropertyChanges]
-			"method": "productPropertyState_delete"
-			"params": [
-						"opsi-script-test",
-						"dummymulti",
-						"%HostID%"
-						]
+"method": "productPropertyState_delete"
+"params": [
+			"opsi-script-test",
+			"dummymulti",
+			"%HostID%"
+			]
 		endfunc
 		
 		
@@ -449,11 +464,11 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 				LogWarning $Message$+" failed"
 			endif
 			[opsiServiceCall_getProductProperty]
-		"method": "productPropertyState_getObjects"
-		"params": [
-					"[]",
-					'{"objectId":"%HostID%","productId":"opsi-script-test","propertyId":"dummybool"}'
-					]
+"method": "productPropertyState_getObjects"
+"params": [
+			"[]",
+			'{"objectId":"%HostID%","productId":"opsi-script-test","propertyId":"dummybool"}'
+			]
 		endfunc
 		DefFunc TestNumericBooleanServiceArrival():void
 			; Test if numeric and boolean values arrive at service correctly by
@@ -481,36 +496,36 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 			endif
 			
 			[opsiServiceCall_setProductProperty_0]
-		"method": "setProductProperty"
-		"params": [
-					"opsi-script-test",
-					"dummybool",
-					0,
-					"%HostID%"
-					]
+"method": "setProductProperty"
+"params": [
+			"opsi-script-test",
+			"dummybool",
+			0,
+			"%HostID%"
+			]
 			[opsiServiceCall_setProductProperty_1]
-		"method": "setProductProperty"
-		"params": [
-					"opsi-script-test",
-					"dummybool",
-					1,
-					"%HostID%"
-					]
+"method": "setProductProperty"
+"params": [
+			"opsi-script-test",
+			"dummybool",
+			1,
+			"%HostID%"
+			]
 			[opsiServiceCall_setProductProperty_false]
-		"method": "setProductProperty"
-		"params": [
-					"opsi-script-test",
-					"dummybool",
-					false,
-					"%HostID%"
-					]
+"method": "setProductProperty"
+"params": [
+			"opsi-script-test",
+			"dummybool",
+			false,
+			"%HostID%"
+			]
 			[opsiServiceCall_deleteProductPropertyChanges]
-		"method": "productPropertyState_delete"
-		"params": [
-					"opsi-script-test",
-					"dummybool",
-					"%HostID%"
-					]
+"method": "productPropertyState_delete"
+"params": [
+			"opsi-script-test",
+			"dummybool",
+			"%HostID%"
+			]
 		endfunc
 		
 		TestBooleanInOpsiServiceCall()
