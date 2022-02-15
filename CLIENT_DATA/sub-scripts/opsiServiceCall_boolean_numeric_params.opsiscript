@@ -5,9 +5,7 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 		DefStringList $CompValueList$
 		markErrorNumber
 		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
-		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
-		Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
-		Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')		
 		if  errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
 			LogWarning "Boolean value in params failed in OpsiServiceCall 'getServiceTime'!"
@@ -16,6 +14,8 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 				set $TestResult$ = "not o.k."
 				LogWarning "Boolean value in params produced empty return in OpsiServiceCall 'getServiceTime'!"
 			else
+				Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
+				Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
 				if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$))
 					comment "Boolean value in params passed OpsiServiceCall 'getServiceTime'"
 				else
