@@ -4,12 +4,9 @@
 FatalOnSyntaxError = false
 
 DefVar $service$ = "https://bonifax.uib.local:4447/rpc"
-
+;define before execution!
 DefVar $UserFQDN$
 DefVar $opsiHostKey$
-;define before execution!
-set $UserFQDN$ = 
-set $opsiHostKey$ = 
 
 opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
 
