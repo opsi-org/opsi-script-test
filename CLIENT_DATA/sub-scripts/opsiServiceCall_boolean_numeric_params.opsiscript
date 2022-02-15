@@ -1,106 +1,105 @@
 DefFunc TestNumericBooleanParams($UserFQDN$:string):void
-
-DefFunc TestBooleanInOpsiServiceCall():void
-	markErrorNumber
-	DefStringList $ConstTestList$
-	DefStringList $CompValueList$
-	set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
-	set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
-	Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
-	Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
-	if  errorsOccuredSinceMark > 0
-		set $TestResult$ = "not o.k."
-		LogWarning "Boolean value in params failed in OpsiServiceCall 'getServiceTime'!"
-	else
-		if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+	
+	DefFunc TestBooleanInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		markErrorNumber
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')
+		Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
+		Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
+		if  errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
-			LogWarning "Boolean value in params produced empty return in OpsiServiceCall 'getServiceTime'!"
+			LogWarning "Boolean value in params failed in OpsiServiceCall 'getServiceTime'!"
 		else
-			if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$))
-				comment "Boolean value in params passed OpsiServiceCall 'getServiceTime'"
-			else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
 				set $TestResult$ = "not o.k."
-				LogWarning "Boolean value in params passed OpsiServiceCall 'getServiceTime' but gives a different date!"
+				LogWarning "Boolean value in params produced empty return in OpsiServiceCall 'getServiceTime'!"
+			else
+				if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$))
+					comment "Boolean value in params passed OpsiServiceCall 'getServiceTime'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Boolean value in params passed OpsiServiceCall 'getServiceTime' but gives a different date!"
+				endif
 			endif
 		endif
-	endif
-	[opsiServiceCall_getServiceTime_TestBoolean]
+		[opsiServiceCall_getServiceTime_TestBoolean]
 	"method": "getServiceTime"
 	"params": [
 				false
 				]
-	[opsiServiceCall_getServiceTime_Compare]
+		[opsiServiceCall_getServiceTime_Compare]
 	"method": "getServiceTime"
 	"params": [
 				"false"
 				]
-endfunc
-
-DefFunc TestNumericInOpsiServiceCall():void
-	markErrorNumber
-	DefStringList $ConstTestList$
-	DefStringList $CompValueList$
-	set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
-	set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare')
-	if errorsOccuredSinceMark > 0
-		set $TestResult$ = "not o.k."
-		LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
-	else
-		if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+	endfunc
+	
+	DefFunc TestNumericInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		markErrorNumber
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare')
+		if errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
-			LogWarning "Numeric value in params produced empty return in OpsiServiceCall 'log_read'!"
+			LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
 		else
-			if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
-				comment "Numeric value in params passed OpsiServiceCall 'log_read'"				
-			else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
 				set $TestResult$ = "not o.k."
-				LogWarning "Numeric value in params passed OpsiServiceCall 'log_read' but gives a different result!"
+				LogWarning "Numeric value in params produced empty return in OpsiServiceCall 'log_read'!"
+			else
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Numeric value in params passed OpsiServiceCall 'log_read'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Numeric value in params passed OpsiServiceCall 'log_read' but gives a different result!"
+				endif
 			endif
 		endif
-	endif
-	[opsiServiceCall_log_read_TestNumeric]
+		[opsiServiceCall_log_read_TestNumeric]
 	"method": "log_read"
 	"params": [
 				"instlog",
 				"$UserFQDN$",
 				1000
 				]
-	[opsiServiceCall_log_read_Compare]
+		[opsiServiceCall_log_read_Compare]
 	"method": "log_read"
 	"params": [
 				"instlog",
 				"$UserFQDN$",
 				"1000"
 				]
-endfunc
-
-DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
-	markErrorNumber
-	DefStringList $ConstTestList$
-	DefStringList $CompValueList$
-	opsiServiceCall_setProductProperty_TestArray
-	set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
-	opsiServiceCall_setProductProperty_Compare
-	set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
-	if errorsOccuredSinceMark > 0
-		set $TestResult$ = "not o.k."
-		LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
-	else
-		if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+	endfunc
+	
+	DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		markErrorNumber
+		opsiServiceCall_setProductProperty_TestArray
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		opsiServiceCall_setProductProperty_Compare
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		opsiServiceCall_deleteProductPropertyChanges
+		if errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
-			LogWarning "Array with " + $type$ + " values in params produced empty return in OpsiServiceCall 'setProductProperty'!"
+			LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
 		else
-			if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
-				comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
-				opsiServiceCall_deleteProductPropertyChanges
-			else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
 				set $TestResult$ = "not o.k."
-				LogWarning "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty' but gives a different result!"
-				opsiServiceCall_deleteProductPropertyChanges
-			endif
+				LogWarning "Array with " + $type$ + " values in params produced empty return in OpsiServiceCall 'setProductProperty'!"
+			else
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty' but gives a different result!"
+				endif
+			endif			
 		endif
-	endif
-	[opsiServiceCall_setProductProperty_TestArray]
+		[opsiServiceCall_setProductProperty_TestArray]
 	"method": "setProductProperty"
 	"params": [
 				"opsi-script-test",
@@ -108,7 +107,7 @@ DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $Se
 				"$SectionTestEntry$",
 				"$UserFQDN$"
 				]
-	[opsiServiceCall_setProductProperty_Compare]
+		[opsiServiceCall_setProductProperty_Compare]
 	"method": "setProductProperty"
 	"params": [
 				"opsi-script-test",
@@ -116,118 +115,118 @@ DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $Se
 				"$SectionCompareEntry$",
 				"$UserFQDN$"
 				]
-	[opsiServiceCall_getProductProperty]
+		[opsiServiceCall_getProductProperty]
 	"method": "productPropertyState_getObjects"
 	"params": [
 				"[]",
 				'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummymulti"}'
 				]
-	[opsiServiceCall_deleteProductPropertyChanges]
+		[opsiServiceCall_deleteProductPropertyChanges]
 	"method": "productPropertyState_delete"
 	"params": [
 				"opsi-script-test",
 				"dummymulti",
 				"$UserFQDN$"
 				]
-endfunc
-
-
-DefFunc GetServiceCallValuesFirstValueAsString($Values$:string):string
-	DefVar $FirstValue$
-	if($Values$="")
-		set $result$= ""
-	else
-		set $FirstValue$=jsonAsArrayGetElementByIndex($Values$,"0")
-		set $result$=$FirstValue$
-	endif
-endfunc
-DefFunc GetServiceCallValuesAsString($JsonResult$:StringList):string
-	DefVar $Values$
-	set $Values$=jsonAsArrayGetElementByIndex(jsonStringListToJsonArray($JsonResult$),"0")
-	set $Values$=jsonAsArrayGetElementByIndex($Values$,"0")
-	set $Values$=jsonAsObjectGetValueByKey($Values$,"values")
-	set $result$=GetServiceCallValuesFirstValueAsString($Values$)
-endfunc
-DefFunc LogGetProdPropResult($Message$:string,$ExpectedResult$:string):void
-	DefStringList $JsonResult$
-	DefVar $FirstValue$
-	set $JsonResult$=getReturnListFromSection('opsiServiceCall_getProductProperty')
-	set $FirstValue$=GetServiceCallValuesAsString($JsonResult$)
-	if($FirstValue$=$ExpectedResult$)
-		comment $Message$+" passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning $Message$+" failed"
-	endif
-	[opsiServiceCall_getProductProperty]
-"method": "productPropertyState_getObjects"
-"params": [
-			"[]",
-			'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
-			]
-endfunc
-DefFunc TestNumericBooleanServiceArrival():void
-	; Test if numeric and boolean values arrive at service correctly by
-	; setting opsi-script-test property dummybool which expects a boolean value.
-	; Therefore strings are converted: "","false" -> false, everything other string -> true.
-	; Numbers are converted: 0 -> false, everything other number -> true.
-	; With this we can test the arrival because e.g. 0 -> false but "0" -> true
-	; and false is correctly converted to the string "false".
-	markErrorNumber
-	opsiServiceCall_setProductProperty_0
-	LogGetProdPropResult("Test 0->false","false")
+	endfunc
 	
-	opsiServiceCall_setProductProperty_1
-	LogGetProdPropResult("Test 1->true","true")
 	
-	opsiServiceCall_setProductProperty_false
-	LogGetProdPropResult("Test false->false","false")
+	DefFunc GetServiceCallValuesFirstValueAsString($Values$:string):string
+		DefVar $FirstValue$
+		if($Values$="")
+			set $result$= ""
+		else
+			set $FirstValue$=jsonAsArrayGetElementByIndex($Values$,"0")
+			set $result$=$FirstValue$
+		endif
+	endfunc
+	DefFunc GetServiceCallValuesAsString($JsonResult$:StringList):string
+		DefVar $Values$
+		set $Values$=jsonAsArrayGetElementByIndex(jsonStringListToJsonArray($JsonResult$),"0")
+		set $Values$=jsonAsArrayGetElementByIndex($Values$,"0")
+		set $Values$=jsonAsObjectGetValueByKey($Values$,"values")
+		set $result$=GetServiceCallValuesFirstValueAsString($Values$)
+	endfunc
+	DefFunc LogGetProdPropResult($Message$:string,$ExpectedResult$:string):void
+		DefStringList $JsonResult$
+		DefVar $FirstValue$
+		set $JsonResult$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		set $FirstValue$=GetServiceCallValuesAsString($JsonResult$)
+		if($FirstValue$=$ExpectedResult$)
+			comment $Message$+" passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning $Message$+" failed"
+		endif
+		[opsiServiceCall_getProductProperty]
+	"method": "productPropertyState_getObjects"
+	"params": [
+				"[]",
+				'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
+				]
+	endfunc
+	DefFunc TestNumericBooleanServiceArrival():void
+		; Test if numeric and boolean values arrive at service correctly by
+		; setting opsi-script-test property dummybool which expects a boolean value.
+		; Therefore strings are converted: "","false" -> false, everything other string -> true.
+		; Numbers are converted: 0 -> false, everything other number -> true.
+		; With this we can test the arrival because e.g. 0 -> false but "0" -> true
+		; and false is correctly converted to the string "false".
+		markErrorNumber
+		opsiServiceCall_setProductProperty_0
+		LogGetProdPropResult("Test 0->false","false")
+		
+		opsiServiceCall_setProductProperty_1
+		LogGetProdPropResult("Test 1->true","true")
+		
+		opsiServiceCall_setProductProperty_false
+		LogGetProdPropResult("Test false->false","false")
+		
+		opsiServiceCall_deleteProductPropertyChanges
+		if errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "TestNumericBooleanServiceArrival failed"
+		else
+			comment "TestNumericBooleanServiceArrival passed"
+		endif
+		
+		[opsiServiceCall_setProductProperty_0]
+	"method": "setProductProperty"
+	"params": [
+				"opsi-script-test",
+				"dummybool",
+				0,
+				"$UserFQDN$"
+				]
+		[opsiServiceCall_setProductProperty_1]
+	"method": "setProductProperty"
+	"params": [
+				"opsi-script-test",
+				"dummybool",
+				1,
+				"$UserFQDN$"
+				]
+		[opsiServiceCall_setProductProperty_false]
+	"method": "setProductProperty"
+	"params": [
+				"opsi-script-test",
+				"dummybool",
+				false,
+				"$UserFQDN$"
+				]
+		[opsiServiceCall_deleteProductPropertyChanges]
+	"method": "productPropertyState_delete"
+	"params": [
+				"opsi-script-test",
+				"dummybool",
+				"$UserFQDN$"
+				]
+	endfunc
 	
-	opsiServiceCall_deleteProductPropertyChanges
-	if errorsOccuredSinceMark > 0
-		set $TestResult$ = "not o.k."
-		LogWarning "TestNumericBooleanServiceArrival failed"
-	else
-		comment "TestNumericBooleanServiceArrival passed"
-	endif
+	TestBooleanInOpsiServiceCall()
+	TestNumericInOpsiServiceCall()
+	TestArrayInOpsiServiceCall("numeric","[0,15,6.789]","['0','15','6.789']")
+	TestArrayInOpsiServiceCall("boolean","[true,false]","['True','False']")
+	TestNumericBooleanServiceArrival()
 	
-	[opsiServiceCall_setProductProperty_0]
-"method": "setProductProperty"
-"params": [
-			"opsi-script-test",
-			"dummybool",
-			0,
-			"$UserFQDN$"
-			]
-	[opsiServiceCall_setProductProperty_1]
-"method": "setProductProperty"
-"params": [
-			"opsi-script-test",
-			"dummybool",
-			1,
-			"$UserFQDN$"
-			]
-	[opsiServiceCall_setProductProperty_false]
-"method": "setProductProperty"
-"params": [
-			"opsi-script-test",
-			"dummybool",
-			false,
-			"$UserFQDN$"
-			]
-	[opsiServiceCall_deleteProductPropertyChanges]
-"method": "productPropertyState_delete"
-"params": [
-			"opsi-script-test",
-			"dummybool",
-			"$UserFQDN$"
-			]
-endfunc
-
-TestBooleanInOpsiServiceCall()
-TestNumericInOpsiServiceCall()
-TestArrayInOpsiServiceCall("numeric","[0,15,6.789]","['0','15','6.789']")
-TestArrayInOpsiServiceCall("boolean","[true,false]","['True','False']")
-TestNumericBooleanServiceArrival()
-
 endfunc
