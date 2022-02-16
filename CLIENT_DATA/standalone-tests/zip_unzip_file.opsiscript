@@ -11,97 +11,109 @@ DefVar $FolderName_Mixed$ = "/128x128mixed"
 DefVar $BigDir$ = "%scriptpath%/../test-files/bigdir"
 DefVar $ZipsDir$ = "%scriptpath%/../test-files/zips"
 
+
 DefFunc Countdown():void
-  message "Zip and unzip in 3"
-  sleepSeconds 1
-  message "Zip and unzip in 2"
-  sleepSeconds 1
-  message "Zip and unzip in 1"
-  sleepSeconds 1
+	message "Zip and unzip in 3"
+	sleepSeconds 1
+	message "Zip and unzip in 2"
+	sleepSeconds 1
+	message "Zip and unzip in 1"
+	sleepSeconds 1
 endfunc
 
+
+DefFunc CreateDirectories():void
+	markErrorNumber
+	message "create directories"
+	Files_createDirectories
+	if errorsOccuredSinceMark > 0
+		comment "Creating directories did not work!"
+	endif
+	[Files_createDirectories]
+	CheckTargetPath = $BigDir$$FolderName_OneBigFile$
+	CheckTargetPath = $BigDir$$FolderName_Mixed$
+endfunc
+
+
+DefFunc CreateAndZipFolders():void
+	markErrorNumber
+	message "zipping many small files"
+	sleepSeconds 1
+	Files_zipManySmallFiles_createBigFolder
+	message "zipping one big file"
+	sleepSeconds 1
+	Files_zipOneBigFile
+	message "create mixed folder"
+	Files_createMixedFolder
+	message "zipping mixed files"
+	sleepSeconds 1
+	Files_zipMixed
+	if errorsOccuredSinceMark > 0
+		comment "Creating and zipping folders did not work!"
+	endif
+	[Files_zipManySmallFiles_createBigFolder]
+	zipfile $BigDir$$FolderName_ManySmallFiles$ $BigDir$$FolderName_OneBigFile$$ZipFileName_ManySmallFiles$
+	[Files_zipOneBigFile]
+	zipfile $BigDir$$FolderName_OneBigFile$ $ZipsDir$$ZipFileName_OneBigFile$
+	[Files_createMixedFolder]
+	copy -s "$BigDir$$FolderName_ManySmallFiles$/" $BigDir$$FolderName_Mixed$
+	copy $BigDir$$FolderName_OneBigFile$$ZipFileName_ManySmallFiles$ $BigDir$$FolderName_Mixed$
+	[Files_zipMixed]
+	zipfile $BigDir$$FolderName_Mixed$ $ZipsDir$$ZipFileName_Mixed$
+endfunc
+
+
+DefFunc UnzipFolders():void
+	markErrorNumber
+	message "unzipping many small files"
+	Files_unzipManySmallFiles
+	message "unzipping one big file"
+	Files_unzipOneBigFile
+	message "unzipping mixed files"
+	Files_unzipMixed
+	if errorsOccuredSinceMark > 0
+		comment "Unzipping folders did not work!"
+	endif
+	[Files_unzipManySmallFiles]
+	unzipfile $BigDir$$FolderName_OneBigFile$$ZipFileName_ManySmallFiles$ $BigDir$$FolderName_ManySmallFiles$
+	[Files_unzipOneBigFile]
+	unzipfile $ZipsDir$$ZipFileName_OneBigFile$ $BigDir$$FolderName_OneBigFile$
+	[Files_unzipMixed]
+	unzipfile $ZipsDir$$ZipFileName_Mixed$ $BigDir$$FolderName_Mixed$
+endfunc
+
+
+DefFunc DeleteFoldersAndZipFiles():void
+	markErrorNumber
+	Files_delete_folders
+	Files_deleteZips
+	if errorsOccuredSinceMark > 0
+		comment "Deleting folders and zip files did not work!"
+	endif
+	[Files_delete_folders]
+	del -s $BigDir$$FolderName_OneBigFile$
+	del -s $BigDir$$FolderName_Mixed$
+	[Files_deleteZips]
+	del $ZipsDir$$ZipFileName_ManySmallFiles$
+	del $ZipsDir$$ZipFileName_OneBigFile$
+	del $ZipsDir$$ZipFileName_Mixed$
+endfunc
+
+
+markErrorNumber
+
 Countdown()
-
-markErrorNumber
-message "create directories"
-Files_createDirectories
-if errorsOccuredSinceMark > 0
-  comment "Creating directories did not work!"
-endif
-
-markErrorNumber
-message "zipping many small files"
-sleepSeconds 1
-Files_zipManySmallFiles_createBigFolder
-message "zipping one big file"
-sleepSeconds 1
-Files_zipOneBigFile
-message "create mixed folder"
-Files_createMixedFolder
-message "zipping mixed files"
-sleepSeconds 1
-Files_zipMixed
-if errorsOccuredSinceMark > 0
-  comment "Creating directories did not work!"
-endif
-
-markErrorNumber
-message "unzipping many small files"
-Files_unzipManySmallFiles
-message "unzipping one big file"
-Files_unzipOneBigFile
-message "unzipping mixed files"
-Files_unzipMixed
-if errorsOccuredSinceMark > 0
-  comment "Creating directories did not work!"
-endif
-
-markErrorNumber
+CreateDirectories()
+CreateAndZipFolders()
+UnzipFolders()
 ; delete created files again for smaller repo
-Files_delete_folders
-Files_deleteZips
+DeleteFoldersAndZipFiles()
+
 if errorsOccuredSinceMark > 0
-  comment "failed"
+	comment "Test failed"
+else
+	comment "Test succeeded"
 endif
-
-
-[Files_createDirectories]
-CheckTargetPath = $BigDir$$FolderName_OneBigFile$
-CheckTargetPath = $BigDir$$FolderName_Mixed$
-
-
-[Files_zipManySmallFiles_createBigFolder]
-zipfile $BigDir$$FolderName_ManySmallFiles$ $BigDir$$FolderName_OneBigFile$$ZipFileName_ManySmallFiles$
-
-[Files_zipOneBigFile]
-zipfile $BigDir$$FolderName_OneBigFile$ $ZipsDir$$ZipFileName_OneBigFile$
-
-[Files_createMixedFolder]
-copy -s "$BigDir$$FolderName_ManySmallFiles$/" $BigDir$$FolderName_Mixed$
-copy $BigDir$$FolderName_OneBigFile$$ZipFileName_ManySmallFiles$ $BigDir$$FolderName_Mixed$
-
-[Files_zipMixed]
-zipfile $BigDir$$FolderName_Mixed$ $ZipsDir$$ZipFileName_Mixed$
-
-
-[Files_unzipManySmallFiles]
-unzipfile $BigDir$$FolderName_OneBigFile$$ZipFileName_ManySmallFiles$ $BigDir$$FolderName_ManySmallFiles$
-
-[Files_unzipOneBigFile]
-unzipfile $ZipsDir$$ZipFileName_OneBigFile$ $BigDir$$FolderName_OneBigFile$
-
-[Files_unzipMixed]
-unzipfile $ZipsDir$$ZipFileName_Mixed$ $BigDir$$FolderName_Mixed$
-
-
-[Files_delete_folders]
-del -s $BigDir$$FolderName_OneBigFile$
-del -s $BigDir$$FolderName_Mixed$
-
-[Files_deleteZips]
-del $ZipsDir$$ZipFileName_ManySmallFiles$
-del $ZipsDir$$ZipFileName_OneBigFile$
-del $ZipsDir$$ZipFileName_Mixed$
 
 
 [stop]
