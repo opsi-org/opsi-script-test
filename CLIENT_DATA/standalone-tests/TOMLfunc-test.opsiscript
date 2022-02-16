@@ -248,7 +248,7 @@ else
 endif
 
 message '- Testing ModifyTOML with "DEL" existing key in root Table :'
-myModifyTOMLTester('DEL',' newSETkeyInRootTable', '')
+myModifyTOMLTester('DEL','newSETkeyInRootTable', '')
 message '- Testing ModifyTOML with "DEL" unexisting key in root Table :'
 myModifyTOMLTester('DEL','DELkeyInRootTable', '')
 message '- Testing ModifyTOML with "DEL" in sub-Table :'
