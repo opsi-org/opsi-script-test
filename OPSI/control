@@ -503,3 +503,12 @@ description: handle CA certificates
 values: ["off", "on"]
 default: ["off"]
 
+[ProductProperty]
+type: unicode
+name: toml
+multivalue: False
+editable: False
+description: Tests for TOML files
+values: ["off", "on"]
+default: ["off"]
+
