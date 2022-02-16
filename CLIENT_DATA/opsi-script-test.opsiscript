@@ -88,6 +88,7 @@ DefVar $winst_networkcalc$
 DefVar $winst_urlparser$
 DefVar $winst_var_as_param$
 DefVar $winst_certificates$
+DefVar $winst_toml$
 DefVar $InterestingFile$
 DefVar $key$
 DefVar $value$
@@ -167,6 +168,7 @@ DefVar $Flag_subwmi$
 DefVar $Flag_var_as_param$
 DefVar $Flag_processinfo$
 DefVar $Flag_certificates$
+DefVar $Flag_toml$
 
 DefStringList $list$
 DefStringList $list1$
@@ -399,6 +401,8 @@ set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
+set $Flag_toml$                    = GetProductProperty ("TOML", "off")
+
 
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
@@ -6991,6 +6995,10 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
 	sub "%scriptpath%\sub-scripts\certificates.opsiscript"
 endif
 
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
+	sub "%scriptpath%\sub-scripts\TOMLtest.opsiscript"
+endif
+
 DefFunc resultoutput( $name$ : string, $value$ : string) : void
 	DefVar $space$
 	DefVar $spacelength$
@@ -7048,6 +7056,8 @@ resultoutput("winst_wmi",$winst_wmi$)
 resultoutput("winst_xml",$winst_xml$)
 resultoutput("winst_xml2",$winst_xml2$)
 resultoutput("winst_certificates",$winst_certificates$)
+resultoutput("winst_toml",$winst_toml$)
+
 comment "--------------------------------"
 resultoutput("compare_to_python",$compare_to_python$)
 resultoutput("winst_internalundocumented",$winst_internalundocumented$)
@@ -7087,6 +7097,7 @@ comment "--------------------------------"
 ;comment "$winst_wmi$                  --> " + $winst_wmi$
 ;comment "$winst_xml$                  --> " + $winst_xml$
 ;comment "$winst_xml2$                 --> " + $winst_xml2$
+;comment "$winst_toml$                 --> " + $winst_toml$
 ;comment "--------------------------------"
 ;comment "$compare_to_python$          --> " + $compare_to_python$
 ;comment "$winst_internalundocumented$ --> " + $winst_internalundocumented$
