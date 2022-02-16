@@ -1,6 +1,7 @@
 [actions]
 
 message "Testing zipfile and unzipfile"
+sleepSeconds 1
 
 DefVar $FolderName_ManySmallFiles$ = "/128x128"
 DefVar $ZipFileName_ManySmallFiles$ = "/128x128.zip"
@@ -37,26 +38,28 @@ endfunc
 
 DefFunc CreateAndZipFolders():void
 	markErrorNumber
-	message "zipping many small files"
+	message "zipping many small files:"
 	sleepSeconds 1
-	Files_zipManySmallFiles_createBigFolder
-	message "zipping one big file"
+	Files_zipManySmallFilesIntoOneBigFileFolder
+	message "zipping one big file:"
 	sleepSeconds 1
 	Files_zipOneBigFile
 	message "create mixed folder"
 	Files_createMixedFolder
-	message "zipping mixed files"
+	message "zipping mixed files:"
 	sleepSeconds 1
 	Files_zipMixed
 	if errorsOccuredSinceMark > 0
 		comment "Creating and zipping folders did not work!"
 	endif
-	[Files_zipManySmallFiles_createBigFolder]
+	[Files_zipManySmallFilesIntoOneBigFileFolder]
 	zipfile $BigDir$$FolderName_ManySmallFiles$ $BigDir$$FolderName_OneBigFile$$ZipFileName_ManySmallFiles$
 	[Files_zipOneBigFile]
 	zipfile $BigDir$$FolderName_OneBigFile$ $ZipsDir$$ZipFileName_OneBigFile$
 	[Files_createMixedFolder]
+	; copy many small files
 	copy -s "$BigDir$$FolderName_ManySmallFiles$/" $BigDir$$FolderName_Mixed$
+	; copy one big file
 	copy $BigDir$$FolderName_OneBigFile$$ZipFileName_ManySmallFiles$ $BigDir$$FolderName_Mixed$
 	[Files_zipMixed]
 	zipfile $BigDir$$FolderName_Mixed$ $ZipsDir$$ZipFileName_Mixed$
@@ -85,6 +88,7 @@ endfunc
 
 DefFunc DeleteFoldersAndZipFiles():void
 	markErrorNumber
+	message "delete folders and zip files"
 	Files_delete_folders
 	Files_deleteZips
 	if errorsOccuredSinceMark > 0
@@ -110,9 +114,9 @@ UnzipFolders()
 DeleteFoldersAndZipFiles()
 
 if errorsOccuredSinceMark > 0
-	comment "Test failed"
+	message "Test failed"
 else
-	comment "Test succeeded"
+	message "Test succeeded"
 endif
 
 
