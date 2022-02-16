@@ -12,13 +12,12 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	set $TestResult$ = "o.k."
 	
 	
-	set $testfilepath$ = "%Scriptpath%\test-files\TOML"
+	set $testfilepath$ = "%Scriptpath%\test-files\TOML\"
 	if DirectoryExists ($testfilepath$)
 		
 		DefVar $TOMLFile$
 		DefVar $newTOMLFile$
 		DefVar $newJSONFile$
-		DefVar $CompValue$
 		
 		DefStringList $TOMLlist$
 		DefVar $TOMLString$
