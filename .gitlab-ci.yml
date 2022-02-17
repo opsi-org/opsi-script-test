@@ -1,0 +1,53 @@
+image: docker.uib.gmbh/opsi/dev/pybuilder:uib-python-default
+
+stages:
+  - package
+  - test
+
+package:makeopsipackage:
+  stage: package
+  script:
+    - opsi-dev-tool --binary-pull
+    - version=`grep OPSI/control -A 10 -e "\[Product\]" | grep "version:" | tr -d "^a-zA-Z :"`
+    - package=`grep OPSI/control -A 5 -e "\[Package\]" | grep "version:" | tr -d "^a-zA-Z :"`
+    - '[ "$CI_COMMIT_TAG" = "" ] && sed -i "0,/version: $package\$/s/version: $package\$/version: $package.$CI_JOB_ID/" OPSI/control'
+    - opsi-makepackage --no-set-rights -l 6
+    - upload-package opsi-script-test*.opsi true false false false
+  artifacts:
+    name: controlfile
+    paths:
+      - OPSI/control
+
+.jenkinsintegrationtest: &jenkinsintegrationtest |
+  version=$(grep OPSI/control -A 10 -e "\[Product\]" | grep "version:" | tr -d "^a-zA-Z :")
+  package=$(grep OPSI/control -A 5 -e "\[Package\]" | grep "version:" | tr -d "^a-zA-Z :")
+  DEPENDENCIES="{\"opsi-script\":\"$(echo $version-$(echo $package | cut -f 1 -d '.')\")}" # any opsi-script text version x-y~z is testing opsi-script x.y (no prerelease)
+  version="$version-$(echo $package | tr '.' '~')"
+  response=$(curl --insecure -v -X POST https://jenkinsttt.uib.gmbh/job/cicd-abo-plus/buildWithParameters --user service_testumgebung_gitlab:$JENKINS_CICD_TOKEN --data PRODUCTS=$PRODUCTS --data ACTIONREQUEST=$ACTIONREQUEST --data PROPERTIES="$PROPERTIES" --data SYSTEMS=$SYSTEMS --data VERSIONS=$version --data DEPENDENCIES=$DEPENDENCIES 2>&1)
+  url=$(echo "$response" | grep "Location" | grep -o 'https://.*/')   # this is the global queue id
+  echo "waiting for start of queue item $url"
+  sleep 20
+  response=$(curl --insecure "$url/api/json" 2> /dev/null)
+  echo "$response"
+  while echo "$response" | grep -q '"blocked":true'; do echo "waiting for job start"; sleep 20; response=$(curl --insecure "$url/api/json" 2> /dev/null); done
+  url=$(echo "$response" | grep -o 'https://[^"]*[0-9]\+/')           # this is the specific build id for the pipeline
+  echo "waiting for completion of job $url"
+  response=$(curl --insecure "$url/api/json" 2> /dev/null)
+  while echo "$response" | grep -q '"result":null'; do echo "still waiting"; sleep 20; response=$(curl --insecure "$url/api/json" 2> /dev/null); done
+  echo "$response"
+  if echo "$response" | grep -q '"result":"SUCCESS"'; then echo 'result:SUCCESS'; exit 0; fi
+  echo 'NOT successful'
+  response=$(curl --insecure "$url/consoleText/api/json" 2> /dev/null)
+  echo "$response" | grep "Failed in branch"
+  exit 1
+
+test:win10:
+  stage: test
+  when: manual
+  script:
+    - echo "starting jenkins job via POST request"
+    - ACTIONREQUEST="setup"
+    - PRODUCTS="opsi-script-test"
+    - PROPERTIES=""
+    - SYSTEMS="win10-x64-21h2"
+    - *jenkinsintegrationtest
