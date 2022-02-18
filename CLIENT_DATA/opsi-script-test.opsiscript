@@ -7728,10 +7728,10 @@ $mylog = FileOpen("%opsiLogDir%\au3.log", 2)
 FileWriteLine($mylog,"auto-it started - waiting for the window")
 FileClose($mylog)
 opsiLogWinList("%opsiLogDir%\au3.log")
-opsiwinwait("SystemInfo" , "", 60, "%opsiLogDir%\au3.log")
-$winhandle = opsiwinactivate("SystemInfo" , "", 20, "%opsiLogDir%\au3.log")
+opsiwinwait("Systeminfo" , "", 60, "%opsiLogDir%\au3.log")
+$winhandle = opsiwinactivate("Systeminfo" , "", 20, "%opsiLogDir%\au3.log")
 WinSetState($winhandle, "",@SW_MAXIMIZE)
-opsiControlClick("SystemInfo" , "", "[CLASS:Button; INSTANCE:1]", 10, "%opsiLogDir%\au3.log")
+opsiControlClick("Systeminfo" , "", "[CLASS:Button; INSTANCE:1]", 10, "%opsiLogDir%\au3.log")
 Sleep(500)
 ;and good bye
 Exit
