@@ -14,7 +14,7 @@ DefVar $TestResult$
 
 include_insert "%scriptpath%\..\sub-scripts\opsiServiceCall_boolean_numeric_params.opsiscript"
 
-TestNumericBooleanParams($UserFQDN$)
+TestJsonSyntaxParams($UserFQDN$)
 
 [opsiservicecall_authenticated]
 "method": "authenticated"

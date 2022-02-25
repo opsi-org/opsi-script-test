@@ -1,4 +1,4 @@
-DefFunc TestNumericBooleanParams($UserFQDN$:string):void
+DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 	
 	DefFunc TestBooleanInOpsiServiceCall():void
 		DefStringList $ConstTestList$
