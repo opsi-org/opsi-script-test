@@ -76,7 +76,7 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 	endfunc
 	
 	
-	DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
+	DefFunc TestNumericBoolInArray($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
 		DefStringList $ConstTestList$
 		DefStringList $CompValueList$
 		DefVar $Array$
@@ -165,53 +165,40 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 				'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
 				]
 	endfunc
-	DefFunc TestNumericBooleanServiceArrival():void
-		; Test if numeric and boolean values arrive at service correctly by
-		; setting opsi-script-test property dummybool which expects a boolean value.
-		; Therefore strings are converted: "","false" -> false, every other string -> true.
-		; Numbers are converted: 0 -> false, every other number -> true.
-		; With this we can test the arrival because e.g. 0 -> false but "0" -> true
-		; and false is correctly converted to the string "false".
+	DefFunc TestNumericAndBooleanStringsToBool($TestValue$:string,$ExpectedResult$:string):void
+		DefVar $Message$
 		markErrorNumber
-		opsiServiceCall_setProductProperty_0
-		LogGetProdPropResult("Test 0->false","false")
 		
-		opsiServiceCall_setProductProperty_1
-		LogGetProdPropResult("Test 1->true","true")
+		set $Message$ = "Test "+$TestValue$+"->"+$ExpectedResult$
+		opsiServiceCall_setProductProperty		
+		LogGetProdPropResult($Message$,$ExpectedResult$)
 		
-		opsiServiceCall_setProductProperty_false
-		LogGetProdPropResult("Test false->false","false")
+		set $Message$ = "Test "+$TestValue$+"(with quotes)->"+$ExpectedResult$
+		opsiServiceCall_setProductProperty_quoted
+		LogGetProdPropResult($Message$,$ExpectedResult$)
 		
 		opsiServiceCall_deleteProductPropertyChanges
 		if errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
 			LogWarning "TestNumericBooleanServiceArrival failed"
 		else
-			comment "TestNumericBooleanServiceArrival passed"
+			comment "TestNumericAndBooleanStringsToBool passed"
 		endif
 		
-		[opsiServiceCall_setProductProperty_0]
+		[opsiServiceCall_setProductProperty]
 	"method": "setProductProperty"
 	"params": [
 				"opsi-script-test",
 				"dummybool",
-				0,
+				$TestValue$,
 				"$UserFQDN$"
 				]
-		[opsiServiceCall_setProductProperty_1]
+		[opsiServiceCall_setProductProperty_quoted]
 	"method": "setProductProperty"
 	"params": [
 				"opsi-script-test",
 				"dummybool",
-				1,
-				"$UserFQDN$"
-				]
-		[opsiServiceCall_setProductProperty_false]
-	"method": "setProductProperty"
-	"params": [
-				"opsi-script-test",
-				"dummybool",
-				false,
+				"$TestValue$",
 				"$UserFQDN$"
 				]
 		[opsiServiceCall_deleteProductPropertyChanges]
@@ -225,8 +212,11 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 	
 	TestBooleanInOpsiServiceCall()
 	TestNumericInOpsiServiceCall()
-	TestArrayInOpsiServiceCall("numeric","[0,15,6.789]","['0','15','6.789']")
-	TestArrayInOpsiServiceCall("boolean","[true,false]","['True','False']")
-	TestNumericBooleanServiceArrival()
-	
+	TestNumericBoolInArray("numeric","[0,15,6.789]","['0','15','6.789']")
+	TestNumericBoolInArray("boolean","[true,false]","['True','False']")
+	TestNumericAndBooleanStringsToBool("0","false")
+	TestNumericAndBooleanStringsToBool("1","true")
+	TestNumericAndBooleanStringsToBool("50.3376","true")
+	TestNumericAndBooleanStringsToBool("false","false")
+	TestNumericAndBooleanStringsToBool("true","true")
 endfunc
