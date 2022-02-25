@@ -210,6 +210,48 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 				]
 	endfunc
 	
+	DefFunc TestArrayAndObjectInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Array$
+		DefVar $Object$
+		markErrorNumber
+		
+		set $Array$ = "[]"
+		set $Object$ = '{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		
+		set $Array$ = "'[]'"
+		set $Object$ = EscapeString: '{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		
+		if  errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Array and object in params failed in OpsiServiceCall 'getServiceTime'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Array and object in params produced empty return in OpsiServiceCall 'getServiceTime'!"
+			else
+				Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
+				Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
+				if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$))
+					comment "Array and object in params passed OpsiServiceCall 'getServiceTime'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Array and object in params passed OpsiServiceCall 'getServiceTime' but gives a different date!"
+				endif
+			endif
+		endif
+		[opsiServiceCall_getProductProperty]
+	"method": "productPropertyState_getObjects"
+	"params": [
+				$Array$,
+				$Object$
+				]
+	endfunc
+	
+	
 	TestBooleanInOpsiServiceCall()
 	TestNumericInOpsiServiceCall()
 	TestNumericBoolInArray("numeric","[0,15,6.789]","['0','15','6.789']")
@@ -219,4 +261,5 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 	TestNumericAndBooleanStringsToBool("50.3376","true")
 	TestNumericAndBooleanStringsToBool("false","false")
 	TestNumericAndBooleanStringsToBool("true","true")
+	TestArrayAndObjectInOpsiServiceCall()
 endfunc
