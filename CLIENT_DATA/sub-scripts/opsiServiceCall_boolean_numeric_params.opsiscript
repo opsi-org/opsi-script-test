@@ -3,9 +3,15 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 	DefFunc TestBooleanInOpsiServiceCall():void
 		DefStringList $ConstTestList$
 		DefStringList $CompValueList$
+		DefVar $Utctime$
 		markErrorNumber
-		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime_TestBoolean')
-		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime_Compare')		
+		
+		set $Utctime$ = "false"
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime')
+		
+		set $Utctime$ = "'false'"
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime')
+		
 		if  errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
 			LogWarning "Boolean value in params failed in OpsiServiceCall 'getServiceTime'!"
@@ -24,24 +30,26 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 				endif
 			endif
 		endif
-		[opsiServiceCall_getServiceTime_TestBoolean]
+		[opsiServiceCall_getServiceTime]
 	"method": "getServiceTime"
 	"params": [
-				false
-				]
-		[opsiServiceCall_getServiceTime_Compare]
-	"method": "getServiceTime"
-	"params": [
-				"false"
+				$Utctime$
 				]
 	endfunc
+	
 	
 	DefFunc TestNumericInOpsiServiceCall():void
 		DefStringList $ConstTestList$
 		DefStringList $CompValueList$
+		DefVar $Size$
 		markErrorNumber
-		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read_TestNumeric')
-		set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read_Compare')
+		
+		set $Size$ = "1000"
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read')
+		
+		set $Size$ = "'1000'"
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read')
+		
 		if errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
 			LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
@@ -58,30 +66,30 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 				endif
 			endif
 		endif
-		[opsiServiceCall_log_read_TestNumeric]
+		[opsiServiceCall_log_read]
 	"method": "log_read"
 	"params": [
 				"instlog",
 				"$UserFQDN$",
-				1000
-				]
-		[opsiServiceCall_log_read_Compare]
-	"method": "log_read"
-	"params": [
-				"instlog",
-				"$UserFQDN$",
-				"1000"
+				$Size$
 				]
 	endfunc
+	
 	
 	DefFunc TestArrayInOpsiServiceCall($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
 		DefStringList $ConstTestList$
 		DefStringList $CompValueList$
+		DefVar $Array$
 		markErrorNumber
-		opsiServiceCall_setProductProperty_TestArray
+		
+		set $Array$ = $SectionTestEntry$
+		opsiServiceCall_setProductProperty
 		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
-		opsiServiceCall_setProductProperty_Compare
+		
+		set $Array$ = $SectionCompareEntry$
+		opsiServiceCall_setProductProperty
 		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		
 		opsiServiceCall_deleteProductPropertyChanges
 		if errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
@@ -99,20 +107,12 @@ DefFunc TestNumericBooleanParams($UserFQDN$:string):void
 				endif
 			endif			
 		endif
-		[opsiServiceCall_setProductProperty_TestArray]
+		[opsiServiceCall_setProductProperty]
 	"method": "setProductProperty"
 	"params": [
 				"opsi-script-test",
 				"dummymulti",
-				"$SectionTestEntry$",
-				"$UserFQDN$"
-				]
-		[opsiServiceCall_setProductProperty_Compare]
-	"method": "setProductProperty"
-	"params": [
-				"opsi-script-test",
-				"dummymulti",
-				"$SectionCompareEntry$",
+				$Array$,
 				"$UserFQDN$"
 				]
 		[opsiServiceCall_getProductProperty]
