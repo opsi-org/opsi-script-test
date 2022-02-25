@@ -1,18 +1,21 @@
 [actions]
 
 ;setDebug_prog=true
+;setloglevel=8
 FatalOnSyntaxError = false
 
 DefVar $service$ = "https://bonifax.uib.local:4447/rpc"
 ;define before execution!
 DefVar $UserFQDN$
 DefVar $opsiHostKey$
+set $UserFQDN$ = "anjam-thinkpad.uib.local"
+set $opsiHostKey$ = "18eb4cee90f143cd24ae4e234988ebaa"
 
 opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
 
 DefVar $TestResult$
 
-include_insert "%scriptpath%\..\sub-scripts\opsiServiceCall_boolean_numeric_params.opsiscript"
+include_insert "%scriptpath%\..\sub-scripts\opsiServiceCall_jsonSyntaxParams.opsiscript"
 
 TestJsonSyntaxParams($UserFQDN$)
 

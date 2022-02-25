@@ -301,7 +301,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 		comment "Testing: "
 		message "opsiservicecall with numeric and boolean values in params"
 		
-		include_insert "%scriptpath%\sub-scripts\opsiServiceCall_boolean_numeric_params.opsiscript"		
+		include_insert "%scriptpath%\sub-scripts\opsiServiceCall_jsonSyntaxParams.opsiscript"		
 		
 		TestJsonSyntaxParams("%HostID%")
 		
