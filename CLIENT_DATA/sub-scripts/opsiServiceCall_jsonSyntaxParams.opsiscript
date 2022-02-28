@@ -296,16 +296,24 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 			]
 	endfunc
 	
+	DefFunc DoTestsNumericBoolInArray():void
+		TestNumericBoolInArray("numeric","[0,15,6.789]","['0','15','6.789']")
+		TestNumericBoolInArray("boolean","[true,false]","['True','False']")
+	endfunc
+	
+	DefFunc DoTestsNumericAndBooleanStringsToBool():void
+		TestNumericAndBooleanStringsToBool("0","false")
+		TestNumericAndBooleanStringsToBool("1","true")
+		TestNumericAndBooleanStringsToBool("50.3376","true")
+		TestNumericAndBooleanStringsToBool("false","false")
+		TestNumericAndBooleanStringsToBool("true","true")
+	endfunc
+	
 	
 	TestBooleanInOpsiServiceCall()
 	TestNumericInOpsiServiceCall()
-	TestNumericBoolInArray("numeric","[0,15,6.789]","['0','15','6.789']")
-	TestNumericBoolInArray("boolean","[true,false]","['True','False']")
-	TestNumericAndBooleanStringsToBool("0","false")
-	TestNumericAndBooleanStringsToBool("1","true")
-	TestNumericAndBooleanStringsToBool("50.3376","true")
-	TestNumericAndBooleanStringsToBool("false","false")
-	TestNumericAndBooleanStringsToBool("true","true")
+	DoTestsNumericBoolInArray()
+	DoTestsNumericAndBooleanStringsToBool()
 	TestArrayAndObjectInOpsiServiceCall()
 	TestNullInOpsiServiceCall()
 endfunc
