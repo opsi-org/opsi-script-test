@@ -251,6 +251,51 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 				]
 	endfunc
 	
+	DefFunc TestNullInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Null$
+		markErrorNumber
+		
+		set $Null$ = "null"
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getClientIds_list')
+		
+		set $Null$ = "'null'"
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getClientIds_list')
+		
+		if  errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Null value in params failed in OpsiServiceCall 'opsiServiceCall_getClientIds_list'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Null value in params produced empty return in OpsiServiceCall 'opsiServiceCall_getClientIds_list'!"
+			else
+				Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
+				Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
+				if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$))
+					comment "Null value in params passed OpsiServiceCall 'opsiServiceCall_getClientIds_list'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Null value in params passed OpsiServiceCall 'opsiServiceCall_getClientIds_list' but gives a different result!"
+				endif
+			endif
+		endif
+		[opsiServiceCall_getClientIds_list]
+"method": "getClientIds_list"
+"params": [
+			$Null$,
+			$Null$,
+			$Null$,
+			"opsi-script",
+			$Null$,
+			$Null$,
+			$Null$,
+			$Null$,
+			$Null$
+			]
+	endfunc
+	
 	
 	TestBooleanInOpsiServiceCall()
 	TestNumericInOpsiServiceCall()
@@ -262,4 +307,5 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 	TestNumericAndBooleanStringsToBool("false","false")
 	TestNumericAndBooleanStringsToBool("true","true")
 	TestArrayAndObjectInOpsiServiceCall()
+	TestNullInOpsiServiceCall()
 endfunc
