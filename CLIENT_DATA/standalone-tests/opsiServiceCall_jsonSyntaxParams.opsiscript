@@ -8,8 +8,8 @@ DefVar $service$ = "https://bonifax.uib.local:4447/rpc"
 ;define before execution!
 DefVar $UserFQDN$
 DefVar $opsiHostKey$
-set $UserFQDN$ = "anjam-thinkpad.uib.local"
-set $opsiHostKey$ = "18eb4cee90f143cd24ae4e234988ebaa"
+set $UserFQDN$ = ""
+set $opsiHostKey$ = ""
 
 opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
 
