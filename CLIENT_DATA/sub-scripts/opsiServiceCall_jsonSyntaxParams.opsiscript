@@ -292,6 +292,43 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 			]
 	endfunc
 	
+	DefFunc TestEmptyStringInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Empty$
+		markErrorNumber
+		
+		set $Empty$ = ""
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProduct_hash')
+		
+		set $Empty$ = "''"
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProduct_hash')
+		
+		if  errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Empty string in params failed in OpsiServiceCall 'opsiServiceCall_getProduct_hash'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Empty string in params produced empty return in OpsiServiceCall 'opsiServiceCall_getProduct_hash'!"
+			else
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Empty string in params passed OpsiServiceCall 'opsiServiceCall_getProduct_hash'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Empty string in params passed OpsiServiceCall 'opsiServiceCall_getProduct_hash' but gives a different result!"
+				endif
+			endif
+		endif
+		[opsiServiceCall_getProduct_hash]
+"method": "getProduct_hash"
+"params": [
+			"opsi-script",
+			$Empty$
+			]
+	endfunc
+	
+	
 	DefFunc DoTestsNumericBoolInArray():void
 		TestNumericBoolInArray("numeric","[0,15,6.789]","['0','15','6.789']")
 		TestNumericBoolInArray("boolean","[true,false]","['True','False']")
@@ -312,4 +349,5 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 	DoTestsNumericAndBooleanStringsToBool()
 	TestArrayAndObjectInOpsiServiceCall()
 	TestNullInOpsiServiceCall()
+	TestEmptyStringInOpsiServiceCall()
 endfunc
