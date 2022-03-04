@@ -180,7 +180,7 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 		opsiServiceCall_deleteProductPropertyChanges
 		if errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
-			LogWarning "TestNumericBooleanServiceArrival failed"
+			LogWarning "TestNumericAndBooleanStringsToBool failed"
 		else
 			comment "TestNumericAndBooleanStringsToBool passed"
 		endif
@@ -227,19 +227,17 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 		
 		if  errorsOccuredSinceMark > 0
 			set $TestResult$ = "not o.k."
-			LogWarning "Array and object in params failed in OpsiServiceCall 'getServiceTime'!"
+			LogWarning "Array and object in params failed in OpsiServiceCall 'productPropertyState_getObjects'!"
 		else
 			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
 				set $TestResult$ = "not o.k."
-				LogWarning "Array and object in params produced empty return in OpsiServiceCall 'getServiceTime'!"
+				LogWarning "Array and object in params produced empty return in OpsiServiceCall 'productPropertyState_getObjects'!"
 			else
-				Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
-				Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
-				if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$))
-					comment "Array and object in params passed OpsiServiceCall 'getServiceTime'"
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Array and object in params passed OpsiServiceCall 'productPropertyState_getObjects'"
 				else
 					set $TestResult$ = "not o.k."
-					LogWarning "Array and object in params passed OpsiServiceCall 'getServiceTime' but gives a different date!"
+					LogWarning "Array and object in params passed OpsiServiceCall 'productPropertyState_getObjects' but give a different result!"
 				endif
 			endif
 		endif
@@ -271,9 +269,7 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 				set $TestResult$ = "not o.k."
 				LogWarning "Null value in params produced empty return in OpsiServiceCall 'opsiServiceCall_getClientIds_list'!"
 			else
-				Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
-				Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
-				if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$))
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
 					comment "Null value in params passed OpsiServiceCall 'opsiServiceCall_getClientIds_list'"
 				else
 					set $TestResult$ = "not o.k."
@@ -296,6 +292,43 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 			]
 	endfunc
 	
+	DefFunc TestEmptyStringInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Empty$
+		markErrorNumber
+		
+		set $Empty$ = ""
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProduct_hash')
+		
+		set $Empty$ = "''"
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProduct_hash')
+		
+		if  errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Empty string in params failed in OpsiServiceCall 'opsiServiceCall_getProduct_hash'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Empty string in params produced empty return in OpsiServiceCall 'opsiServiceCall_getProduct_hash'!"
+			else
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Empty string in params passed OpsiServiceCall 'opsiServiceCall_getProduct_hash'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Empty string in params passed OpsiServiceCall 'opsiServiceCall_getProduct_hash' but gives a different result!"
+				endif
+			endif
+		endif
+		[opsiServiceCall_getProduct_hash]
+"method": "getProduct_hash"
+"params": [
+			"opsi-script",
+			$Empty$
+			]
+	endfunc
+	
+	
 	DefFunc DoTestsNumericBoolInArray():void
 		TestNumericBoolInArray("numeric","[0,15,6.789]","['0','15','6.789']")
 		TestNumericBoolInArray("boolean","[true,false]","['True','False']")
@@ -316,4 +349,5 @@ DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
 	DoTestsNumericAndBooleanStringsToBool()
 	TestArrayAndObjectInOpsiServiceCall()
 	TestNullInOpsiServiceCall()
+	TestEmptyStringInOpsiServiceCall()
 endfunc
