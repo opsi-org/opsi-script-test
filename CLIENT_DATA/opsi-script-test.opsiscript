@@ -3638,7 +3638,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_getTask_autoit3")
 			set $tmp$ = takeFirstStringContaining($list1$,"autoit3.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			Set $ConstTest$ = ""
+			Set $ConstTest$ = "autoit3.exe"
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
