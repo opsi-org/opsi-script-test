@@ -31,6 +31,8 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 		Set $newTOMLFile$ = $testfilepath$ + "TOMLempty.toml"
 		Set $newJSONFile$ = $testfilepath$ + "myJSONfromTOMLdata.json"
 		
+		Files_copy_toml
+		
 		comment "-----  Testing LoadTOMLFile :"
 		Message "-- LoadTOMLFile TOMLfile.toml "
 		Set $TOMLlist$ = LoadTOMLFile($TOMLFile$)
@@ -305,3 +307,11 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	set $winst_TOML$ = $SubResult$
 	
 endif
+
+
+[Files_copy_toml]
+copy $TOMLFile$ $HomeTestFiles$
+copy $TOMLFileList$ $HomeTestFiles$
+copy $newTOMLFile$ $HomeTestFiles$
+copy $newJSONFile$ $HomeTestFiles$
+
