@@ -11,9 +11,9 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 	
-	
+	DefVar $depotfilepath$
 	set $depotfilepath$ = "%Scriptpath%\test-files\TOML\"
-	if DirectoryExists ($testfilepath$)
+	if DirectoryExists ($depotfilepath$)
 		
 		DefVar $TOMLFile$
 		DefVar $newTOMLFile$
@@ -299,7 +299,7 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 	else
-		Logerror "TOML directory missing - no: "+$testfilepath$
+		Logerror "TOML directory missing - no: "+$depotfilepath$
 		set $TestResult$ = "not o.k."
 	endif
 	
