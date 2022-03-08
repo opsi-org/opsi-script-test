@@ -1,4 +1,5 @@
 encoding=utf8
+[Actions]
 
 if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	Message "testing TOML functions"
@@ -12,7 +13,7 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	set $TestResult$ = "o.k."
 	
 	
-	set $testfilepath$ = "%Scriptpath%\test-files\TOML\"
+	set $depotfilepath$ = "%Scriptpath%\test-files\TOML\"
 	if DirectoryExists ($testfilepath$)
 		
 		DefVar $TOMLFile$
@@ -26,10 +27,10 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 		DefStringList $TestList$
 		DefVar $TestString$
 		
-		Set $TOMLFile$ = $testfilepath$ + "TOMLfile.toml"
-		Set $TOMLFileList$ = $testfilepath$ + "TOMLStringList.txt"
-		Set $newTOMLFile$ = $testfilepath$ + "TOMLempty.toml"
-		Set $newJSONFile$ = $testfilepath$ + "myJSONfromTOMLdata.json"
+		Set $TOMLFile$ = $HomeTestFiles$ + "\TOMLfile.toml"
+		Set $TOMLFileList$ = $HomeTestFiles$ + "\TOMLStringList.txt"
+		Set $newTOMLFile$ = $HomeTestFiles$ + "\TOMLempty.toml"
+		Set $newJSONFile$ = $HomeTestFiles$ + "\myJSONfromTOMLdata.json"
 		
 		Files_copy_toml
 		
@@ -310,8 +311,8 @@ endif
 
 
 [Files_copy_toml]
-copy $TOMLFile$ $HomeTestFiles$
-copy $TOMLFileList$ $HomeTestFiles$
-copy $newTOMLFile$ $HomeTestFiles$
-copy $newJSONFile$ $HomeTestFiles$
+copy "$depotfilepath$\TOMLfile.toml" $HomeTestFiles$
+copy "$depotfilepath$\TOMLStringList.txt" $HomeTestFiles$
+copy "$depotfilepath$\TOMLempty.toml" $HomeTestFiles$
+copy "$depotfilepath$\myJSONfromTOMLdata.json" $HomeTestFiles$
 
