@@ -1,5 +1,4 @@
 encoding=utf8
-[Actions]
 
 if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	Message "testing TOML functions"
