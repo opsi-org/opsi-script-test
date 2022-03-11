@@ -1,3 +1,5 @@
+encoding=utf8
+
 [Actions]
 Message "Testing of TOML functions"
 SetLogLevel=7
