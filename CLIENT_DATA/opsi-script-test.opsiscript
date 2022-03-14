@@ -6806,7 +6806,7 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
 	sub "%scriptpath%\sub-scripts\certificates.opsiscript"
 endif
 
-if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.38")
 	sub "%scriptpath%\sub-scripts\TOMLtest.opsiscript"
 endif
 
