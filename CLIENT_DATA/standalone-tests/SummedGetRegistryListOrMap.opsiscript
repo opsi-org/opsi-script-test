@@ -1,5 +1,7 @@
 [actions]
 
+DefVar $TestResult$
+
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.5.0")
 	comment ""
 	comment "-------------------------------------"
