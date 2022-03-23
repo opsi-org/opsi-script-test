@@ -556,7 +556,27 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed"
-	endif	
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.5.0")
+		if contains('TestString','stSt') and not (contains('TestString','stst'))
+			comment 'Default case sensitive passed'
+		else
+			LogWarning 'Default case sensitive passed'
+		endif
+				
+		if contains('TestString','stSt','true') and not (contains('TestString','stst','true'))
+			comment 'Parameter case sensitive passed'
+		else
+			LogWarning 'Parameter case sensitive passed'
+		endif
+				
+		if contains('TestString','stSt','false') and contains('TestString','stst','false') and contains('TestString','StsT','false')
+			comment 'Parameter case insensitive passed'
+		else
+			LogWarning 'Parameter case insensitive passed'
+		endif
+	endif
 	
 	comment ""
 	comment "-------------------------------------"
