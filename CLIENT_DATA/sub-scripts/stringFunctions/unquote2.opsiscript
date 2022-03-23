@@ -1,0 +1,74 @@
+
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "unquote2"
+		comment ""
+		set $ConstTest$ = "b"
+		set $CompValue$ = unquote2("'b'", "'")
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		comment "double quote"
+		set $ConstTest$ = "b"
+		set $CompValue$ = unquote2('"b"', '"')
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		comment "quote string will be trimmed."
+		comment "if quote string has two chars, the first will be used as start mark and second as end mark"
+		comment "so it is usable to remove brackets"
+		set $ConstTest$ = "b"
+		set $CompValue$ = unquote2("[b]", " [] ")
+		; is the same as  unquote(unquote("[b]", "["),"]")
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "b"
+		set $CompValue$ = unquote2("{b}", " {} ")
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "b]"
+		set $CompValue$ = unquote2("[b]", "[")
+		set $CompValue$ = unquote2($CompValue$,"]")
+		set $CompValue$ = unquote2("[b]", "]")
+		set $CompValue$ = unquote2($CompValue$,"[")
+		set $CompValue$ = unquote2(unquote("[b]", "["),"]")
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		comment "if not quotes found at start AND end th string it will be come back without changes"
+		set $CompValue$ = unquote2("[b]", "[")
+		set $CompValue$ = unquote2("[b]", "]")
+		set $CompValue$ = unquote2('"b]', "'")
+		set $ConstTest$ = "'b"
+		set $CompValue$ = unquote2("'b", "'")
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif

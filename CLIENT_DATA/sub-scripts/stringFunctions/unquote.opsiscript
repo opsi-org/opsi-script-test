@@ -1,0 +1,61 @@
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "unquote"
+		comment ""
+		set $ConstTest$ = "b"
+		set $CompValue$ = unquote("'b'", "'")
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		comment "double quote"
+		set $ConstTest$ = "b"
+		set $CompValue$ = unquote('"b"', '"')
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		comment "quote string will be trimmed and then only the first char is used"
+		comment "note: brackets are different chars"
+		set $ConstTest$ = "b]"
+		set $CompValue$ = unquote("[b]", " [{ ")
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		comment "not usable to remove brackets"
+		set $ConstTest$ = "b]"
+		set $CompValue$ = unquote("[b]", "[")
+		set $CompValue$ = unquote($CompValue$,"]")
+		set $CompValue$ = unquote("[b]", "]")
+		set $CompValue$ = unquote($CompValue$,"[")
+		set $CompValue$ = unquote(unquote("[b]", "["),"]")
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		comment "if string not quoted it will be come back without changes"
+		set $ConstTest$ = "b"
+		set $CompValue$ = unquote("b", "'")
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+			

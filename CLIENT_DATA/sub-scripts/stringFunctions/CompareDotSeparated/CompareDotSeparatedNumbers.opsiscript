@@ -1,0 +1,197 @@
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "CompareDotSeparatedNumbers (Bool)"
+	set $string1$ = "1.2.3.4.5"
+	set $string2$ = "1.2.3.4.5"
+	if CompareDotSeparatedNumbers($string1$, "<", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "<=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "=<", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, ">=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "=>", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, ">", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	
+	set $string1$ = "1.20.3.4.5"
+	set $string2$ = "1.2.30.4.5"
+	if CompareDotSeparatedNumbers($string1$, "<", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "<=", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "=<", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "=", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, ">=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "=>", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, ">", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $string1$ = "1.2.30.4.5"
+	set $string2$ = "1.20.30.4.5"
+	if CompareDotSeparatedNumbers($string1$, "<", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "<=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "=<", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "=", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, ">=", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, "=>", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedNumbers($string1$, ">", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.28")
+		if CompareDotSeparatedNumbers("4.2.2", ">", "4.2.00079")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		if CompareDotSeparatedNumbers("0.9.8h", ">", "0.9.8e")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.12.4.28
+
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "CompareDotSeparatedNumbers"
+	set $string1$ = "1.2.3.4.5"
+	set $string2$ = "1.2.3.4.5"
+	set $ConstTest$ = "0"
+	set $CompValue$ = CompareDotSeparatedNumbers($string1$, $string2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment $string1$+" is equal to "+$string2$
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $string1$ = "1.2.31.4.5"
+	set $string2$ = "1.2.13.4.5"
+	set $ConstTest$ = "1"
+	set $CompValue$ = CompareDotSeparatedNumbers($string1$, $string2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment $string1$+" is higher then "+$string2$
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $string1$ = "1.2.3.4.5"
+	set $string2$ = "1.2.13.4.5"
+	set $ConstTest$ = "-1"
+	set $CompValue$ = CompareDotSeparatedNumbers($string1$, $string2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment $string1$+" is lower then "+$string2$
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	

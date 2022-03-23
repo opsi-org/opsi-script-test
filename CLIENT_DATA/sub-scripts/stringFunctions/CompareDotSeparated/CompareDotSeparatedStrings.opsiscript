@@ -1,0 +1,219 @@
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "CompareDotSeparatedStrings (Bool)"
+	set $string1$ = "1.a.b.c.3"
+	set $string2$ = "1.a.b.c.3"
+	if CompareDotSeparatedStrings($string1$, "<", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "<=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "=<", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, ">=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "=>", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, ">", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	
+	set $string1$ = "1.a.cb.c.3"
+	set $string2$ = "1.a.b.c.3"
+	if CompareDotSeparatedStrings($string1$, "<", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "<=", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "=<", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "=", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedStrings($string1$, ">=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "=>", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, ">", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $string1$ = "1.a.ab.c.3"
+	set $string2$ = "1.a.b.c.3"
+	if CompareDotSeparatedStrings($string1$, "<", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "<=", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "=<", $string2$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "=", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedStrings($string1$, ">=", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedStrings($string1$, "=>", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	if CompareDotSeparatedStrings($string1$, ">", $string2$)
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	else
+		comment "passed"
+	endif
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "CompareDotSeparatedStrings"
+	set $string1$ = "1.a.b.c.3"
+	set $string2$ = "1.a.b.c.3"
+	set $ConstTest$ = "0"
+	set $CompValue$ = CompareDotSeparatedStrings($string1$, $string2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment $string1$+" is equal to "+$string2$
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $string1$ = "1.a.b.c.3"
+	set $string2$ = "1.A.B.C.3"
+	set $ConstTest$ = "0"
+	set $CompValue$ = CompareDotSeparatedStrings($string1$, $string2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment $string1$+" is equal to "+$string2$
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $string1$ = "1.a.cb.c.3"
+	set $string2$ = "1.a.b.c.3"
+	set $ConstTest$ = "1"
+	set $CompValue$ = CompareDotSeparatedStrings($string1$, $string2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment $string1$+" is higher then "+$string2$
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $string1$ = "1.a.ab.c.3"
+	set $string2$ = "1.a.b.c.3"
+	set $ConstTest$ = "-1"
+	set $CompValue$ = CompareDotSeparatedStrings($string1$, $string2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment $string1$+" is lower then "+$string2$
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $string1$ = "1.2.13.4.5"
+	set $string2$ = "1.2.3.4.5"
+	set $ConstTest$ = "-1"
+	set $CompValue$ = CompareDotSeparatedStrings($string1$, $string2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment $string1$+" is lower then "+$string2$
+		comment "using CompareDotSeparatedStrings give wrong results on numbers"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $string1$ = "1.2.3.4.5"
+	set $string2$ = "1.2.13.4.5"
+	set $ConstTest$ = "1"
+	set $CompValue$ = CompareDotSeparatedStrings($string1$, $string2$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment $string1$+" is higher then "+$string2$
+		comment "using CompareDotSeparatedStrings give wrong results on numbers"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
