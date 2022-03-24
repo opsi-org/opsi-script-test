@@ -529,7 +529,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			defvar $mylocalvar$
 			
 				set $str1$ = $str1$+"a"
-				comment "run: "+$str1$+"  --> "+$mystr$
+				comment "run: "+$str1$
 				if strLength($str1$) int< "10"
 					innerFunc25($str1$)
 				endif
@@ -643,7 +643,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 	set $CompValue$ = "localfunctions_func_findsubsection"
 	set $ConstTest$ = findsubsection()
 	if ($ConstTest$ = $CompValue$)
-		comment "passed: find_section_test
+		comment "passed: find_section_test"
 	else
 		set $TestResult$ = "not o.k."
 		LogWarning "failed: find_section_test"

@@ -1,0 +1,97 @@
+encoding=utf8
+
+defvar $keyPath$ = 'HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test'
+defvar $getRegistryPath$ = 'hklm\software\opsi.org\opsi-script-test'
+
+deffunc compareRegistryResultLists($TestList$: stringlist, $CompareList$: stringlist, $TestName$: string): void
+	if areListsEqual($TestList$,$CompareList$,'FLAG_AUTO_CS')
+		comment $TestName$ + ' passed'
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning $TestName$ + ' failed'
+	endif
+endfunc
+
+deffunc compareRegistry32():void
+	defstringlist $TestList$
+	defstringlist $CompareList$
+	defvar $accessString$ = '32Bit'
+	set $CompareList$ = getRegistryKeyList32($getRegistryPath$)
+	set $TestList$ = getRegistryKeyList($getRegistryPath$,$accessString$)
+	compareRegistryResultLists($TestList$,$CompareList$,'Test KeyList 32Bit')
+	set $CompareList$ = getRegistryVarList32($getRegistryPath$)
+	set $TestList$ = getRegistryVarList($getRegistryPath$,$accessString$)
+	compareRegistryResultLists($TestList$,$CompareList$,'Test VarList 32Bit')
+	set $CompareList$ = getRegistryVarMap32($getRegistryPath$)
+	set $TestList$ = getRegistryVarMap($getRegistryPath$,$accessString$)
+	compareRegistryResultLists($TestList$,$CompareList$,'Test VarMap 32Bit')
+endfunc
+
+deffunc compareRegistry64():void
+	defstringlist $TestList$
+	defstringlist $CompareList$
+	defvar $accessString$ = '64Bit'
+	set $CompareList$ = getRegistryKeyList64($getRegistryPath$)
+	set $TestList$ = getRegistryKeyList($getRegistryPath$,$accessString$)
+	compareRegistryResultLists($TestList$,$CompareList$,'Test KeyList 64Bit')
+	set $CompareList$ = getRegistryVarList64($getRegistryPath$)
+	set $TestList$ = getRegistryVarList($getRegistryPath$,$accessString$)
+	compareRegistryResultLists($TestList$,$CompareList$,'Test VarList 64Bit')
+	set $CompareList$ = getRegistryVarMap64($getRegistryPath$)
+	set $TestList$ = getRegistryVarMap($getRegistryPath$,$accessString$)
+	compareRegistryResultLists($TestList$,$CompareList$,'Test VarMap 64Bit')
+endfunc
+
+deffunc compareRegistrySysnative():void
+	defstringlist $TestList$
+	defstringlist $CompareList$
+	defvar $accessString$ = 'sysnative'
+	set $CompareList$ = getRegistryKeyListSysnative($getRegistryPath$)
+	set $TestList$ = getRegistryKeyList($getRegistryPath$,$accessString$)
+	compareRegistryResultLists($TestList$,$CompareList$,'Test KeyList Sysnative')
+	set $CompareList$ = getRegistryVarListSysnative($getRegistryPath$)
+	set $TestList$ = getRegistryVarList($getRegistryPath$,$accessString$)
+	compareRegistryResultLists($TestList$,$CompareList$,'Test VarList Sysnative')
+	set $CompareList$ = getRegistryVarMapSysnative($getRegistryPath$)
+	set $TestList$ = getRegistryVarMap($getRegistryPath$,$accessString$)
+	compareRegistryResultLists($TestList$,$CompareList$,'Test VarMap Sysnative')
+endfunc
+
+
+Registry_createEntries /32Bit
+compareRegistry32()
+Registry_deleteEntries /32Bit
+
+Registry_createEntries /64Bit
+compareRegistry64()
+Registry_deleteEntries /64Bit
+
+Registry_createEntries /Sysnative
+compareRegistrySysnative()
+Registry_deleteEntries /Sysnative
+
+
+[Registry_createEntries]
+openkey [$keyPath$]
+set "var1" = "value1"
+set "var2" = REG_SZ:"value2"
+set "var3" = REG_EXPAND_SZ:"value3"
+set "var4" = REG_DWORD:444
+set "var5" = REG_BINARY:05 05 05 0F 10
+set "var6" = REG_MULTI_SZ:"value6|value7|de"
+openkey [$keyPath$\key1]
+openkey [$keyPath$\key2]
+openkey [$keyPath$\key3]
+
+[Registry_deleteEntries]
+openkey [$keyPath$]
+deletevar "var1"
+deletevar "var2"
+deletevar "var3"
+deletevar "var4"
+deletevar "var5"
+deletevar "var6"
+deletekey [$keyPath$\key1]
+deletekey [$keyPath$\key2]
+deletekey [$keyPath$\key3]
+

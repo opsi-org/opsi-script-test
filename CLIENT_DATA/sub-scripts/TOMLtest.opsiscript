@@ -11,9 +11,9 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 	
-	
-	set $testfilepath$ = "%Scriptpath%\test-files\TOML\"
-	if DirectoryExists ($testfilepath$)
+	DefVar $depotfilepath$
+	set $depotfilepath$ = "%Scriptpath%\test-files\TOML\"
+	if DirectoryExists ($depotfilepath$)
 		
 		DefVar $TOMLFile$
 		DefVar $newTOMLFile$
@@ -26,10 +26,12 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 		DefStringList $TestList$
 		DefVar $TestString$
 		
-		Set $TOMLFile$ = $testfilepath$ + "TOMLfile.toml"
-		Set $TOMLFileList$ = $testfilepath$ + "TOMLStringList.txt"
-		Set $newTOMLFile$ = $testfilepath$ + "TOMLempty.toml"
-		Set $newJSONFile$ = $testfilepath$ + "myJSONfromTOMLdata.json"
+		Set $TOMLFile$ = $HomeTestFiles$ + "\TOMLfile.toml"
+		Set $TOMLFileList$ = $HomeTestFiles$ + "\TOMLStringList.txt"
+		Set $newTOMLFile$ = $HomeTestFiles$ + "\TOMLempty.toml"
+		Set $newJSONFile$ = $HomeTestFiles$ + "\myJSONfromTOMLdata.json"
+		
+		Files_copy_toml
 		
 		comment "-----  Testing LoadTOMLFile :"
 		Message "-- LoadTOMLFile TOMLfile.toml "
@@ -297,7 +299,7 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 	else
-		Logerror "TOML directory missing - no: "+$testfilepath$
+		Logerror "TOML directory missing - no: "+$depotfilepath$
 		set $TestResult$ = "not o.k."
 	endif
 	
@@ -305,3 +307,11 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	set $winst_TOML$ = $SubResult$
 	
 endif
+
+
+[Files_copy_toml]
+copy "$depotfilepath$\TOMLfile.toml" $HomeTestFiles$
+copy "$depotfilepath$\TOMLStringList.txt" $HomeTestFiles$
+copy "$depotfilepath$\TOMLempty.toml" $HomeTestFiles$
+copy "$depotfilepath$\myJSONfromTOMLdata.json" $HomeTestFiles$
+
