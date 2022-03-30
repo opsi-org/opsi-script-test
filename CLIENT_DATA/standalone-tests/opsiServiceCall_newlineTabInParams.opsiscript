@@ -1,0 +1,105 @@
+
+; !!! FOR THIS TEST YOUR HOST NOTES SHOULD BE A ONE-LINER; OTHERWISE THE NOTES WILL NOT BE RESET CORRECTLY !!!
+
+[actions]
+
+;setDebug_prog=true
+;setloglevel=8
+FatalOnSyntaxError = false
+
+DefVar $service$ = "https://bonifax.uib.local:4447/rpc"
+;define before execution!
+DefVar $UserFQDN$
+DefVar $opsiHostKey$
+set $UserFQDN$ = ""
+set $opsiHostKey$ = ""
+
+opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+
+DefVar $TestResult$
+
+;include_insert "%scriptpath%\..\sub-scripts\opsiServiceCall_newlineTabInParams.opsiscript"
+DefFunc TestNewlineTabInParams($UserFQDN$:string):void	
+	deffunc getNotes():string
+		defstringlist $Notes$
+		markErrorNumber
+		set $Notes$ = getReturnListFromSection('opsiservicecall_getNotes')
+		if (count($Notes$) = "0") or errorsOccurredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Failed to get host notes!"
+		else
+			set $result$=jsonAsArrayGetElementByIndex(jsonStringListToJsonArray($Notes$),"0")
+			set $result$=jsonAsArrayGetElementByIndex($result$,"0")
+			set $result$=jsonAsObjectGetValueByKey($result$,"notes")
+		endif		
+		[opsiservicecall_getNotes]
+"method": "host_getObjects"
+"params": [
+			["notes"],
+			{"id":"$UserFQDN$"}
+			]
+	endfunc
+		
+	defvar $oldNotes$
+	defvar $notesText$ = "\n Line2 \r\n Line3 \t After tab"
+	defvar $setHostNotesText$
+	defvar $updateObjectsText$
+	set $setHostNotesText$ = "setHostNotes: " + $notesText$
+	set $updateObjectsText$ = "updateObjects: " + $notesText$
+	set $oldNotes$ = getNotes()
+	comment "Notes: " + $oldNotes$
+	
+	markErrorNumber
+	opsiservicecall_setHostNotes
+	if errorsOccurredSinceMark > 0
+		set $TestResult$ = "not o.k."
+		LogWarning "Failed to set host notes with 'setHostNotes'!"
+	else
+		comment "Host notes successfully set with 'setHostNotes'"
+	endif
+	comment getNotes()
+	
+	markErrorNumber
+	opsiservicecall_updateObjects
+	if errorsOccurredSinceMark > 0
+		set $TestResult$ = "not o.k."
+		LogWarning "Failed to set host notes with 'updateObjects'!"
+	else
+		comment "Host notes successfully set with 'updateObjects'"
+	endif
+	comment getNotes()
+	
+	markErrorNumber
+	opsiservicecall_resetHostNotes
+	if errorsOccurredSinceMark > 0
+		set $TestResult$ = "not o.k."
+		LogWarning "Failed to reset host notes!"
+	else
+		comment "Host notes successfully reset"
+	endif
+		
+	[opsiservicecall_setHostNotes]
+"method": "setHostNotes",
+"params": [
+			'$UserFQDN$',
+			"$setHostNotesText$"
+			]	
+	[opsiservicecall_updateObjects]
+"method": "host_updateObjects"
+"params": [
+			{"id":"$UserFQDN$","notes":"$updateObjectsText$","type":"OpsiClient"}
+			]	
+	[opsiservicecall_resetHostNotes]
+"method": "setHostNotes",
+"params": [
+			'$UserFQDN$',
+			'$oldNotes$'
+			]	
+endfunc
+
+TestNewlineTabInParams($UserFQDN$)
+
+[opsiservicecall_authenticated]
+"method": "authenticated"
+"params": []
+
