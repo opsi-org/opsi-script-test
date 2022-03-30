@@ -19,7 +19,7 @@ deffunc compareRegistry32():void
 	set $CompareList$ = getRegistryKeyList32($getRegistryPath$)
 	set $TestList$ = getRegistryKeyList($getRegistryPath$,$accessString$)
 	compareRegistryResultLists($TestList$,$CompareList$,'Test KeyList 32Bit')
-	set $CompareList$ = getRegistryVarList32($getRegistryPath$)
+	set $CompareList$ = GetRegistryVarList32($getRegistryPath$)
 	set $TestList$ = getRegistryVarList($getRegistryPath$,$accessString$)
 	compareRegistryResultLists($TestList$,$CompareList$,'Test VarList 32Bit')
 	set $CompareList$ = getRegistryVarMap32($getRegistryPath$)
@@ -37,7 +37,7 @@ deffunc compareRegistry64():void
 	set $CompareList$ = getRegistryVarList64($getRegistryPath$)
 	set $TestList$ = getRegistryVarList($getRegistryPath$,$accessString$)
 	compareRegistryResultLists($TestList$,$CompareList$,'Test VarList 64Bit')
-	set $CompareList$ = getRegistryVarMap64($getRegistryPath$)
+	set $CompareList$ = GetRegistryVarMap64($getRegistryPath$)
 	set $TestList$ = getRegistryVarMap($getRegistryPath$,$accessString$)
 	compareRegistryResultLists($TestList$,$CompareList$,'Test VarMap 64Bit')
 endfunc
@@ -46,7 +46,7 @@ deffunc compareRegistrySysnative():void
 	defstringlist $TestList$
 	defstringlist $CompareList$
 	defvar $accessString$ = 'sysnative'
-	set $CompareList$ = getRegistryKeyListSysnative($getRegistryPath$)
+	set $CompareList$ = GetRegistryKeyListSysnative($getRegistryPath$)
 	set $TestList$ = getRegistryKeyList($getRegistryPath$,$accessString$)
 	compareRegistryResultLists($TestList$,$CompareList$,'Test KeyList Sysnative')
 	set $CompareList$ = getRegistryVarListSysnative($getRegistryPath$)

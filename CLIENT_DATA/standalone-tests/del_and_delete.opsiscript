@@ -1,0 +1,84 @@
+[actions]
+
+setloglevel = 8
+;setdebug_prog = true
+
+DefVar $basedir$
+; linux
+;set $basedir$ = "/tmp"
+; windows
+set $basedir$ = "c:\opsi.org\tmp"
+defvar $dir$ = $basedir$+"\delTestDir"
+defvar $file1$ = $basedir$+"\delTest1.txt"
+defvar $file2$ = $basedir$+"\delTest2.txt"
+defvar $subDir$ = $dir$+"\delTestSubDir"
+defvar $subFile$ = $dir$+"\delTestInDir.txt"
+defvar $subSubFile$ = $dir$+"\delTestSubDir\delTestInSubDir.txt"
+defvar $delFilesWorked$ = "false"
+defvar $deleteFilesWorked$ = "false"
+
+DefFunc executeDeletion():string
+defvar $result$
+if not (FileExists($file1$) or FileExists($file2$) or FileExists($subFile$) or FileExists($subSubFile$))
+	comment "Files correctly deleted"
+	if DirectoryExists($dir$) and DirectoryExists($subDir$)
+		comment "Directories still existing (which is correct)"
+		set $result$ = "true"
+	else
+		logwarning "Problems with directories"
+		set $result$ = "false"
+	endif
+else
+	logwarning "Problems with deletion"
+	set $result$ = "false"
+endif
+endfunc
+
+
+DefFunc delFiles():void
+DosBatch_createFiles
+Files_delFiles
+set $delFilesWorked$ = executeDeletion()
+Files_delEverything
+endfunc
+
+
+Deffunc deleteFiles():void
+DosBatch_createFiles
+Files_deleteFiles
+set $deleteFilesWorked$ = executeDeletion()
+Files_delEverything
+endfunc
+
+
+delFiles()
+deleteFiles()
+if $delFilesWorked$ = $deleteFilesWorked$
+	comment "del and delete do the same"
+else
+	logwarning "del and delete do different things!"
+endif
+
+
+[DosBatch_createFiles]
+mkdir "$dir$"
+echo > "$file1$"
+echo > "$file2$"
+mkdir "$subDir$"
+echo > "$subFile$"
+echo > "$subSubFile$"
+
+[dosInAnIcon_check]
+dir "$basedir$\delTest*"
+
+[Files_delFiles]
+del -s "$basedir$\delTest*"
+
+[Files_deleteFiles]
+delete -s "$basedir$\delTest*"
+
+[Files_delEverything]
+del -s $dir$
+
+
+[stop]
