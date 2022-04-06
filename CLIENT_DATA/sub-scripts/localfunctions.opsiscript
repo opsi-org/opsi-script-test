@@ -501,25 +501,6 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		DefFunc myFunc23($str1$ : string) : string
-		;defvar $mylocalvar$
-		
-			set $str1$ = $str1$+"a"
-			comment "run: "+$str1$
-			if strLength($str1$) int< "10"
-				set $str1$ = myFunc23($str1$)
-			endif
-			set $result$ = $str1$
-		endfunc
-		
-		set $ConstTest$ = "aaaaaaaaaa"
-		set $CompValue$ = myFunc23("")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
 		
 		; recursive call with local void function
 
