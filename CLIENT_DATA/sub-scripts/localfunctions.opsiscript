@@ -209,7 +209,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 				set $list1$ = myFunc8('echo %cd%')
 			endif
 			
-			comment " Testing fuction call while if ..."
+			comment " Testing function call while if ..."
 			
 			DefFunc function-test($VarSub1$ : string) : string
 				set $result$ = $VarSub1$
@@ -278,13 +278,13 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	
-		comment " Testing fuction with no (void) result ..."
-		DefFunc myNoResultFunc(ref $str1$ : string) : void
+		comment " Testing function with no (void) result ..."
+		DefFunc myNoResultFuncOutsideOfLib(ref $str1$ : string) : void
 			set $str1$ = "huhu"
 		endfunc
 		set $CompValue$ = "haha"
 		set $ConstTest$ = "huhu"
-		myNoResultFunc($CompValue$)
+		myNoResultFuncOutsideOfLib($CompValue$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -292,7 +292,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		comment " Testing fuction with no parameters ..."
+		comment " Testing function with no parameters ..."
 		DefFunc myNoParamFunc() : string
 			set $result$ = "huhu"
 		endfunc
