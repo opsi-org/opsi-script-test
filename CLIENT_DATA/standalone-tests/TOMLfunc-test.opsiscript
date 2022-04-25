@@ -201,6 +201,8 @@ endif
 message '- Testing ModifyTOML with "ADD" new key in root Table :'
 myModifyTOMLTester('ADD','newADDkeyInRootTable', '"newADDvalueInRootTable"')
 message '- Testing ModifyTOML with "ADD" new key in sub-Table :'
+myModifyTOMLTester('ADD','servers.newADDkeyInServers', '"newADDvalueInServers"')
+message '- Testing ModifyTOML with "ADD" new key in new sub-Table :'
 myModifyTOMLTester('ADD','servers.alpha.a.newADDkeyInAlphaA', '"newADDvalueInAlphaA"')
 message '- Testing ModifyTOML with "ADD" new key in new Table :'
 myModifyTOMLTester('ADD','newTable.newADDtableKey', '"newADDtableValue"')
