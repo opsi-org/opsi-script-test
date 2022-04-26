@@ -799,6 +799,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			set $CompValue$ = unquote2($CompValue$,"[]")
 		endcase
 	endswitch
+	sleepseconds 6
 	killtask $helper_child_bin_name$
 	killtask $opsi_script_test_helper_bin_name$
 	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
