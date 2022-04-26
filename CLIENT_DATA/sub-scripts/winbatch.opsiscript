@@ -409,138 +409,73 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/WaitForProcessEnding assumed failed"
 	endif
 	
-	message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 2"
-	killtask $helper_child_bin_name$
-	killtask $opsi_script_test_helper_bin_name$
-	marktime
-	Winbatch_startprocess_with_child_nowait8 /WaitForProcessEnding  $helper_child_bin_name$ /TimeOutSeconds 2
-	difftime
-	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-	comment "difftime should be 2 seconds"
-	set $ConstTest$ = "2"
-	set $difftime$ = getDiffTimeSec
-	set $CompValue$ = $difftime$
-	if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-		comment "/WaitForProcessEnding assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitForProcessEnding assumed failed"
-	endif
-	sleepseconds 1
-	set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
-	;set $list1$ = GetProcessList
-	switch $OS$
-		case 'Windows_NT'
-			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-			set $ConstTest$ = "helperchild.exe"
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		endcase
-		case 'Linux'
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-			set $ConstTest$ = $helper_child_bin_name$
-			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-			set $CompValue$ = unquote2($CompValue$,"[]")
-		endcase
-		case 'macos'
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-			set $ConstTest$ = $helper_child_bin_name$
-			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-			set $CompValue$ = unquote2($CompValue$,"[]")
-			; #### here is something wrong: todo
-			; so we fake the positive result
-			LogWarning "processCall does not work in this case with macos. Positive test result is faked ....."
-			set $CompValue$ = $helper_child_bin_name$
-		endcase
-	endswitch
-	killtask $helper_child_bin_name$
-	killtask $opsi_script_test_helper_bin_name$
-	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-	if ($ConstTest$ = $CompValue$)
-		comment "/WaitForProcessEnding assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitForProcessEnding assumed failed"
-	endif
-	
-	comment "same test without /WaitForProcessEnding"
-	killtask $helper_child_bin_name$
-	killtask $opsi_script_test_helper_bin_name$
-	
-	marktime
-	Winbatch_startprocess_with_child_nowait8
-	difftime
-	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-	
-	switch $OS$
-		case 'Windows_NT'
-			set $ConstTest$ = "1"
-		endcase
-		case 'Linux'
-			set $ConstTest$ = "3"
-		endcase
-		case 'macos'
-			set $ConstTest$ = "1"
-		endcase
-	endswitch
-	comment "difftime should be "+$ConstTest$+" seconds"
-	
-	set $difftime$ = getDiffTimeSec
-	set $CompValue$ = $difftime$
-	if $test_speed$ = "true"
-		if ($ConstTest$ int>= calculate($CompValue$+'-2')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
-			comment " assumed passed"
+	; this will create zombies on Linux/macOS
+	if $OS$ = 'Windows_NT'
+		message "Winbatch_testing /WaitForProcessEnding "helperchild" /TimeOutSeconds 2"
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
+		marktime
+		Winbatch_startprocess_with_child_nowait8 /WaitForProcessEnding  $helper_child_bin_name$ /TimeOutSeconds 2
+		difftime
+		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+		comment "difftime should be 2 seconds"
+		set $ConstTest$ = "2"
+		set $difftime$ = getDiffTimeSec
+		set $CompValue$ = $difftime$
+		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			comment "/WaitForProcessEnding assumed passed"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning " assumed failed"
+			LogWarning "/WaitForProcessEnding assumed failed"
 		endif
-	endif
-	sleepseconds 1
-	set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
-	switch $OS$
-		case 'Windows_NT'
-			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-			set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-			set $ConstTest$ = "helperchild.exe"
-			set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		endcase
-		case 'Linux'
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-			set $ConstTest$ = $helper_child_bin_name$
-			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-			set $CompValue$ = unquote2($CompValue$,"[]")
-		endcase
-		case 'macos'
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-			set $ConstTest$ = $helper_child_bin_name$
-			set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-			set $CompValue$ = unquote2($CompValue$,"[]")
-		endcase
-	endswitch
-	killtask $helper_child_bin_name$
-	killtask $opsi_script_test_helper_bin_name$
-	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-	if ($ConstTest$ = $CompValue$)
-		comment "/WaitForProcessEnding assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitForProcessEnding assumed failed"
-	endif
-	
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.3")
-		comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
+		sleepseconds 1
+		set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
+		;set $list1$ = GetProcessList
+		switch $OS$
+			case 'Windows_NT'
+				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+				set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+				set $ConstTest$ = "helperchild.exe"
+				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			endcase
+			case 'Linux'
+				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+				set $ConstTest$ = $helper_child_bin_name$
+				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+			endcase
+			case 'macos'
+				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+				set $ConstTest$ = $helper_child_bin_name$
+				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+				; #### here is something wrong: todo
+				; so we fake the positive result
+				LogWarning "processCall does not work in this case with macos. Positive test result is faked ....."
+				set $CompValue$ = $helper_child_bin_name$
+			endcase
+		endswitch
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
+		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+		if ($ConstTest$ = $CompValue$)
+			comment "/WaitForProcessEnding assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "/WaitForProcessEnding assumed failed"
+		endif
+		
+		comment "same test without /WaitForProcessEnding"
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
+		
 		marktime
-		Winbatch_startprocess_with_child_nowait8 /TimeOutSeconds 20
+		Winbatch_startprocess_with_child_nowait8
 		difftime
 		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
 		
@@ -549,21 +484,22 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				set $ConstTest$ = "1"
 			endcase
 			case 'Linux'
-				set $ConstTest$ = "1"
+				set $ConstTest$ = "3"
 			endcase
 			case 'macos'
 				set $ConstTest$ = "1"
 			endcase
 		endswitch
 		comment "difftime should be "+$ConstTest$+" seconds"
+		
 		set $difftime$ = getDiffTimeSec
 		set $CompValue$ = $difftime$
 		if $test_speed$ = "true"
-			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-				comment "/WaitForProcessEnding assumed passed"
+			if ($ConstTest$ int>= calculate($CompValue$+'-2')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
+				comment " assumed passed"
 			else
 				set $TestResult$ = "not o.k."
-				LogWarning "/WaitForProcessEnding assumed failed"
+				LogWarning " assumed failed"
 			endif
 		endif
 		sleepseconds 1
@@ -601,6 +537,76 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		else
 			set $TestResult$ = "not o.k."
 			LogWarning "/WaitForProcessEnding assumed failed"
+		endif
+	endif ; windows
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.3")
+		; this will create zombies on Linux/macOS
+		if $OS$ = 'Windows_NT'
+			comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
+			marktime
+			Winbatch_startprocess_with_child_nowait8 /TimeOutSeconds 20
+			difftime
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+			
+			switch $OS$
+				case 'Windows_NT'
+					set $ConstTest$ = "1"
+				endcase
+				case 'Linux'
+					set $ConstTest$ = "1"
+				endcase
+				case 'macos'
+					set $ConstTest$ = "1"
+				endcase
+			endswitch
+			comment "difftime should be "+$ConstTest$+" seconds"
+			set $difftime$ = getDiffTimeSec
+			set $CompValue$ = $difftime$
+			if $test_speed$ = "true"
+				if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+					comment "/WaitForProcessEnding assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "/WaitForProcessEnding assumed failed"
+				endif
+			endif
+			sleepseconds 1
+			set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
+			switch $OS$
+				case 'Windows_NT'
+					;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+					set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+					set $ConstTest$ = "helperchild.exe"
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				endcase
+				case 'Linux'
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $ConstTest$ = $helper_child_bin_name$
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+				case 'macos'
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $ConstTest$ = $helper_child_bin_name$
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+			endswitch
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+			if ($ConstTest$ = $CompValue$)
+				comment "/WaitForProcessEnding assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "/WaitForProcessEnding assumed failed"
+			endif
 		endif
 	endif ; 4.11.3
 	
@@ -1170,343 +1176,346 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			;includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
 		endif ; windows
 		
-		message "processCall /WaitForProcessEnding"
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		marktime
-		set $tmp$ = '"%ScriptPath%' + $pathDelim$ + $opsi_script_test_helper_bin$ + '" --fork-and-stop=2'
-		set $tmp$ = processCall($tmp$)  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
-		difftime
-		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-		switch $OS$
-			case 'Windows_NT'
-				set $ConstTest$ = "5"
-			endcase
-			case 'Linux'
-				set $ConstTest$ = "7"
-			endcase
-			case 'macos'
-				set $ConstTest$ = "5"
-			endcase
-		endswitch
-		comment "difftime should be "+$ConstTest$+" seconds"
-		set $difftime$ = getDiffTimeSec
-		set $CompValue$ = $difftime$
-		if $test_speed$ = "true"
-			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
+		; this will create zombies on Linux/macOS
+		if $OS$ = 'Windows_NT'
+			message "processCall /WaitForProcessEnding"
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			marktime
+			set $tmp$ = '"%ScriptPath%' + $pathDelim$ + $opsi_script_test_helper_bin$ + '" --fork-and-stop=2'
+			set $tmp$ = processCall($tmp$)  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
+			difftime
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+			switch $OS$
+				case 'Windows_NT'
+					set $ConstTest$ = "5"
+				endcase
+				case 'Linux'
+					set $ConstTest$ = "7"
+				endcase
+				case 'macos'
+					set $ConstTest$ = "5"
+				endcase
+			endswitch
+			comment "difftime should be "+$ConstTest$+" seconds"
+			set $difftime$ = getDiffTimeSec
+			set $CompValue$ = $difftime$
+			if $test_speed$ = "true"
+				if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+2'))
+					comment "processCall assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "processCall assumed failed"
+				endif
+			endif
+			sleepseconds 1
+			switch $OS$
+				case 'Windows_NT'
+					set $ConstTest$ = ""
+					;set $ConstTest$ = "helperchild.exe"
+					;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+					set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				endcase
+				case 'Linux'
+					set $ConstTest$ = ""
+					;set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+				case 'macos'
+					set $ConstTest$ = ""
+					;set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+			endswitch
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+			if ($ConstTest$ = $CompValue$)
 				comment "processCall assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "processCall assumed failed"
 			endif
-		endif
-		sleepseconds 1
-		switch $OS$
-			case 'Windows_NT'
-				set $ConstTest$ = ""
-				;set $ConstTest$ = "helperchild.exe"
-				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-				set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			endcase
-			case 'Linux'
-				set $ConstTest$ = ""
-				;set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-			case 'macos'
-				set $ConstTest$ = ""
-				;set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-		endswitch
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-		if ($ConstTest$ = $CompValue$)
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
-		endif
-		
-		message 'processCall /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 20'
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		marktime
-		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
-		difftime
-		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-		
-		switch $OS$
-			case 'Windows_NT'
-				set $ConstTest$ = "5"
-			endcase
-			case 'Linux'
-				set $ConstTest$ = "9"
-			endcase
-			case 'macos'
-				set $ConstTest$ = "5"
-			endcase
-		endswitch
-		comment "difftime should be "+$ConstTest$+" seconds"
-		set $difftime$ = getDiffTimeSec
-		set $CompValue$ = $difftime$
-		if $test_speed$ = "true"
-			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			
+			message 'processCall /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 20'
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			marktime
+			set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
+			difftime
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+			
+			switch $OS$
+				case 'Windows_NT'
+					set $ConstTest$ = "5"
+				endcase
+				case 'Linux'
+					set $ConstTest$ = "9"
+				endcase
+				case 'macos'
+					set $ConstTest$ = "5"
+				endcase
+			endswitch
+			comment "difftime should be "+$ConstTest$+" seconds"
+			set $difftime$ = getDiffTimeSec
+			set $CompValue$ = $difftime$
+			if $test_speed$ = "true"
+				if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+					comment "processCall assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "processCall assumed failed"
+				endif
+			endif
+			sleepseconds 1
+			switch $OS$
+				case 'Windows_NT'
+					set $ConstTest$ = ""
+					;set $ConstTest$ = "helperchild.exe"
+					;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+					set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				endcase
+				case 'Linux'
+					set $ConstTest$ = ""
+					;set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+				case 'macos'
+					set $ConstTest$ = ""
+					;set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+			endswitch
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+			if ($ConstTest$ = $CompValue$)
 				comment "processCall assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "processCall assumed failed"
 			endif
-		endif
-		sleepseconds 1
-		switch $OS$
-			case 'Windows_NT'
-				set $ConstTest$ = ""
-				;set $ConstTest$ = "helperchild.exe"
-				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-				set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			endcase
-			case 'Linux'
-				set $ConstTest$ = ""
-				;set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-			case 'macos'
-				set $ConstTest$ = ""
-				;set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-		endswitch
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-		if ($ConstTest$ = $CompValue$)
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
-		endif
-		
-		message 'processCall /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 2'
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		marktime
-		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=6')  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 2
-		difftime
-		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-		comment "difftime should be 2 seconds"
-		set $ConstTest$ = "2"
-		set $difftime$ = getDiffTimeSec
-		set $CompValue$ = $difftime$
-		if $test_speed$ = "true"
-			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			
+			message 'processCall /WaitForProcessEnding "helperchild.exe" /TimeOutSeconds 2'
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			marktime
+			set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=6')  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 2
+			difftime
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+			comment "difftime should be 2 seconds"
+			set $ConstTest$ = "2"
+			set $difftime$ = getDiffTimeSec
+			set $CompValue$ = $difftime$
+			if $test_speed$ = "true"
+				if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+					comment "processCall assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "processCall assumed failed"
+				endif
+			endif
+			sleepseconds 1
+			set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
+			switch $OS$
+				case 'Windows_NT'
+					;set $ConstTest$ = ""
+					set $ConstTest$ = "helperchild.exe"
+					set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				endcase
+				case 'Linux'
+					;set $ConstTest$ = ""
+					set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+				case 'macos'
+					;set $ConstTest$ = ""
+					set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+					; #### here is something wrong: todo
+					; so we fake the positive result
+					LogWarning "processCall does not work in this case with macos. Positive test result is faked ....."
+					set $CompValue$ = $helper_child_bin_name$
+				endcase
+			endswitch
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+			if ($ConstTest$ = $CompValue$)
 				comment "processCall assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "processCall assumed failed"
 			endif
-		endif
-		sleepseconds 1
-		set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
-		switch $OS$
-			case 'Windows_NT'
-				;set $ConstTest$ = ""
-				set $ConstTest$ = "helperchild.exe"
-				set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			endcase
-			case 'Linux'
-				;set $ConstTest$ = ""
-				set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-			case 'macos'
-				;set $ConstTest$ = ""
-				set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-				; #### here is something wrong: todo
-				; so we fake the positive result
-				LogWarning "processCall does not work in this case with macos. Positive test result is faked ....."
-				set $CompValue$ = $helper_child_bin_name$
-			endcase
-		endswitch
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-		if ($ConstTest$ = $CompValue$)
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
-		endif
-		
-		comment "same test without /WaitForProcessEnding"
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		marktime
-		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
-		difftime
-		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-		switch $OS$
-			case 'Windows_NT'
-				set $ConstTest$ = "1"
-			endcase
-			case 'Linux'
-				set $ConstTest$ = "2"
-			endcase
-			case 'macos'
-				set $ConstTest$ = "1"
-			endcase
-		endswitch
-		comment "difftime should be "+$ConstTest$+" seconds"
-		set $difftime$ = getDiffTimeSec
-		set $CompValue$ = $difftime$
-		if $test_speed$ = "true"
-			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			
+			comment "same test without /WaitForProcessEnding"
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			marktime
+			set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
+			difftime
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+			switch $OS$
+				case 'Windows_NT'
+					set $ConstTest$ = "1"
+				endcase
+				case 'Linux'
+					set $ConstTest$ = "2"
+				endcase
+				case 'macos'
+					set $ConstTest$ = "1"
+				endcase
+			endswitch
+			comment "difftime should be "+$ConstTest$+" seconds"
+			set $difftime$ = getDiffTimeSec
+			set $CompValue$ = $difftime$
+			if $test_speed$ = "true"
+				if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+					comment "processCall assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "processCall assumed failed"
+				endif
+			endif
+			sleepseconds 1
+			set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
+			switch $OS$
+				case 'Windows_NT'
+					;set $ConstTest$ = ""
+					set $ConstTest$ = "helperchild.exe"
+					;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
+					set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				endcase
+				case 'Linux'
+					;set $ConstTest$ = ""
+					set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+				case 'macos'
+					;set $ConstTest$ = ""
+					set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+			endswitch
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+			if ($ConstTest$ = $CompValue$)
 				comment "processCall assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "processCall assumed failed"
 			endif
-		endif
-		sleepseconds 1
-		set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
-		switch $OS$
-			case 'Windows_NT'
-				;set $ConstTest$ = ""
-				set $ConstTest$ = "helperchild.exe"
-				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq helperchild.exe"')
-				set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			endcase
-			case 'Linux'
-				;set $ConstTest$ = ""
-				set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-			case 'macos'
-				;set $ConstTest$ = ""
-				set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-		endswitch
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-		if ($ConstTest$ = $CompValue$)
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
-		endif
-		
-		
-		comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		marktime
-		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /TimeOutSeconds 20
-		difftime
-		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-		switch $OS$
-			case 'Windows_NT'
-				set $ConstTest$ = "1"
-			endcase
-			case 'Linux'
-				set $ConstTest$ = "2"
-			endcase
-			case 'macos'
-				set $ConstTest$ = "1"
-			endcase
-		endswitch
-		comment "difftime should be "+$ConstTest$+" seconds"
-		set $difftime$ = getDiffTimeSec
-		set $CompValue$ = $difftime$
-		if $test_speed$ = "true"
-			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+			
+			
+			comment "same test without /WaitForProcessEnding but /TimeOutSeconds 20"
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			marktime
+			set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')  /TimeOutSeconds 20
+			difftime
+			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+			switch $OS$
+				case 'Windows_NT'
+					set $ConstTest$ = "1"
+				endcase
+				case 'Linux'
+					set $ConstTest$ = "2"
+				endcase
+				case 'macos'
+					set $ConstTest$ = "1"
+				endcase
+			endswitch
+			comment "difftime should be "+$ConstTest$+" seconds"
+			set $difftime$ = getDiffTimeSec
+			set $CompValue$ = $difftime$
+			if $test_speed$ = "true"
+				if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+					comment "processCall assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "processCall assumed failed"
+				endif
+			endif
+			sleepseconds 1
+			set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
+			switch $OS$
+				case 'Windows_NT'
+					;set $ConstTest$ = ""
+					set $ConstTest$ = "helperchild.exe"
+					set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
+					set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				endcase
+				case 'Linux'
+					;set $ConstTest$ = ""
+					set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+				case 'macos'
+					;set $ConstTest$ = ""
+					set $ConstTest$ = $helper_child_bin_name$
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
+					set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+			endswitch
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+			if ($ConstTest$ = $CompValue$)
 				comment "processCall assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "processCall assumed failed"
 			endif
-		endif
-		sleepseconds 1
-		set $ConstTest$ = boolToString(processIsRunning($helper_child_bin_name$))
-		switch $OS$
-			case 'Windows_NT'
-				;set $ConstTest$ = ""
-				set $ConstTest$ = "helperchild.exe"
-				set $list1$ = getoutstreamFromSection("DosInAnIcon_getTask_helperchild")
-				set $tmp$ = takeFirstStringContaining($list1$,"helperchild.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			endcase
-			case 'Linux'
-				;set $ConstTest$ = ""
-				set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-			case 'macos'
-				;set $ConstTest$ = ""
-				set $ConstTest$ = $helper_child_bin_name$
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [h]elperchild')
-				set $tmp$ = takeFirstStringContaining($list1$,$helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $helper_child_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $helper_child_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-		endswitch
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-		if ($ConstTest$ = $CompValue$)
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
-		endif
+		endif ; windows
 		
 		if $OS$ = "Windows_NT"
 			;/WaitForWindowVanish sees only Windows of 32 Bit applications
