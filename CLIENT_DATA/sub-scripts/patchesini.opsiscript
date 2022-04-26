@@ -159,7 +159,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	set $SectionName$ ="[secdummy]"
 	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
-	; encoding in patches has to be fixed
+		; encoding in patches has to be fixed
 		if (FileExists($HometestFiles$+"\dummy.ini"))
 			set $ConstTest$ = "[secdüöä]"
 			Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
@@ -196,18 +196,27 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	
 	Files_remove_folder
 	
-	;if not($OS$ = "macos")
-		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
-			comment ""
-			comment "-------------------------------------"
-			comment "Testing: "
-			message "Patches /AllNTUserProfiles"
-			Patches_dummy_ini "%userprofiledir%\opsi-winst-test.ini" /AllNTUserProfiles
-			set $list1$ = getProfilesDirList
-			for %s% in $list1$ do sub_check_profile_ini
-			Files_remove_profile_ini /AllNTUserProfiles
-		endif ; 4.11.3.2
-	;endif
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Patches /AllNTUserProfiles"
+		Patches_dummy_ini "%userprofiledir%\opsi-winst-test.ini" /AllNTUserProfiles
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_ini
+		Files_remove_profile_ini /AllNTUserProfiles
+	endif ; 4.11.3.2
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.5.0")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Patches /AllUserProfiles with userProfileDir constant"
+		Patches_userprofiledir "%userprofiledir%\opsi-winst-test.ini" /AllUserProfiles
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_dir
+		Files_remove_profile_ini /AllNTUserProfiles
+	endif ; 4.12.5.0
 	
 	switch $OS$
 		case "Windows_nt"
@@ -223,10 +232,10 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	
 	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.13")
-	;if $test_experimental$ = "true"
+		;if $test_experimental$ = "true"
 		
 		comment ""
-        comment "-------------------------------------"
+		comment "-------------------------------------"
 		comment "Testing: "
 		message "GetSectionFromInifile"
 		;GetSectionFromInifile
@@ -276,6 +285,18 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	set $winst_patches$ = $SubResult$
 endif
 
+[DosInAnIcon_create_ini]
+c:
+mkdir $HomeTestFiles$
+cd $HomeTestFiles$
+del dummy.ini
+
+[ShellInAnIcon_create_ini]
+set -x
+mkdir -p "$HomeTestFiles$"
+cd "$HomeTestFiles$"
+rm dummy.ini
+
 [Patches_dummy_ini]
 add [secdummy] dummy1=add1
 ; will be overwritten by other functions
@@ -294,3 +315,33 @@ Replace dummy6=add6 replace1=replace1
 
 [Patches_dummy_ini_delsec]
 delsec $SectionName$
+
+[Files_remove_folder]
+Delete -s -f $HomeTestFiles$
+
+[Files_remove_profile_ini]
+del "%userprofiledir%\opsi-winst-test.ini"
+
+[sub_check_profile_ini]
+set $ConstTest$ = "add1"
+Set $CompValue$ = GetValueFromInifile("%s%\opsi-winst-test.ini", "secdummy", "dummy1", "failed")
+if ($ConstTest$ = $CompValue$)
+	comment "GetValueFromInifile passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "Patches /AllNTUserProfiles"
+endif
+
+
+[Patches_userprofiledir]
+set [secdummy] userprofile=%userProfileDir%
+
+[sub_check_profile_dir]
+set $ConstTest$ = "%s%"
+Set $CompValue$ = GetValueFromInifile("%s%\opsi-winst-test.ini", "secdummy", "userprofile", "failed")
+if ($ConstTest$ = $CompValue$)
+	comment "GetValueFromInifile passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "Patches /AllNTUserProfiles"
+endif

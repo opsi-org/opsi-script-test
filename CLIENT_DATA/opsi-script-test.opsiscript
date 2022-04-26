@@ -3835,10 +3835,10 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		message "if / else / elseif / endif"
 		
 		;-----------------------------
-		; Test 1 
+		; Test 1
 		; (if / else / elseif / endif)
 		;-----------------------------
-		comment "Start Test 1" 
+		comment "Start Test 1"
 		if "true" = "true"
 			comment "then branch"
 			comment "Nesting Level 1"
@@ -3887,7 +3887,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		comment "End Test 2"
-
+		
 		;-----------------------------
 		; Test 3
 		; (if / else / elseif / endif)
@@ -3914,7 +3914,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		comment "End Test 3"
-
+		
 		;-----------------------------
 		; Test 4
 		; (if / else / elseif / endif)
@@ -3941,7 +3941,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			comment "else passed (Test 4)"
 		endif
 		comment "End Test 4"
-
+		
 		;-----------------------------
 		; Test 5
 		; (if / else / elseif / endif)
@@ -4008,7 +4008,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 		endif
 		comment "End Test 5"
-
+		
 		;-----------------------------
 		; Test 6
 		; (if / else / elseif / endif)
@@ -4074,7 +4074,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "else failed (Test 6)"
 			set $TestResult$ = "not o.k."
 		endif
-
+		
 		;-----------------------------
 		; Test 7
 		; (if / else / elseif / endif)
@@ -4105,7 +4105,7 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 						set $TestResult$ = "not o.k."
 					EndCase
 					Case "2"
-					    comment "Nesting Level 3 (or 3 for if conditions, 1 for case?)"
+						comment "Nesting Level 3 (or 3 for if conditions, 1 for case?)"
 						comment "case passed (Test 7)"
 						if "true" = "true"
 							comment "Nesting Level 4 (or 3 for if conditions, 1 for case?)"
@@ -6524,7 +6524,7 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.29")
 endif
 
 if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
-	sub "%scriptpath%\sub-scripts\opsiServiceCalls.opsiscript"	
+	sub "%scriptpath%\sub-scripts\opsiServiceCalls.opsiscript"
 endif
 
 if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
@@ -7490,17 +7490,17 @@ comment "test sub_giveString " + "%letter%"
 set $TestResult$=$TestResult$+"5"
 ;----------------   end   sections for sub test ---------------------------------
 ;----------------   start   sections for patches test ---------------------------------
-[DosInAnIcon_create_ini]
-c:
-mkdir $HomeTestFiles$
-cd $HomeTestFiles$
-del dummy.ini
-
-[ShellInAnIcon_create_ini]
-set -x
-mkdir -p "$HomeTestFiles$"
-cd "$HomeTestFiles$"
-rm dummy.ini
+;[DosInAnIcon_create_ini]
+;c:
+;mkdir $HomeTestFiles$
+;cd $HomeTestFiles$
+;del dummy.ini
+;
+;[ShellInAnIcon_create_ini]
+;set -x
+;mkdir -p "$HomeTestFiles$"
+;cd "$HomeTestFiles$"
+;rm dummy.ini
 
 ;[Patches_dummy_ini]
 ;add [secdummy] dummy1=add1
@@ -7521,21 +7521,21 @@ rm dummy.ini
 ;[Patches_dummy_ini_delsec]
 ;delsec $SectionName$
 
-[Files_remove_folder]
-Delete -s -f $HomeTestFiles$
+;[Files_remove_folder]
+;Delete -s -f $HomeTestFiles$
 
-[Files_remove_profile_ini]
-del "%userprofiledir%\opsi-winst-test.ini"
+;[Files_remove_profile_ini]
+;del "%userprofiledir%\opsi-winst-test.ini"
 
-[sub_check_profile_ini]
-set $ConstTest$ = "add1"
-Set $CompValue$ = GetValueFromInifile("%s%\opsi-winst-test.ini", "secdummy", "dummy1", "failed")
-if ($ConstTest$ = $CompValue$)
-	comment "GetValueFromInifile passed"
-else
-	set $TestResult$ = "not o.k."
-	LogWarning "Patches /AllNTUserProfiles"
-endif
+;[sub_check_profile_ini]
+;set $ConstTest$ = "add1"
+;Set $CompValue$ = GetValueFromInifile("%s%\opsi-winst-test.ini", "secdummy", "dummy1", "failed")
+;if ($ConstTest$ = $CompValue$)
+;	comment "GetValueFromInifile passed"
+;else
+;	set $TestResult$ = "not o.k."
+;	LogWarning "Patches /AllNTUserProfiles"
+;endif
 
 ;----------------   end   sections for patches test ---------------------------------
 ;---------------- start sections for patch hosts test ---------------------------
