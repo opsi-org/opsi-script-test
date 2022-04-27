@@ -764,59 +764,68 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		LogWarning "/WaitSeconds assumed failed"
 	endif
 	
-	comment "should be take exactly 2 seconds even if the program takes longer"
-	marktime
-	Winbatch_helper_wait2_showwindow5 /WaitSeconds 2 /LetThemgo
-	difftime
-	set $ConstTest$ = "2"
-	set $difftime$ = getDiffTimeSec
-	set $CompValue$ = $difftime$
-	if $test_speed$ = "true"
-		if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
-			comment "/WaitForProcessEnding assumed passed"
+	; this will create zombies on Linux/macOS
+	; I do not understand why in this special case
+	if $OS$ = 'Windows_NT'
+		comment "should be take exactly 2 seconds even if the program takes longer"
+		marktime
+		Winbatch_helper_wait2_showwindow5 /WaitSeconds 2 /LetThemgo
+		difftime
+		set $ConstTest$ = "2"
+		set $difftime$ = getDiffTimeSec
+		set $CompValue$ = $difftime$
+		if $test_speed$ = "true"
+			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+				comment "/WaitForProcessEnding assumed passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "/WaitForProcessEnding assumed failed"
+			endif
+		endif
+		sleepseconds 1
+		switch $OS$
+			case 'Windows_NT'
+				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
+				set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
+				set $ConstTest$ = "opsiscripttesthelper.exe"
+				set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
+				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			endcase
+			case 'Linux'
+				set $list1$ = getProcesslist
+				set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
+				set $ConstTest$ = $opsi_script_test_helper_bin_name$
+				set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+			endcase
+			case 'macos'
+				set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
+				set $ConstTest$ = $opsi_script_test_helper_bin_name$
+				set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
+				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
+				set $CompValue$ = unquote2($CompValue$,"[]")
+			endcase
+		endswitch
+		sleepseconds 6
+		set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
+		set $list1$ = getProcesslist
+		if processIsRunning($opsi_script_test_helper_bin_name$)
+			logwarning "Still running: "+$opsi_script_test_helper_bin_name$
+		endif
+		killtask $helper_child_bin_name$
+		killtask $opsi_script_test_helper_bin_name$
+		includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
+		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+		if ($ConstTest$ = $CompValue$)
+			comment "/WaitSeconds assumed passed"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "/WaitForProcessEnding assumed failed"
+			LogWarning "/WaitSeconds assumed failed"
 		endif
 	endif
-	sleepseconds 1
-	switch $OS$
-		case 'Windows_NT'
-			;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
-			set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
-			set $ConstTest$ = "opsiscripttesthelper.exe"
-			set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
-			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-		endcase
-		case 'Linux'
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
-			set $ConstTest$ = $opsi_script_test_helper_bin_name$
-			set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
-			set $CompValue$ = unquote2($CompValue$,"[]")
-		endcase
-		case 'macos'
-			set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
-			set $ConstTest$ = $opsi_script_test_helper_bin_name$
-			set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
-			set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
-			set $CompValue$ = unquote2($CompValue$,"[]")
-		endcase
-	endswitch
-	sleepseconds 6
-	killtask $helper_child_bin_name$
-	killtask $opsi_script_test_helper_bin_name$
-	includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
-	includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-	if ($ConstTest$ = $CompValue$)
-		comment "/WaitSeconds assumed passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "/WaitSeconds assumed failed"
-	endif
-	
 	
 	message "Winbatch_testing exitcode"
 	marktime
@@ -1678,58 +1687,62 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "processCall assumed failed"
 		endif
 		
-		comment "should be take exactly 2 seconds even if the program takes longer"
-		marktime
-		;Winbatch_helper_wait2_showwindow5
-		;set $string1$ = ExtractFileName($opsi_script_test_helper_child_bin$)
-		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --wait=2 --showwindow=5') /WaitSeconds 2 /LetThemgo
-		difftime
-		comment "difftime should be 2 seconds"
-		set $ConstTest$ = "2"
-		set $difftime$ = getDiffTimeSec
-		set $CompValue$ = $difftime$
-		if $test_speed$ = "true"
-			if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+		; this will create zombies on Linux/macOS
+		; I do not understand why in this special case
+		if $OS$ = 'Windows_NT'
+			comment "should be take exactly 2 seconds even if the program takes longer"
+			marktime
+			;Winbatch_helper_wait2_showwindow5
+			;set $string1$ = ExtractFileName($opsi_script_test_helper_child_bin$)
+			set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --wait=2 --showwindow=5') /WaitSeconds 2 /LetThemgo
+			difftime
+			comment "difftime should be 2 seconds"
+			set $ConstTest$ = "2"
+			set $difftime$ = getDiffTimeSec
+			set $CompValue$ = $difftime$
+			if $test_speed$ = "true"
+				if ($ConstTest$ int>= calculate($CompValue$+'-1')) and ($ConstTest$ int<= calculate($CompValue$+'+1'))
+					comment "processCall assumed passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "processCall assumed failed"
+				endif
+			endif
+			switch $OS$
+				case 'Windows_NT'
+					;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
+					set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
+					set $ConstTest$ = "opsiscripttesthelper.exe"
+					set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
+					set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+				endcase
+				case 'Linux'
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
+					set $ConstTest$ = $opsi_script_test_helper_bin_name$
+					set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+				case 'macos'
+					set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
+					set $ConstTest$ = $opsi_script_test_helper_bin_name$
+					set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
+					set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
+					set $CompValue$ = unquote2($CompValue$,"[]")
+				endcase
+			endswitch
+			killtask $helper_child_bin_name$
+			killtask $opsi_script_test_helper_bin_name$
+			includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
+			if ($ConstTest$ = $CompValue$)
 				comment "processCall assumed passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "processCall assumed failed"
 			endif
-		endif
-		switch $OS$
-			case 'Windows_NT'
-				;set $list1$ = shellCall('tasklist /FI "IMAGENAME eq opsiscripttesthelper.exe"')
-				set $list1$ = getOutStreamFromSection ('DosInAnIcon_getTask_helper')
-				set $ConstTest$ = "opsiscripttesthelper.exe"
-				set $tmp$ = takeFirstStringContaining($list1$,"opsiscripttesthelper.exe")
-				set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
-			endcase
-			case 'Linux'
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
-				set $ConstTest$ = $opsi_script_test_helper_bin_name$
-				set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-			case 'macos'
-				set $list1$ = shellCall('ps -Ao pid,user,args | grep [o]psiscripttesthelper"')
-				set $ConstTest$ = $opsi_script_test_helper_bin_name$
-				set $tmp$ = takeFirstStringContaining($list1$,$opsi_script_test_helper_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitStringOnWhitespace($tmp$), $opsi_script_test_helper_bin_name$)
-				set $CompValue$ = takeFirstStringContaining( splitString($CompValue$,$pathDelim$), $opsi_script_test_helper_bin_name$)
-				set $CompValue$ = unquote2($CompValue$,"[]")
-			endcase
-		endswitch
-		killtask $helper_child_bin_name$
-		killtask $opsi_script_test_helper_bin_name$
-		includelog "%opsiLogDir%"+$pathDelim$+$helper_child_bin_log$ "100"
-		if ($ConstTest$ = $CompValue$)
-			comment "processCall assumed passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "processCall assumed failed"
-		endif
+		endif ; windows
 		
 		
 		

@@ -110,33 +110,42 @@ if ($Flag_processinfo$ = "on") or ($MasterFlag$ = "on")
 	endif
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.35")
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "isProcessChildOf"
-		set $ConstTest$ = $helper_child_bin_name$
-		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_child_bin$+'" --wait=4') /LetThemGo
-		set $list1$ = getProcessList
-		if isProcessChildOf($ConstTest$,'%opsiscriptprocname%')
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+		; this will create zombies on Linux/macOS
+		if $OS$ = 'Windows_NT'
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "isProcessChildOf"
+			set $ConstTest$ = $helper_child_bin_name$
+			set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_child_bin$+'" --wait=2') /LetThemGo
+			;Winbatch_helperchild_wait2 /LetThemGo
+			set $list1$ = getProcessList
+			if isProcessChildOf($ConstTest$,'%opsiscriptprocname%')
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			sleepseconds 2
+			set $list1$ = getProcessList
+			killtask $ConstTest$
+			
+			comment "testing with processname wider than 15 chars"
+			set $ConstTest$ = $opsi_script_test_helper_bin_name$
+			set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --wait=2') /LetThemGo
+			;Winbatch_helper_wait2 /LetThemGo
+			set $list1$ = getProcessList
+			if isProcessChildOf($ConstTest$,'%opsiscriptprocname%')
+				comment "passed"
+			else
+				; temporary commented out until fix
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			sleepseconds 2
+			set $list1$ = getProcessList
+			killtask $ConstTest$
 		endif
-		killtask $ConstTest$
-		
-		comment "testing with processname wider than 15 chars"
-		set $ConstTest$ = $opsi_script_test_helper_bin_name$
-		set $tmp$ = processCall('"%ScriptPath%'+$pathDelim$+$opsi_script_test_helper_bin$+'" --wait=4') /LetThemGo
-		set $list1$ = getProcessList
-		if isProcessChildOf($ConstTest$,'%opsiscriptprocname%')
-			comment "passed"
-		else
-			; temporary commented out until fix
-			;set $TestResult$ = "not o.k."
-			;LogWarning "failed"
-		endif
-		killtask $ConstTest$
 		
 		if not(isProcessChildOf("not-expected-process.exe",'%opsiscriptprocname%'))
 			comment "passed"
@@ -191,4 +200,8 @@ endif
 [WinBatch_testing]
 $ping5command$
 
+[Winbatch_helper_wait2]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_bin$" --wait=2
 
+[Winbatch_helperchild_wait2]
+"%ScriptPath%$pathDelim$$opsi_script_test_helper_child_bin$" --wait=2
