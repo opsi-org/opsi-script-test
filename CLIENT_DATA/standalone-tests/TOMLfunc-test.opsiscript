@@ -50,7 +50,7 @@ endif
 ;comment "-----  Testing ReadTOMLFile :"
 ;Message "-- ReadTOMLFile TOMLfile.toml "
 ;Set $TOMLString$ = ReadTOMLFile($TOMLFile$)
-;Set $TestString$ = strLoadTextFile($TOMLFile$)
+;;Set $TestString$ = strLoadTextFile($TOMLFile$)
 ;if $TOMLString$ = $TestString$
 ;		comment "Testing ReadTOMLFile TOMLfile.toml succeeded"
 ;else
@@ -60,7 +60,7 @@ endif
 
 ;Message "-- ReadTOMLFile empty file : TOMLempty.toml "
 ;Set $TOMLString$ = ReadTOMLFile($newTOMLFile$)
-;Set $TestString$ = strLoadTextFile($newTOMLFile$)
+;;Set $TestString$ = strLoadTextFile($newTOMLFile$)
 ;if $TOMLString$ = $TestString$
 ;		comment "Testing ReadTOMLFile TOMLexample.toml succeeded"
 ;else
@@ -203,6 +203,8 @@ endif
 message '- Testing ModifyTOML with "ADD" new key in root Table :'
 myModifyTOMLTester('ADD','newADDkeyInRootTable', '"newADDvalueInRootTable"')
 message '- Testing ModifyTOML with "ADD" new key in sub-Table :'
+myModifyTOMLTester('ADD','servers.newADDkeyInServers', '"newADDvalueInServers"')
+message '- Testing ModifyTOML with "ADD" new key in new sub-Table :'
 myModifyTOMLTester('ADD','servers.alpha.a.newADDkeyInAlphaA', '"newADDvalueInAlphaA"')
 message '- Testing ModifyTOML with "ADD" new key in new Table :'
 myModifyTOMLTester('ADD','newTable.newADDtableKey', '"newADDtableValue"')
@@ -217,15 +219,27 @@ myModifyTOMLTester('ADD','newTable.newDateKey', '2022-02-02T16:16:00Z-16:16')
 message 'Testing ModifyTOML with "ADD" an Array Value :'
 myModifyTOMLTester('ADD','newTable.newArray', '[ "a", "b", "c" ]')
 
+message '- Testing ModifyTOML with "SET" empty key in root Table :'
+myModifyTOMLTester('SET','   ', 'defaultValue')
 message '- Testing ModifyTOML with "SET" existing key in root Table :'
-myModifyTOMLTester('SET','newADDkeyInRootTable', '"newSETValueInRootTable"')
+myModifyTOMLTester('SET','newADDkeyInRootTable', '"newSETafterADDvalueInRootTable"')
 message '- Testing ModifyTOML with "SET" new key in root Table :'
-myModifyTOMLTester('SET','newSETkeyInRootTable', '"newSETValueInRootTable"')
-message '- Testing ModifyTOML with "SET" in sub-Table :'
-myModifyTOMLTester('SET','servers.alpha.a.newADDkeyInAlphaA', '"newSETValueInAlphaA"')
-message '- Testing ModifyTOML with "SET" in new Table :'
-myModifyTOMLTester('SET','newTable.newADDtableKey', '"newSETtableValue"')
+myModifyTOMLTester('SET','newSETkeyInRootTable', '"newSETvalueInRootTable"')
+message '- Testing ModifyTOML with "SET" existing key in sub-Table :'
+myModifyTOMLTester('SET','servers.newADDkeyInServers', '"newSETafterADDvalueInServers"')
+message '- Testing ModifyTOML with "SET" new key in sub-Table :'
+myModifyTOMLTester('SET','servers.newSETkeyInServers', '"newSETvalueInServers"')
+message '- Testing ModifyTOML with "SET" existing key in sub-sub-Table :'
+myModifyTOMLTester('SET','servers.alpha.a.newADDkeyInAlphaA', '"newSETafterADDvalueInAlphaA"')
+message '- Testing ModifyTOML with "SET" new key in sub-sub-Table :'
+myModifyTOMLTester('SET','servers.alpha.a.newSETkeyInAlphaA', '"newSETvalueInAlphaA"')
+message '- Testing ModifyTOML with "SET" existing key in new Table :'
+myModifyTOMLTester('SET','newTable.newADDtableKey', '"newSETafterADDtableValue"')
+message '- Testing ModifyTOML with "SET" new key in new Table :'
+myModifyTOMLTester('SET','newTable.newSETtableKey', '"newSETtableValue"')
 
+message '- Testing ModifyTOML with "CHANGE" empty key in root Table :'
+myModifyTOMLTester('CHANGE','   ', 'defaultValue')
 message '- Testing ModifyTOML with "CHANGE" unexisting key in root Table :'
 Set $TOMLString$ = ModifyTOML($TOMLString$,'CHANGE','newCHANGEkeyInRootTable', ' "newCHANGEValueInRootTable" ')
 Set $TestString$ = GetValueFromTOML($TOMLString$,'newCHANGEkeyInRootTable',"defaultValue")
@@ -236,9 +250,11 @@ else
 	LogWarning "Testing ModifyTOML TOMLfile.toml failed"
 endif
 message '- Testing ModifyTOML with "CHANGE" existing key in root Table :'
-myModifyTOMLTester('CHANGE','newSETkeyInRootTable', '"newCHANGEValueInRootTable"')
+myModifyTOMLTester('CHANGE','newSETkeyInRootTable', '"newCHANGEvalueInRootTable"')
 message '- Testing ModifyTOML with "CHANGE" in sub-Table :'
-myModifyTOMLTester('CHANGE','servers.alpha.a.newADDkeyInAlphaA', '"newCHANGEValueInAlphaA"')
+myModifyTOMLTester('CHANGE','servers.newADDkeyInServers', '"newCHANGEvalueInServers"')
+message '- Testing ModifyTOML with "CHANGE" in sub-sub-Table :'
+myModifyTOMLTester('CHANGE','servers.alpha.a.newADDkeyInAlphaA', '"newCHANGEvalueInAlphaA"')
 message '- Testing ModifyTOML with "CHANGE" in unexisting Table :'
 Set $TOMLString$ = ModifyTOML($TOMLString$,'CHANGE','newCHANGETable.newCHANGEtableKey', ' "newCHANGEtableValue" ')
 Set $TestString$ = GetValueFromTOML($TOMLString$,'newCHANGEkeyInRootTable',"defaultValue")
