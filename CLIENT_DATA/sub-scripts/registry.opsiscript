@@ -749,7 +749,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				endif
 			endif
 			
-					comment ""
+			comment ""
 			comment "-------------------------------------"
 			comment "Testing: "
 			message "GetRegistryVarMap"
@@ -789,6 +789,15 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 				endif
 			endif
 		endif ; 4.11.3
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.5.0")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "Summed GetRegistryKeyList, GetRegistryVarList, GetRegistryVarMap"
+			sub "%scriptpath%\sub-scripts\SummedGetRegistryListOrMap.opsiscript"
+		endif
+		
 		
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5") >= "0"
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"

@@ -132,7 +132,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 		endif
 		
 		message "GetIni"
-		comment "GetIni is deprecated - use GetValueFromInifile)
+		comment "GetIni is deprecated - use GetValueFromInifile"
 		set $ConstTest$ = "add1"
 		Set $CompValue$ = GetIni($HometestFiles$+"\dummy.ini"[secdummy] dummy1)
 		if ($ConstTest$ = $CompValue$)
