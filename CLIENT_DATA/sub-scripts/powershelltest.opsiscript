@@ -199,6 +199,10 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "Execwith assumed failed"
 			endif
 			
+			comment "testing outstream with and without exit statement"
+			set $list$ = getoutstreamfromsection('ExecWith_powershell_pipe_exit42 "powershell.exe" -ExecutionPolicy Bypass')
+			set $list$ = getoutstreamfromsection('ExecWith_powershell_pipe_noexit "powershell.exe" -ExecutionPolicy Bypass')
+			
 			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.28")
 				comment "testing exitcode"
 				ExecWith_powershell_exit42 "powershell.exe" -ExecutionPolicy Bypass
@@ -206,6 +210,13 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 					set $TestResult$ = "not o.k."
 					LogWarning "Execwith assumed failed"
 				endif
+				
+				ExecWith_powershell_pipe_exit42 "powershell.exe" -ExecutionPolicy Bypass
+				if not (getlastexitcode = "42")
+					set $TestResult$ = "not o.k."
+					LogWarning "Execwith assumed failed"
+				endif
+				
 				
 				set $exitcode$ = powershellCall('exit 42')
 				if not ($exitcode$ = "42")
@@ -510,6 +521,19 @@ trap { write-output $_ ; exit 1 }
 $myexitcode = 42
 echo $myexitcode
 exit $myexitcode
+
+[ExecWith_powershell_pipe_exit42]
+trap { write-output $_ ; exit 1 }
+Get-hotfix | Select HotfixId
+$myexitcode = 42
+echo $myexitcode
+exit $myexitcode
+
+[ExecWith_powershell_pipe_noexit]
+trap { write-output $_ ; exit 1 }
+Get-hotfix | Select HotfixId
+$myexitcode = 42
+echo $myexitcode
 
 [ExecWith_powershell_create_test_cert]
 trap { write-output $_ ; exit 1 }
