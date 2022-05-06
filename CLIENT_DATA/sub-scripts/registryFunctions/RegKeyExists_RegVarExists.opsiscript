@@ -1,0 +1,90 @@
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
+			Registry_opsi_org_delete_test
+			Registry_opsi_org_delete_test /64bit
+			Registry_createkeys /32bit
+			message "RegKeyExists...."
+			if RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","32bit")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if $architecture$ = "32"
+				comment "default is sysnative - should on 32 bit systems work"
+				if RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","sysnative")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			else ; 64 bit
+				comment "default is sysnative - should on 64 bit systems notwork"
+				if not(RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if not(RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","sysnative"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if not(RegKeyExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","64bit"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif ; 32/64
+			
+			message "RegVarExists...."
+			if RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","32bit")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if $architecture$ = "32"
+				comment "default is sysnative - should on 32 bit systems work"
+				if RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","sysnative")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			else ; 64 bit
+				comment "default is sysnative - should on 64 bit systems not work"
+				if not(RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if not(RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","sysnative"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				if not(RegVarExists("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","var1","64bit"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif ; 32/64
+		endif ; 4.12.0.16
