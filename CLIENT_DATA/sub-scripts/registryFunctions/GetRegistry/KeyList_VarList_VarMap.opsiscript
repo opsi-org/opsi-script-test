@@ -1,0 +1,158 @@
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3") >= "0"
+			Registry_createkeys
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryKeyList"
+  	
+			set $ConstTest$ = "key3"
+			set $list$ = GetRegistryKeyList32("hklm\software\opsi.org\opsi-winst-test")
+			set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  	
+			if ($INST_SystemType$ = "64 Bit System")
+				Registry_createkeys /64bit
+  	
+				set $ConstTest$ = "key3"
+				set $list$ = GetRegistryKeyList64("hklm\software\opsi.org\opsi-winst-test")
+				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+  	
+				set $ConstTest$ = "key3"
+				set $list$ = GetRegistryKeyListSysNative("hklm\software\opsi.org\opsi-winst-test")
+				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
+  	
+  	
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryVarList"
+  	
+			set $ConstTest$ = "var3"
+			set $list$ = GetRegistryVarList32("hklm\software\opsi.org\opsi-winst-test")
+			set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  	
+			if ($INST_SystemType$ = "64 Bit System")
+				set $ConstTest$ = "var3"
+				set $list$ = GetRegistryVarList64("hklm\software\opsi.org\opsi-winst-test")
+				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+  	
+				set $ConstTest$ = "var3"
+				set $list$ = GetRegistryVarListSysNative("hklm\software\opsi.org\opsi-winst-test")
+				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
+			
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryVarMap"
+  	
+			set $ConstTest$ = "value3"
+				set $string1$ = "var3"
+				set $list$ = GetRegistryVarMap32("hklm\software\opsi.org\opsi-winst-test")
+				set $CompValue$ = getValue($string1$,$list$)
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  	
+			if ($INST_SystemType$ = "64 Bit System")
+				set $ConstTest$ = "value3"
+				set $string1$ = "var3"
+				set $list$ = GetRegistryVarMap64("hklm\software\opsi.org\opsi-winst-test")
+				set $CompValue$ = getValue($string1$,$list$)
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+  	
+				set $ConstTest$ = "value3"
+				set $string1$ = "var3"
+				set $list$ = GetRegistryVarMapSysNative("hklm\software\opsi.org\opsi-winst-test")
+				set $CompValue$ = getValue($string1$,$list$)
+				if ($ConstTest$ = $CompValue$)
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
+		endif ; 4.11.3
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.5.0")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "Summed GetRegistryKeyList, GetRegistryVarList, GetRegistryVarMap"
+			sub "%scriptpath%\sub-scripts\SummedGetRegistryListOrMap.opsiscript"
+		endif
+		
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5") >= "0"
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
+				message "Set Environment Variables and check for it...."
+				Registry_add_environment /sysnative
+				set $list$ = shellCall('set opsi-winst-test')
+				UpdateEnvironment
+				comment "Wait for Environment update ...."
+				for %index% = "1" to "2" do sub_check_environment
+				if Contains($CompValue$, "deleteme")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				
+				Registry_del_environment /sysnative
+				UpdateEnvironment
+				for %index% = "1" to "2" do sub_check_environment
+				if not (Contains($CompValue$, "deleteme"))
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+				
+				set $tmp$ = '"this is a string in double quotes"'
+				Registry_set_quoted_string
+			endif ; NT6
+		endif ; 4.11.5

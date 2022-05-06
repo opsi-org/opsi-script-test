@@ -1,0 +1,74 @@
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue (default)"
+			set $ConstTest$ = "Explorer.exe"
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon","Shell")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue (32)"
+			set $ConstTest$ = "Explorer.exe"
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon","Shell","32bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue  (32) standard entry"
+			Registry_opsi_org_test
+			set $ConstTest$ = "standard entry"
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0","","32bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue (64)"
+			Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+			Set $INST_SearchValue$ = "AutoRestartShell"
+			sub_retrieve_registry_data
+			set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
+			set $CompValue$ = GetRegistryValue ("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "AutoRestartShell","64bit")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+  		
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "GetRegistryValue  (sysnative)"
+			Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+			Set $INST_SearchValue$ = "AutoRestartShell"
+			sub_retrieve_registry_data
+			set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
+			set $CompValue$ = GetRegistryValue("HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "AutoRestartShell","sysnative")
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; 4.12.0.16
