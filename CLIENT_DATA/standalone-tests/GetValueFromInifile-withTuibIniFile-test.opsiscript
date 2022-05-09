@@ -20,23 +20,23 @@ Set $OS$ = GetOS
 switch $OS$
 	case "Windows_nt"
 		comment "We are running on Windows"
-		Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
-		Set $FilePath$ = "C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\test-files\ini"
+		;Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
+		Set $HomeTestFiles$ = "C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\test-files\ini\"
 
 	endcase
 	case "Linux"
 		comment "We are running on Linux"
-		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
-		Set $FilePath$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/ini/"
+		;Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		Set $HomeTestFiles$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/ini/"
 	endcase
 	case "macos"
 		comment "We are running on macOS"
-		Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		;Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		Set $HomeTestFiles$ = "/home/gitwork/opsi-script-test/CLIENT_DATA/test-files/ini/"
 	endcase
 endswitch
 
 ;Set $HomeTestFiles$ = "test-files/"
-
 Set $FilePath$ = $HomeTestFiles$+"dummy.ini"
 
 if (FileExists($FilePath$))
@@ -49,10 +49,10 @@ if (FileExists($FilePath$))
 	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default")
 	
 	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
-		comment "GetValueFromInifile passed"
+		comment "GetValueFromInifile for dummy.ini passed"
 	else
 		set $TestResult$ = "not o.k."
-		LogWarning "GetValueFromInifile failed"
+		LogWarning "GetValueFromInifile for dummy.ini failed"
 	endif
 else
 	set $TestResult$ = "not o.k."
@@ -72,10 +72,10 @@ if (FileExists($FilePath$))
 	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default")
 	
 	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
-		comment "GetValueFromInifile passed"
+		comment "GetValueFromInifile for dummy_utf8.ini passed"
 	else
 		set $TestResult$ = "not o.k."
-		LogWarning "GetValueFromInifile failed"
+		LogWarning "GetValueFromInifile for dummy_utf8.ini failed"
 	endif
 else
 	set $TestResult$ = "not o.k."
@@ -95,10 +95,10 @@ if (FileExists($FilePath$))
 	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default")
 	
 	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
-		comment "GetValueFromInifile passed"
+		comment "GetValueFromInifile for dummy_utf16.ini passed"
 	else
 		set $TestResult$ = "not o.k."
-		LogWarning "GetValueFromInifile failed"
+		LogWarning "GetValueFromInifile for dummy_utf16.ini failed"
 	endif
 else
 	set $TestResult$ = "not o.k."
