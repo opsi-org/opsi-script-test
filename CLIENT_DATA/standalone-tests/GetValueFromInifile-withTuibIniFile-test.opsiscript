@@ -21,7 +21,7 @@ switch $OS$
 	case "Windows_nt"
 		comment "We are running on Windows"
 		Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
-		Set $FilePath$ = "C:/gituib/opsi-script-test/CLIENT_DATA/test-files/ini/"
+		Set $FilePath$ = "C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\test-files\ini"
 
 	endcase
 	case "Linux"
