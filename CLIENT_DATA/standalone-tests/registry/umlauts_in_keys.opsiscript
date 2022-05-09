@@ -1,0 +1,11 @@
+[actions]
+
+encoding=utf8
+
+setloglevel = 8
+
+DefVar $ConstTest$
+DefVar $CompValue$
+DefVar $TestResult$
+
+sub "%scriptpath%\..\..\sub-scripts\registryFunctions\umlauts_in_keys.opsiscript"

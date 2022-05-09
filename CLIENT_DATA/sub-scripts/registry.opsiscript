@@ -31,7 +31,9 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 	endfunc
 	
 	doHKEYAccessTest()
-		
+	
+	
+	sub "%scriptpath%\sub-scripts\registryFunctions\umlauts_in_keys.opsiscript"
 	
 	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\registrySections.opsiscript"
 	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\otherSections.opsiscript"
