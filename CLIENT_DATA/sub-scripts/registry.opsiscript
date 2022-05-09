@@ -1,6 +1,15 @@
 encoding=utf8
 
 if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
+
+	if $OS$ = "windows_NT"
+	
+	Message "testing registry functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing registry functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"	
 	
 	deffunc doHKEYAccessTest():void
 		comment ""
@@ -22,16 +31,8 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 	endfunc
 	
 	doHKEYAccessTest()
+		
 	
-	
-	if $OS$ = "windows_NT"
-	
-	Message "testing registry functions"
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	comment ""
-	comment "testing registry functions"
-	comment ""
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\registrySections.opsiscript"
 	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\otherSections.opsiscript"
 
