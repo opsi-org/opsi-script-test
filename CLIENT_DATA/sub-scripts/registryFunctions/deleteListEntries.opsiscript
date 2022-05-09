@@ -1,6 +1,6 @@
 encoding=utf8
 
-if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.7.0")
 		
 	comment ""
 	comment "-------------------------------------"
