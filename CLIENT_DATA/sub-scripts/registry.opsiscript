@@ -106,6 +106,9 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 		Registry_opsi_org_delete_test
 		Registry_opsi_org_delete_test /64bit
 		Files_delete_SaveValueToFile_txt
+		
+		sub "%scriptpath%\sub-scripts\registryFunctions\deleteListEntries.opsiscript"
+	
 	else ; windows
 		set $TestResult$ = "not implemented"
 	endif  ; windows 

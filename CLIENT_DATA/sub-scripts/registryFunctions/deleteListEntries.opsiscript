@@ -1,0 +1,50 @@
+encoding=utf8
+
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
+		
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "deleteListEntries"
+		
+	Registry_CreateListVariables /SysNative
+	Registry_DeleteListEntries /SysNative
+	
+	set $ConstTest$ = "entry4;entry6"
+	set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","deleteListEntriesList","Sysnative")
+	if ($ConstTest$ = $CompValue$)
+		comment "deleteListEntries succeeded in REG_SZ list"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "deleteListEntries failed in REG_SZ list"
+	endif
+	
+	set $ConstTest$ = "%USERPROFILE%\e7;%USERPROFILE%\e10"
+	set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test","deleteListEntriesExpandList","Sysnative")
+	if ($ConstTest$ = $CompValue$)
+		comment "deleteListEntries succeeded in REG_EXPAND_SZ list"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "deleteListEntries failed in REG_EXPAND_SZ list"
+	endif
+	
+	Registry_DeleteListVariables /SysNative
+
+endif
+
+[Registry_CreateListVariables]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+set "deleteListEntriesList" = REG_SZ:"entry1;entry2;entry3;entry4;entry5;entry6"
+set "deleteListEntriesExpandList" = REG_EXPAND_SZ:"%USERPROFILE%\e7;%USERPROFILE%\e8;%USERPROFILE%\e9;%USERPROFILE%\e10;%USERPROFILE%\e11"
+
+[Registry_DeleteListEntries]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+deleteListEntries "deleteListEntriesList" ; "entry1;entry3;entry5"
+deleteListEntries "deleteListEntriesList" ; "entry2"
+deleteListEntries "deleteListEntriesExpandList" ; "%USERPROFILE%\e9"
+deleteListEntries "deleteListEntriesExpandList" ; "%USERPROFILE%\e11; %USERPROFILE%\e8"
+
+[Registry_DeleteListVariables]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+DeleteVar "deleteListEntriesList"
+DeleteVar "deleteListEntriesExpandList"
