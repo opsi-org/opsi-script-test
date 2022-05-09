@@ -1,26 +1,7 @@
 encoding=utf8
 
 if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
-	
-	deffunc doHKEYAccessTest():void
-	
-	DefVar $Administrator_SID$
-	DefVar $escUserProfile$
-	Set $Administrator_SID$ = GetUserSID("Administrator")
-	Set $escUserProfile$ = "%" + "USERPROFILE" + "%" 
-	defvar $keypath$ = "HKEY_LOCAL_MACHINE\Häger+Busch"
-	Registry_local_admin_folders /SysNative
 
-	[Registry_local_admin_folders]
-	openkey [$keypath$]
-	set "Desktop" = REG_EXPAND_SZ:"$escUserProfile$\Desktop" 
-	set "Personal" = REG_EXPAND_SZ:"$escUserProfile$\My Documents"
-	deletekey [$keyPath$]
-	endfunc
-	
-	doHKEYAccessTest()
-	
-	
 	if $OS$ = "windows_NT"
 	
 	Message "testing registry functions"
@@ -28,7 +9,32 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment "testing registry functions"
 	comment ""
-	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"	
+	
+	deffunc doHKEYAccessTest():void
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "No new keys allowed directly under HKLM (Error should occur in the following!)"
+		
+		DefVar $Administrator_SID$
+		DefVar $escUserProfile$
+		Set $Administrator_SID$ = GetUserSID("Administrator")
+		Set $escUserProfile$ = "%" + "USERPROFILE" + "%" 
+		defvar $keypath$ = "HKEY_LOCAL_MACHINE\Testkey"
+		Registry_local_admin_folders /SysNative
+
+		[Registry_local_admin_folders]
+		openkey [$keypath$]
+		;set "var1" = REG_SZ:"value1"
+		deletekey [$keyPath$]
+	endfunc
+	
+	doHKEYAccessTest()
+	
+	
+	sub "%scriptpath%\sub-scripts\registryFunctions\umlauts_in_keys.opsiscript"
+	
 	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\registrySections.opsiscript"
 	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\otherSections.opsiscript"
 
