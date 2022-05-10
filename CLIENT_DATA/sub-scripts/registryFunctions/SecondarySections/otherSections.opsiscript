@@ -16,13 +16,16 @@ endif
 reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
 
 [sub_fetch_SearchResult]
-set $INST_ResultList2$ = splitStringOnWhiteSpace("$s$")
-if $INST_SearchValue$ = takeString(1,$INST_ResultList2$)
-	if not (takeString(3,$INST_ResultList2$) = "")
-		set $INST_ResultList3$ = getSublist(3:, $INST_ResultList2$)
-		set $INST_SearchResult$ = composeString($INST_ResultList3$," ")
-	else
-		set $INST_SearchResult$ = ""
+; skip empty entries of $INST_ResultList$
+if not ("$s$" = '')
+	set $INST_ResultList2$ = splitStringOnWhiteSpace("$s$")
+	if $INST_SearchValue$ = takeString(1,$INST_ResultList2$)
+		if not (takeString(3,$INST_ResultList2$) = "")
+			set $INST_ResultList3$ = getSublist(3:, $INST_ResultList2$)
+			set $INST_SearchResult$ = composeString($INST_ResultList3$," ")
+		else
+			set $INST_SearchResult$ = ""
+		endif
 	endif
 endif
 
