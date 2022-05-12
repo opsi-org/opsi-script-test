@@ -168,6 +168,21 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "testing powershellCall failed"
 			endif
 			
+			message "powershellcall (pipe in command)"
+			set $list1$ = powershellCall('Get-Process | Select ProcessName')
+			if not (getlastexitcode = "0")
+				set $TestResult$ = "not o.k."
+				LogWarning "powershellCall assumed failed"
+			endif
+			comment "check if the script was executed..."
+			;set $ConstTest$ = ""
+			;set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+			if (count($list1$) int>= "1")
+				comment "powershellCall passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "testing powershellcall (pipe in command)"
+			endif
 			
 			comment "backup old powershell executionpolicy (sysnative)"
 			set $list$ = shellCall('powershell.exe get-executionpolicy')
@@ -448,6 +463,22 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				else
 					set $TestResult$ = "not o.k."
 					LogWarning "testing powershellCall failed"
+				endif
+				
+				message "powershellcall (pipe in command)"
+				set $list1$ = powershellCall('Get-Process | Select ProcessName')
+				if not (getlastexitcode = "0")
+					set $TestResult$ = "not o.k."
+					LogWarning "powershellCall assumed failed"
+				endif
+				comment "check if the script was executed..."
+				;set $ConstTest$ = ""
+				;set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+				if (count($list1$) int>= "1")
+					comment "powershellCall passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "testing powershellcall (pipe in command)"
 				endif
 				
 				
