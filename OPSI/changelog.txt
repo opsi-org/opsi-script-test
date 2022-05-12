@@ -2,7 +2,7 @@
 
 opsi-script-test (4.12.5.0-1) stable; urgency=low
 
-  * standalone-tests/error_markerror_0: new tests for parsing errorsOccurredSinceMark added
+  * standalone-tests/error_markerror_0: new tests for parsing errorsOccurredSinceMark added (a.schmitz)
   * testing %userprofiledir% inside of patches section (d.ooertel)
   * new powershellCall test. Testing powershellcall with piped command e.g. powershellcall('Get-Process | Select ProcessName'). (j.werner)  
 
