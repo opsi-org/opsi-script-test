@@ -345,10 +345,10 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 	
 	myFileHasBomTester($tmp$+"test_cp1252.ini","false")
 	myFileHasBomTester($tmp$+"test_utf8bom.opsiscript","true")
-	myFileHasBomTester($tmp$+"test_utf16be-bom.ini","true"))
-	myFileHasBomTester($tmp$+"test_utf16lebom.opsiscript","true"))
-	myFileHasBomTester($tmp$+"test_utf32be-bom.ini","true"))
-	myFileHasBomTester($tmp$+"test_utf32le-bom.ini","true"))
+	myFileHasBomTester($tmp$+"test_utf16be-bom.ini","true")
+	myFileHasBomTester($tmp$+"test_utf16lebom.opsiscript","true")
+	myFileHasBomTester($tmp$+"test_utf32be-bom.ini","true")
+	myFileHasBomTester($tmp$+"test_utf32le-bom.ini","true")
 	
 	comment ""
 	comment "-------------------------------------"
