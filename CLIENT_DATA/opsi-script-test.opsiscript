@@ -239,6 +239,8 @@ defvar $orgpolicy$
 
 ; retrieve OS and NT Version
 
+FatalOnSyntaxError = "false"
+
 Set $OS$ = GetOS
 ; retrieve current language
 set $languageInfo$ = getLocaleInfoMap
@@ -1237,7 +1239,7 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 	if not ("%installingProdName%" = "")
 		comment "we are in opsi service mode"
 		message "IniVar ("key")"
-		comment "IniVar is deprecated - use GetProductProperty)
+		comment "IniVar is deprecated - use GetProductProperty)"
 		set $ConstTest$ = "off"
 		set $CompValue$ = IniVar ("dummy")
 		if ($ConstTest$ = $CompValue$)
