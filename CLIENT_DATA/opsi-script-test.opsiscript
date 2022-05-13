@@ -239,7 +239,6 @@ defvar $orgpolicy$
 
 ; retrieve OS and NT Version
 
-FatalOnSyntaxError = "false"
 
 Set $OS$ = GetOS
 ; retrieve current language

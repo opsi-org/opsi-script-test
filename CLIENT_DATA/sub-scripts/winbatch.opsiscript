@@ -215,7 +215,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	
 	if ($OS$ = "Windows_NT")
 		
-		comment " no more tests for winbatch /WaitForWindowAppearing
+		comment "no more tests for winbatch /WaitForWindowAppearing"
 		;message "Winbatch_testing /WaitForWindowAppearing"
 		;killtask $helper_child_bin_name$
 		;killtask $opsi_script_test_helper_bin_name$
