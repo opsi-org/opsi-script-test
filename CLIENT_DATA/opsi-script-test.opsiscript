@@ -7215,24 +7215,24 @@ copy -s "%ScriptPath%\test-files\testfiles\*.*" $HomeTestFiles$
 @echo off
 netstat -n
 
-[sub_iteration_test]
-set $CompValue$ = $CompValue$ + '%s%'
+;[sub_iteration_test]
+;set $CompValue$ = $CompValue$ + '%s%'
+;
+;[sub_subsubiteration_test1]
+;sub_subsubiteration_test2
+;
+;[sub_subsubiteration_test2]
+;set $CompValue$ = $CompValue$ + '%s%'
 
-[sub_subsubiteration_test1]
-sub_subsubiteration_test2
+;[Files_del_iteration_txt]
+;delete "$HomeTestFiles$\iteration.txt"
 
-[sub_subsubiteration_test2]
-set $CompValue$ = $CompValue$ + '%s%'
+;[DosInAnIcon_iteration_test]
+;echo %s%>> "$HomeTestFiles$\iteration.txt"
 
-[Files_del_iteration_txt]
-delete "$HomeTestFiles$\iteration.txt"
-
-[DosInAnIcon_iteration_test]
-echo %s%>> "$HomeTestFiles$\iteration.txt"
-
-[ShellInAnIcon_Linux_iteration_test]
-set -x
-echo %s%>> "$HomeTestFiles$/iteration.txt"
+;[ShellInAnIcon_Linux_iteration_test]
+;set -x
+;echo %s%>> "$HomeTestFiles$/iteration.txt"
 
 ;[sub_getprocess_by_shortcommand]
 ;;comment " shortcommand gives only the first 15 chars)"

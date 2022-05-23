@@ -1757,3 +1757,22 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 	sub_compareResult
 	set $winst_string_list$ = $SubResult$
 endif
+
+[sub_iteration_test]
+set $CompValue$ = $CompValue$ + '%s%'
+
+[sub_subsubiteration_test1]
+sub_subsubiteration_test2
+
+[sub_subsubiteration_test2]
+set $CompValue$ = $CompValue$ + '%s%'
+
+[Files_del_iteration_txt]
+delete "$HomeTestFiles$\iteration.txt"
+
+[DosInAnIcon_iteration_test]
+echo %s%>> "$HomeTestFiles$\iteration.txt"
+
+[ShellInAnIcon_Linux_iteration_test]
+set -x
+echo %s%>> "$HomeTestFiles$/iteration.txt"
