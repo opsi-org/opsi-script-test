@@ -1744,8 +1744,12 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		
 	endif ; 4.12.4.5
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.34")
-		sub "%scriptpath%/sub-scripts/subsub_getoutstream_test2.opsiscript"
-	endif ; 4.12.4.5
+		if fileexists("%scriptpath%/sub-scripts/subsub_getoutstream_test2.opsiscript")
+			sub "%scriptpath%/sub-scripts/subsub_getoutstream_test2.opsiscript"
+		else
+			sub "%scriptpath%/../sub-scripts/subsub_getoutstream_test2.opsiscript"
+		endif
+	endif ; 4.12.4.34
 	
 	Files_empty_folder ;remove test files
 	;End of Testing listFiles

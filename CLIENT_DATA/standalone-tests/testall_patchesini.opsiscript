@@ -1,0 +1,134 @@
+; This code is part of the opsi.org project
+;
+; Copyright (c) uib gmbh (www.uib.de)
+; This sourcecode is owned by the uib gmbh, D55118 Mainz, Germany
+; and published under the Terms of the GNU Affero General Public License.
+; Text of the AGPL: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+; credits: http://www.opsi.org/credits/
+
+
+
+
+[Actions]
+requiredWinstVersion >= "4.11.4.1"
+ScriptErrorMessages = false
+encoding=utf8
+setOutputLevel = 3
+
+include_insert "testall_definevars.opsiinc"
+
+
+
+set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
+setLoglevel=$ScriptLoglevel$
+
+; retrieve OS and NT Version
+
+Set $OS$ = GetOS
+; retrieve current language
+set $languageInfo$ = getLocaleInfoMap
+set $language$ = getValue("language_id_2chars", $languageInfo$)
+
+
+if $OS$ = "Windows_NT"
+	Set $NTVersion$ = GetNTVersion
+	set $MsVersion$ = GetMsVersionInfo
+	Set $HomeTestFiles$ = "C:\tmp\testFiles"
+endif
+set $ProductId$ = "opsi-winst-test"
+if $OS$ = "LINUX"
+	comment "We are running on Linux"
+	Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+	set $ProductId$ = "opsi-script-test"
+endif
+
+Set $INST_SystemType$ = GetSystemType
+
+Files_testFiles
+set $FinalResult$ = "passed"
+
+
+set $Lic_ProductId$ = "opsi-winst-test"
+set $LicensePool$ = "opsi-winst-test-pool"
+
+
+
+; Message at install time:
+Message "Testing opsi-script ..."
+;show product picture
+ShowBitmap "%scriptpath%\opsi.png" $ProductId$
+
+;if $MsVersion$ <= "5.0"
+;	LogError "win2k is not supported because wmic is needed"
+;	isFatalError
+;endif
+
+if "True" = GetProductProperty ("setfailed","False")
+	LogError "set to fatal by property"
+	;isFatalError
+endif
+
+set $MasterFlag$                   = GetProductProperty ("alltest", "off")
+set $Flag_winst_patches$               = GetProductProperty ("Patches", "on")
+
+
+
+
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.7") >= "0"
+	AutoActivityDisplay = true
+endif
+
+
+sub "%scriptpath%\..\sub-scripts\patchesini.opsiscript"
+
+comment ""
+comment ""
+comment ""
+comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+comment "All sub results:"
+comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+comment "$winst_patches$                  --> " + $winst_patches$
+
+; at the end set the return value
+comment ""
+comment "======================================"
+if $FinalResult$="failed"
+	comment "Fatal: one ore more tests failed"
+	Message "Fatal: one ore more tests failed"
+	logError "Fatal: one ore more tests failed"
+	isFatalError
+else
+	Message "All tests are passsed"
+	comment "All tests are passsed"
+endif
+comment "======================================"
+comment ""
+
+
+[sub_compareResult]
+comment ""
+comment "-------------------------------------"
+comment "expectedResult is >" +  $ExpectedResult$ + "<"
+comment "TestResult is >" +  $TestResult$ + "<"
+if $ExpectedResult$ = $TestResult$
+	set $SubResult$ ="passed"
+	comment "OK: Subtest passed"
+else
+	if $TestResult$ = "not implemented"
+		set $SubResult$ = $TestResult$
+	else
+		set $SubResult$ ="failed"
+		logError "Fatal: Subtest failed"
+		set $FinalResult$="failed"
+	endif
+endif
+comment ""
+comment ""
+
+;----------------   start   general helpers ---------------------------------
+
+[Files_testFiles]
+checkTargetPath = "$HomeTestFiles$"
+
+;----------------   end   general helpers ---------------------------------
+
