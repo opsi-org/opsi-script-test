@@ -1,0 +1,51 @@
+encoding=utf8
+
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "QWord data type in normal registry section and regedit format (not addreg format since not provided there!)"
+	
+	DefVar $QWordKeyName$ = "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\TestQWord"	
+	DefVar $VariableName$ = "QWordValue"
+	DefVar $VariableValue$ = '18446744073709551615'
+
+	deffunc TestQWordInNormalRegistrySection(): void		
+		Registry_CreateQWordVariable		
+		DefVar $CompValue$ = GetRegistryValue($QWordKeyName$,$VariableName$,'SysNative')
+		if ($CompValue$ = $VariableValue$)
+			comment "creating QWord variable in normal registry section succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "creating QWord variable in normal registry section failed"
+		endif
+		
+		[Registry_CreateQWordVariable]
+		openkey [$QWordKeyName$]	
+		set '$VariableName$'=REG_QWORD:$VariableValue$
+	endfunc
+		
+	deffunc TestQWordInRegeditFormat(): void
+		registry "%scriptpath%\test-files\registry\QWord_regedit_format.reg" /regedit /SysNative
+		DefVar $CompValue$ = GetRegistryValue($QWordKeyName$,$VariableName$+'Regedit','SysNative')
+		if ($CompValue$ = $VariableValue$)
+			comment "creating QWord variable in regedit format succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "creating QWord variable in regedit format failed"
+		endif
+	endfunc
+	
+	deffunc deleteQWordKey(): void
+		Registry_DeleteQWordKey
+		
+		[Registry_DeleteQWordKey]
+		openkey [$QWordKeyName$]
+		deletekey [$QWordKeyName$]
+	endfunc
+		
+	TestQWordInNormalRegistrySection()
+	TestQWordInRegeditFormat()
+	deleteQWordKey()
+	
+endif
