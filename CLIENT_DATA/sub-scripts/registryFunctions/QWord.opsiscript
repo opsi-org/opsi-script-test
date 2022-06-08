@@ -11,7 +11,7 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
 	DefVar $VariableValue$ = '18446744073709551615'
 
 	deffunc TestQWordInNormalRegistrySection(): void		
-		Registry_CreateQWordVariable		
+		Registry_CreateQWordVariable /SysNative
 		DefVar $CompValue$ = GetRegistryValue($QWordKeyName$,$VariableName$,'SysNative')
 		if ($CompValue$ = $VariableValue$)
 			comment "creating QWord variable in normal registry section succeeded"
@@ -37,10 +37,9 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
 	endfunc
 	
 	deffunc deleteQWordKey(): void
-		Registry_DeleteQWordKey
+		Registry_DeleteQWordKey /SysNative
 		
 		[Registry_DeleteQWordKey]
-		openkey [$QWordKeyName$]
 		deletekey [$QWordKeyName$]
 	endfunc
 		
