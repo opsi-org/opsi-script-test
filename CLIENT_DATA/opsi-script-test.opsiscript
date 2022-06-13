@@ -408,7 +408,6 @@ set $Flag_toml$                    = GetProductProperty ("TOML", "off")
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
 set $Flag_internalundocumented$    = GetProductProperty ("internalundocumented", "off")
-set $Flag_RunAsLoggedOnAdmin$      = GetProductProperty ("RunAsLoggedOnAdmin", "off")
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 ;--------------------------------------------------------
 ;set $Flag_winst_idapiconfig$       = GetProductProperty ("idapiconfig", "off")
