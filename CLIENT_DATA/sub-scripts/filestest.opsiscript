@@ -494,15 +494,13 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				isFatalError
 				comment "could not copy file"
 			endif
-			; copy -u
-			message "copy -u"
-			Files_empty_folder_files
-			if $OS$ = "Windows_NT"
-				DosInAnIcon_prepare_copy_u
-			else
-				ShellInAnIcon_Linux_prepare_copy_u
-			endif
-			
+        endif ; windows
+        
+		; copy -u
+		message "copy -u"
+		Files_empty_folder_files
+		if $OS$ = "Windows_NT"
+			DosInAnIcon_prepare_copy_u
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_prepare_copy_u_dir_main")
 			set $tmp$ = takeString(7, $list1$)
 			set $ConstTest$ = Trim(SubstringBefore($tmp$, "13 dummy.txt"))
@@ -515,12 +513,33 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $tmp$ = takeString(8, $list1$)
 			set $CompValue2$ = Trim(SubstringBefore($tmp$, "13 dummy2.txt"))
 			if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-				comment "-u passed"
+				comment "-u passed [Windows]"
 			else
 				set $TestResult$ = "not o.k."
-				LogWarning "-u failed"
+				LogWarning "-u failed [Windows]"
 			endif
-		endif ; windows
+		else
+			ShellInAnIcon_Linux_prepare_copy_u /showOutput
+			set $list1$ = getOutStreamFromSection("ShellInAnIcon_Linux_prepare_copy_u_dir_main")
+			set $tmp$ = takeString(7, $list1$)
+			set $ConstTest$ = Trim(SubstringBefore($tmp$, "13 dummy.txt"))
+			set $tmp$ = takeString(8, $list1$)
+			set $ConstTest2$ = Trim(SubstringBefore($tmp$, "13 dummy2.txt"))
+			Files_copy_u
+			set $list1$ = getOutStreamFromSection("ShellInAnIcon_Linux_prepare_copy_u_dir_main")
+			set $tmp$ = takeString(7, $list1$)
+			set $CompValue$ = Trim(SubstringBefore($tmp$, "13 dummy.txt"))
+			set $tmp$ = takeString(8, $list1$)
+			set $CompValue2$ = Trim(SubstringBefore($tmp$, "13 dummy2.txt"))
+			if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+				comment "-u passed [Linux]"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "-u failed [Linux]"
+			endif
+		endif		
+
+		;endif ; windows
 		
 		Files_empty_folder_files
 	else

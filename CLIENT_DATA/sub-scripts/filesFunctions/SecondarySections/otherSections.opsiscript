@@ -111,7 +111,8 @@ cp -a  dummy.txt "files/dummy.txt" .
 cd "$HomeTestFiles$/files"
 echo "Hello World Files"> dummy2.txt
 cd ..
-ping 127.0.0.1 -n 60
+;ping 127.0.0.1 -n 60
+sleep 60
 echo "Hello World" > dummy2.txt
 cd "%opsiTmpDir%"
 exit
