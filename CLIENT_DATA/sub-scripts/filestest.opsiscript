@@ -521,17 +521,17 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		else
 			ShellInAnIcon_Linux_prepare_copy_u /showOutput
 			set $list1$ = getOutStreamFromSection("ShellInAnIcon_Linux_prepare_copy_u_dir_main")
-			set $tmp$ = takeString(7, $list1$)
-			set $ConstTest$ = Trim(SubstringBefore($tmp$, "13 dummy.txt"))
-			set $tmp$ = takeString(8, $list1$)
-			set $ConstTest2$ = Trim(SubstringBefore($tmp$, "13 dummy2.txt"))
+			set $tmp$ = takeString(3, $list1$)
+			set $ConstTest$ = Trim(SubstringBefore($tmp$, "dummy2.txt"))
+			set $tmp$ = takeString(4, $list1$)
+			set $ConstTest2$ = Trim(SubstringBefore($tmp$, "dummy.txt"))
 			Files_copy_u
 			set $list1$ = getOutStreamFromSection("ShellInAnIcon_Linux_prepare_copy_u_dir_main")
-			set $tmp$ = takeString(7, $list1$)
-			set $CompValue$ = Trim(SubstringBefore($tmp$, "13 dummy.txt"))
-			set $tmp$ = takeString(8, $list1$)
-			set $CompValue2$ = Trim(SubstringBefore($tmp$, "13 dummy2.txt"))
-			if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			set $tmp$ = takeString(3, $list1$)
+			set $CompValue$ = Trim(SubstringBefore($tmp$, "dummy2.txt"))
+			set $tmp$ = takeString(4, $list1$)
+			set $CompValue2$ = Trim(SubstringBefore($tmp$, "dummy.txt"))
+			if (NOT($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
 				comment "-u passed [Linux]"
 			else
 				set $TestResult$ = "not o.k."
