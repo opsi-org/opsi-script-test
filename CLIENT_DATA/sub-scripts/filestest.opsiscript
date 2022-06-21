@@ -531,7 +531,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			set $CompValue$ = Trim(SubstringBefore($tmp$, "dummy2.txt"))
 			set $tmp$ = takeString(4, $list1$)
 			set $CompValue2$ = Trim(SubstringBefore($tmp$, "dummy.txt"))
-			if (NOT($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
 				comment "-u passed [Linux]"
 			else
 				set $TestResult$ = "not o.k."
