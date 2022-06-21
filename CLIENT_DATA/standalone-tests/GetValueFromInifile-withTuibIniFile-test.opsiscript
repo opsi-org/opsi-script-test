@@ -43,10 +43,33 @@ if (FileExists($FilePath$))
 	;GetValueFromInifile
 
 	set $value1$ = "add1"
-	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "system", "default")
+	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default")
 	
 	set $value2$ = "üöäßÜÖÄ"
-	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "system", "default")
+	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default")
+	
+	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
+		comment "GetValueFromInifile for dummy.ini without encoding parameter passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "GetValueFromInifile for dummy.ini without encoding parameter failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	logError "Fatal: could not create .ini file"
+	isFatalError
+endif
+
+Set $FilePath$ = $HomeTestFiles$+"dummy.ini"
+
+if (FileExists($FilePath$))
+	;GetValueFromInifile
+
+	set $value1$ = "add1"
+	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "system")
+	
+	set $value2$ = "üöäßÜÖÄ"
+	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "system")
 	
 	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
 		comment "GetValueFromInifile for dummy.ini system-encoding passed"
@@ -66,10 +89,10 @@ if (FileExists($FilePath$))
 	;GetValueFromInifile
 
 	set $value1$ = "add1"
-	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "utf8", "default")
+	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "utf8")
 	
 	set $value2$ = "üöäßÜÖÄ"
-	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "utf8", "default")
+	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "utf8")
 	
 	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
 		comment "GetValueFromInifile for dummy_utf8.ini passed"
@@ -89,10 +112,10 @@ if (FileExists($FilePath$))
 	;GetValueFromInifile
 
 	set $value1$ = "add1"
-	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "utf16", "default")
+	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "utf16")
 	
 	set $value2$ = "üöäßÜÖÄ"
-	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "utf16", "default")
+	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "utf16")
 	
 	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
 		comment "GetValueFromInifile for dummy_utf16.ini passed"
@@ -112,10 +135,10 @@ if (FileExists($FilePath$))
 	;GetValueFromInifile
 
 	set $value1$ = "add1"
-	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "utf16le", "default")
+	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "utf16le")
 	
 	set $value2$ = "üöäßÜÖÄ"
-	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "utf16le", "default")
+	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "utf16le")
 	
 	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
 		comment "GetValueFromInifile for dummy_utf16le.ini passed"
