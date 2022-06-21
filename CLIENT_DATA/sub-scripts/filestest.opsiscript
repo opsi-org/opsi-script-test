@@ -503,15 +503,15 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			DosInAnIcon_prepare_copy_u
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_prepare_copy_u_dir_main")
 			set $tmp$ = takeString(7, $list1$)
-			set $ConstTest$ = Trim(SubstringBefore($tmp$, "13 dummy.txt"))
+			set $ConstTest$ = Trim(SubstringBefore($tmp$, "dummy.txt"))
 			set $tmp$ = takeString(8, $list1$)
-			set $ConstTest2$ = Trim(SubstringBefore($tmp$, "13 dummy2.txt"))
+			set $ConstTest2$ = Trim(SubstringBefore($tmp$, "dummy2.txt"))
 			Files_copy_u
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_prepare_copy_u_dir_main")
 			set $tmp$ = takeString(7, $list1$)
-			set $CompValue$ = Trim(SubstringBefore($tmp$, "13 dummy.txt"))
+			set $CompValue$ = Trim(SubstringBefore($tmp$, "dummy.txt"))
 			set $tmp$ = takeString(8, $list1$)
-			set $CompValue2$ = Trim(SubstringBefore($tmp$, "13 dummy2.txt"))
+			set $CompValue2$ = Trim(SubstringBefore($tmp$, "dummy2.txt"))
 			if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
 				comment "-u passed [Windows]"
 			else

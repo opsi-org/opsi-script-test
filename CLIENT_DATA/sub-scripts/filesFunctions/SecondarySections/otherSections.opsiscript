@@ -87,7 +87,7 @@ cd "$HomeTestFiles$"
 echo Hello World > dummy.txt
 copy dummy.txt "files\dummy.txt"
 cd "$HomeTestFiles$\files"
-echo Hello World Files> dummy2.txt
+echo Hello World Files > dummy2.txt
 cd ..
 ping 127.0.0.1 -n 60
 echo Hello World > dummy2.txt
