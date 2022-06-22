@@ -37,50 +37,51 @@ switch $OS$
 endswitch
 
 ;Set $HomeTestFiles$ = "test-files/"
-Set $FilePath$ = $HomeTestFiles$+"dummy.ini"
 
-if (FileExists($FilePath$))
-	;GetValueFromInifile
+if $OS$ = "Windows_nt"
+    Set $FilePath$ = $HomeTestFiles$+"dummy.ini"
 
-	set $value1$ = "add1"
-	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default")
-	
-	set $value2$ = "üöäßÜÖÄ"
-	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default")
-	
-	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
-		comment "GetValueFromInifile for dummy.ini without encoding parameter passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "GetValueFromInifile for dummy.ini without encoding parameter failed"
-	endif
-else
-	set $TestResult$ = "not o.k."
-	logError "Fatal: could not create .ini file"
-	isFatalError
-endif
+    if (FileExists($FilePath$))
+        ;GetValueFromInifile
 
-Set $FilePath$ = $HomeTestFiles$+"dummy.ini"
+        set $value1$ = "add1"
+        Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default")
+        
+        set $value2$ = "üöäßÜÖÄ"
+        Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default")
+        
+        if $value1$=$CompValue1$ AND $value2$=$CompValue2$
+            comment "GetValueFromInifile for dummy.ini [cp1252] without encoding parameter passed"
+        else
+            set $TestResult$ = "not o.k."
+            LogWarning "GetValueFromInifile for dummy.ini [cp1252] without encoding parameter failed"
+        endif
+    else
+        set $TestResult$ = "not o.k."
+        logError "Fatal: could not create .ini file"
+        isFatalError
+    endif
 
-if (FileExists($FilePath$))
-	;GetValueFromInifile
+    if (FileExists($FilePath$))
+        ;GetValueFromInifile
 
-	set $value1$ = "add1"
-	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "system")
-	
-	set $value2$ = "üöäßÜÖÄ"
-	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "system")
-	
-	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
-		comment "GetValueFromInifile for dummy.ini system-encoding passed"
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "GetValueFromInifile for dummy.ini system-encoding failed"
-	endif
-else
-	set $TestResult$ = "not o.k."
-	logError "Fatal: could not create .ini file"
-	isFatalError
+        set $value1$ = "add1"
+        Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "system")
+        
+        set $value2$ = "üöäßÜÖÄ"
+        Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "system")
+        
+        if $value1$=$CompValue1$ AND $value2$=$CompValue2$
+            comment "GetValueFromInifile for dummy.ini [cp1252] with system-encoding passed"
+        else
+            set $TestResult$ = "not o.k."
+            LogWarning "GetValueFromInifile for dummy.ini [cp1252] with system-encoding failed"
+        endif
+    else
+        set $TestResult$ = "not o.k."
+        logError "Fatal: could not create .ini file"
+        isFatalError
+    endif
 endif
 
 Set $FilePath$ = $HomeTestFiles$+"dummy_utf8.ini"
