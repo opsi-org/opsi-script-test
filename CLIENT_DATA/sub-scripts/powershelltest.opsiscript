@@ -528,13 +528,13 @@ endif
 
 [ExecWith_powershell]
 trap { write-output $_ ; exit 1 }
-set-executionpolicy RemoteSigned
+set-executionpolicy ByPass
 echo "powershell opsi-winst-test"
 exit $LASTEXITCODE
 
 [execwith_powershell_architecture]
 trap { write-output $_ ; exit 1 }
-set-executionpolicy RemoteSigned
+set-executionpolicy ByPass
 echo "powershell opsi-winst-test"
 $psversion
 $psversiontable
