@@ -198,9 +198,9 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "set-executionpolicy assumed failed"
 			endif
 			message "powershellcall (sysnative) (false)"
-			comment "this should fail because executionpolicy Resticted and policy handling set to false"
+			comment "this should not fail even executionpolicy is Resticted and policy handling set to false because executionpolicy is in every case set to Bypass by opsi for the process"
 			set $list1$ = powershellCall('echo "powershell opsi-winst-test"',"sysnative","false")
-			if getlastexitcode = "0"
+			if getlastexitcode = "1"
 				; even if we have exitcode 0 (win7) we should find the exception message
 				if "" =  getIndexFromListByContaining($list1$,"RuntimeException")
 					set $TestResult$ = "not o.k."
@@ -528,13 +528,13 @@ endif
 
 [ExecWith_powershell]
 trap { write-output $_ ; exit 1 }
-set-executionpolicy RemoteSigned
+set-executionpolicy ByPass
 echo "powershell opsi-winst-test"
 exit $LASTEXITCODE
 
 [execwith_powershell_architecture]
 trap { write-output $_ ; exit 1 }
-set-executionpolicy RemoteSigned
+set-executionpolicy ByPass
 echo "powershell opsi-winst-test"
 $psversion
 $psversiontable
