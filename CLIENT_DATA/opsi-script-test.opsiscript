@@ -3559,7 +3559,7 @@ endif
 
 
 if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
-	include_insert '%scriptpath%\subscripts\controls.opsiscript'
+	include_insert '%scriptpath%\sub-scripts\controls.opsiscript'
 endif
 
 if ($Flag_subtestsub$ = "on") or ($MasterFlag$ = "on")
