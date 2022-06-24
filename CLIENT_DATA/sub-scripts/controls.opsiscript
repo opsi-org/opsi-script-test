@@ -1,0 +1,688 @@
+Message "testing control functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing control functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	if $OS$ = "Windows_NT"
+		;if $MsVersion$ <= "5.0"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+			comment "not tested at win2k  because tasklist is needed"
+		else
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "Killtask"
+			WinBatch_prepare_killtask /LetThemGo
+			Set $ConstTest$ = ""
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.2") >= "0"
+				set $list1$ = getProcessList
+			endif
+			set $list1$ = getOutStreamFromSection("DosInAnIcon_getTask")
+			set $tmp$ = takeFirstStringContaining($list1$,"notepad.exe")
+			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			if $CompValue$ = "notepad.exe"
+				comment "this should kill the notepad ..."
+				Killtask "NoTePaD.exe"
+				comment "this should not found any notepad.exe ..."
+				Killtask "notepad.exe"
+			endif
+			sleepseconds 1
+			set $list1$ = getOutStreamFromSection("DosInAnIcon_getTask")
+			set $list1$ = getListContaining($list1$,"Console")
+			set $tmp$ = takeFirstStringContaining($list1$,"notepad.exe")
+			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; windows
+		
+		if not ("%opsiserviceURL%" = "")
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.1") >= "0"
+				comment ""
+				comment "-------------------------------------"
+				comment "Testing: "
+				message "runningAsAdmin"
+				comment " we assume that we running in opsi service mode as admin"
+				if runningAsAdmin
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			else
+				comment "runningAsAdmin not tested, minimum winst needed: 4.11.1.1"
+			endif
+		endif
+		
+		;if $MsVersion$ <= "5.0"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+			comment "not tested at win2k  because tasklist is needed"
+		else
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "ShowMessageFile"
+			; Killtask "autoit3.exe"
+			sleepseconds 5
+			Execwith_autoit_close_showmessage "%SCRIPTPATH%\autoit3.exe" WINST /letThemGo
+			ShowMessageFile "%SCRIPTPATH%\test-files\testmessage.txt"
+			set $list1$ = getOutStreamFromSection("DosInAnIcon_getTask_autoit3")
+			set $tmp$ = takeFirstStringContaining($list1$,"autoit3.exe")
+			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
+			Set $ConstTest$ = "autoit3.exe"
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Killtask "autoit3.exe"
+			includelog "%opsiLogDir%\au3.log" "200"
+			
+		endif
+		
+	endif ; windows
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.6") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "ChangeDirectory"
+		comment "backup actual working directory"
+		if $OS$ = "Windows_NT"
+			set $SectionName$ = "DosInAnIcon_dir"
+		else
+			set $SectionName$ = "ShellInAnIcon_dir"
+		endif
+		set $list1$ = getOutstreamfromSection($SectionName$)
+		set $tmp$ = takeString(0,$list1$)
+		
+		Set $ConstTest$ = "%ScriptPath%"
+		ChangeDirectory $ConstTest$
+		set $list1$ = getOutstreamfromSection($SectionName$)
+		if not ("" = takeFirstStringContaining($list1$,$ConstTest$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "restore actual working directory"
+		Set $ConstTest$ = $tmp$
+		ChangeDirectory $ConstTest$
+		set $list1$ = getOutstreamfromSection($SectionName$)
+		if not ("" = takeFirstStringContaining($list1$,$ConstTest$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif
+	
+	include_insert '%scriptpath%\sub-scripts\controlsFunctions\ShowBitMap.opsiscript'
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: SetSkinDirectory"
+	message "SetSkinDirectory"
+	SetSkinDirectory "%ScriptPath%\testskin"
+	sleepseconds 1
+	SetSkinDirectory ""
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "sleepSeconds / markTime / diffTime - takes 2 seconds"
+	if $OS$ = "Windows_NT"
+		markTime
+		set $list1$ = getOutStreamFromSection("DosInAnIcon_time")
+		set $tmp$ = takeString(0, $list1$)
+		Set $ConstTest$ = takeString(0, splitString ($tmp$, ","))
+		comment "sleepSeconds 2"
+		marktime
+		sleepSeconds 2
+		difftime
+		set $list1$ = getOutStreamFromSection("DosInAnIcon_time")
+		set $tmp$ = takeString(0, $list1$)
+		set $CompValue$ = takeString(0, splitString ($tmp$, ","))
+		if $ConstTest$ < $CompValue$
+			comment "sleepSeconds assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "sleepSeconds failed"
+		endif
+		diffTime
+	else ; windows
+		markTime
+		set $list1$ = getOutStreamFromSection("ShellInAnIcon_time")
+		set $ConstTest$ = takeString(0, $list1$)
+		comment "sleepSeconds 2"
+		marktime
+		sleepSeconds 2
+		difftime
+		set $list1$ = getOutStreamFromSection("ShellInAnIcon_time")
+		set $CompValue$ = takeString(0, $list1$)
+		if $ConstTest$ < $CompValue$
+			comment "sleepSeconds assumed passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "sleepSeconds failed"
+		endif
+		diffTime
+	endif ; windows
+	
+	include_insert '%scriptpath%\sub-scripts\controlsFunctions\if_else_elseif_endif.opsiscript'
+	
+	;  Boolean Expressions
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "FileExists"
+	Files_empty_folder
+	if $OS$ = "Windows_NT"
+		DosInAnIcon_prepare_fileExists
+	else
+		ShellInAnIcon_prepare_fileExists
+	endif
+	if FileExists($HomeTestFiles$+"\dummy.txt")
+		if not(FileExists ($HomeTestFiles$+"\dummy2.txt"))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment "Testing fileexist with quoted filenames "
+	set $tmp1$ = '"'+$HomeTestFiles$+'\dummy.txt"'
+	set $tmp2$ = '"'+$HomeTestFiles$+'\dummy2.txt"'
+	
+	if FileExists($tmp1$)
+		if not(FileExists ($tmp2$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment "Testing fileexist with quoted filenames "
+	set $tmp1$ = "'"+$HomeTestFiles$+"\dummy.txt'"
+	set $tmp2$ = "'"+$HomeTestFiles$+"\dummy2.txt'"
+	
+	if FileExists($tmp1$)
+		if not(FileExists ($tmp2$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	if $OS$ = "Windows_NT"
+		Set $list$ = getOutStreamFromSection ('dosbatch_profiledir')
+		comment "loop over the result"
+		for $x$ in $list$ do sub_file_exists
+	endif ; windows
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "FileExists"
+	
+	DefFunc myFileExistsTester($fileName$ : string, $expected$ : string) : void
+		DefVar $CompValue$
+		set $CompValue$ = booltostring(FileExists($fileName$))
+		if $CompValue$ = $expected$
+			comment "Testing FileExists succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing FileExists failed"
+		endif
+	endfunc
+	
+	switch $OS$
+		case "Windows_nt"
+			comment "We are running on Windows"
+			myFileExistsTester("C:\Users\","true")
+			myFileExistsTester("C:\Users\uib.txt","false")
+		endcase
+		case "Linux"
+			comment "We are running on Linux"
+			myFileExistsTester("/home/","true")
+			myFileExistsTester("/home/uib.txt","false")
+		endcase
+		case "macos"
+			comment "We are running on macOS"
+			myFileExistsTester("/Users/","true")
+			myFileExistsTester("/Users/uib.txt","false")
+		endcase
+	endswitch
+	
+	comment "Testing fileexist with quoted filenames "
+	set $tmp1$ = "'"+$HomeTestFiles$+"\dummy.txt'"
+	set $tmp2$ = "'"+$HomeTestFiles$+"\dummy2.txt'"
+	myFileExistsTester($tmp1$,"true")
+	myFileExistsTester($tmp2$,"false")
+	
+	comment "Testing fileexist with quoted filenames "
+	set $tmp1$ = '"'+$HomeTestFiles$+'\dummy.txt"'
+	set $tmp2$ = '"'+$HomeTestFiles$+'\dummy2.txt"'
+	myFileExistsTester($tmp1$,"true")
+	myFileExistsTester($tmp2$,"false")
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "FileOrFolderExists"
+	
+	
+	DefFunc myFileOrFolderExistsWithOneParam($filePath$ : string, $expected$ : string) : void
+		DefVar $CompValue$
+		set $CompValue$ = booltostring(FileOrFolderExists($filePath$))
+		if $CompValue$ = $expected$
+			comment "Testing FileOrFolderExists succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing FileOrFolderExists failed"
+		endif
+	endfunc
+	
+	DefFunc myFileOrFolderExistsWithTwoParams($filePath$ : string, $accessStr$ : string, $expected$ : string) : void
+		DefVar $CompValue$
+		set $CompValue$ = booltostring(FileOrFolderExists($filePath$, $accessStr$))
+		if $CompValue$ = $expected$
+			comment "Testing FileOrFolderExists succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing FileOrFolderExists failed"
+		endif
+	endfunc
+	
+	
+	switch $OS$
+		case "Windows_nt"
+			comment "We are running on Windows"
+			myFileOrFolderExistsWithOneParam("","false")
+			myFileOrFolderExistsWithOneParam("C:\Windows\","true")
+			myFileOrFolderExistsWithOneParam("C:\Windows\uib.txt","false")
+			
+			myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","32bit","true")
+			myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","64bit","true")
+			myFileOrFolderExistsWithTwoParams("C:\Windows\","accessStr","false")
+			myFileOrFolderExistsWithTwoParams("C:\Windows\uib.txt","64bit","false")
+		endcase
+		case "Linux"
+			comment "We are running on Linux"
+			myFileOrFolderExistsWithOneParam("","false")
+			myFileOrFolderExistsWithOneParam("/home/","true")
+			myFileOrFolderExistsWithOneParam("/home/uib.txt","false")
+		endcase
+		case "macos"
+			comment "We are running on macOS"
+			myFileOrFolderExistsWithOneParam("","false")
+			myFileOrFolderExistsWithOneParam("/Users/","true")
+			myFileOrFolderExistsWithOneParam("/Users/uib.txt","false")
+		endcase
+	endswitch
+	
+	comment "Testing FileOrFolderExists with quoted filenames "
+	set $tmp1$ = "'"+$HomeTestFiles$+"\dummy.txt'"
+	set $tmp2$ = "'"+$HomeTestFiles$+"\dummy2.txt'"
+	myFileOrFolderExistsWithOneParam($tmp1$,"true")
+	myFileOrFolderExistsWithOneParam($tmp2$,"false")
+	
+	comment "Testing FileOrFolderExists with quoted filenames "
+	set $tmp1$ = '"'+$HomeTestFiles$+'\dummy.txt"'
+	set $tmp2$ = '"'+$HomeTestFiles$+'\dummy2.txt"'
+	myFileOrFolderExistsWithOneParam($tmp1$,"true")
+	myFileOrFolderExistsWithOneParam($tmp2$,"false")
+	
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "LineExistsIn"
+	if (LineExistsIn("dummy", $HomeTestFiles$+"\dummy.txt"))
+		if not (LineExistsIn("dummy2", $HomeTestFiles$+"\dummy.txt"))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "LineBeginning_ExistsIn"
+	if (LineBeginning_ExistsIn("dum", $HomeTestFiles$+"\dummy.txt"))
+		if not (LineBeginning_ExistsIn("d2", $HomeTestFiles$+"\dummy.txt"))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	Files_empty_folder
+	
+	;if $MsVersion$ <= "5.0"
+	if $OS$ = "Windows_NT"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"5.0") <= "0"
+			comment "not tested at win2k  because wmic is needed"
+		else
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "HasMinimumSpace"
+			set $list1$ = getOutStreamFromSection("DosInAnIcon_getFreeSpace")
+			set $tmp$ = takeString(2, $list1$)
+			if (HasMinimumSpace ("%Systemdrive%", "100"))
+				if ($tmp$ > "100")
+					comment "passed"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "failed"
+				endif
+			endif
+		endif
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "markErrorNumber / errorsOccuredSinceMark"
+	set $ConstTest$ = "error"
+	markErrorNumber
+	LogError "create a error for testing error counter"
+	if errorsOccuredSinceMark > 0
+		set $CompValue$ = "error"
+	else
+		set $CompValue$ = "no error"
+	endif
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		LogWarning "failed"
+		set $TestResult$ = "not o.k."
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "markErrorNumber / errorsOccuredSinceMark"
+	set $ConstTest$ = "no error"
+	markErrorNumber
+	LogWarning "create a warning for testing error counter"
+	if errorsOccuredSinceMark > 0
+		set $CompValue$ = "error"
+	else
+		set $CompValue$ = "no error"
+	endif
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		LogWarning "failed"
+		set $TestResult$ = "not o.k."
+	endif
+	
+	
+	if $OS$ = "Windows_NT"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "tracemode"
+		set $opsi_message_title$ = "opsi-script Message"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","<","4.11.6.11")
+			comment "backward compatibility"
+			set $opsi_message_title$ = "opsi-winst Message"
+		endif
+		execwith_autoit_close_trace_window  "%SCRIPTPATH%\autoit3.exe" WINST /letThemGo
+		comment "not in trace window"
+		Tracemode=on
+		comment "in trace window"
+		Tracemode=off
+		comment "not in trace window"
+		Tracemode=on
+		comment "in trace window"
+		Tracemode=off
+		comment "not in trace window"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.10.8.9") = "1"
+			Tracemode=on
+			comment "should be turned off by autoit"
+		endif
+		killtask "autoit3.exe"
+	endif ; windows
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.2.1")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "includelog"
+		;if not($OS$ = 'macos')
+		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
+		set $string2$ = "5"
+		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
+		includelog $string1$ $string2$
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
+			set $string2$ = "-5"
+			includelog $string1$ $string2$
+			includelog $string1$ $string2$ "auto"
+		endif
+		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
+		set $string2$ = "5"
+		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
+		includelog $string1$ $string2$
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
+			set $string2$ = "-5"
+			includelog $string1$ $string2$
+			includelog $string1$ $string2$ "auto"
+		endif
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.1") >= "0"
+			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf16.txt"
+			set $string2$ = "5"
+			includelog $string1$ $string2$
+			includelog $string1$ $string2$ "auto"
+			includelog $string1$ $string2$ "UCS-2BE"
+			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf32.txt"
+			set $string2$ = "5"
+			includelog $string1$ $string2$
+			includelog $string1$ $string2$ "auto"
+			includelog $string1$ $string2$ "ucs2be"
+			includelog $string1$ $string2$ "utf32"
+		endif
+		;else
+		;	logerror "macos todo"
+		;endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GetScriptMode"
+		
+		set $CompValue$ = GetScriptMode
+		set $ConstTest$ = "Machine"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "syntax error handling"
+		markErrorNumber
+		FatalOnSyntaxError = False
+		ScriptErrorMessages = False
+		This-is-a-syntax-error
+		FatalOnSyntaxError = True
+		;ScriptErrorMessages = True
+		if errorsOccuredSinceMark > 0
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.5")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Switch Case EndCase DefaultCase EndSwitch"
+		set $ConstTest$ = "5"
+		Switch $ConstTest$
+			Case "1"
+				set $CompValue$ = "1"
+			EndCase
+			Case "2"
+				set $CompValue$ = "2"
+			EndCase
+			Case "3"
+				set $CompValue$ = "3"
+			EndCase
+			Case "4"
+				set $CompValue$ = "4"
+			EndCase
+			Case "5"
+				set $CompValue$ = "5"
+			EndCase
+			Case "6"
+				set $CompValue$ = "6"
+			EndCase
+			Case "7"
+				set $CompValue$ = "7"
+			EndCase
+			DefaultCase
+				set $CompValue$ = "notexisting"
+			EndCase
+		EndSwitch
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Set the opsi-winst-followup product to setup"
+		opsiServiceCall_setFollowUp
+	endif ; 4.11.5
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.6")
+		
+		forceLogInAppendMode = true
+		
+		forceLogInAppendMode = false
+		
+	endif ; 4.12.3.6
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "runningOnUefi"
+	switch $OS$
+		case "Windows_nt"
+			set $list$ = shellCall('bcdedit /enum')
+			set $tmp1$ = takeFirstStringContaining($list$,"\windows\system32\winload")
+			if contains($tmp1$,".efi")
+				set $tmp$ = "0"
+			else
+				set $tmp$ = "-1"
+			endif
+		endcase
+		case "Linux"
+			set $tmp$ = shellCall('efibootmgr -v')
+			if DirectoryExists('/sys/firmware/efi/')
+				set $tmp$ = "0"
+			else
+				set $tmp$ = "-1"
+			endif
+		endcase
+		case "macos"
+			set $tmp$ = "0"
+		endcase
+	endswitch
+	
+	set $CompValue$ = boolToString($tmp$ = "0")
+	set $ConstTest$ = boolToString(runningOnUefi)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		LogWarning "runningOnUefi failed"
+		set $TestResult$ = "not o.k."
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.16")
+		set $CompValue$ = "false"
+		set $list$ = parseUrl('%opsiserviceurl%')
+		set $tmp$ = getValue('host',$list$)
+		if ($tmp$ = 'localhost') or ($tmp$ = '127.0.0.1') or ($tmp$ = '::1')
+			set $CompValue$ = "true"
+		endif
+		set $ConstTest$ = boolToString(runningInWANMode)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			LogWarning "runningOnUefi failed"
+			set $TestResult$ = "not o.k."
+		endif
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Variable declaration with initialization"
+		
+		DefVar $strvarinittest$ = "str init value"
+		set $ConstTest$ = "str init value"
+		set $CompValue$ = $strvarinittest$
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefStringlist $listvarinittest$ = '["list","init","value"]'
+		if areListsEqual($listvarinittest$,'["list","init","value"]', "FLAG_AUTOMODE")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif
+		
+	sub_compareResult
+	
+	set $winst_controls$ = $SubResult$
