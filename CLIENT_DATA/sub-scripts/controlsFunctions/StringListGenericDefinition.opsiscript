@@ -1,7 +1,3 @@
-encoding=utf8
-
-[Actions]
-Defvar $TestResult$
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
 	comment ""

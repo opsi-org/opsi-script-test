@@ -1,7 +1,27 @@
-encoding=utf8
-
-[Actions]
-Defvar $TestResult$
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Variable declaration with initialization"
+		
+		DefVar $strvarinittest$ = "str init value"
+		set $ConstTest$ = "str init value"
+		set $CompValue$ = $strvarinittest$
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefStringlist $listvarinittest$ = '["list","init","value"]'
+		if areListsEqual($listvarinittest$,'["list","init","value"]', "FLAG_AUTOMODE")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
 	comment ""
