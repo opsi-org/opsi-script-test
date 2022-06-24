@@ -3,6 +3,7 @@
 opsi-script-test (4.12.5.1-1) stable; urgency=low
   
   * fixed some syntax errors in comments
+  * ExecwithPython: check for python / python3 (d.oertel 24.6.2022)
 
 -- j.werner <j.werner@uib.de> Tue, 31 May 2022
 

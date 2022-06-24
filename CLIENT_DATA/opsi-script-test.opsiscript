@@ -116,6 +116,7 @@ DefVar $systemroot$
 DefVar $pspolicy$
 DefVar $architecture$
 DefVar $GUI$
+DefVar $mypython$
 
 DefVar $opsi_script_test_helper_bin$
 DefVar $opsi_script_test_helper_child_bin$
@@ -5295,15 +5296,25 @@ if ($Flag_compare_to_python$ = "on")
 	
 	message "comparing an execWith call to a should be identical execPython call"
 	
-	set $list1$ = getOutStreamFromSection('ExecWith_hello "python" PASS -a "option a" -b "option b" "there we are" WINST /EscapeStrings')
-	set $list2$ = getOutStreamFromSection('execpython_hello -a "option a" -b "option b" "there we are"')
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.1") >= "0"
-		set $list$ = getListContainingList($list1$,$list2$)
-		if count($list1$) = count($list$)
-			comment "passed"
-		else
-			comment "failed"
-			set $TestResult$ = "not o.k."
+	set $mypython$ = which('python3')
+	if $mypython$ = ''
+		set $mypython$ = which('python')
+	endif
+	
+	if $mypython$ = ''
+		set $TestResult$ = "not o.k."
+		comment "no python interpreter found"
+	else
+		set $list1$ = getOutStreamFromSection('ExecWith_hello "'+$mypython$+'" PASS -a "option a" -b "option b" "there we are" WINST /EscapeStrings')
+		set $list2$ = getOutStreamFromSection('execpython_hello -a "option a" -b "option b" "there we are"')
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.1") >= "0"
+			set $list$ = getListContainingList($list1$,$list2$)
+			if count($list1$) = count($list$)
+				comment "passed"
+			else
+				comment "failed"
+				set $TestResult$ = "not o.k."
+			endif
 		endif
 	endif
 	
