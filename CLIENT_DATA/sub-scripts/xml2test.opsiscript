@@ -1190,7 +1190,7 @@ endif
 
 [Files_copy_xml2]
 ; sub test:
-copy "%scriptpath%\test-files\xmlpatch2\*" "$HomeTestFiles$"
+copy "$TestFilesBaseDir$\xmlpatch2\*" "$HomeTestFiles$"
 ; standalone test:
 copy "%scriptpath%\..\test-files\xmlpatch2\*" "$HomeTestFiles$"
 

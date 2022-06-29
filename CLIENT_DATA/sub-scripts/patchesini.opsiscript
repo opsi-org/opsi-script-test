@@ -345,3 +345,6 @@ else
 	set $TestResult$ = "not o.k."
 	LogWarning "Patches /AllNTUserProfiles"
 endif
+
+[Files_empty_folder]
+Delete -s -f -c $HomeTestFiles$

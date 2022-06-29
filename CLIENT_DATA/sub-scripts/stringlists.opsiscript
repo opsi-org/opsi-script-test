@@ -1388,7 +1388,7 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "removeFromListByContaining"
-		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
+		set $string1$ = $TestFilesBaseDir$+"\encoding\10lines-cp1252.txt"
 		set $list1$ = loadTextFileWithEncoding($string1$, "cp1252")
 		comment "search with string"
 		comment "search with string constant"
@@ -1776,3 +1776,66 @@ echo %s%>> "$HomeTestFiles$\iteration.txt"
 [ShellInAnIcon_Linux_iteration_test]
 set -x
 echo %s%>> "$HomeTestFiles$/iteration.txt"
+
+[Files_copy_dummy]
+copy "$TestFilesBaseDir$\string\dummy.txt" $HomeTestFiles$
+copy "$TestFilesBaseDir$\string\dummyUTF-8y.txt" $HomeTestFiles$
+copy "$TestFilesBaseDir$\string\dummyUTF-16.txt" $HomeTestFiles$
+
+[Files_copy_for_filelist]
+copy -s "$TestFilesBaseDir$\string\*.*" $HomeTestFiles$
+copy -s "$TestFilesBaseDir$\encoding\*.*" $HomeTestFiles$
+copy -s "$TestFilesBaseDir$\testFiles\*.*" $HomeTestFiles$
+
+[DosInAnIcon_netstat]
+@echo off
+netstat -n
+
+[DosInAnIcon_dummy_receivesection]
+@echo off
+c:
+
+[Files_empty_folder]
+Delete -s -f -c $HomeTestFiles$
+
+[DosInAnIcon_ListFiles_Test1]
+@echo off
+cd $HomeTestFiles$
+dir /a-d /b *.*
+
+[ShellInAnIcon_ListFiles_Test1]
+cd $HomeTestFiles$
+ls -p | grep -v /
+
+;[DosInAnIcon_ListFiles_Test2]
+;@echo off
+;cd $HomeTestFiles$
+;dir *.* /A-D /B                                              
+
+[DosInAnIcon_ListFiles_Test3]
+@echo off
+cd $HomeTestFiles$
+dir /s /b *.exe
+
+[ShellInAnIcon_ListFiles_Test3]
+cd $HomeTestFiles$
+find . -name "*.exe"
+
+;[DosInAnIcon_ListFiles_Test4]
+;@echo off
+;cd $HomeTestFiles$
+;dir *.txt /A-D /B
+
+[DosInAnIcon_ListFiles_Test5]
+@echo off
+cd $HomeTestFiles$
+dir /b encode-cp866.opsiscript
+
+[ShellInAnIcon_ListFiles_Test5]
+cd $HomeTestFiles$
+find . -name "encode-cp866.opsiscript"
+
+[DosInAnIcon_ListFiles_Test6]
+@echo off
+cd %System%
+dir *.* /A-D /B

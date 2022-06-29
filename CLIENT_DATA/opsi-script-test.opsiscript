@@ -27,6 +27,7 @@ DefVar $TestNr$
 DefVar $TestResult$
 DefVar $SubResult$
 DefVar $HomeTestFiles$
+DefVar $TestFilesBaseDir$
 DefVar $ConstTest$
 Defvar $ConstTest2$
 DefVar $CompValue$
@@ -238,9 +239,8 @@ defvar $adminuser_password$
 defvar $orgpolicy$
 
 
-; retrieve OS and NT Version
 
-
+set $TestFilesBaseDir$ = forcePathDelims("%scriptpath%\test-files")
 Set $OS$ = GetOS
 ; retrieve current language
 set $languageInfo$ = getLocaleInfoMap
@@ -1104,13 +1104,13 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		if ($OS$ = "Windows_NT")
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 				comment " test stringlist"
-				set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
+				set $list$ = loadTextFile ($TestFilesBaseDir$+"\constants\nt6x64_constants.txt")
 				set $list$ = replaceOpsiConstants($list$)
 				set $list1$ = getKeyList($list$)
 				for %key% in $list1$ do sub_check_key_value_constants
 				
 				comment " test string"
-				set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
+				set $str$ = strLoadTextFile($TestFilesBaseDir$+"\constants\nt6x64_constants.txt")
 				set $str$ = replaceOpsiConstants($str$)
 				set $ConstTest$ = takestring(0,splitstring($str$,"="))
 				set $CompValue$ = takestring(1,splitstring($str$,"="))
@@ -1448,7 +1448,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	comment "-------------------------------------"
 	comment "Testing: "
 	comment "EscapeString"
-	set $ConstTest$ = takeString(0, loadTextFile("%ScriptPath%\test-files\string\compEscapeString.txt"))
+	set $ConstTest$ = takeString(0, loadTextFile($TestFilesBaseDir$+"\string\compEscapeString.txt"))
 	Set $tmp$ = 'he says "Yes"'
 	set $CompValue$ = EscapeString: Set $tmp$ = 'he says "Yes"'
 	if ($ConstTest$ = $CompValue$)
@@ -3573,7 +3573,7 @@ if ($Flag_subtestsub$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = ""
 	
-	set $AktTestSubScript$ = "%ScriptPath%\test-files\sub\subtestsub.ins"
+	set $AktTestSubScript$ = $TestFilesBaseDir$+"\sub\subtestsub.ins"
 	sub_executeTest
 	set $subtestsub$ = $SubResult$
 endif
@@ -4581,7 +4581,7 @@ endif
 ;
 ;	;set $ConstTest$ = "no error"
 ;	;markErrorNumber
-;	;IdapiConfig_winsttest "%ScriptPath%\test-files\idapi-dummy.cfg"
+;	;IdapiConfig_winsttest $TestFilesBaseDir$+"\idapi-dummy.cfg"
 ;	;if errorsOccuredSinceMark > 0
 ;	;	set $CompValue$ = "error"
 ;	;else
@@ -5895,9 +5895,9 @@ wmic LogicalDisk "%Systemdrive%" get freespace
 @echo off
 tasklist /FI "IMAGENAME eq notepad.exe"
 
-[DosInAnIcon_dummy_receivesection]
-@echo off
-c:
+;[DosInAnIcon_dummy_receivesection]
+;@echo off
+;c:
 
 [DosInAnIcon_dummy_getOutStreamFromSection]
 @echo off
@@ -6002,15 +6002,15 @@ comment "value for key '" +$key$ + "' : '" + $value$ + "'"
 
 ;----------------   end   sections for info map test ---------------------------------
 ;----------------   start   sections for string list test ---------------------------------
-[Files_copy_dummy]
-copy "%ScriptPath%\test-files\string\dummy.txt" $HomeTestFiles$
-copy "%ScriptPath%\test-files\string\dummyUTF-8y.txt" $HomeTestFiles$
-copy "%ScriptPath%\test-files\string\dummyUTF-16.txt" $HomeTestFiles$
-
+;[Files_copy_dummy]
+;copy "$TestFilesBaseDir$\string\dummy.txt" $HomeTestFiles$
+;copy "$TestFilesBaseDir$\string\dummyUTF-8y.txt" $HomeTestFiles$
+;copy "$TestFilesBaseDir$\string\dummyUTF-16.txt" $HomeTestFiles$
+;
 [Files_copy_for_filelist]
-copy -s "%ScriptPath%\test-files\string\*.*" $HomeTestFiles$
-copy -s "%ScriptPath%\test-files\encoding\*.*" $HomeTestFiles$
-copy -s "%ScriptPath%\test-files\testfiles\*.*" $HomeTestFiles$
+copy -s "$TestFilesBaseDir$\string\*.*" $HomeTestFiles$
+copy -s "$TestFilesBaseDir$\encoding\*.*" $HomeTestFiles$
+copy -s "$TestFilesBaseDir$\testfiles\*.*" $HomeTestFiles$
 
 [DosInAnIcon_netstat]
 @echo off
@@ -6061,47 +6061,47 @@ netstat -n
 ;	endif
 ;endif
 
-[DosInAnIcon_ListFiles_Test1]
-@echo off
-cd $HomeTestFiles$
-dir /a-d /b *.*
-
-[ShellInAnIcon_ListFiles_Test1]
-cd $HomeTestFiles$
-ls -p | grep -v /
-
-;[DosInAnIcon_ListFiles_Test2]
+;[DosInAnIcon_ListFiles_Test1]
 ;@echo off
 ;cd $HomeTestFiles$
-;dir *.* /A-D /B                                              
-
-[DosInAnIcon_ListFiles_Test3]
-@echo off
-cd $HomeTestFiles$
-dir /s /b *.exe
-
-[ShellInAnIcon_ListFiles_Test3]
-cd $HomeTestFiles$
-find . -name "*.exe"
-
-;[DosInAnIcon_ListFiles_Test4]
+;dir /a-d /b *.*
+;
+;[ShellInAnIcon_ListFiles_Test1]
+;cd $HomeTestFiles$
+;ls -p | grep -v /
+;
+;;[DosInAnIcon_ListFiles_Test2]
+;;@echo off
+;;cd $HomeTestFiles$
+;;dir *.* /A-D /B                                              
+;
+;[DosInAnIcon_ListFiles_Test3]
 ;@echo off
 ;cd $HomeTestFiles$
-;dir *.txt /A-D /B
-
-[DosInAnIcon_ListFiles_Test5]
-@echo off
-cd $HomeTestFiles$
-dir /b encode-cp866.opsiscript
-
-[ShellInAnIcon_ListFiles_Test5]
-cd $HomeTestFiles$
-find . -name "encode-cp866.opsiscript"
-
-[DosInAnIcon_ListFiles_Test6]
-@echo off
-cd %System%
-dir *.* /A-D /B
+;dir /s /b *.exe
+;
+;[ShellInAnIcon_ListFiles_Test3]
+;cd $HomeTestFiles$
+;find . -name "*.exe"
+;
+;;[DosInAnIcon_ListFiles_Test4]
+;;@echo off
+;;cd $HomeTestFiles$
+;;dir *.txt /A-D /B
+;
+;[DosInAnIcon_ListFiles_Test5]
+;@echo off
+;cd $HomeTestFiles$
+;dir /b encode-cp866.opsiscript
+;
+;[ShellInAnIcon_ListFiles_Test5]
+;cd $HomeTestFiles$
+;find . -name "encode-cp866.opsiscript"
+;
+;[DosInAnIcon_ListFiles_Test6]
+;@echo off
+;cd %System%
+;dir *.* /A-D /B
 
 ;----------------   end   sections for string list test ---------------------------------
 ;----------------   start   sections for controls test ---------------------------------
@@ -6372,7 +6372,7 @@ delhost ServerNo2.mydom.org
 delhost 111.111.111.111
 
 [Files_copy_vmnat_hosts]
-copy "%ScriptPath%\test-files\hosts\*.*" $HomeTestFiles$
+copy "$TestFilesBaseDir$\hosts\*.*" $HomeTestFiles$
 
 [PatchHosts_vmnat]
 delhost 172.16.166.1
@@ -6471,7 +6471,7 @@ endif
 
 [Files_profile_copy]
 ;copy "%Scriptpath%\profiles\*.*" "%CurrentAppdataDir%\ACME"
-copy "%ScriptPath%\test-files\PatchTextFile\*.*" "%userprofiledir%\opsi-winst-test"
+copy "$TestFilesBaseDir$\PatchTextFile\*.*" "%userprofiledir%\opsi-winst-test"
 
 [Files_profile_del]
 ;del -s -f "%CurrentAppdataDir%\ACME"
@@ -6479,13 +6479,13 @@ del "%userprofiledir%\opsi-winst-test.ini"
 del -s -f -c "%userprofiledir%\opsi-winst-test"
 
 [Files_copy_patchtextfile]
-copy "%ScriptPath%\test-files\PatchTextFile\*.*" $HomeTestFiles$
+copy "$TestFilesBaseDir$\PatchTextFile\*.*" $HomeTestFiles$
 
 [Files_empty_folder]
 Delete -s -f -c $HomeTestFiles$
 
 [Files_copy_patchtextfile_system]
-copy "%ScriptPath%\test-files\PatchTextFile\*.*" "%system%\opsi-script-test"
+copy "$TestFilesBaseDir$\PatchTextFile\*.*" "%system%\opsi-script-test"
 
 [Files_empty_folder_system]
 Delete -s -f -c "%system%\opsi-script-test"
@@ -6738,7 +6738,7 @@ reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
 ;
 ;[Registry_GetMultiSZFromFile]
 ;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-;GetMultiSZFromFile "test2" "%ScriptPath%\test-files\reg_multisz_text.txt"
+;GetMultiSZFromFile "test2" $TestFilesBaseDir$+"\reg_multisz_text.txt"
 ;
 ;[Registry_SaveValueToFile]
 ;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
@@ -6874,7 +6874,7 @@ deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
 
 ;----------------   start   sections for xml test ---------------------------------
 [Files_copy_xml]
-copy "%ScriptPath%\test-files\xmlpatch2\*.xml" $HomeTestFiles$
+copy "$TestFilesBaseDir$\xmlpatch2\*.xml" $HomeTestFiles$
 
 ;[XMLPatch_XMLAddNamespace]
 
@@ -7064,7 +7064,7 @@ tasklist /FI "IMAGENAME eq helperchild.exe"
 ;"%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 ;
 ;[Winbatch_msi_standard]
-;msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+;msiexec /i "$TestFilesBaseDir$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 ;
 ;[Winbatch_msi_standard_from_c]
 ;msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
@@ -7101,8 +7101,8 @@ tasklist /FI "IMAGENAME eq helperchild.exe"
 ;"$HomeTestFiles$\testFiles\opsi-script-test-helper-win\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 ;
 [Files_copy_msi_exe_2_c]
-copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
-copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.exe" "$HomeTestFiles$\testFiles"
 
 ;[Files_copy_helper_2_c]
 ;copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"
@@ -7240,9 +7240,9 @@ if errorsOccuredSinceMark > 14
 endif
 
 [Files_work_on_profiles]
-copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
+copy "$TestFilesBaseDir$\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
 del -sfc "%UserProfileDir%\opsi-script-test"
-copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
+copy "$TestFilesBaseDir$\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
 del -sfc "%CurrentProfileDir%\opsi-script-test"
 
 ;----------------   stop   ProfileActions tests ---------------------------------
@@ -7260,7 +7260,7 @@ del -f "$testfilepath$"
 ;----------------   stop   internal undocumented functions tests ---------------------------------
 
 [Files_copy_test_to_system32]
-copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%System%"
+copy "$TestFilesBaseDir$\testFiles\dummy.txt" "%System%"
 
 [ExecWith_Powershell_HelloWorld]
 	$strString = "Hello World"

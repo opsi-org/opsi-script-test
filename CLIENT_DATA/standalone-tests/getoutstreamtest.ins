@@ -219,8 +219,8 @@ setloglevel = 8
 wmic os get manufacturer
 
 [Files_copy_dummy]
-copy "%ScriptPath%\test-files\string\dummy.txt" $HomeTestFiles$
-copy "%ScriptPath%\test-files\string\dummyUnicode.txt" $HomeTestFiles$
+copy "$TestFilesBaseDir$\string\dummy.txt" $HomeTestFiles$
+copy "$TestFilesBaseDir$\string\dummyUnicode.txt" $HomeTestFiles$
 
 [DosInAnIcon_dummy_receivesection]
 @echo off

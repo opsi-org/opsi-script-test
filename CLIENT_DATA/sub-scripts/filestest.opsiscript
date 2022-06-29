@@ -1242,3 +1242,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	
 	set $winst_file$ = $SubResult$
 endif
+
+
+[Files_empty_folder]
+Delete -s -f -c $HomeTestFiles$

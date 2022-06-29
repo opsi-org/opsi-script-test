@@ -70,7 +70,7 @@ endif
 
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
 set $Flag_winst_string_list$               = GetProductProperty ("stringListFunctions", "on")
-
+set $TestFilesBaseDir$ = forcePathDelims("%scriptpath%\..\test-files")
 
 
 

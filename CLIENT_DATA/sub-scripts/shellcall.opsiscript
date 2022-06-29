@@ -705,8 +705,8 @@ echo Hello %1%
 echo Hello $1
 
 [Files_copy_msi_exe_2_c]
-copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
-copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.exe" "$HomeTestFiles$\testFiles"
 
 [Files_copy_helper_2_c]
 copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"

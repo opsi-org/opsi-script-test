@@ -12,7 +12,7 @@
 		endif
   	
 		Registry_opsi_org_delete_test
-		Registry "%Scriptpath%\test-files\construct_subkeys.reg" /regedit
+		Registry $TestFilesBaseDir$+"\construct_subkeys.reg" /regedit
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
 		if $CompValue$ = "C:\Program Files\test\test.exe -a"
 			comment "/regedit passed"
@@ -22,7 +22,7 @@
 		endif
   	
 		Registry_opsi_org_delete_test
-		Registry loadUnicodeTextFile("%Scriptpath%\test-files\unicode_subkeys.reg") /regedit
+		Registry loadUnicodeTextFile($TestFilesBaseDir$+"\unicode_subkeys.reg") /regedit
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
 		if $CompValue$ = "C:\Program Files\test\test.exe -a"
 			comment "/regedit passed"
@@ -43,7 +43,7 @@
 		;endif
   	
 		;Registry_opsi_org_delete_test
-		;Registry "%Scriptpath%\test-files\multiline.reg" /regedit
+		;Registry $TestFilesBaseDir$+"\multiline.reg" /regedit
 		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\multiline]")
 		;if $CompValue$ = "C:\Program Files\test\test.exe -a"
 		;	comment "/regedit passed"
@@ -53,7 +53,7 @@
 		;endif
   	
 		;Registry_opsi_org_delete_test
-		;Registry loadUnicodeTextFile("%Scriptpath%\test-files\unicode_multiline.reg") /regedit
+		;Registry loadUnicodeTextFile($TestFilesBaseDir$+"\unicode_multiline.reg") /regedit
 		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\multiline]")
 		;if $CompValue$ = "C:\Program Files\test\test.exe -a"
 		;	comment "/regedit passed"

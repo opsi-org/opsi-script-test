@@ -129,8 +129,8 @@ if ($Flag_crypt$ = "on") or ($MasterFlag$ = "on")
 		comment "Testing: "
 		message "crypt "
 
-		set $ConstTest$ = md5sumFromFile("%ScriptPath%\test-files\crypt\dummy.msi")
-		set $CompValue$ = strLoadTextFile("%ScriptPath%\test-files\crypt\dummy.msi.md5")
+		set $ConstTest$ = md5sumFromFile($TestFilesBaseDir$+"\crypt\dummy.msi")
+		set $CompValue$ = strLoadTextFile($TestFilesBaseDir$+"\crypt\dummy.msi.md5")
 		if ($ConstTest$ = $CompValue$)
 			comment "md5sumFromFile passed"
 		else

@@ -114,8 +114,8 @@ if ($Flag_jsonfunctions$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		set $list1$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_host_ml.json","utf8")
-		set $list2$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_host_r.json","utf8")
+		set $list1$ = loadTextFileWithEncoding($TestFilesBaseDir$+"\json\sepia_host_ml.json","utf8")
+		set $list2$ = loadTextFileWithEncoding($TestFilesBaseDir$+"\json\sepia_host_r.json","utf8")
 		set $string1$ = composeString($list1$,"")
 		set $string2$ = takeString(0,$list2$)
 		if jsonIsValid($string1$)
@@ -250,8 +250,8 @@ if ($Flag_jsonfunctions$ = "on") or ($MasterFlag$ = "on")
 		endif ; 4.11.6.4
 		
 		
-		set $list1$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_productOnClient_ml.json","utf8")
-		set $list2$ = loadTextFileWithEncoding("%ScriptPath%\test-files\json\sepia_productOnClient_r.json","utf8")
+		set $list1$ = loadTextFileWithEncoding($TestFilesBaseDir$+"\json\sepia_productOnClient_ml.json","utf8")
+		set $list2$ = loadTextFileWithEncoding($TestFilesBaseDir$+"\json\sepia_productOnClient_r.json","utf8")
 		set $string1$ = composeString($list1$,"")
 		set $string2$ = takeString(0,$list2$)
 		if jsonIsValid($string1$)

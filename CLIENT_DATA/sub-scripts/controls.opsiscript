@@ -73,7 +73,7 @@ Message "testing control functions"
 			; Killtask "autoit3.exe"
 			sleepseconds 5
 			Execwith_autoit_close_showmessage "%SCRIPTPATH%\autoit3.exe" WINST /letThemGo
-			ShowMessageFile "%SCRIPTPATH%\test-files\testmessage.txt"
+			ShowMessageFile $TestFilesBaseDir$+"\testmessage.txt"
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_getTask_autoit3")
 			set $tmp$ = takeFirstStringContaining($list1$,"autoit3.exe")
 			set $CompValue$ = takeString(0, splitStringOnWhitespace($tmp$))
@@ -486,18 +486,18 @@ Message "testing control functions"
 		comment "Testing: "
 		message "includelog"
 		;if not($OS$ = 'macos')
-		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
+		set $string1$ = $TestFilesBaseDir$+"\encoding\10lines-cp1252.txt"
 		set $string2$ = "5"
-		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
+		;includelog $TestFilesBaseDir$+"\encoding\10lines.txt" "5"
 		includelog $string1$ $string2$
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 			set $string2$ = "-5"
 			includelog $string1$ $string2$
 			includelog $string1$ $string2$ "auto"
 		endif
-		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
+		set $string1$ = $TestFilesBaseDir$+"\encoding\10lines-cp1252.txt"
 		set $string2$ = "5"
-		;includelog "%Scriptpath%\test-files\encoding\10lines.txt" "5"
+		;includelog $TestFilesBaseDir$+"\encoding\10lines.txt" "5"
 		includelog $string1$ $string2$
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
 			set $string2$ = "-5"
@@ -505,12 +505,12 @@ Message "testing control functions"
 			includelog $string1$ $string2$ "auto"
 		endif
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.1") >= "0"
-			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf16.txt"
+			set $string1$ = $TestFilesBaseDir$+"\encoding\10lines-utf16.txt"
 			set $string2$ = "5"
 			includelog $string1$ $string2$
 			includelog $string1$ $string2$ "auto"
 			includelog $string1$ $string2$ "UCS-2BE"
-			set $string1$ = "%Scriptpath%\test-files\encoding\10lines-utf32.txt"
+			set $string1$ = $TestFilesBaseDir$+"\encoding\10lines-utf32.txt"
 			set $string2$ = "5"
 			includelog $string1$ $string2$
 			includelog $string1$ $string2$ "auto"
@@ -686,3 +686,7 @@ Message "testing control functions"
 	sub_compareResult
 	
 	set $winst_controls$ = $SubResult$
+
+
+[Files_empty_folder]
+Delete -s -f -c $HomeTestFiles$

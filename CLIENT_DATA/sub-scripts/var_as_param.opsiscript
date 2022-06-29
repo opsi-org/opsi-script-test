@@ -932,7 +932,7 @@ tasklist /FI "IMAGENAME eq $opsi_script_test_helper_bin_name$"
 "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard]
-msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+msiexec /i "$TestFilesBaseDir$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard_from_c]
 msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
@@ -950,10 +950,10 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 "%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 
 [Winbatch_regedit_s_64]
-"%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+"%systemroot%\regedit.exe" /s "$TestFilesBaseDir$\64bit.reg"
 
 [Winbatch_regedit_s_32]
-"%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+"%system%\regedit.exe" /s "$TestFilesBaseDir$\64bit.reg"
 
 [winbatch_wow_myinno_from_c]
 "%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
@@ -973,8 +973,8 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 
 
 [Files_copy_msi_exe_2_c]
-copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
-copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.exe" "$HomeTestFiles$\testFiles"
 
 [Files_copy_helper_2_c]
 copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"
@@ -1095,7 +1095,7 @@ supp "test" ; "$systemroot$\System32\Wbem"
 
 [Registry_GetMultiSZFromFile]
 openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-GetMultiSZFromFile "test2" "%ScriptPath%\test-files\reg_multisz_text.txt"
+GetMultiSZFromFile "test2" "$TestFilesBaseDir$\reg_multisz_text.txt"
 
 [Registry_SaveValueToFile]
 openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
@@ -1303,7 +1303,7 @@ Exit
 "%ScriptPath%\$opsi_script_test_helper_bin$" --wait=2 --showwindow=50
 
 [Files_copy_test_to_system32]
-copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%System%"
+copy "$TestFilesBaseDir$\testFiles\dummy.txt" "%System%"
 
 [DosInAnIcon_remove_test_from_system32]
 %SystemDrive%
@@ -1319,7 +1319,7 @@ cd "%System%"
 del "dummy.txt"
 
 [Files_copy_test_to_programfiles]
-copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%ProgramFilesDir%\opsi.org\test"
+copy "$TestFilesBaseDir$\testFiles\dummy.txt" "%ProgramFilesDir%\opsi.org\test"
 
 [ExecWith_remove_test_from_programfiles]
 %SystemDrive%
@@ -1327,7 +1327,7 @@ cd "%ProgramFilesDir%\opsi.org\test"
 del "dummy.txt"
 
 [Files_copy_test_to_programfiles2]
-copy "%ScriptPath%\test-files\testFiles\dummy.txt" "c:\program files\opsi.org\test"
+copy "$TestFilesBaseDir$\testFiles\dummy.txt" "c:\program files\opsi.org\test"
 
 [ExecWith_remove_test_from_programfiles2]
 %SystemDrive%

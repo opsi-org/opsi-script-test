@@ -55,7 +55,7 @@ supp "test" ; "$systemroot$\System32\Wbem"
 
 [Registry_GetMultiSZFromFile]
 openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
-GetMultiSZFromFile "test2" "%ScriptPath%\test-files\reg_multisz_text.txt"
+GetMultiSZFromFile "test2" $TestFilesBaseDir$+"\reg_multisz_text.txt"
 
 [Registry_SaveValueToFile]
 openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]

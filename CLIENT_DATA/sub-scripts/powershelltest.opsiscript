@@ -242,8 +242,8 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				;comment "testing hookscript"
 				;; https://docs.microsoft.com/de-de/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7.1
 				;ExecWith_powershell_create_test_cert "powershell.exe" -Executionpolicy Bypass
-				;set $tmp$ = "%SCRIPTPATH%\test-files\certificates\PowershellSignatureOntheFly.cmd"
-				;ChangeDirectory "%SCRIPTPATH%\test-files\certificates"
+				;set $tmp$ = $TestFilesBaseDir$+"\certificates\PowershellSignatureOntheFly.cmd"
+				;ChangeDirectory $TestFilesBaseDir$+"\certificates"
 				;ExecWith_powershell_exit42 "powershell.exe" -Executionpolicy Bypass winst /hookscript "$tmp$"
 				;if not (getlastexitcode = "42")
 				;	set $TestResult$ = "not o.k."
@@ -251,8 +251,8 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				;endif
 				;
 				;comment "testing powershellCall with optionstr"
-				;set $tmp$ = "%SCRIPTPATH%\test-files\certificates\PowershellSignatureOntheFly.cmd"
-				;ChangeDirectory "%SCRIPTPATH%\test-files\certificates"
+				;set $tmp$ = $TestFilesBaseDir$+"\certificates\PowershellSignatureOntheFly.cmd"
+				;ChangeDirectory $TestFilesBaseDir$+"\certificates"
 				;comment "this should not fail because executionpolicy Restricted and policy handling set to false"
 				;set $list1$ = powershellCall('exit 42',"sysnative","false","/hookscript "+$tmp$)
 				;if not (getlastexitcode = "42")
@@ -286,8 +286,8 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				;comment "testing hookscript"
 				;; https://docs.microsoft.com/de-de/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7.1
 				;ExecWith_powershell_create_test_cert "powershell.exe" -Executionpolicy Bypass
-				;set $tmp$ = "%SCRIPTPATH%\test-files\certificates\PowershellSignatureOntheFly.cmd"
-				;ChangeDirectory "%SCRIPTPATH%\test-files\certificates"
+				;set $tmp$ = $TestFilesBaseDir$+"\certificates\PowershellSignatureOntheFly.cmd"
+				;ChangeDirectory $TestFilesBaseDir$+"\certificates"
 				;ExecWith_powershell_exit42 "powershell.exe" -Executionpolicy Bypass winst /hookscript "$tmp$"
 				;if not (getlastexitcode = "42")
 				;	set $TestResult$ = "not o.k."
@@ -295,8 +295,8 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 				;endif
 				;
 				;comment "testing powershellCall with optionstr"
-				;set $tmp$ = "%SCRIPTPATH%\test-files\certificates\PowershellSignatureOntheFly.cmd"
-				;ChangeDirectory "%SCRIPTPATH%\test-files\certificates"
+				;set $tmp$ = $TestFilesBaseDir$+"\certificates\PowershellSignatureOntheFly.cmd"
+				;ChangeDirectory $TestFilesBaseDir$+"\certificates"
 				;comment "this should not fail because executionpolicy Restricted and policy handling set to false"
 				;set $list1$ = powershellCall('exit 42',"sysnative","false","/hookscript "+$tmp$)
 				;if not (getlastexitcode = "42")
