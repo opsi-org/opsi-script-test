@@ -5554,8 +5554,6 @@ sub "%scriptpath%\sub-scripts\shellcall.opsiscript"
 
 sub "%scriptpath%\sub-scripts\winbatch.opsiscript"
 
-sub "%scriptpath%\sub-scripts\RunAsLoggedOnAdmin.opsiscript"
-
 sub "%scriptpath%\sub-scripts\internalundocumented.opsiscript"
 
 sub "%scriptpath%\sub-scripts\encodingtest.opsiscript"
