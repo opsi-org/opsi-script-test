@@ -1,0 +1,1778 @@
+encoding=utf8
+
+if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
+	Message "testing string list functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing string list functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "createStringList"
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a','b', 'c', 'd')
+	Set $CompValue$ = takeString(2, $list1$)
+	
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a','b', 'c', 'd')
+	Set $CompValue$ = takeString(2, $list1$)
+	
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a','', 'c', 'd')
+	Set $CompValue$ = takeString(2, $list1$)
+	
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = ""
+	set $list1$ = createStringList ('a','', 'c', 'd')
+	Set $CompValue$ = takeString(1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "0"
+	set $list1$ = createStringList ()
+	Set $CompValue$ = count($list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "set stringlist json style"
+		
+		set $ConstTest$ = "c"
+		set $list1$ = '["a","b", "c", "d"]'
+		Set $CompValue$ = takeString(2, $list1$)
+		
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "c"
+		set $list1$ = '["a","", "c", "d"]'
+		Set $CompValue$ = takeString(2, $list1$)
+		
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = ""
+		set $list1$ = '["a","", "c", "d"]'
+		Set $CompValue$ = takeString(1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "0"
+		set $list1$ = '[]'
+		Set $CompValue$ = count($list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "splitString"
+	set $ConstTest$ = "server"
+	set $list1$ = splitString ("\\server\share\directory", "\")
+	Set $CompValue$ = takeString(2, $list1$)
+	
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "splitStringOnWhiteSpace"
+	set $ConstTest$ = "Remote"
+	set $list1$ = splitStringOnWhiteSpace ("Status Lokal	Remote Netzwerk")
+	Set $CompValue$ = takeString(2, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "splitString Confidential"
+		SetConfidential "\\secret1\secret2\secret3"
+		set $ConstTest$ = "secret1"
+		set $list1$ = splitString ("\\secret1\secret2\secret3", "\")
+		Set $CompValue$ = takeString(2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		;setDebug_prog = true
+		if not(isConfidential(""))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret1")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret2")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret3")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "splitStringOnWhiteSpace Confidential"
+		SetConfidential "secret4  secret5	secret6  "
+		set $ConstTest$ = "secret6"
+		set $list1$ = splitStringOnWhiteSpace ("secret4  secret5	secret6  ")
+		Set $CompValue$ = takeString(2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		if not(isConfidential(""))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret4")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret5")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if isConfidential("secret6")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		;setDebug_prog = false
+	endif ; 4.12.0.16
+	
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "loadTextFile"
+	Files_copy_dummy
+	set $ConstTest$ = "line2"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeString(2, $list1$)
+	
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "loadUnicodeTextFile"
+		set $ConstTest$ = "line2"
+		set $list1$ = loadUnicodeTextFile($HomeTestFiles$+"\dummyUTF-8y.txt")
+		Set $CompValue$ = takeString(2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-8y.txt")
+		Set $CompValue$ = takeString(2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $list1$ = loadUnicodeTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
+		Set $CompValue$ = takeString(2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		;if not($OS$ = 'macos')
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummyUTF-16.txt")
+		Set $CompValue$ = takeString(2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		;else
+		;	logerror "macos todo"
+		;endif
+	endif
+	
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "composeString"
+	set $ConstTest$ = "a | b | c | d | e"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	Set $CompValue$ = composeString ($list1$, " | ")
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "takeString"
+	set $ConstTest$ = "element1"
+	set $list1$ = createStringList ('element0', 'element1', 'element2')
+	set $CompValue$ = takeString(1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "positive index passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "positive index failed"
+	endif
+	
+	set $ConstTest$ = "element2"
+	set $list1$ = createStringList ('element0', 'element1', 'element2')
+	set $CompValue$ = takeString(-1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "negative index passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "negative index failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "takeFirstStringContaining"
+	set $list1$ = createStringList ('element0', 'element1', 'element2')
+	set $ConstTest$ = "element1"
+	set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = "element2"
+	set $CompValue$ = takeFirstStringContaining($list1$,'MENT2')
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	set $ConstTest$ = ""
+	set $CompValue$ = takeFirstStringContaining($list1$,'other string')
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "getValue"
+	set $ConstTest$ = "element1"
+	set $list1$ = createStringList ('key0=element0', 'key1=element1', 'key2=element2')
+	set $CompValue$ = getValue("key1",$list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "retrieveSection"
+	set $ConstTest$ = "c:"
+	set $list1$ = retrieveSection ('DosInAnIcon_dummy_receivesection')
+	set $CompValue$ = takeString(1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	;set $list1$ = getOutStreamFromSection ('DosInAnIcon_netstat')
+	
+	;getReturnListFromSection (Sectionname)
+	;if $MsVersion$ <= "5.0"
+	if $OS$ = "Windows_NT"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"<=","5.0")
+			comment "not tested at win2k  because wmic is needed"
+		else
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "getOutStreamFromSection"
+			set $ConstTest$ = "Microsoft Corporation"
+			set $list1$ = getOutStreamFromSection ('DosInAnIcon_dummy_getOutStreamFromSection')
+			set $CompValue$ = trim(takeString(2, $list1$))
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+	endif
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "getSubList"
+	comment "Now with numbers (no whitespace) ...."
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList(1:3, $list1$)
+	set $CompValue$ = takeString (1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:3, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:3, $list1$) failed"
+	endif
+	set $ConstTest$ = "b"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList(1:, $list1$)
+	set $CompValue$ = takeString (0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:, $list1$) failed"
+	endif
+	set $ConstTest$ = "e"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList(:, $list1$)
+	set $CompValue$ = takeString (4, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(:, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(:, $list1$) failed"
+	endif
+	set $ConstTest$ = "d"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList(1:-1, $list1$)
+	set $CompValue$ = takeString (2, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:-1, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:-1, $list1$) failed"
+	endif
+	comment "Now with numbers (with whitespace) ...."
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList(1 : 3, $list1$)
+	set $CompValue$ = takeString (1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:3, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:3, $list1$) failed"
+	endif
+	set $ConstTest$ = "b"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList( 1 :, $list1$)
+	set $CompValue$ = takeString (0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:, $list1$) failed"
+	endif
+	set $ConstTest$ = "e"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList( : , $list1$)
+	set $CompValue$ = takeString (4, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(:, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(:, $list1$) failed"
+	endif
+	set $ConstTest$ = "d"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getSubList( 1 : -1 , $list1$)
+	set $CompValue$ = takeString (2, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "getSubList(1:-1, $list1$) passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "getSubList(1:-1, $list1$) failed"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.34")
+		comment "Now with string variables  (no whitespace)...."
+		comment "-------------------------------------"
+		
+		set $tmp1$ = "1"
+		set $tmp2$ = "3"
+		set $ConstTest$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:$tmp2$, $list1$)
+		set $CompValue$ = takeString (1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:3, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:3, $list1$) failed"
+		endif
+		set $ConstTest$ = "b"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:, $list1$)
+		set $CompValue$ = takeString (0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:, $list1$) failed"
+		endif
+		set $tmp1$ = ""
+		set $ConstTest$ = "e"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:, $list1$)
+		set $CompValue$ = takeString (4, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(:, $list1$) failed"
+		endif
+		set $tmp1$ = "1"
+		set $tmp2$ = "-1"
+		set $ConstTest$ = "d"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList($tmp1$:$tmp2$, $list1$)
+		set $CompValue$ = takeString (2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:-1, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:-1, $list1$) failed"
+		endif
+		
+		comment "Now with string variables  (with whitespace)...."
+		comment "-------------------------------------"
+		
+		set $tmp1$ = "1"
+		set $tmp2$ = "3"
+		set $ConstTest$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : $tmp2$ , $list1$)
+		set $CompValue$ = takeString (1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:3, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:3, $list1$) failed"
+		endif
+		set $ConstTest$ = "b"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : , $list1$)
+		set $CompValue$ = takeString (0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:, $list1$) failed"
+		endif
+		set $tmp1$ = ""
+		set $ConstTest$ = "e"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : , $list1$)
+		set $CompValue$ = takeString (4, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(:, $list1$) failed"
+		endif
+		set $tmp1$ = "1"
+		set $tmp2$ = "-1"
+		set $ConstTest$ = "d"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList( $tmp1$ : $tmp2$ , $list1$)
+		set $CompValue$ = takeString (2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:-1, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:-1, $list1$) failed"
+		endif
+		
+		comment "Now with string functions ...."
+		comment "-------------------------------------"
+		
+		set $list2$ = createStringList("","-1","0","1","2","3","4","5","6",)
+		set $ConstTest$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(3,$list2$):takestring(5,$list2$), $list1$)
+		set $CompValue$ = takeString (1, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:3, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:3, $list1$) failed"
+		endif
+		set $ConstTest$ = "b"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(3,$list2$):takestring(0,$list2$), $list1$)
+		set $CompValue$ = takeString (0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:, $list1$) failed"
+		endif
+		set $tmp1$ = ""
+		set $ConstTest$ = "e"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(0,$list2$):takestring(0,$list2$), $list1$)
+		set $CompValue$ = takeString (4, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(:, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(:, $list1$) failed"
+		endif
+		set $tmp1$ = "1"
+		set $tmp2$ = "-1"
+		set $ConstTest$ = "d"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = getSubList(takestring(3,$list2$):takestring(1,$list2$), $list1$)
+		set $CompValue$ = takeString (2, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "getSubList(1:-1, $list1$) passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "getSubList(1:-1, $list1$) failed"
+		endif
+	endif ; 4.12.0.34
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "getlistContaining"
+	set $ConstTest$ = "c"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = getlistContaining($list1$, $ConstTest$)
+	set $CompValue$ = takeString (0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	set $ConstTest$ = "C"
+	set $list1$ = createStringList ('a', 'b', 'c', 'c', 'd', 'e')
+	set $list1$ = getlistContaining($list1$, $ConstTest$)
+	set $CompValue$ = takeString (1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	set $ConstTest$ = "0"
+	set $list1$ = createStringList ('a', 'b', 'c', 'c', 'd', 'e')
+	set $list1$ = getlistContaining($list1$, 'other string')
+	set $CompValue$ = count($list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
+		message "getIndexFromListByContaining..string ..."
+		set $tmp$ = "c"
+		set $ConstTest$ = "2"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $CompValue$ = getIndexFromListByContaining($list1$, $tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "C"
+		set $ConstTest$ = "2"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $CompValue$ = getIndexFromListByContaining($list1$, $tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other string"
+		set $ConstTest$ = ""
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $CompValue$ = getIndexFromListByContaining($list1$, $tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		
+		;message "getIndexFromListByContaining..list ..."
+		;set $ConstTest$ = "2"
+		;set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		;set $list2$ = createStringList ('u', 'v', 'w', 'c', 'z')
+		;set $CompValue$ = getIndexFromListByContaining($list1$, $list2$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		;set $ConstTest$ = "2"
+		;set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		;set $list2$ = createStringList ('U', 'V', 'W', 'C', 'Z')
+		;set $CompValue$ = getIndexFromListByContaining($list1$, $list2$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		;set $tmp$ = "other string"
+		;set $ConstTest$ = ""
+		;set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		;set $list2$ = createStringList ('U', 'V', 'W', 'X', 'Z')
+		;set $CompValue$ = getIndexFromListByContaining($list1$, $list2$)
+		;if ($ConstTest$ = $CompValue$)
+		;	comment "passed"
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
+		;	  * new function : getSubListByMatch(<search string>, <target list>) :stringlist
+		;* new function : getSubListByMatch(<search list>, <target list>) :stringlist
+		;* new function : getSubListByContaining(<search string>, <target list>) :stringlist
+		;* new function : getSubListByContaining(<search list>, <target list>) :stringlist
+		;* new function : getSubListByKey(<search string>, <target list>) :stringlist
+		;* new function : getSubListByKey(<search list>, <target list>) :stringlist
+		;* new function : getKeyList(<list>) :stringlist
+		message "getSubListByMatch..string ..."
+		set $tmp$ = "c"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = getSubListByMatch($tmp$,$list1$)
+		set $ConstTest$ = "c"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "C"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = getSubListByMatch($tmp$,$list1$)
+		set $ConstTest$ = "C"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other string"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = getSubListByMatch($tmp$,$list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByMatch..list ..."
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = createStringList ('u', 'v', 'w', 'c', 'z')
+		set $list3$ = getSubListByMatch($list2$, $list1$)
+		set $ConstTest$ = "c"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = createStringList ('U', 'V', 'W', 'C', 'Z')
+		set $list3$ = getSubListByMatch($list2$, $list1$)
+		set $ConstTest$ = "c"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other string"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list2$ = createStringList ('U', 'V', 'W', 'X', 'Z')
+		set $list3$ = getSubListByMatch($list2$, $list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByContaining..string ..."
+		set $tmp$ = "tt"
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = getSubListByContaining($tmp$,$list1$)
+		set $ConstTest$ = "all bottles"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "TT"
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = getSubListByContaining($tmp$,$list1$)
+		set $ConstTest$ = "all bottles"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other string"
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = getSubListByContaining($tmp$,$list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByContaining..list ..."
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = createStringList ('not', 'really not', 'not at all', 'tt', 'never ever')
+		set $list3$ = getSubListByContaining($list2$, $list1$)
+		set $ConstTest$ = "all bottles"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = createStringList ('NOT', 'Really Not', 'not at all', 'TT', 'never ever')
+		set $list3$ = getSubListByContaining($list2$, $list1$)
+		set $ConstTest$ = "all bottles"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = createStringList ('NOT', 'Really Not', 'not at all', 'not a bottle', 'never ever')
+		set $list3$ = getSubListByContaining($list2$, $list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all ants', 'all bottles', 'all circles', 'all doors', 'all elephants')
+		set $list2$ = createStringList ('NOT', 'Really Not', 'not at all', 'ants', 'never ever')
+		set $list3$ = getSubListByContaining($list2$, $list1$)
+		set $ConstTest$ = "2"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByKey..string ..."
+		set $tmp$ = "all"
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = getSubListByKey($tmp$,$list1$)
+		set $ConstTest$ = "all=ants"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "ALL"
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = getSubListByKey($tmp$,$list1$)
+		set $ConstTest$ = "all=ants"
+		set $CompValue$ = takeString(0,$list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $tmp$ = "other"
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = getSubListByKey($tmp$,$list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getSubListByKey..list ..."
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('all', 'really not', 'not at all', 'tt', 'never ever')
+		set $list3$ = getSubListByKey($list2$, $list1$)
+		set $ConstTest$ = "all=ants"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('ALL', 'really not', 'not at all', 'tt', 'never ever')
+		set $list3$ = getSubListByKey($list2$, $list1$)
+		set $ConstTest$ = "all=ants"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('ANTS', 'really not', 'not at all', 'tt', 'never ever')
+		set $list3$ = getSubListByKey($list2$, $list1$)
+		set $ConstTest$ = "0"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('all', 'really not', 'not at all', 'my', 'never ever')
+		set $list3$ = getSubListByKey($list2$, $list1$)
+		set $ConstTest$ = "2"
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		message "getKeyList..list ..."
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('all', 'my', 'round', 'open', 'big')
+		set $list3$ = getKeyList($list1$)
+		set $ConstTest$ = "all"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = count($list2$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('ALL=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('ALL', 'My', 'rouND', 'OPEN', 'big')
+		set $list3$ = getKeyList($list1$)
+		set $ConstTest$ = "ALL"
+		set $CompValue$ = takeString(0,$list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = count($list2$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $list1$ = createStringList ('all=ants', 'my=bottles', 'round=circles', 'open=doors', 'big=elephants')
+		set $list2$ = createStringList ('all', 'my', 'round', 'open', 'big')
+		set $list3$ = getKeyList($list1$)
+		set $ConstTest$ = count($list1$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = count($list2$)
+		set $CompValue$ = count($list3$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.12.0.16
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "reverse"
+	set $ConstTest$ = "e"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = reverse($list1$)
+	set $CompValue$ = takeString (0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "addtolist"
+	set $ConstTest$ = "f"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list1$ = addtolist($list1$,'f')
+	set $CompValue$ = takeString (5, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "addlisttolist"
+	set $ConstTest$ = "g"
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	set $list2$ = createStringList ('f', 'g')
+	set $list1$ = addlisttolist($list1$,$list2$)
+	set $CompValue$ = takeString (6, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	if $OS$ = "Windows_NT"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "getSwauditInfoList"
+		set $ConstTest$ = "OpenSSL-0.9.8h-1_is1"
+		set $list1$ = getSwauditInfoList ("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\OpenSSL-0.9.8h-1_is1", "softwareHashlist", "x86")
+		set $CompValue$ = getvalue ("windowsSoftwareId", $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "getSwauditInfoList"
+		set $ConstTest$ = "AddressBook"
+		;set $list1$ = getSwauditInfoList ("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\AutoHotkey", "softwareHashlist", "x86")
+		set $list1$ = getSwauditInfoList ("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\AddressBook", "softwareHashlist", "x86")
+		;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\AutoHotkey
+		set $CompValue$ = getvalue ("windowsSoftwareId", $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; windows
+	
+	; Iterating through String Lists
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Iteration 1"
+	set $ConstTest$ = "abcde"
+	set $CompValue$ = ""
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	for %s% in $list1$ do set $CompValue$ = $CompValue$ + '%s%'
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Iteration 2"
+	set $ConstTest$ = "abcde"
+	set $CompValue$ = ""
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	for %s% in $list1$ do sub_iteration_test
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Iteration 3"
+	Files_del_iteration_txt
+	set $ConstTest$ = "abcde"
+	set $CompValue$ = ""
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	if $OS$ = "Windows_NT"
+		for %s% in $list1$ do DosInAnIcon_iteration_test
+	else
+		for %s% in $list1$ do ShellInAnIcon_Linux_iteration_test
+	endif
+	set $list1$ = loadTextFile ($HomeTestFiles$+"\iteration.txt")
+	for %s% in $list1$ do set $CompValue$ = $CompValue$ + '%s%'
+	Files_del_iteration_txt
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Iteration 4"
+	set $ConstTest$ = "abcde"
+	set $CompValue$ = ""
+	set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+	for %s% in $list1$ do sub_subsubiteration_test1
+	if not ($ConstTest$ = $CompValue$)
+		comment "passed"
+		comment "the use of the temporary loop constant in a subsub section does not work"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	;; migrated to processinfotest
+	;if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.2") >= "0"
+	;	comment ""
+	;	comment "-------------------------------------"
+	;	comment "Testing: "
+	;	message "getProcessList"
+	;	switch $OS$
+	;		case "Windows_nt"
+	;			set $ConstTest$ = "helperchild.exe"
+	;			killtask $ConstTest$
+	;			Winbatch_startprocess_with_child_nowait
+	;			set $list1$ = getProcessList
+	;			set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+	;			set $CompValue$ = takeString(0,splitString($CompValue$,";"))
+	;			killtask $ConstTest$
+	;			if ($ConstTest$ = $CompValue$)
+	;				comment "passed"
+	;			else
+	;				set $TestResult$ = "not o.k."
+	;				LogWarning "failed"
+	;			endif
+	;		endcase
+	;		case "Linux"
+	;			set $CompValue$ = ""
+	;			set $list1$ = getProcessList
+	;			set $ConstTest$ = "opsi-script-gui"
+	;			comment " shortcommand gives only the first 15 chars)"
+	;			set $ConstTest$ = strPart($ConstTest$,"1","15")
+	;			set $list2$ = getListContaining($list1$,$ConstTest$)
+	;			if count($list2$) = "0"
+	;				set $ConstTest$ = "opsi-script"
+	;				set $list2$ = getListContaining($list1$,$ConstTest$)
+	;			endif
+	;			for %aktprocess% in $list2$ do sub_getprocess_by_shortcommand
+	;			if ($ConstTest$ = $CompValue$)
+	;				comment "passed"
+	;			else
+	;				set $TestResult$ = "not o.k."
+	;				LogWarning "failed"
+	;			endif
+	;		endcase
+	;		case "macos"
+	;			set $CompValue$ = ""
+	;			set $list1$ = getProcessList
+	;			set $ConstTest$ = "opsi-script-gui"
+	;			set $list2$ = getListContaining($list1$,$ConstTest$)
+	;			if count($list2$) = "0"
+	;				set $ConstTest$ = "opsi-script"
+	;				set $list2$ = getListContaining($list1$,$ConstTest$)
+	;			endif
+	;			for %aktprocess% in $list2$ do sub_getprocess_by_command
+	;			if ($ConstTest$ = $CompValue$)
+	;				comment "passed"
+	;			else
+	;				set $TestResult$ = "not o.k."
+	;				LogWarning "failed"
+	;			endif
+	;		endcase
+	;	endswitch
+	;else
+	;	comment "getProcessList not tested, minimum winst needed: 4.11.1.2"
+	;endif
+	;
+	;if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
+	;	comment ""
+	;	comment "-------------------------------------"
+	;	comment "Testing: "
+	;	message "processIsRunning"
+	;	if $OS$ = "Windows_NT"
+	;		set $ConstTest$ = "helperchild.exe"
+	;		set $tmp$ = processCall('"%ScriptPath%\'+$opsi_script_test_helper_bin$+'" --fork-and-stop=2')
+	;		set $list1$ = getProcessList
+	;		if processIsRunning($ConstTest$)
+	;			comment "passed"
+	;		else
+	;			set $TestResult$ = "not o.k."
+	;			LogWarning "failed"
+	;		endif
+	;		killtask $ConstTest$
+	;		
+	;		if not(processIsRunning("not-expected-process.exe"))
+	;			comment "passed"
+	;		else
+	;			set $TestResult$ = "not o.k."
+	;			LogWarning "failed"
+	;		endif
+	;	else ; windows / linux
+	;		set $ConstTest$ = "opsi-script"
+	;		if processIsRunning("opsi-script") or processIsRunning("opsi-script-gui")
+	;			comment "passed"
+	;		else
+	;			set $TestResult$ = "not o.k."
+	;			LogWarning "failed"
+	;		endif
+	;	endif ; windows / linux
+	;else
+	;	comment "processIsRunning not tested, minimum winst needed: 4.11.6.1"
+	;endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "getProfilesDirList"
+		set $list1$ = getProfilesDirList
+		if $OS$ = "Windows_NT"
+			set $list2$ = getRegistryKeyListSysnative('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList')
+			set $list2$ = getListContaining($list2$,'S-1-5-')
+			set $list2$ = getListContaining($list2$,'-500')
+			;if ($MsVersion$ = "6.2")
+			;	comment "we are on win8"
+			;	set $list2$ = getListContaining($list2$,'-1001')
+			;else
+			;	set $list2$ = getListContaining($list2$,'-500')
+			;endif
+			set $list2$ = reverse ($list2$)
+			set $ConstTest$ = takeString(0,$list2$)
+			set $ConstTest$ = SidToName($ConstTest$)
+			set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+			if not($CompValue$ = '')
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if FileExists($CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; windows
+	else
+		comment "getProfilesDirList not tested, minimum winst needed: 4.11.3.2"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.4") >= "0"
+		set $ConstTest$ = "0"
+		set $list1$ = createStringList ('a', 'b', 'c', 'd', 'e')
+		set $list1$ = emptylist ($list1$)
+		set $CompValue$ = count($list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.11.4.4
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.1") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "for to loop"
+		set $ConstTest$ = "12345"
+		set $CompValue$ = ""
+		for %s% = "1" to "5" do sub_iteration_test
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "4567891011"
+		set $CompValue$ = ""
+		set $string1$ = "4"
+		set $string2$ = "11"
+		for %s% = $string1$ to $string2$ do sub_iteration_test
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "removeFromListByContaining"
+		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
+		set $list1$ = loadTextFileWithEncoding($string1$, "cp1252")
+		comment "search with string"
+		comment "search with string constant"
+		set $ConstTest$ = "10"
+		set $list2$ = removeFromListByContaining("line 5", $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "10"
+		set $list2$ = removeFromListByContaining("LINE 5", $list1$)
+		comment "the match is case insensitive"
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		
+		set $ConstTest$ = "1"
+		set $list2$ = removeFromListByContaining("line", $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "9"
+		comment "searchstr 1 will found in 'line 1' and 'line 10'"
+		set $list2$ = removeFromListByContaining("1", $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "search with string function"
+		set $ConstTest$ = "10"
+		set $list2$ = removeFromListByContaining(trim(" line 5 "), $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "search with string variable"
+		set $string1$ = "line 5"
+		set $ConstTest$ = "10"
+		set $list2$ = removeFromListByContaining($string1$, $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "search with string list"
+		comment "search with string list variable"
+		set $list3$ = createStringList ('1', '2', '3', '4', '5')
+		comment "searchstr 1 will found in 'line 1' and 'line 10'"
+		set $ConstTest$ = "5"
+		set $list2$ = removeFromListByContaining($list3$, $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "search with string list variable"
+		comment "searchstr 1 will found in 'line 1' and 'line 10'"
+		set $ConstTest$ = "5"
+		set $list2$ = removeFromListByContaining(createStringList ('1', '2', '3', '4', '5'), $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+	endif ; 4.11.5
+	
+	
+	; Tests for WinstVersion >= 4.12.3
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "listFiles"
+		Files_copy_for_filelist ;initialize test directory
+		
+		comment "Search all  files in $HomeTestFiles$"
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test1')
+		endif
+		;set $list2$ = GetListContaining($list2$, ".")
+		set $list3$ = listFiles($HomeTestFiles$,"*.*","False")
+		if (count($list2$) = count($list3$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "No search pattern given, search all files in $HomeTestFiles$"
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test1')
+		endif
+		set $list3$ = listFiles($HomeTestFiles$,"","False")
+		if (count($list2$) = count($list3$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Search all exe files in $HomeTestFiles$ no subdirectories"
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test1')
+		endif
+		set $list2$ = GetListContaining($list2$, ".exe")
+		set $list3$ = listFiles($HomeTestFiles$,"*.exe","false")
+		if (count($list2$) = count($list3$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Search all exe files in $HomeTestFiles$ and subdirectories"
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test3')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test3')
+		endif
+		;set $list2$ = GetListContaining($list2$, ".exe")
+		set $list3$ = listFiles($HomeTestFiles$,"*.exe","True")
+		if (count($list2$) = count($list3$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Search all txt files in $HomeTestFiles$"
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test1')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test1')
+		endif
+		set $list2$ = GetListContaining($list2$, ".txt")
+		set $list3$ = listFiles($HomeTestFiles$,"*.txt","False")
+		if (count($list2$) = count($list3$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "Search file encode-cp866.opsiscript in $HomeTestFiles$"
+		if $OS$ = "Windows_NT"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test5')
+		else
+			set $list2$ = getOutStreamFromSection('ShellInAnIcon_ListFiles_Test5')
+		endif ; windows
+		;set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+		set $list3$ = listFiles($HomeTestFiles$,"encode-cp866.opsiscript","False")
+		if (count($list2$) = count($list3$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		if $OS$ = "Windows_NT"
+			comment "Search file in %System% with redirection for 32bit programs to SysWOW64"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6')
+			set $list3$ = listFiles("%System%","*.*","False")
+			set $ConstTest$ = count($list3$)
+			set $CompValue$ = count($list2$)
+			comment "compare values"
+			if $ConstTest$ = $CompValue$
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+			comment "Search file in %System% with redirection disabled"
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 winst /64bit')
+			; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+			set $list3$ = listFiles("%System%","*.*","False","64bit")
+			set $ConstTest$ = count($list3$)
+			set $CompValue$ = count($list2$)
+			comment "compare values"
+			if $ConstTest$ = $CompValue$
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; windows
+	endif ;4.12.3
+	
+	
+	if $OS$ = "Windows_NT"
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.17")
+			
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			message "DosInAnIcon with WINST /encoding parameter"
+			comment ""
+			
+			;Files_copy_for_filelist
+			
+			set $list2$ = getOutStreamFromSection('DosInAnIcon_ListFiles_Test6 WINST /64bit /encoding utf8')
+			; set $list2$ = GetListContaining($list2$, "encode-cp866.opsiscript")
+			set $list3$ = listFiles("%System%","*.*","False","64bit")
+			set $ConstTest$ = count($list3$)
+			set $CompValue$ = count($list2$)
+			if $ConstTest$ = $CompValue$
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+		endif ;4.12.4.7
+	endif ; windows
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.9")
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "setValueByKey (with default keyvalue separator: =)"
+		comment ""
+		set $INST_Resultlist$ = createStringList("a=1","b=2","c=2")
+		set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$)
+		set $ConstTest$ = "myvalue"
+		set $CompValue$ = getValue("mykey", $INST_Resultlist$)
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $INST_Resultlist$ = createStringList("a = 1","b = 2","c = 2")
+		set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$)
+		set $ConstTest$ = "myvalue"
+		set $CompValue$ = getValue("b", $INST_Resultlist$)
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "setValueByKey (with explicit set keyvalue separator)"
+		comment ""
+		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+		set $INST_Resultlist$ = setValueByKey("mykey","myvalue",$INST_Resultlist$,":")
+		set $ConstTest$ = "myvalue"
+		set $CompValue$ = getValueBySeparator("mykey", ":", $INST_Resultlist$)
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+		set $INST_Resultlist$ = setValueByKey("b","myvalue",$INST_Resultlist$,":")
+		set $ConstTest$ = "myvalue"
+		set $CompValue$ = getValueBySeparator("b", ":", $INST_Resultlist$)
+		comment "compare values"
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+	endif ; 4.12.3.9
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.5")
+		
+		comment "Testing: "
+		message "areStringlistsEqual"
+		
+		
+		Set $testlist0$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4")
+		
+		Set $testlist1$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
+		Set $testlist2$ = CreateStringList("KEY1 = value1", "key2= Value2", "key3 =value3", " Key4=value4 ", " key5=VALUE5 ")
+		
+		Set $testlist3$ = CreateStringList("key1=value1", "key2 = value2", "key3 =value3", "key4= value4", " key5 = value5 ")
+		
+		Set $testlist4$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
+		Set $testlist5$ = CreateStringList("string1", "STRING2", "String3", "StRiNg4", " string5 ")
+		Set $testlist6$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", " STRING5 ")
+		Set $testlist7$ = CreateStringList("STRING1", "STRING2", "STRING3", "STRING4", "STRING5")
+		
+		DefFunc myAreStringlistEqualTester($list1$ : stringlist, $list2$ : stringlist, $flag$ : string, $ConstTest$ : string) : void
+			DefVar $CompValue$
+			set $CompValue$ = booltostring(areListsEqual($list1$,$list2$,$flag$))
+			if $CompValue$ = $ConstTest$
+				comment "Testing areStringlistsEqual succeeded"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "Testing areStringlistsEqual failed"
+			endif
+		endfunc
+		
+		myAreStringlistEqualTester($testlist0$,$testlist1$,"FLAG_AUTOMODE","false")
+		
+		myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTOMODE","true")
+		myAreStringlistEqualTester($testlist1$,$testlist2$,"FLAG_AUTO_CS","false")
+		myAreStringlistEqualTester($testlist1$,$testlist3$,"FLAG_STRING_CS","true")
+		
+		myAreStringlistEqualTester($testlist4$,$testlist5$,"FLAG_AUTOMODE","true")
+		myAreStringlistEqualTester($testlist5$,$testlist6$,"FLAG_AUTO_CS","false")
+		myAreStringlistEqualTester($testlist4$,$testlist6$,"FLAG_STRING_CS","false")
+		myAreStringlistEqualTester($testlist6$,$testlist7$,"FLAG_AUTO_CS","false")
+		
+	endif ; 4.12.4.5
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.34")
+		if fileexists("%scriptpath%/sub-scripts/subsub_getoutstream_test2.opsiscript")
+			sub "%scriptpath%/sub-scripts/subsub_getoutstream_test2.opsiscript"
+		else
+			sub "%scriptpath%/../sub-scripts/subsub_getoutstream_test2.opsiscript"
+		endif
+	endif ; 4.12.4.34
+	
+	Files_empty_folder ;remove test files
+	;End of Testing listFiles
+	
+	sub_compareResult
+	set $winst_string_list$ = $SubResult$
+endif
+
+[sub_iteration_test]
+set $CompValue$ = $CompValue$ + '%s%'
+
+[sub_subsubiteration_test1]
+sub_subsubiteration_test2
+
+[sub_subsubiteration_test2]
+set $CompValue$ = $CompValue$ + '%s%'
+
+[Files_del_iteration_txt]
+delete "$HomeTestFiles$\iteration.txt"
+
+[DosInAnIcon_iteration_test]
+echo %s%>> "$HomeTestFiles$\iteration.txt"
+
+[ShellInAnIcon_Linux_iteration_test]
+set -x
+echo %s%>> "$HomeTestFiles$/iteration.txt"

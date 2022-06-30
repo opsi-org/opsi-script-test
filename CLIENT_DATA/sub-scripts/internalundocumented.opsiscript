@@ -12,7 +12,7 @@ if $Flag_internalundocumented$ = "on"
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
 
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.2.1") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 
 		comment ""
 		comment "-------------------------------------"
@@ -55,7 +55,7 @@ if $Flag_internalundocumented$ = "on"
 
 	endif ; 4.11.2
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.3") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -208,7 +208,7 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 "%ProgramFiles32Dir%\myinnosetup\unins000.exe" /silent
 
 [winbatch_wow_myinno]
-"%winstdir%\winst32.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+"%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 
 [Winbatch_regedit_s_64]
 "%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
@@ -217,11 +217,11 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 "%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
 
 [winbatch_wow_myinno_from_c]
-"%winstdir%\winst32.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
+"%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 
 [Winbatch_msi_standard_from_c_indirect]
-;"%WinstDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
-;"%WinstDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
+;"%OpsiscriptDir%\..\action_processor_starter.exe" <hostId> <hostKey> <controlServerPort> <logFile> <logLevel> <depotRemoteUrl> <depotDrive> <depotServerUsername> <depotServerPassword> <sessionId> <actionProcessorDesktop> <actionProcessorCommand> <actionProcessorTimeout> <runAsUser> <runAsPassword> <createEnvironment>
+;"%OpsiscriptDir%\..\action_processor_starter.exe" "%HostID%" <hostKey> "4441"  "8" <depotRemoteUrl> "%ScriptDrive%" <depotServerUsername> <depotServerPassword> 0 "defaukt" "msiexec /i c:\tmp\testFiles\dummy.msi /l* c:\tmp\dummy.install_log.txt /qb! ALLUSERS=2 REBOOT=ReallySuppress" 30 "" "" false
 
 [winbatch_start_helper_asadmin_c]
 "$HomeTestFiles$\testFiles\$opsi_script_test_helper_bin$" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"

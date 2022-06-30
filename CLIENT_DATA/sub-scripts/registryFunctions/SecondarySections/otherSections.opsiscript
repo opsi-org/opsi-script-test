@@ -1,0 +1,70 @@
+
+[sub_retrieve_registry_data]
+if $INST_SystemType$ = "64 Bit System"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4")
+		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%System%\cmd.exe' /C winst /64bit")
+	else
+		set $INST_ResultList$ = getOutStreamFromSection("execWith_reg_query '%SystemRoot%\cmd64.exe' /C")
+	endif
+	for $s$ in $INST_ResultList$ do sub_fetch_SearchResult
+else
+	set $INST_SearchResult$ = GetRegistryStringValue("["+$INST_SearchKey$+"] "+$INST_SearchValue$)
+endif
+
+[execWith_reg_query]
+@echo off
+reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
+
+[sub_fetch_SearchResult]
+; skip empty entries of $INST_ResultList$
+if not ("$s$" = '')
+	set $INST_ResultList2$ = splitStringOnWhiteSpace("$s$")
+	if $INST_SearchValue$ = takeString(1,$INST_ResultList2$)
+		if not (takeString(3,$INST_ResultList2$) = "")
+			set $INST_ResultList3$ = getSublist(3:, $INST_ResultList2$)
+			set $INST_SearchResult$ = composeString($INST_ResultList3$," ")
+		else
+			set $INST_SearchResult$ = ""
+		endif
+	endif
+endif
+
+
+[Files_delete_SaveValueToFile_txt]
+Delete -f "$HomeTestFiles$\SaveValueToFile.txt"
+
+
+[ExecWith_opsi_org_test]
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0" /v "bitByReg" /t REG_SZ /d "$regWriteValue$" /f
+
+
+[DosInAnIcon_export_hkcu_complete_opsi_org_test]
+@echo off
+regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test
+
+
+[winbatch_hack_forbidden_key1]
+reg add "HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard" /v "HideWizard" /t REG_DWORD /d "1" /f
+
+[winbatch_hack_forbidden_key2]
+reg delete "HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard" /v "HideWizard" /f
+
+
+[sub_check_environment]
+comment "This will not work because the environment is inherited from the running process"
+set $list$ = shellCall('set opsi-script-test')
+set $CompValue$ = takeFirstStringContaining($list$, "deleteme")
+if "" = $CompValue$
+	comment "This will work because this new started process will get a new environment"
+	winbatch_check_environment /RunElevated
+	if ("42" = getlastExitCode)
+		set $CompValue$ = "opsi-script-test=deleteme"
+	else
+		message "Set Environment Variables and wait for update "+calculate("%index% * 10")+" seconds ..."
+		sleepseconds 10
+	endif
+endif
+
+[winbatch_check_environment]
+"%system%\cmd.exe" /c "if %opsi-script-test%==deleteme exit 42"
+

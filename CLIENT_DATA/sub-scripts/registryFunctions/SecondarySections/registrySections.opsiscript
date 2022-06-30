@@ -1,0 +1,161 @@
+
+[Registry_createkeys]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+set "var1" = "value1"
+set "var2" = "value2"
+set "var3" = "value3"
+set "var4" = "value4"
+set "var5" = REG_SZ:"value5"
+set "var6" = REG_EXPAND_SZ:"value6"
+set "var7" = REG_DWORD:777
+set "var8" = REG_BINARY:08 08 08 0F 10
+set "var9" = REG_MULTI_SZ:"value9|value10|de"
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+set ""="C:\Program files\test\test.exe -a"
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key1]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key2]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key3]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key4]
+
+[Registry_deleteKey]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a]
+
+[Registry_deleteKey_winst_test]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\winst-test]
+
+[Registry_Add]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+Add "test"=REG_EXPAND_SZ:"value"
+
+[Registry_Supp]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+supp "test" ; "value1;value2;value3"
+
+[Registry_Supp1]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+supp "test" ; "value2"
+
+[Registry_set4supp]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+set "test"=REG_EXPAND_SZ:"C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient"
+
+[Registry_Supp2]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+supp "test" ; "C:\Program Files (x86)\Java\jre8\bin"
+
+[Registry_set4supp3]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+set "test"=REG_EXPAND_SZ:"$systemroot$;$systemroot$\system32"
+
+
+[Registry_Supp3]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+supp "test" ; "$systemroot$\System32\Wbem"
+
+
+[Registry_GetMultiSZFromFile]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+GetMultiSZFromFile "test2" "%ScriptPath%\test-files\reg_multisz_text.txt"
+
+[Registry_SaveValueToFile]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+SaveValueToFile "test" "$HomeTestFiles$\SaveValueToFile.txt"
+
+[Registry_DeleteVar]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+DeleteVar "test"
+DeleteVar "test2"
+
+
+[Registry_opsi_org_test]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0]
+set ""="standard entry"
+set "bitByWinst"="$regWriteValue$"
+set "str_bywinst"=REG_SZ:"my string"
+set "str_bywinst_with_%"="string with no percent char set without explicit data type will be written as string"
+set "str_bywinst_with_%"="string with % set without explicit data type and will so be changed to expand_string"
+set "str_bywinst_with_%"=REG_SZ:"string with % set with explicit data type string "
+set "strexpand_bywinst"=REG_EXPAND_SZ:"%programfiles%"
+set "dword_test1"= REG_DWORD:10
+set "dword_test2"= REG_DWORD:0xA
+set "dword_test3"= REG_DWORD:0x0A
+set "dword_test4"= REG_DWORD:$0A
+set "binary_bywinst"=REG_BINARY:00 FF
+set "binary_empty_bywinst"=REG_BINARY:
+set "multi_sz_bywinst" = REG_MULTI_SZ:"A|BC|de"
+
+
+
+[Registry_set_quoted_string]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\quoted]
+set "quoted"="$tmp$"
+
+[Registry_createkeys_with_brackets]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+set "entry1"="myentry1"
+
+[Registry_deletekeys_with_brackets]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+
+[Registry_opsi_org_delete_test]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+
+
+
+[Registry_hkcu_opsi_org_test]
+openkey [SOFTWARE\opsi.org\opsi-winst-test]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_opsi_org_deletekey]
+openkey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+deletekey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+
+[Registry_hkcu_complete_opsi_org_test]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test]
+set "bitByWinst"="$regWriteValue$"
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+set "bitByWinst"="$regWriteValue$"
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b\c]
+set "bitByWinst"="$regWriteValue$"
+
+
+[Registry_hkcu_complete_opsi_org_deletekey]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+
+
+
+[Registry_hkcu_userclasses_create_test]
+openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_userclasses_delete_test]
+deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+
+[Registry_hkcu_userclasses_createkey]
+openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+set "bitByWinst"="$regWriteValue$"
+
+[Registry_hkcu_userclasses_deletekey]
+deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a]
+
+
+[Registry_hack_forbidden_key]
+openkey [HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard]
+set "HideWizard" = REG_DWORD:0x1
+DeleteVar "HideWizard"
+
+
+
+[Registry_multiline]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+set ""="part1\npart2\npart3"
+;set "test" = "$string1$"
+
+[Registry_add_environment]
+openkey [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
+set "opsi-script-test"="deleteme"
+
+[Registry_del_environment]
+openkey [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]
+DeleteVar "opsi-script-test"

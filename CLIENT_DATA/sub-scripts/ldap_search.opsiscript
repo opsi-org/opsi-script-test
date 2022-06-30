@@ -1,0 +1,111 @@
+encoding=utf8
+
+;if ($Flag_winst_ldap_search$ = "on") or ($MasterFlag$ = "on")
+if ($Flag_winst_ldap_search$ = "on")
+	
+	Message "testing LDAP Search"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing LDAP Search"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	Set $LdapHost$ = getproductproperty('ldapserver',"ad.opsi.local")
+	if isPingReachable($LdapHost$)
+		set $LDAPBaseDN$ = 'dc='+stringReplace($LdapHost$,'.',',dc=')
+		Set $LdapPort$ = getproductproperty('ldapport',"389")
+		Set $LdapUser$ = getproductproperty('ldapuser',"Administrator")
+		Set $LdapUser$ = 'cn='+$LdapUser$+',cn=Users,'+$LDAPBaseDN$
+		Set $LdapPassword$ = getproductproperty('ldappassword',"secret")
+		
+		set $LdapSearchDn$ = "cn=Users,"+$LDAPBaseDN$
+		set $LdapSearchAttributes$ = "sAMAccountName,objectCategory,gidNumber"
+		Set $LdapFilter$ = "(&(objectclass=group))"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		comment "/objects"
+		ldapsearch_generic /cache
+		set $ConstTest$ = "cn=Domain Users,cn=Users,"+$LDAPBaseDN$
+		set $list1$ = getReturnlistFromSection("ldapsearch_generic /cached /objects")
+		set $CompValue$ = takeFirstStringContaining($list1$,"cn=Domain Users,cn=Users,"+$LDAPBaseDN$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		comment "/objects"
+		set $LdapSearchDn$ = "CN=Users,CN=Builtin,"+$LDAPBaseDN$
+		
+		set $ConstTest$ = "1"
+		ldapsearch_generic /cache
+		set $list1$ = getReturnlistFromSection("ldapsearch_generic /cached /objects")
+		set $CompValue$ = count ($list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		comment "/attributes"
+		set $ConstTest$ = "sAMAccountName"
+		set $list1$ = getReturnlistFromSection("ldapsearch_generic /attributes")
+		set $CompValue$ = takeFirstStringContaining($list1$,$ConstTest$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		comment "users"
+		Set $LdapResultType$ = "objects"
+		Set $LdapSearchDn$ = "cn=Users,"+$LDAPBaseDN$
+		Set $LdapSearchAttributes$ = "name,objectClass"
+		Set $LdapFilter$ = "(&(objectclass=*))"
+		
+		markErrorNumber
+		set $list1$ = getReturnListFromSection("ldapsearch_generic /" + $LdapResultType$)
+		if errorsOccuredSinceMark > 0
+			LogWarning "failed while ldapsearch"
+			set $TestResult$ = "not o.k."
+		else
+			comment "passed"
+		endif
+	endif
+	
+	
+	sub_compareResult
+	set $winst_ldap_search$ = $SubResult$
+endif
+
+
+[ldapsearch_generic]
+targethost: $LdapHost$
+targetport: $LdapPort$
+user: $LdapUser$
+password: $LdapPassword$
+dn: $LdapSearchDn$
+attributes: $LdapSearchAttributes$
+filter: $LdapFilter$
+
+
+

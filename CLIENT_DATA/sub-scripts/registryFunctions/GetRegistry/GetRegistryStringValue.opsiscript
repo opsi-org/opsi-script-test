@@ -1,0 +1,72 @@
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GetRegistryStringValue"
+		set $ConstTest$ = "Explorer.exe"
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon] Shell")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GetRegistryStringValue32"
+		set $ConstTest$ = "Explorer.exe"
+		set $CompValue$ = GetRegistryStringValue32 ("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon] Shell")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GetRegistryStringValue32 standard entry"
+		Registry_opsi_org_test
+		set $ConstTest$ = "standard entry"
+		set $CompValue$ = GetRegistryStringValue32 ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0]")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GetRegistryStringValue64"
+		Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+		Set $INST_SearchValue$ = "AutoRestartShell"
+		sub_retrieve_registry_data
+		set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
+		set $CompValue$ = GetRegistryStringValue64 ("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon] AutoRestartShell")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+  	
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GetRegistryStringValueSysNative"
+		Set $INST_SearchKey$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+		Set $INST_SearchValue$ = "AutoRestartShell"
+		sub_retrieve_registry_data
+		set $ConstTest$ = HexStrToDecStr($INST_SearchResult$)
+		set $CompValue$ = GetRegistryStringValueSysNative ("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon] AutoRestartShell")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif

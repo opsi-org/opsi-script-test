@@ -1,0 +1,353 @@
+DefFunc TestJsonSyntaxParams($UserFQDN$:string):void
+	
+	DefFunc TestBooleanInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Utctime$
+		markErrorNumber
+		
+		set $Utctime$ = "false"
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getServiceTime')
+		
+		set $Utctime$ = "'false'"
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getServiceTime')
+		
+		if  errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Boolean value in params failed in OpsiServiceCall 'getServiceTime'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Boolean value in params produced empty return in OpsiServiceCall 'getServiceTime'!"
+			else
+				Set $ConstTestList$=splitStringOnWhiteSpace(takeString(0,$ConstTestList$))
+				Set $CompValueList$=splitStringOnWhiteSpace(takeString(0,$CompValueList$))
+				if (takeString(0,$ConstTestList$) = takeString(0,$CompValueList$))
+					comment "Boolean value in params passed OpsiServiceCall 'getServiceTime'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Boolean value in params passed OpsiServiceCall 'getServiceTime' but gives a different date!"
+				endif
+			endif
+		endif
+		[opsiServiceCall_getServiceTime]
+	"method": "getServiceTime"
+	"params": [
+				$Utctime$
+				]
+	endfunc
+	
+	
+	DefFunc TestNumericInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Size$
+		markErrorNumber
+		
+		set $Size$ = "1000"
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_log_read')
+		
+		set $Size$ = "'1000'"
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_log_read')
+		
+		if errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Numeric value in params failed in OpsiServiceCall 'log_read'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Numeric value in params produced empty return in OpsiServiceCall 'log_read'!"
+			else
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Numeric value in params passed OpsiServiceCall 'log_read'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Numeric value in params passed OpsiServiceCall 'log_read' but gives a different result!"
+				endif
+			endif
+		endif
+		[opsiServiceCall_log_read]
+	"method": "log_read"
+	"params": [
+				"instlog",
+				"$UserFQDN$",
+				$Size$
+				]
+	endfunc
+	
+	
+	DefFunc TestNumericBoolInArray($type$:string, $SectionTestEntry$:string, $SectionCompareEntry$:string):void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Array$
+		markErrorNumber
+		
+		set $Array$ = $SectionTestEntry$
+		opsiServiceCall_setProductProperty
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		
+		set $Array$ = $SectionCompareEntry$
+		opsiServiceCall_setProductProperty
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		
+		opsiServiceCall_deleteProductPropertyChanges
+		if errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Array with " + $type$ + " values in params failed in OpsiServiceCall 'setProductProperty'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Array with " + $type$ + " values in params produced empty return in OpsiServiceCall 'setProductProperty'!"
+			else
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Array with " + $type$ + " values in params passed OpsiServiceCall 'setProductProperty' but gives a different result!"
+				endif
+			endif			
+		endif
+		[opsiServiceCall_setProductProperty]
+	"method": "setProductProperty"
+	"params": [
+				"opsi-script-test",
+				"dummymulti",
+				$Array$,
+				"$UserFQDN$"
+				]
+		[opsiServiceCall_getProductProperty]
+	"method": "productPropertyState_getObjects"
+	"params": [
+				"[]",
+				'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummymulti"}'
+				]
+		[opsiServiceCall_deleteProductPropertyChanges]
+	"method": "productPropertyState_delete"
+	"params": [
+				"opsi-script-test",
+				"dummymulti",
+				"$UserFQDN$"
+				]
+	endfunc
+	
+	
+	DefFunc GetServiceCallValuesFirstValueAsString($Values$:string):string
+		DefVar $FirstValue$
+		if($Values$="")
+			set $result$= ""
+		else
+			set $FirstValue$=jsonAsArrayGetElementByIndex($Values$,"0")
+			set $result$=$FirstValue$
+		endif
+	endfunc
+	DefFunc GetServiceCallValuesAsString($JsonResult$:StringList):string
+		DefVar $Values$
+		set $Values$=jsonAsArrayGetElementByIndex(jsonStringListToJsonArray($JsonResult$),"0")
+		set $Values$=jsonAsArrayGetElementByIndex($Values$,"0")
+		set $Values$=jsonAsObjectGetValueByKey($Values$,"values")
+		set $result$=GetServiceCallValuesFirstValueAsString($Values$)
+	endfunc
+	DefFunc LogGetProdPropResult($Message$:string,$ExpectedResult$:string):void
+		DefStringList $JsonResult$
+		DefVar $FirstValue$
+		set $JsonResult$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		set $FirstValue$=GetServiceCallValuesAsString($JsonResult$)
+		if($FirstValue$=$ExpectedResult$)
+			comment $Message$+" passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning $Message$+" failed"
+		endif
+		[opsiServiceCall_getProductProperty]
+	"method": "productPropertyState_getObjects"
+	"params": [
+				"[]",
+				'{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
+				]
+	endfunc
+	DefFunc TestNumericAndBooleanStringsToBool($TestValue$:string,$ExpectedResult$:string):void
+		DefVar $Message$
+		markErrorNumber
+		
+		set $Message$ = "Test "+$TestValue$+"->"+$ExpectedResult$
+		opsiServiceCall_setProductProperty		
+		LogGetProdPropResult($Message$,$ExpectedResult$)
+		
+		set $Message$ = "Test "+$TestValue$+"(with quotes)->"+$ExpectedResult$
+		opsiServiceCall_setProductProperty_quoted
+		LogGetProdPropResult($Message$,$ExpectedResult$)
+		
+		opsiServiceCall_deleteProductPropertyChanges
+		if errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "TestNumericAndBooleanStringsToBool failed"
+		else
+			comment "TestNumericAndBooleanStringsToBool passed"
+		endif
+		
+		[opsiServiceCall_setProductProperty]
+	"method": "setProductProperty"
+	"params": [
+				"opsi-script-test",
+				"dummybool",
+				$TestValue$,
+				"$UserFQDN$"
+				]
+		[opsiServiceCall_setProductProperty_quoted]
+	"method": "setProductProperty"
+	"params": [
+				"opsi-script-test",
+				"dummybool",
+				"$TestValue$",
+				"$UserFQDN$"
+				]
+		[opsiServiceCall_deleteProductPropertyChanges]
+	"method": "productPropertyState_delete"
+	"params": [
+				"opsi-script-test",
+				"dummybool",
+				"$UserFQDN$"
+				]
+	endfunc
+	
+	DefFunc TestArrayAndObjectInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Array$
+		DefVar $Object$
+		markErrorNumber
+		
+		set $Array$ = "[]"
+		set $Object$ = '{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		
+		set $Array$ = "'[]'"
+		set $Object$ = EscapeString: '{"objectId":"$UserFQDN$","productId":"opsi-script-test","propertyId":"dummybool"}'
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProductProperty')
+		
+		if  errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Array and object in params failed in OpsiServiceCall 'productPropertyState_getObjects'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Array and object in params produced empty return in OpsiServiceCall 'productPropertyState_getObjects'!"
+			else
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Array and object in params passed OpsiServiceCall 'productPropertyState_getObjects'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Array and object in params passed OpsiServiceCall 'productPropertyState_getObjects' but give a different result!"
+				endif
+			endif
+		endif
+		[opsiServiceCall_getProductProperty]
+	"method": "productPropertyState_getObjects"
+	"params": [
+				$Array$,
+				$Object$
+				]
+	endfunc
+	
+	DefFunc TestNullInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Null$
+		markErrorNumber
+		
+		set $Null$ = "null"
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getClientIds_list')
+		
+		set $Null$ = "'null'"
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getClientIds_list')
+		
+		if  errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Null value in params failed in OpsiServiceCall 'opsiServiceCall_getClientIds_list'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Null value in params produced empty return in OpsiServiceCall 'opsiServiceCall_getClientIds_list'!"
+			else
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Null value in params passed OpsiServiceCall 'opsiServiceCall_getClientIds_list'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Null value in params passed OpsiServiceCall 'opsiServiceCall_getClientIds_list' but gives a different result!"
+				endif
+			endif
+		endif
+		[opsiServiceCall_getClientIds_list]
+"method": "getClientIds_list"
+"params": [
+			$Null$,
+			$Null$,
+			$Null$,
+			"opsi-script",
+			$Null$,
+			$Null$,
+			$Null$,
+			$Null$,
+			$Null$
+			]
+	endfunc
+	
+	DefFunc TestEmptyStringInOpsiServiceCall():void
+		DefStringList $ConstTestList$
+		DefStringList $CompValueList$
+		DefVar $Empty$
+		markErrorNumber
+		
+		set $Empty$ = ""
+		set $ConstTestList$=getReturnListFromSection('opsiServiceCall_getProduct_hash')
+		
+		set $Empty$ = "''"
+		set $CompValueList$=getReturnListFromSection('opsiServiceCall_getProduct_hash')
+		
+		if  errorsOccuredSinceMark > 0
+			set $TestResult$ = "not o.k."
+			LogWarning "Empty string in params failed in OpsiServiceCall 'opsiServiceCall_getProduct_hash'!"
+		else
+			if (count($ConstTestList$)="0") or (count($CompValueList$)="0")
+				set $TestResult$ = "not o.k."
+				LogWarning "Empty string in params produced empty return in OpsiServiceCall 'opsiServiceCall_getProduct_hash'!"
+			else
+				if areListsEqual($ConstTestList$,$CompValueList$,'FLAG_STRING_CS')
+					comment "Empty string in params passed OpsiServiceCall 'opsiServiceCall_getProduct_hash'"
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "Empty string in params passed OpsiServiceCall 'opsiServiceCall_getProduct_hash' but gives a different result!"
+				endif
+			endif
+		endif
+		[opsiServiceCall_getProduct_hash]
+"method": "getProduct_hash"
+"params": [
+			"opsi-script",
+			$Empty$
+			]
+	endfunc
+	
+	
+	DefFunc DoTestsNumericBoolInArray():void
+		TestNumericBoolInArray("numeric","[0,15,6.789]","['0','15','6.789']")
+		TestNumericBoolInArray("boolean","[true,false]","['True','False']")
+	endfunc
+	
+	DefFunc DoTestsNumericAndBooleanStringsToBool():void
+		TestNumericAndBooleanStringsToBool("0","false")
+		TestNumericAndBooleanStringsToBool("1","true")
+		TestNumericAndBooleanStringsToBool("50.3376","true")
+		TestNumericAndBooleanStringsToBool("false","false")
+		TestNumericAndBooleanStringsToBool("true","true")
+	endfunc
+	
+	
+	TestBooleanInOpsiServiceCall()
+	TestNumericInOpsiServiceCall()
+	DoTestsNumericBoolInArray()
+	DoTestsNumericAndBooleanStringsToBool()
+	TestArrayAndObjectInOpsiServiceCall()
+	TestNullInOpsiServiceCall()
+	TestEmptyStringInOpsiServiceCall()
+endfunc

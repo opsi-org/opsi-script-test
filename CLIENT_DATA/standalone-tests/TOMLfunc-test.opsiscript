@@ -1,0 +1,306 @@
+encoding=utf8
+
+[Actions]
+Message "Testing of TOML functions"
+SetLogLevel=7
+
+DefVar $HomeTestFiles$
+DefVar $TOMLFile$
+DefVar $newTOMLFile$
+DefVar $newJSONFile$
+DefVar $TestResult$
+DefVar $CompValue$
+
+DefStringList $TOMLlist$
+DefVar $TOMLString$
+DefVar $TOMLFileList$
+DefVar $TOMLdata$
+DefStringList $TestList$
+DefVar $TestString$
+
+Set $HomeTestFiles$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/TOML/"
+Set $TOMLFile$ = $HomeTestFiles$ + "TOMLfile.toml"
+Set $TOMLFileList$ = $HomeTestFiles$ + "TOMLStringList.txt"
+Set $newTOMLFile$ = $HomeTestFiles$ + "TOMLempty.toml"
+Set $newJSONFile$ = $HomeTestFiles$ + "myJSONfromTOMLdata.json"
+
+comment "-----  Testing LoadTOMLFile :"
+Message "-- LoadTOMLFile TOMLfile.toml "
+Set $TOMLlist$ = LoadTOMLFile($TOMLFile$)
+Set $TestList$ = loadTextFile($TOMLFile$)
+set $CompValue$ = booltostring(areListsEqual($TOMLlist$, $TestList$,"FLAG_AUTO_CS"))
+if $CompValue$ = "true"
+		comment "Testing LoadTOMLFile TOMLfile.toml succeeded"
+else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing LoadTOMLFile TOMLfile.toml failed"
+endif
+
+;Message "-- LoadTOMLFile empty file : TOMLempty.toml "
+;Set $TOMLlist$ = LoadTOMLFile($newTOMLFile$)
+;Set $TestList$ = loadTextFile($newTOMLFile$)
+;set $CompValue$ = booltostring(areListsEqual($TOMLlist$, $TestList$,"FLAG_AUTO_CS"))
+;if $CompValue$ = "true"
+;		comment "Testing LoadTOMLFile TOMLempty.toml succeeded"
+;else
+;		set $TestResult$ = "not o.k."
+;		LogWarning "Testing LoadTOMLFile TOMLempty.toml failed"
+;endif
+
+;comment "-----  Testing ReadTOMLFile :"
+;Message "-- ReadTOMLFile TOMLfile.toml "
+;Set $TOMLString$ = ReadTOMLFile($TOMLFile$)
+;;Set $TestString$ = strLoadTextFile($TOMLFile$)
+;if $TOMLString$ = $TestString$
+;		comment "Testing ReadTOMLFile TOMLfile.toml succeeded"
+;else
+;		set $TestResult$ = "not o.k."
+;		LogWarning "Testing ReadTOMLFile TOMLfile.toml failed"
+;endif
+
+;Message "-- ReadTOMLFile empty file : TOMLempty.toml "
+;Set $TOMLString$ = ReadTOMLFile($newTOMLFile$)
+;;Set $TestString$ = strLoadTextFile($newTOMLFile$)
+;if $TOMLString$ = $TestString$
+;		comment "Testing ReadTOMLFile TOMLexample.toml succeeded"
+;else
+;		set $TestResult$ = "not o.k."
+;		LogWarning "Testing ReadTOMLFile TOMLexample.toml failed"
+;endif
+
+comment "-----  Testing GetTOMLAsStringList :"
+Message "-- GetTOMLAsStringList TOMLfile.toml "
+Set $TOMLString$ = ReadTOMLFile($TOMLFile$)
+Set $TOMLlist$ = GetTOMLAsStringList($TOMLString$)
+Set $TestList$ = loadTextFile($TOMLFileList$)
+set $CompValue$ = booltostring(areListsEqual($TOMLlist$, $TestList$,"FLAG_AUTO_CS"))
+if $CompValue$ = "true"
+		comment "Testing GetTOMLAsStringList TOMLfile.toml succeeded"
+else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing GetTOMLAsStringList TOMLfile.toml failed"
+endif
+
+;comment "-----  Testing GetTOMLAsString :"
+;Message "-- GetTOMLAsString TOMLfile.toml "
+;Set $TOMLString$ = ReadTOMLFile($TOMLFile$)
+;Set $TOMLString$ = GetTOMLAsString($TOMLString$)
+;;Set $TestString$ = strLoadTextFile($TOMLFile$)
+;if $TOMLString$ = $TestString$
+;		comment "Testing GetTOMLAsString TOMLfile.toml succeeded"
+;else
+;		set $TestResult$ = "not o.k."
+;		LogWarning "Testing GetTOMLAsString TOMLfile.toml failed"
+;endif
+
+comment "-----  Testing GetTOMLKeys :"
+Message "-- GetTOMLKeys TOMLfile.toml "
+Set $TOMLlist$ = GetTOMLKeys($TOMLString$)
+;Set $TestList$ = getKeyList($TOMLlist$)
+Set $TestList$ = CreateStringList("title", "owner", "database", "servers", "clients")
+set $CompValue$ = booltostring(areListsEqual($TOMLlist$, $TestList$,"FLAG_AUTO_CS"))
+if $CompValue$ = "true"
+		comment "Testing GetTOMLKeys TOMLfile.toml succeeded"
+else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing GetTOMLKeys TOMLfile.toml failed"
+endif
+
+comment "-----  Testing GetTOMLTableNames :"
+Message "-- GetTOMLTableNames TOMLfile.toml "
+Set $TOMLlist$ = GetTOMLTableNames($TOMLString$)
+Set $TestList$ = CreateStringList("owner", "database", "servers", "clients")
+set $CompValue$ = booltostring(areListsEqual($TOMLlist$, $TestList$,"FLAG_AUTO_CS"))
+if $CompValue$ = "true"
+		comment "Testing GetTOMLTableNames TOMLfile.toml succeeded"
+else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing GetTOMLTableNames TOMLfile.toml failed"
+endif
+
+comment "-----  Testing GetTOMLTable :"
+Message "-- GetTOMLTable TOMLfile.toml "
+Set $TOMLlist$ = GetTOMLTable($TOMLString$, "owner")
+Set $TestList$ = CreateStringList('name = "Tom Preston-Werner"', 'dob = 1979-05-27T07:32:00Z-07:32')
+set $CompValue$ = booltostring(areListsEqual($TOMLlist$, $TestList$,"FLAG_AUTO_CS"))
+if $CompValue$ = "true"
+		comment "Testing GetTOMLTable TOMLfile.toml succeeded"
+else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing GetTOMLTable TOMLfile.toml failed"
+endif
+
+comment "-----  Testing GetTOMLTableAsString :"
+Message "-- GetTOMLTableAsString TOMLfile.toml "
+Set $TOMLdata$ = GetTOMLTableAsString($TOMLString$, "owner")
+Set $TestString$ = 'name = "Tom Preston-Werner"\ndob = 1979-05-27T07:32:00Z-07:32\n'
+if $TOMLdata$ = $TestString$
+		comment "Testing GetTOMLTableAsString succeeded"
+else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing GetTOMLTableAsString failed"
+endif
+
+comment "-----  Testing GetValueFromTOML :"
+Message "-- GetValueFromTOML TOMLfile.toml "
+DefFunc myGetValueFromTOMLTester( $keyPath$ : string, $expected$ : string) : void
+	Set $TOMLString$ = ReadTOMLFile($TOMLFile$)
+    Set $TOMLdata$ = GetValueFromTOML($TOMLString$,$keyPath$,"defaultValue")
+    if $TOMLdata$ = $expected$
+		comment "Testing GetValueFromTOML TOMLfile.toml succeeded"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing GetValueFromTOML TOMLfile.toml failed"
+	endif
+endfunc
+
+myGetValueFromTOMLTester("","defaultValue")
+myGetValueFromTOMLTester("   ","defaultValue")
+myGetValueFromTOMLTester("key","defaultValue")
+myGetValueFromTOMLTester("title",'"TOML Example"')
+myGetValueFromTOMLTester("owner.name",'"Tom Preston-Werner"')
+myGetValueFromTOMLTester("servers.alpha.ip",'"10.0.0.1"')
+myGetValueFromTOMLTester("servers.beta.key","defaultValue")
+myGetValueFromTOMLTester("clients.data",'[ [ "gamma", "delta" ], [ 1, 2 ] ]')
+myGetValueFromTOMLTester("database.ports","[ 8001, 8001, 8002 ]")
+myGetValueFromTOMLTester("database.connection_max","5000")
+myGetValueFromTOMLTester("database.enabled","True")
+
+
+comment "-----  Testing ModifyTOML :"
+Message "-- ModifyTOML TOMLfile.toml :"
+Set $TOMLString$ = ReadTOMLFile($TOMLFile$)
+DefFunc myModifyTOMLTester( $command$ : string, $keyPath$ : string, $value$ : string) : void
+    DefVar $CompValue$
+    Set $TOMLString$ = ModifyTOML($TOMLString$,$command$,$keyPath$,$value$)
+    Set $TestString$ = GetValueFromTOML($TOMLString$,$keyPath$,"defaultValue")
+    if $command$ = 'DEL' 
+    	set $CompValue$ = booltostring($TestString$ = "defaultValue")
+    else
+    	set $CompValue$ = booltostring($TestString$ = $value$)
+    endif
+	if $CompValue$ = 'true'
+		comment "Testing ModifyTOML TOMLfile.toml succeeded"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing ModifyTOML TOMLfile.toml failed"
+	endif
+endfunc
+
+message '- Testing ModifyTOML with "ADD" empty key in root Table :'
+myModifyTOMLTester('ADD','   ', 'defaultValue')
+
+message '- Testing ModifyTOML with "ADD" existing key in root Table :'
+Set $TOMLString$ = ModifyTOML($TOMLString$,'ADD','title', '"newADDvalueInRootTable"')
+Set $TestString$ = GetValueFromTOML($TOMLString$,'title',"defaultValue")
+if $TestString$ = '"TOML Example"'
+	comment "Testing ModifyTOML TOMLfile.toml succeeded"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "Testing ModifyTOML TOMLfile.toml failed"
+endif
+
+message '- Testing ModifyTOML with "ADD" new key in root Table :'
+myModifyTOMLTester('ADD','newADDkeyInRootTable', '"newADDvalueInRootTable"')
+message '- Testing ModifyTOML with "ADD" new key in sub-Table :'
+myModifyTOMLTester('ADD','servers.newADDkeyInServers', '"newADDvalueInServers"')
+message '- Testing ModifyTOML with "ADD" new key in new sub-Table :'
+myModifyTOMLTester('ADD','servers.alpha.a.newADDkeyInAlphaA', '"newADDvalueInAlphaA"')
+message '- Testing ModifyTOML with "ADD" new key in new Table :'
+myModifyTOMLTester('ADD','newTable.newADDtableKey', '"newADDtableValue"')
+message 'Testing ModifyTOML with "ADD" a String Value :'
+myModifyTOMLTester('ADD','newTable.newStringKey', '"newStringValue"')
+message 'Testing ModifyTOML with "ADD" an Integer Value :'
+myModifyTOMLTester('ADD','newTable.newIntegerKey', '1')
+message 'Testing ModifyTOML with "ADD" a Float Value :'
+myModifyTOMLTester('ADD','newTable.newFloatKey', '10.1')
+message 'Testing ModifyTOML with "ADD" a Date Value :'
+myModifyTOMLTester('ADD','newTable.newDateKey', '2022-02-02T16:16:00Z-16:16')
+message 'Testing ModifyTOML with "ADD" an Array Value :'
+myModifyTOMLTester('ADD','newTable.newArray', '[ "a", "b", "c" ]')
+
+message '- Testing ModifyTOML with "SET" empty key in root Table :'
+myModifyTOMLTester('SET','   ', 'defaultValue')
+message '- Testing ModifyTOML with "SET" existing key in root Table :'
+myModifyTOMLTester('SET','newADDkeyInRootTable', '"newSETafterADDvalueInRootTable"')
+message '- Testing ModifyTOML with "SET" new key in root Table :'
+myModifyTOMLTester('SET','newSETkeyInRootTable', '"newSETvalueInRootTable"')
+message '- Testing ModifyTOML with "SET" existing key in sub-Table :'
+myModifyTOMLTester('SET','servers.newADDkeyInServers', '"newSETafterADDvalueInServers"')
+message '- Testing ModifyTOML with "SET" new key in sub-Table :'
+myModifyTOMLTester('SET','servers.newSETkeyInServers', '"newSETvalueInServers"')
+message '- Testing ModifyTOML with "SET" existing key in sub-sub-Table :'
+myModifyTOMLTester('SET','servers.alpha.a.newADDkeyInAlphaA', '"newSETafterADDvalueInAlphaA"')
+message '- Testing ModifyTOML with "SET" new key in sub-sub-Table :'
+myModifyTOMLTester('SET','servers.alpha.a.newSETkeyInAlphaA', '"newSETvalueInAlphaA"')
+message '- Testing ModifyTOML with "SET" existing key in new Table :'
+myModifyTOMLTester('SET','newTable.newADDtableKey', '"newSETafterADDtableValue"')
+message '- Testing ModifyTOML with "SET" new key in new Table :'
+myModifyTOMLTester('SET','newTable.newSETtableKey', '"newSETtableValue"')
+
+message '- Testing ModifyTOML with "CHANGE" empty key in root Table :'
+myModifyTOMLTester('CHANGE','   ', 'defaultValue')
+message '- Testing ModifyTOML with "CHANGE" unexisting key in root Table :'
+Set $TOMLString$ = ModifyTOML($TOMLString$,'CHANGE','newCHANGEkeyInRootTable', ' "newCHANGEValueInRootTable" ')
+Set $TestString$ = GetValueFromTOML($TOMLString$,'newCHANGEkeyInRootTable',"defaultValue")
+if $TestString$ = "defaultValue"
+	comment "Testing ModifyTOML TOMLfile.toml succeeded"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "Testing ModifyTOML TOMLfile.toml failed"
+endif
+message '- Testing ModifyTOML with "CHANGE" existing key in root Table :'
+myModifyTOMLTester('CHANGE','newSETkeyInRootTable', '"newCHANGEvalueInRootTable"')
+message '- Testing ModifyTOML with "CHANGE" in sub-Table :'
+myModifyTOMLTester('CHANGE','servers.newADDkeyInServers', '"newCHANGEvalueInServers"')
+message '- Testing ModifyTOML with "CHANGE" in sub-sub-Table :'
+myModifyTOMLTester('CHANGE','servers.alpha.a.newADDkeyInAlphaA', '"newCHANGEvalueInAlphaA"')
+message '- Testing ModifyTOML with "CHANGE" in unexisting Table :'
+Set $TOMLString$ = ModifyTOML($TOMLString$,'CHANGE','newCHANGETable.newCHANGEtableKey', ' "newCHANGEtableValue" ')
+Set $TestString$ = GetValueFromTOML($TOMLString$,'newCHANGEkeyInRootTable',"defaultValue")
+if $TestString$ = "defaultValue"
+	comment "Testing ModifyTOML TOMLfile.toml succeeded"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "Testing ModifyTOML TOMLfile.toml failed"
+endif
+
+message '- Testing ModifyTOML with "DEL" existing key in root Table :'
+myModifyTOMLTester('DEL','newSETkeyInRootTable', '')
+message '- Testing ModifyTOML with "DEL" unexisting key in root Table :'
+myModifyTOMLTester('DEL','DELkeyInRootTable', '')
+message '- Testing ModifyTOML with "DEL" in sub-Table :'
+myModifyTOMLTester('DEL','servers.alpha.a.newADDkeyInAlphaA', '')
+message '- Testing ModifyTOML with "DEL" in unexisting Table :'
+myModifyTOMLTester('DEL','DELTable.DELtableKey', '')
+
+comment "-----  Testing DeleteTableFromTOML "
+Message "-- DeleteTableFromTOML TOMLfile.toml "
+Set $TOMLString$ = DeleteTableFromTOML($TOMLString$, "newTable")
+Set $TestString$ = GetValueFromTOML($TOMLString$,'newADDtableKey',"defaultValue")
+if $TestString$ = "defaultValue"
+		comment "Testing DeleteTableFromTOML succeeded"
+else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing DeleteTableFromTOML failed"
+endif
+
+Message "-----  Testing SaveToTOMLFile "
+comment "-- SaveToTOMLFile TOMLempty.toml "
+set $TestString$ = booltostring(SaveToTOMLFile($TOMLString$,$newTOMLFile$))
+if $TestString$ = "true"
+		comment "Testing SaveToTOMLFile succeeded"
+else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing SaveToTOMLFile failed"
+endif
+
+Message "-----  Testing ConvertTOMLfileToJSONfile "
+comment "-- ConvertTOMLfileToJSONfile myJSONfromTOMLdata.json "
+set $TestString$ = booltostring(ConvertTOMLfileToJSONfile($newTOMLFile$,$newJSONFile$))
+if $TestString$ = "true"
+		comment "Testing ConvertTOMLfileToJSONfile succeeded"
+else
+		set $TestResult$ = "not o.k."
+		LogWarning "Testing ConvertTOMLfileToJSONfile failed"
+endif

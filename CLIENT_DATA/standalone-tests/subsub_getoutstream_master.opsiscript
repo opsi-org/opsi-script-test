@@ -1,0 +1,9 @@
+[actions]
+DefVar $ProductId$
+DefVar $OS$
+
+
+
+set $OS$ = GetOS
+
+sub "%ScriptPath%/../sub-scripts/subsub_getoutstream_test2.opsiscript"

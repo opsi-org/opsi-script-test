@@ -17,7 +17,7 @@ if ($Flag_winst_macos$ = "on") or ($MasterFlag$ = "on")
 	
 		; start testing
 		set $TestResult$ = "o.k."
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
 			
 			Files_copy_macos
 			

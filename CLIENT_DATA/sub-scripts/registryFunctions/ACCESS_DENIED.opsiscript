@@ -1,0 +1,94 @@
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "ACCESS DENIED"
+
+		; no empty str because ACCESS DENIED:
+		Set $tmp$    = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"
+		set $ConstTest$ = ""
+		set $CompValue$ = getRegistryValue($tmp$, "Version" ,"64bit") 
+		if not($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $CompValue$ = getRegistryValue($tmp$, "Version" ,"32bit")
+		if not($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $CompValue$ = getRegistryValue($tmp$, "Version" ,"sysnative")
+		if not($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.14")
+			; test fix to  #4625
+			; empty list because ACCESS DENIED:
+			Set $tmp$    = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"
+			
+			if RegVarExists($tmp$,"Version","64bit")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if RegVarExists($tmp$,"Version","32bit")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if RegVarExists($tmp$,"Version","sysnative")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+			if RegKeyExists($tmp$,"64bit")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if RegKeyExists($tmp$,"32bit")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			if RegKeyExists($tmp$,"sysnative")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+			Set $list$ = getRegistryVarMapSysnative($tmp$)
+			if not(count($list$) = "0")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Set $list$ = GetRegistryKeyListSysnative($tmp$)
+			if not(count($list$) = "0")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Set $list$ = GetRegistryVarListSysnative($tmp$)
+			if not(count($list$) = "0")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; 4.12.4.14

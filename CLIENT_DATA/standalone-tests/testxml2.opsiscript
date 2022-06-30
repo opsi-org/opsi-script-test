@@ -36,14 +36,14 @@ DefVar $MsVersion$
 DefVar $string1$
 DefVar $string2$
 DefVar $string3$
-DefVar $xml2nodepath$
-DefVar $xml2nodetext$
-DefVar $xml2changeValue$
-DefVar $xml2cmdLine1$
-DefVar $xml2cmdLine2$
-DefVar $xml2cmdLine3$
-DefVar $xml2cmdLine4$
-DefVar $xml2cmdLine5$
+;DefVar $xml2nodepath$
+;DefVar $xml2nodetext$
+;DefVar $xml2changeValue$
+;DefVar $xml2cmdLine1$
+;DefVar $xml2cmdLine2$
+;DefVar $xml2cmdLine3$
+;DefVar $xml2cmdLine4$
+;DefVar $xml2cmdLine5$
 DefVar $ScriptLoglevel$
 
 DefVar $winst_constants$
@@ -167,7 +167,7 @@ DefVar $LicensePool$
 DefVar $licensekey$
 
 
-set $ScriptLoglevel$ = GetProductProperty ("loglevel", "9")
+set $ScriptLoglevel$ = GetProductProperty ("loglevel", "7")
 setLoglevel=$ScriptLoglevel$
 
 ; retrieve OS and NT Version
@@ -213,7 +213,7 @@ ShowBitmap "%scriptpath%\opsi.png" $ProductId$
 
 if "True" = GetProductProperty ("setfailed","False")
 	LogError "set to fatal by property"
-;isFatalError
+	;isFatalError
 endif
 
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
@@ -222,7 +222,7 @@ set $Flag_winst_xml2$               = GetProductProperty ("XML2", "on")
 
 
 
-if CompareDotSeparatedNumbers("%WinstVersion%","4.11.4.7") >= "0"
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.7") >= "0"
 	AutoActivityDisplay = true
 endif
 

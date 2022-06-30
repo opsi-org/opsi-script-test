@@ -1,0 +1,46 @@
+encoding=utf8
+
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.5.0")
+
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "Umlauts in key"
+	
+	DefVar $UmlautKeyName$ = "ÄÖÜäöüß"	
+
+	deffunc TestUmlautKey(): void
+		DefStringList $KeyList$
+		
+		Registry_CreateUmlautKey		
+		set $KeyList$ = getRegistryKeyList32("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org")
+		set $KeyList$ = reencodestrlist($KeyList$,'UTF-8','CP1252')
+		set $CompValue$ = getIndexFromListByContaining($KeyList$,$UmlautKeyName$)
+		if not ($CompValue$ = "")
+			comment "creating key with umlauts succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "creating key with umlauts failed"
+		endif
+		
+		Registry_DeleteUmlautKey	
+		set $KeyList$ = getRegistryKeyList32("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org")
+		set $KeyList$ = reencodestrlist($KeyList$,'UTF-8','CP1252')
+		set $CompValue$ = getIndexFromListByContaining($KeyList$,$UmlautKeyName$)		
+		if ($CompValue$ = "")
+			comment "deleting key with umlauts succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "deleting key with umlauts failed"
+		endif	
+		
+		[Registry_CreateUmlautKey]
+		openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\$UmlautKeyName$]		
+		
+		[Registry_DeleteUmlautKey]
+		deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\$UmlautKeyName$]
+	endfunc
+	
+	TestUmlautKey()
+
+endif

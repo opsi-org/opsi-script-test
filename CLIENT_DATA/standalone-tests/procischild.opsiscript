@@ -1,0 +1,44 @@
+[actions]
+
+defVar $pingcommand$
+defVar $ping5command$
+defVar $OS$
+set $OS$ = GetOS
+
+setloglevel = 8
+
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		; for ping parameters and errorcode see:
+		; https://superuser.com/questions/403905/ping-from-windows-7-get-no-reply-but-sets-errorlevel-to-0
+		set $pingcommand$ = "ping.exe"
+		set $ping5command$ = $pingcommand$ +" -w 2999 -n 5 127.0.0.1"
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		set $pingcommand$ = "ping"
+		set $ping5command$ = $pingcommand$ +" -c 5 127.0.0.1"
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		set $pingcommand$ = "ping"
+		set $ping5command$ = $pingcommand$ +" -c 5 127.0.0.1"
+	endcase
+endswitch
+
+
+Winbatch_testing /LetThemGo
+sleepSeconds 1
+
+
+if isProcessChildOf($pingcommand$,'%opsiscriptprocname%')
+	comment "true"
+else
+	comment "false"
+endif
+
+[WinBatch_testing]
+$ping5command$
+
+[stop]

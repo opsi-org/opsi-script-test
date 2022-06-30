@@ -1,8 +1,175 @@
-[Changelog]
+[Changelog] 
+
+opsi-script-test (4.12.5.1-1) stable; urgency=low
+  
+  * fixed some syntax errors in comments
+  * ExecwithPython: check for python / python3 (d.oertel 24.6.2022)
+
+-- j.werner <j.werner@uib.de> Tue, 31 May 2022
+
+opsi-script-test (4.12.5.0-1) stable; urgency=low
+
+  * standalone-tests/error_markerror_0: new tests for parsing errorsOccurredSinceMark added (a.schmitz)
+  * testing %userprofiledir% inside of patches section (d.ooertel)
+  * new powershellCall test. Testing powershellcall with piped command e.g. powershellcall('Get-Process | Select ProcessName'). (j.werner)
+  * TOML tests (j.laajili)  
+
+-- a.schmitz <a.schmitz@uib.de> Mon, 21 Mar 2022 16:40
+
+
+opsi-script-test (4.12.4.37-1) stable; urgency=low
+
+  * new property certificate_test
+  * new if elseif test at Flag_winst_controls
+  * networkcalc tests: test for netmaskToCidr / cidrToNetmask
+  * opsiservicecall tests outsourced in subscript "opsiServiceCalls"
+  * new subscript "opsiServiceCall_jsonSyntaxParams" added for json syntax in params of opsiservicecall
+  * new standalone test "zip_unzip_file" for showing a progressbar while zipping/unzipping
+  
+-- detlef oertel <d.oertel@uib.de>  Mon,  07 Feb 2022 15:00:00 +0200
+
+opsi-script-test (4.12.4.36-1) stable; urgency=low
+
+  * getProductpropertylist(<propertyname>,<json type stringlist literal>)
+  * GetProductProperty / list - with properties.conf
+  * new test for runningOnUefi in Linux
+  
+-- detlef oertel <d.oertel@uib.de>  Mon,  24 Jan 2022 15:00:00 +0200
+
+opsi-script-test (4.12.4.35-1) stable; urgency=low
+
+  * powershell: AllSigned Hack in PowershellCall / execwith with loops
+  * opsiservicecall test timeout command: give a message
+  * new property processinfo
+    tests for getprocesslist and processIsRunning moved from stringlist to here
+  * test isProcessChildOf in processinfo
+  * test getMSVersionName in stringtest
+  * varasparam: fixes for waitforprocessending at macos
+  
+-- detlef oertel <d.oertel@uib.de>  Tue,  04 Jan 2022 15:00:00 +0200
+
+opsi-script-test (4.12.4.34-1) stable; urgency=low
+
+  * powershell: AllSigned Hack in PowershellCall / execwith
+  * varasparam: AllSigned Hack in PowershellCall / execwith
+  * subsub getoutstreamfromsection
+  * opsiservicecall test timeout command
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  22 Dec 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.32-1) stable; urgency=low
+
+  * files unzip to profiles
+  * todo 
+  * DefVar / DefStringlist with initialization
+  * set <stringlist> = <json type stringlist literal>
+  * files section: unzip create target dir
+    * new void function ImportCertToSystem(<cert file name>)
+    * Linux: waitforpackagelock
+    * standalone test for: GetProductProperty: 
+      if no service context, tries to find property in %scriptpah%/properties.conf
+  
+-- detlef oertel <d.oertel@uib.de>  Fri,  19 Nov 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.31-1) stable; urgency=low
+
+  * files speed test (Files_bigdir)
+  * files: movedir
+  
+-- detlef oertel <d.oertel@uib.de>  Tue,  16 Nov 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.29-1) stable; urgency=low
+
+  * ldapsearch for 4.12.4.29 now (again) part of standard test
+    uses Properies for accessing ldap server
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  20 Oct 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.28-1) stable; urgency=low
+
+  * xml2: setNodePair
+  * execWith: powershell exitcode
+  * execWith: powershell hookscript
+  * CompareDotSeparatedNumbers 
+         4.2.00079 < 4.2.2
+         0.9.8e < 0.9.8h
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  22 Sep 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.27-1) stable; urgency=low
+
+  * replace all calls of Winst32.exe with opsi-script-exe
+  * replace all calls of %WinstDir% with %OpsiscriptDir%
+  * replace all calls of %WinstVersion% with %OpsiscriptVersion%
+  
+-- detlef oertel <d.oertel@uib.de>  Fri,  13 Aug 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.24-1) stable; urgency=low
+
+  * xml2 encoding tests and /AllNTUserprofiles test
+  * do not test adminuser at bonifax any more
+  
+-- detlef oertel <d.oertel@uib.de>  Thu,  1 Jul 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.21-2) stable; urgency=low
+
+  * fixes asConfidential with stringlist working since 4.12.4.16
+  
+-- detlef oertel <d.oertel@uib.de>  Fri,  25 June 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.21-1) stable; urgency=low
+
+  * Testing resolveSymlink
+  * Testing forcePathDelims(<path string>) 
+  * Testing isSymLink(const filepath : string) : boolean
+  * fix test FileOrFolderExists and FileExists tests for linux
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  19 Mai 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.19-1) stable; urgency=low
+
+  * Testing FileOrFolderExists with quoted filenames
+  * Testing FileExists with quoted filenames
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  5 Mai 2021 15:00:00 +0200
+
+
+opsi-script-test (4.12.4.18-1) stable; urgency=low
+
+  * find sub section test
+  * /AllNTUserProfiles also for macos
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  14 Apr 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.17-1) stable; urgency=low
+
+  * encoding tests filehasbom
+  
+-- detlef oertel <d.oertel@uib.de>  Wed,  30 Mar 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.16-1) stable; urgency=low
+
+  * files test: fix killtask helperchild
+  * encoding tests hasbom
+  * encoding tests opsiscript sub files with bom
+  * getOSArchitecture
+  * runningInWANMode
+  
+-- detlef oertel <d.oertel@uib.de>  Tue,  23 Mar 2021 15:00:00 +0200
+
+opsi-script-test (4.12.4.15-1) stable; urgency=low
+
+  * encodingtest: cleanup
+  * asConfidential: include test for asConfidential with stringlist (Jan Werner, provided by Terry Strooband)
+  * var_as_Param: executesection: ShellInAnIcon /showoutput test (fix loglevel offset bug)
+  
+-- detlef oertel <d.oertel@uib.de>  Tue,  16 Feb 2021 15:00:00 +0200
+
 opsi-script-test (4.12.4.14-1) stable; urgency=low
 
   * patche /encoding
   * patchTextFile /encoding
+  * registry: test for fix  #4625 Wrong access rights for registry read only functions 
   
 -- detlef oertel <d.oertel@uib.de>  Tue,  29 Jan 2021 15:00:00 +0200
 
@@ -11,6 +178,7 @@ opsi-script-test (4.12.4.13-1) stable; urgency=low
   * getsectionfrominifile
   * patches (inifile) tests now in sub script patchesini.opsiscript
   * switch loglevel to 5 on alltests=on
+  * new xml2 test delnodestrict
   
 -- detlef oertel <d.oertel@uib.de>  Tue,  29 Dec 2020 15:00:00 +0200
 

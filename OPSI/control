@@ -5,10 +5,10 @@ depends:
 [Product]
 type: localboot
 id: opsi-script-test
-name: opsi-script test
-description: Test and example script for opsi-script
+name: opsi-script-test
+description: tests for opsi-script
 advice: 
-version: 4.12.4.14
+version: 4.12.5.1
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -226,6 +226,42 @@ editable: False
 description: LdapSearch
 values: ["off", "on"]
 default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: ldapserver
+multivalue: False
+editable: True
+description: LdapSearch Server
+values: ["ad.opsi.local"]
+default: ["ad.opsi.local"]
+
+[ProductProperty]
+type: unicode
+name: ldapuser
+multivalue: False
+editable: True
+description: LdapSearch User  name
+values: ["Administrator"]
+default: ["Administrator"]
+
+[ProductProperty]
+type: unicode
+name: ldappassword
+multivalue: False
+editable: True
+description: LdapSearch User Password
+values: ["secret"]
+default: ["secret"]
+
+[ProductProperty]
+type: unicode
+name: ldapport
+multivalue: False
+editable: True
+description: LdapSearch Server Port; Default 389; on 636 we use ssl
+values: ["389", "636"]
+default: ["389"]
 
 [ProductProperty]
 type: unicode
@@ -448,4 +484,31 @@ type: bool
 name: test_speed
 description: Test also run performance
 default: False
+
+[ProductProperty]
+type: unicode
+name: processinfo
+multivalue: False
+editable: False
+description: process functions
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: certificate_test
+multivalue: False
+editable: False
+description: handle CA certificates
+values: ["off", "on"]
+default: ["off"]
+
+[ProductProperty]
+type: unicode
+name: toml
+multivalue: False
+editable: False
+description: Tests for TOML files
+values: ["off", "on"]
+default: ["off"]
 

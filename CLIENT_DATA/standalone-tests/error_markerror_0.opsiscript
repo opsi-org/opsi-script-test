@@ -1,8 +1,7 @@
-
-
 [actions]
 setloglevel=7
 ScriptErrorMessages = false
+FatalOnSyntaxError=false
 
 markErrorNumber
 logError "test error"
@@ -11,3 +10,68 @@ if errorsOccurredSinceMark > 0
 else
     comment "no error occured"
 endif
+
+
+; Combine errorsOccurredSinceMark with other conditions:
+DefVar $a$ = "1"
+
+markErrorNumber
+comment "Test"
+if not ((errorsOccurredSinceMark > 0) and ($a$="1"))
+  comment "no syntax error in Test with all brackets"
+endif
+markErrorNumber
+comment "Test"
+if (errorsOccurredSinceMark = 0 and $a$="1")
+  comment "no syntax error in Test with only outer brackets"
+endif
+
+
+markErrorNumber
+comment "Test"
+if (errorsOccurredSinceMark >= 0) and ($a$="1")
+  comment "no syntax error in Test with one bracket each"
+endif
+markErrorNumber
+comment "Test"
+if ($a$="1") and (errorsOccurredSinceMark >= 0)
+  comment "no syntax error in Test with one bracket each (reversed order)"
+endif
+
+
+markErrorNumber
+comment "Test"
+if errorsOccurredSinceMark = 0 and $a$="1"
+  comment "no syntax error in Test with no brackets"
+endif
+markErrorNumber
+comment "Test"
+if $a$="1" and errorsOccurredSinceMark = 0
+  comment "no syntax error in Test with no brackets (reversed order)"
+endif
+
+
+markErrorNumber
+comment "Test"
+if errorsOccuredSinceMark <= 0 and ($a$="1")
+  comment "no syntax error in Test with brackets around only one condition"
+endif
+markErrorNumber
+comment "Test"
+if ($a$="1") and errorsOccuredSinceMark <= 0
+  comment "no syntax error in Test with brackets around only one condition (reversed order)"
+endif
+markErrorNumber
+comment "Test"
+if not (errorsOccuredSinceMark = 1) and errorsOccuredSinceMark < 1
+  comment "no syntax error in advanced Test with brackets around only one condition"
+endif
+markErrorNumber
+comment "Test"
+if errorsOccuredSinceMark < 1 and not (errorsOccuredSinceMark = 1)
+  comment "no syntax error in advanced Test with brackets around only one condition (reversed order)"
+endif
+
+Message "Errors to occur: 1"
+Message "No syntax error should have occurred!"
+

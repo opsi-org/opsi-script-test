@@ -1,0 +1,443 @@
+; Conditional Statements (if Statements)
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "if / else / endif"
+	if ("1" = "1")
+		comment "if passed"
+	endif
+	if ("1" = "2")
+		LogWarning "else failed"
+		set $TestResult$ = "not o.k."
+	else
+		comment "else passed"
+	endif	
+
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
+		message "if / else / elseif / endif"
+		
+		;-----------------------------
+		; Test 1
+		; (if / else / elseif / endif)
+		;-----------------------------
+		comment "Start Test 1"
+		if "true" = "true"
+			comment "then branch"
+			comment "Nesting Level 1"
+			comment "if passed (Test 1)"
+		elseif "true" = "true"
+			comment "elseif branch1"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 1)"
+			set $TestResult$ = "not o.k."
+		elseif "false" = "true"
+			comment "elseif branch2"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 1)"
+			set $TestResult$ = "not o.k."
+		else
+			comment "else branch"
+			comment "Nesting Level 1"
+			LogWarning "else failed (Test 1)"
+			set $TestResult$ = "not o.k."
+		endif
+		comment "End Test 1"
+		
+		;-----------------------------
+		; Test 2
+		; (if / else / elseif / endif)
+		;-----------------------------
+		comment "Start Test 2"
+		if "false" = "true"
+			comment "then branch"
+			comment "Nesting Level 1"
+			LogWarning "if failed (Test 2)"
+			set $TestResult$ = "not o.k."
+		elseif "true" = "true"
+			comment "elseif branch1"
+			comment "Nesting Level 1"
+			comment "elseif passed (Test 2)"
+		elseif "true" = "true"
+			comment "elseif branch2"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 2)"
+			set $TestResult$ = "not o.k."
+		else
+			comment "else branch"
+			comment "Nesting Level 1"
+			LogWarning "else failed (Test 2)"
+			set $TestResult$ = "not o.k."
+		endif
+		comment "End Test 2"
+		
+		;-----------------------------
+		; Test 3
+		; (if / else / elseif / endif)
+		;-----------------------------
+		comment "Start Test 3"
+		if "false" = "true"
+			comment "then branch"
+			comment "Nesting Level 1"
+			LogWarning "if failed (Test 3)"
+			set $TestResult$ = "not o.k."
+		elseif "false" = "true"
+			comment "elseif branch1"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 3)"
+			set $TestResult$ = "not o.k."
+		elseif "true" = "true"
+			comment "elseif branch2"
+			comment "Nesting Level 1"
+			comment "elseif passed (Test 3)"
+		else
+			comment "else branch"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 3)"
+			set $TestResult$ = "not o.k."
+		endif
+		comment "End Test 3"
+		
+		;-----------------------------
+		; Test 4
+		; (if / else / elseif / endif)
+		;-----------------------------
+		comment "Start Test 4"
+		if "false" = "true"
+			comment "then branch"
+			comment "Nesting Level 1"
+			LogWarning "if failed (Test 4)"
+			set $TestResult$ = "not o.k."
+		elseif "false" = "true"
+			comment "elseif branch1"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 4)"
+			set $TestResult$ = "not o.k."
+		elseif "false" = "true"
+			comment "elseif branch2"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 4)"
+			set $TestResult$ = "not o.k."
+		else
+			comment "else branch"
+			comment "Nesting Level 1"
+			comment "else passed (Test 4)"
+		endif
+		comment "End Test 4"
+		
+		;-----------------------------
+		; Test 5
+		; (if / else / elseif / endif)
+		;-----------------------------
+		comment "Start Test 5"
+		if "true" = "true"
+			comment "then branch"
+			comment "Nesting Level 1"
+			comment "if passed (Test 5)"
+			if "true" = "true"
+				comment "then branch"
+				comment "Nesting Level 2"
+				comment "if passed (Test 5)"
+				if "true" = "true"
+					comment "then branch"
+					comment "Nesting Level 3"
+					comment "if passed (Test 5)"
+				elseif "true" = "true"
+					comment "elseif branch1"
+					comment "Nesting Level 3"
+					LogWarning "elseif failed (Test 5)"
+					set $TestResult$ = "not o.k."
+				elseif "false" = "true"
+					comment "elseif branch2"
+					comment "Nesting Level 3"
+					LogWarning "elseif failed (Test 5)"
+					set $TestResult$ = "not o.k."
+				else
+					comment "else branch"
+					comment "Nesting Level 3"
+					LogWarning "else failed (Test 5)"
+					set $TestResult$ = "not o.k."
+				endif
+			elseif "true" = "true"
+				comment "elseif branch1"
+				comment "Nesting Level 2"
+				LogWarning "elseif failed (Test 5)"
+				set $TestResult$ = "not o.k."
+			elseif "false" = "true"
+				comment "elseif branch2"
+				comment "Nesting Level 2"
+				LogWarning "elseif failed (Test 5)"
+				set $TestResult$ = "not o.k."
+			else
+				comment "else branch"
+				comment "Nesting Level 2"
+				LogWarning "else failed (Test 5)"
+				set $TestResult$ = "not o.k."
+			endif
+		elseif "true" = "true"
+			comment "elseif branch1"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 5)"
+			set $TestResult$ = "not o.k."
+		elseif "false" = "true"
+			comment "elseif branch2"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 5)"
+			set $TestResult$ = "not o.k."
+		else
+			comment "else branch"
+			comment "Nesting Level 1"
+			LogWarning "else failed (Test 5)"
+			set $TestResult$ = "not o.k."
+		endif
+		comment "End Test 5"
+		
+		;-----------------------------
+		; Test 6
+		; (if / else / elseif / endif)
+		;-----------------------------
+		comment "Start Test 6"
+		if "false" = "true"
+			comment "then branch"
+			comment "Nesting Level 1"
+			LogWarning "if failed (Test 6)"
+			set $TestResult$ = "not o.k."
+		elseif "true" = "true"
+			comment "elseif branch1"
+			comment "Nesting Level 1"
+			comment "elseif passed (Test 6)"
+			if "false" = "true"
+				comment "then branch"
+				comment "Nesting Level 2"
+				LogWarning "if failed (Test 6)"
+				set $TestResult$ = "not o.k."
+			elseif "true" = "true"
+				comment "elseif branch1"
+				comment "Nesting Level 2"
+				comment "elseif passed (Test 6)"
+				if "false" = "true"
+					comment "then branch"
+					comment "Nesting Level 3"
+					LogWarning "if failed (Test 6)"
+					set $TestResult$ = "not o.k."
+				elseif "true" = "true"
+					comment "elseif branch1"
+					comment "Nesting Level 3"
+					comment "elseif passed (Test 6)"
+				elseif "true" = "true"
+					comment "elseif branch2"
+					comment "Nesting Level 3"
+					LogWarning "elseif failed (Test 6)"
+					set $TestResult$ = "not o.k."
+				else
+					comment "else branch"
+					comment "Nesting Level 3"
+					LogWarning "else failed (Test 6)"
+					set $TestResult$ = "not o.k."
+				endif
+			elseif "true" = "true"
+				comment "elseif branch2"
+				comment "Nesting Level 2"
+				LogWarning "elseif failed (Test 6)"
+				set $TestResult$ = "not o.k."
+			else
+				comment "else branch"
+				comment "Nesting Level 2"
+				LogWarning "else failed (Test 6)"
+				set $TestResult$ = "not o.k."
+			endif
+		elseif "true" = "true"
+			comment "elseif branch2"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 6)"
+			set $TestResult$ = "not o.k."
+		else
+			comment "else branch"
+			comment "Nesting Level 1"
+			LogWarning "else failed (Test 6)"
+			set $TestResult$ = "not o.k."
+		endif
+		
+		;-----------------------------
+		; Test 7
+		; (if / else / elseif / endif)
+		;-----------------------------
+		comment "Start Test 7"
+		if "false" = "true"
+			comment "then branch"
+			comment "Nesting Level 1"
+			LogWarning "if failed (Test 7)"
+			set $TestResult$ = "not o.k."
+		elseif "true" = "true"
+			comment "elseif branch1"
+			comment "Nesting Level 1"
+			comment "elseif passed (Test 7)"
+			if "false" = "true"
+				comment "then branch"
+				comment "Nesting Level 2"
+				LogWarning "if failed (Test 7)"
+				set $TestResult$ = "not o.k."
+			elseif "true" = "true"
+				comment "elseif branch1"
+				comment "Nesting Level 2"
+				comment "elseif passed (Test 7)"
+				Switch "2"
+					Case "1"
+						comment "Nesting Level 3 (2 for if conditions?)"
+						LogWarning "case failed (Test 7)"
+						set $TestResult$ = "not o.k."
+					EndCase
+					Case "2"
+						comment "Nesting Level 3 (or 3 for if conditions, 1 for case?)"
+						comment "case passed (Test 7)"
+						if "true" = "true"
+							comment "Nesting Level 4 (or 3 for if conditions, 1 for case?)"
+							comment "then branch"
+							comment "if passed (Test 7)"
+						elseif "true" = "true"
+							comment "elseif branch1"
+							comment "Nesting Level 4 (or 3 for if conditions, 1 for case?)"
+							LogWarning "elseif failed (Test 7)"
+							set $TestResult$ = "not o.k."
+						elseif "false" = "true"
+							comment "elseif branch2"
+							comment "Nesting Level 4 (or 3 for if conditions, 1 for case?)"
+							LogWarning "elseif failed (Test 7)"
+							set $TestResult$ = "not o.k."
+						else
+							comment "else branch"
+							comment "Nesting Level 4 (or 3 for if conditions, 1 for case?)"
+							LogWarning "else failed (Test 7)"
+							set $TestResult$ = "not o.k."
+						endif
+					EndCase
+					DefaultCase
+						comment "Nesting Level 3 (or 2 for if conditions, 1 for case?)"
+						LogWarning "case failed (Test 7)"
+						set $TestResult$ = "not o.k."
+					EndCase
+				EndSwitch
+				if "false" = "true"
+					comment "then branch"
+					comment "Nesting Level 3"
+					LogWarning "if failed (Test 7)"
+					set $TestResult$ = "not o.k."
+				elseif "true" = "true"
+					comment "elseif branch1"
+					comment "Nesting Level 3"
+					comment "elseif passed (Test 7)"
+					Switch "2"
+						Case "1"
+							comment "Nesting Level 4"
+							LogWarning "case failed (Test 7)"
+							set $TestResult$ = "not o.k."
+						EndCase
+						Case "2"
+							comment "Nesting Level 4"
+							comment "case passed (Test 7)"
+							if "true" = "true"
+								comment "then branch"
+								comment "Nesting Level 5"
+								comment "if passed (Test 7)"
+							elseif "true" = "true"
+								comment "elseif branch1"
+								comment "Nesting Level 5"
+								LogWarning "elseif failed (Test 7)"
+								set $TestResult$ = "not o.k."
+							elseif "false" = "true"
+								comment "elseif branch2"
+								comment "Nesting Level 5"
+								LogWarning "elseif failed (Test 7)"
+								set $TestResult$ = "not o.k."
+							else
+								comment "else branch"
+								comment "Nesting Level 5"
+								LogWarning "else failed (Test 7)"
+								set $TestResult$ = "not o.k."
+							endif
+						EndCase
+						DefaultCase
+							comment "Nesting Level 4"
+							LogWarning "case failed (Test 7)"
+							set $TestResult$ = "not o.k."
+						EndCase
+					EndSwitch
+				elseif "true" = "true"
+					comment "elseif branch2"
+					comment "Nesting Level 3"
+					LogWarning "elseif failed (Test 7)"
+					set $TestResult$ = "not o.k."
+				else
+					comment "else branch"
+					comment "Nesting Level 3"
+					LogWarning "else failed (Test 7)"
+					set $TestResult$ = "not o.k."
+				endif
+			elseif "true" = "true"
+				comment "elseif branch2"
+				comment "Nesting Level 2"
+				LogWarning "elseif failed (Test 7)"
+				set $TestResult$ = "not o.k."
+			else
+				comment "else branch"
+				comment "Nesting Level 2"
+				LogWarning "else failed (Test 7)"
+				set $TestResult$ = "not o.k."
+			endif
+		elseif "true" = "true"
+			comment "elseif branch2"
+			comment "Nesting Level 1"
+			LogWarning "elseif failed (Test 7)"
+			set $TestResult$ = "not o.k."
+		else
+			comment "else branch"
+			comment "Nesting Level 1"
+			LogWarning "else failed (Test 7)"
+			set $TestResult$ = "not o.k."
+		endif
+		comment "End Test 7"
+		
+		;-----------------------------
+		; Test 8
+		; (if / else / elseif / endif)
+		;-----------------------------
+		comment "Start Test 8"
+		Switch "2"
+			Case "1"
+				comment "Nesting Level 1"
+				LogWarning "case failed (Test 8)"
+				set $TestResult$ = "not o.k."
+			EndCase
+			Case "2"
+				comment "Nesting Level 1"
+				comment "case passed (Test 8)"
+				if "true" = "true"
+					comment "then branch"
+					comment "Nesting Level 2"
+					comment "if passed (Test 8)"
+				elseif "true" = "true"
+					comment "elseif branch1"
+					comment "Nesting Level 2"
+					LogWarning "elseif failed (Test 8)"
+					set $TestResult$ = "not o.k."
+				elseif "false" = "true"
+					comment "elseif branch2"
+					comment "Nesting Level 2"
+					LogWarning "elseif failed (Test 8)"
+					set $TestResult$ = "not o.k."
+				else
+					comment "else branch"
+					comment "Nesting Level 2"
+					LogWarning "else failed (Test 8)"
+					set $TestResult$ = "not o.k."
+				endif
+			EndCase
+			DefaultCase
+				comment "Nesting Level 1"
+				LogWarning "case failed (Test 8)"
+				set $TestResult$ = "not o.k."
+			EndCase
+		EndSwitch
+		comment "End Test 8"
+		
+		
+	endif ; 4.12.4.37

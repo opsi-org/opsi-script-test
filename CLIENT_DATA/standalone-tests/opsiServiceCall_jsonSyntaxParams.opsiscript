@@ -1,0 +1,27 @@
+[actions]
+
+;setDebug_prog=true
+;setloglevel=8
+FatalOnSyntaxError = false
+
+DefVar $service$ = "https://bonifax.uib.local:4447/rpc"
+;define before execution!
+DefVar $UserFQDN$
+DefVar $opsiHostKey$
+set $UserFQDN$ = ""
+set $opsiHostKey$ = ""
+
+opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+
+DefVar $TestResult$
+
+include_insert "%scriptpath%\..\sub-scripts\opsiServiceCall_jsonSyntaxParams.opsiscript"
+
+TestJsonSyntaxParams($UserFQDN$)
+
+[opsiservicecall_authenticated]
+"method": "authenticated"
+"params": [
+			]
+
+[stop]

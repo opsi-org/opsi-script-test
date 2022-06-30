@@ -12,7 +12,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	set $TestResult$ = "o.k."
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12")
 	
 		comment ""
 		comment "-------------------------------------"
@@ -194,7 +194,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			set $list1$ = myFunc8('echo %cd%')
 		endif
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.10")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.10")
 			comment " Testing repeated function call with local variables ..."
 			comment "should give no syntax error here"
 			if GetOS = 'Linux'
@@ -209,7 +209,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 				set $list1$ = myFunc8('echo %cd%')
 			endif
 			
-			comment " Testing fuction call while if ..."
+			comment " Testing function call while if ..."
 			
 			DefFunc function-test($VarSub1$ : string) : string
 				set $result$ = $VarSub1$
@@ -240,7 +240,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			endif
 		endif ;4.12.10
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.13")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.13")
 			importLib "%scriptpath%\standalone-tests\functionlib.opsiscript"
 			switch $OS$
 				case "Windows_nt"
@@ -276,15 +276,15 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not tested"
 	endif ; 4.12
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.16")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 	
-		comment " Testing fuction with no (void) result ..."
-		DefFunc myNoResultFunc(ref $str1$ : string) : void
+		comment " Testing function with no (void) result ..."
+		DefFunc myNoResultFuncOutsideOfLib(ref $str1$ : string) : void
 			set $str1$ = "huhu"
 		endfunc
 		set $CompValue$ = "haha"
 		set $ConstTest$ = "huhu"
-		myNoResultFunc($CompValue$)
+		myNoResultFuncOutsideOfLib($CompValue$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -292,7 +292,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		comment " Testing fuction with no parameters ..."
+		comment " Testing function with no parameters ..."
 		DefFunc myNoParamFunc() : string
 			set $result$ = "huhu"
 		endfunc
@@ -309,7 +309,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		set $TestResult$ = "not tested"
 	endif ; 4.16
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.17")
 		comment " Testing function in loop ..."
 	
 		deffunc copy_str_to_list($srv_str$ : string, val $full_srv_list$ : stringlist, ref $dep_srv_list$ : stringlist) : void
@@ -341,7 +341,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif ; 4.17
 
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.17")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.17")
 		comment " Testing function with stringtobool ..."
 	
 		DefFunc myboolstrFunc1($str1$ : string, ref $str2$ : string, $list$: stringlist) : string
@@ -477,7 +477,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 
 	endif ; 4.12.0.20
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.0.36")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.36")
 		
 		comment "Recursive calls ...."
 		
@@ -501,25 +501,6 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		DefFunc myFunc23($str1$ : string) : string
-		;defvar $mylocalvar$
-		
-			set $str1$ = $str1$+"a"
-			comment "run: "+$str1$
-			if strLength($str1$) int< "10"
-				set $str1$ = myFunc23($str1$)
-			endif
-			set $result$ = $str1$
-		endfunc
-		
-		set $ConstTest$ = "aaaaaaaaaa"
-		set $CompValue$ = myFunc23("")
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
 		
 		; recursive call with local void function
 
@@ -529,7 +510,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			defvar $mylocalvar$
 			
 				set $str1$ = $str1$+"a"
-				comment "run: "+$str1$+"  --> "+$mystr$
+				comment "run: "+$str1$
 				if strLength($str1$) int< "10"
 					innerFunc25($str1$)
 				endif
@@ -553,7 +534,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		
 	endif ; 4.12.0.36
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.0")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
 	
 		DefFunc fakultaet_str($zahlstr$ : string) : string
 			DefVar $zahl2str$
@@ -622,7 +603,8 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 
 	endif ; 4.12.1.0
 	
-	if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.12.1.5")
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.5")
+		comment "Testing loop through empty list (should give a warning):"
 		; This test should not give a syntax error
 		Deffunc emptyloop() : void
 			DefStringlist $list$
@@ -631,6 +613,23 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		emptyloop()
 		
 	endif ; 4.12.1.5
+	
+	DefFunc findsubsection() : string
+	
+		sub_find_section_test
+	
+		[sub_find_section_test]
+		set $result$ = "localfunctions_func_findsubsection"
+	endfunc
+	
+	set $CompValue$ = "localfunctions_func_findsubsection"
+	set $ConstTest$ = findsubsection()
+	if ($ConstTest$ = $CompValue$)
+		comment "passed: find_section_test"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed: find_section_test"
+	endif
 
 	sub_compareResult
 	set $winst_local_functions$ = $SubResult$

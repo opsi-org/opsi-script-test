@@ -1,0 +1,53 @@
+﻿comment "the given encoding string is correct (but without bom)"
+comment " We expect no warning here"
+encoding=utf8
+comment "testing encoding functions  üöäßáéúí"
+
+Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
+if (FileExists($HometestFiles$+"\dummy.ini"))
+	message "set"
+	set $ConstTest$ = "[secdüöä]"
+	set $ConstTest2$ = "dümmy7=üöäßÜÖÄ"
+	Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
+	Set $CompValue$ = Trim(takeFirstStringContaining($list1$, "secdüöä"))
+	Set $CompValue2$ = Trim(takeFirstStringContaining($list1$, "üöäßÜÖÄ"))
+	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+		comment "set passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "set failed"
+	endif
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "GetValueFromInifile"
+	;GetValueFromInifile
+	set $ConstTest$ = "üöäßÜÖÄ"
+	Set $CompValue$ = GetValueFromInifile($HometestFiles$+"\dummy.ini", "secdüöä", "dümmy7", "failed")
+	if ($ConstTest$ = $CompValue$)
+		comment "GetValueFromInifile passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "GetValueFromInifile failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	logError "Fatal: could not create .ini file"
+	isFatalError
+endif
+
+[Patches_dummy_ini]
+add [secdummy] dummy1=add1
+; will be overwritten by other functions
+add [secdummy] dummy2=add2
+add [secdummy] dummy3=add3
+add [secdummy] dummy4=add4
+add [secdummy] dummy5=add5
+add [secdummy] dummy6=add6
+add [secdüöä] dümmy7=üöäßÜÖÄ
+
+set [secdummy] dummy2=set1
+addnew [secdummy] dummy1=addnew1
+change [secdummy] dummy3=change1
+del [secdummy] dummy4
+Replace dummy6=add6 replace1=replace1

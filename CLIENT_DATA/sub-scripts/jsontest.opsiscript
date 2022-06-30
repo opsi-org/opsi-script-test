@@ -68,7 +68,7 @@ if ($Flag_jsonfunctions$ = "on") or ($MasterFlag$ = "on")
 	set $CompValue$ = Convert2JsonStr($tmp$)
 
 
-	if CompareDotSeparatedNumbers("%WinstVersion%","4.11.6.0") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.0") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -196,7 +196,7 @@ if ($Flag_jsonfunctions$ = "on") or ($MasterFlag$ = "on")
 		
 		for %obj% = "0" to calculate(count($list3$)+"-1") do sub_compare_obj
 		
-		if CompareDotSeparatedNumbers("%WinstVersion%",">=","4.11.6.4")
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.6.4")
 			set $ConstTest$ = jsonAsObjectCountElements($string1$)
 			set $string1$ = jsonAsArrayDeleteObjectByIndex($string1$,"1")
 			set $CompValue$ = jsonAsObjectCountElements($string1$)

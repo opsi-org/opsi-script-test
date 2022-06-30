@@ -1,0 +1,61 @@
+[Actions]
+comment "Testing: "
+message "FileOrFolderExists"
+
+;function FileOrFolderExists(<file path> [, <access str>]) : boolean;
+
+DefVar $OS$
+DefVar $TestResult$
+
+DefFunc myFileOrFolderExistsWithOneParam($filePath$ : string, $expected$ : string) : void
+    DefVar $CompValue$
+    set $CompValue$ = booltostring(FileOrFolderExists($filePath$))
+    if $CompValue$ = $expected$
+            comment "Testing FileOrFolderExists succeeded"
+    else
+            set $TestResult$ = "not o.k."
+            LogWarning "Testing FileOrFolderExists failed"
+    endif
+endfunc
+
+DefFunc myFileOrFolderExistsWithTwoParams($filePath$ : string, $accessStr$ : string, $expected$ : string) : void
+    DefVar $CompValue$
+    set $CompValue$ = booltostring(FileOrFolderExists($filePath$, $accessStr$))
+    if $CompValue$ = $expected$
+            comment "Testing FileOrFolderExists succeeded"
+    else
+            set $TestResult$ = "not o.k."
+            LogWarning "Testing FileOrFolderExists failed"
+    endif
+endfunc
+
+Set $OS$ = GetOS
+
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		myFileOrFolderExistsWithOneParam("","false")
+		myFileOrFolderExistsWithOneParam("C:\Windows\","true")
+        myFileOrFolderExistsWithOneParam("C:\Windows\uib.txt","false")
+
+        myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","32bit","true")
+        myFileOrFolderExistsWithTwoParams("C:\Windows\Cursors\aero_arrow_xl.cur","64bit","true")
+        myFileOrFolderExistsWithTwoParams("C:\Windows\","accessStr","false")
+        myFileOrFolderExistsWithTwoParams("C:\Windows\uib.txt","64bit","false")
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		myFileOrFolderExistsWithOneParam("","false")
+		myFileOrFolderExistsWithOneParam("/home/user/","true")
+        myFileOrFolderExistsWithOneParam("/home/user/uib.txt","false")
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		myFileOrFolderExistsWithOneParam("","false")
+		myFileOrFolderExistsWithOneParam("/Users/","true")
+        myFileOrFolderExistsWithOneParam("/Users/uib.txt","false")
+	endcase
+endswitch
+
+
+
