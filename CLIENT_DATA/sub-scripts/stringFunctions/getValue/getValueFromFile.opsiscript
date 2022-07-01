@@ -1,0 +1,159 @@
+
+comment ""
+comment "-------------------------------------"
+comment "Testing: "
+message "getValueFromFile"
+comment ""
+set $testfile$ = $HomeTestFiles$+"\dummy.txt"
+set $INST_Resultlist$ = createStringList("a=1","b=2","c=2")
+if saveTextFile($INST_Resultlist$, $testfile$)
+	set $ConstTest$ = "2"
+	set $CompValue$ = getValueFromFile("b", $testfile$)
+	comment "compare values"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+comment "white spaces around the separator are not part of key and value"
+comment "if the key does not exist we get NULL"
+set $INST_Resultlist$ = createStringList("a = 1","b = 2","c = 2")
+if saveTextFile($INST_Resultlist$, $testfile$)
+	set $ConstTest$ = "2"
+	set $CompValue$ = getValueFromFile("b", $testfile$)
+	comment "compare values"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	set $ConstTest$ = "2"
+	set $CompValue$ = getValueFromFile("b ", $testfile$)
+	comment "compare values"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
+		set $ConstTest$ = ""
+	else
+		comment "This is a bug in opsi-script < 4.11.6": should be empty string"
+		set $ConstTest$ = "NULL"
+	endif
+	set $CompValue$ = getValueFromFile("Not existing", $testfile$)
+	comment "compare values"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
+		set $ConstTest$ = ""
+	else
+		comment "This is a bug in opsi-script < 4.11.6": should be empty string"
+		set $ConstTest$ = "NULL"
+	endif
+	set $CompValue$ = getValueFromFile("Not existing", "Not existing")
+	comment "compare values"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+
+comment ""
+comment "-------------------------------------"
+comment "Testing: "
+message "getValueFromFileBySeparator"
+comment "getValueFromFileBySeparator winst function"
+set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+if saveTextFile($INST_Resultlist$, $testfile$)
+	set $ConstTest$ = "2"
+	set $CompValue$ = getValueFromFileBySeparator("b", ":", $testfile$)
+	comment "compare values"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+
+set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+if saveTextFile($INST_Resultlist$, $testfile$)
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
+		set $ConstTest$ = ""
+	else
+		comment "This is a bug in opsi-script < 4.11.6": should be empty string"
+		set $ConstTest$ = "NULL"
+	endif
+	set $CompValue$ = getValueFromFileBySeparator("b", "=", $testfile$)
+	comment "compare values"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+if saveTextFile($INST_Resultlist$, $testfile$)
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
+		set $ConstTest$ = ""
+	else
+		comment "This is a bug in opsi-script < 4.11.6": should be empty string"
+		set $ConstTest$ = "NULL"
+	endif
+	set $CompValue$ = getValueFromFileBySeparator("not existing", ":", $testfile$)
+	comment "compare values"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+
+set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+if saveTextFile($INST_Resultlist$, $testfile$)
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.6.1") >= "0"
+		set $ConstTest$ = ""
+	else
+		comment "This is a bug in opsi-script < 4.11.6": should be empty string"
+		set $ConstTest$ = "NULL"
+	endif
+	set $CompValue$ = getValueFromFileBySeparator("b", "=", "not existing")
+	comment "compare values"
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+		endif

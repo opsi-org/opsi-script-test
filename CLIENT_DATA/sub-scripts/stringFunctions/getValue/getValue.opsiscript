@@ -1,0 +1,74 @@
+
+comment ""
+comment "-------------------------------------"
+comment "Testing: "
+message "getValue"
+comment ""
+set $INST_Resultlist$ = createStringList("a=1","b=2","c=2")
+set $ConstTest$ = "2"
+set $CompValue$ = getValue("b", $INST_Resultlist$)
+comment "compare values"
+if ($ConstTest$ = $CompValue$)
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+comment "white spaces around the separator are not part of key and value"
+comment "if the key does not exist we get NULL"
+set $INST_Resultlist$ = createStringList("a = 1","b = 2","c = 2")
+set $ConstTest$ = "2"
+set $CompValue$ = getValue("b", $INST_Resultlist$)
+comment "compare values"
+if ($ConstTest$ = $CompValue$)
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+set $ConstTest$ = "2"
+set $CompValue$ = getValue("b ", $INST_Resultlist$)
+comment "compare values"
+if ($ConstTest$ = $CompValue$)
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+set $ConstTest$ = "NULL"
+set $CompValue$ = getValue("Not Existing", $INST_Resultlist$)
+comment "compare values"
+if ($ConstTest$ = $CompValue$)
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+
+
+comment ""
+comment "-------------------------------------"
+comment "Testing: "
+message "getValueBySeparator"
+comment "getValueBySeparator winst function"
+set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+set $ConstTest$ = "2"
+set $CompValue$ = getValueBySeparator("b", ":", $INST_Resultlist$)
+comment "compare values"
+if ($ConstTest$ = $CompValue$)
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+endif
+
+set $INST_Resultlist$ = createStringList("a:1","b:2","c:2")
+set $ConstTest$ = "NULL"
+set $CompValue$ = getValueBySeparator("b", "=", $INST_Resultlist$)
+comment "compare values"
+if ($ConstTest$ = $CompValue$)
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed"
+		endif
