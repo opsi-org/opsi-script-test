@@ -1,0 +1,46 @@
+
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "Generic definition of string lists"
+	
+	DefStringList $NormalList$
+	DefStringList $GenericList$
+	
+	set $NormalList$ = createstringlist('alpha','beta','gamma')
+	set $GenericList$ = "['alpha','beta','gamma']"
+	if areListsEqual($NormalList$,$GenericList$,'FLAG_AUTO_CS')
+		comment "Generic definition of string list passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Generic definition of string list failed"
+	endif
+	
+	set $NormalList$ = createstringlist()
+	set $GenericList$ = "[]"
+	if (count($NormalList$) = '0') and (count($NormalList$) = count($GenericList$))
+		comment "Generic definition of empty string list passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Generic definition of empty string list failed"
+	endif
+	
+	set $NormalList$ = removeFromListByContaining('try2',getKeyList(createstringlist('entry1=x','entry2=y','entry3=z')))
+	set $GenericList$ = removeFromListByContaining('try2',getKeyList("['entry1=x','entry2=y','entry3=z']"))	
+	if areListsEqual($NormalList$,$GenericList$,'FLAG_AUTO_CS')
+		comment "Generic definition of string list in functions passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Generic definition of string list in functions failed"
+	endif
+	
+	set $NormalList$ = removeFromListByContaining('try2',getKeyList(createstringlist()))
+	set $GenericList$ = removeFromListByContaining('try2',getKeyList("[]"))	
+	if (count($NormalList$) = '0') and (count($NormalList$) = count($GenericList$))
+		comment "Generic definition of empty string list in functions passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Generic definition of empty string list in functions failed"
+	endif
+endif 
