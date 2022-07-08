@@ -1,0 +1,31 @@
+encoding=utf8
+
+[Actions]
+
+DefVar $FilePath$
+DefVar $HashResult$
+DefVar $CompValue$
+
+; This online tool can be used to double check hash results : https://emn178.github.io/online-tools/
+
+Set $FilePath$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/dummy.txt"
+
+
+comment "Testing HashFromFile - MD5"
+if FileExists($FilePath$)
+    Set $HashResult$ = HashFromFile($FilePath$, "MD5")
+    Set $CompValue$ = md5sumFromFile($FilePath$)
+    if $HashResult$ = $CompValue$ 
+        comment "HashFromFile succeeded"
+    else
+        LogWarning "HashFromFile failed"
+    endif
+else
+	LogWarning "File not found"
+endif
+
+comment "Testing HashFromFile - SHA3_256"
+Set $HashResult$ = HashFromFile($FilePath$, "SHA3_256")
+
+comment "Testing HashFromFile - Blake2XS"
+Set $HashResult$ = HashFromFile($FilePath$, "Blake2XS")
