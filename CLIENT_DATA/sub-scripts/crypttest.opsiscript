@@ -161,6 +161,42 @@ if ($Flag_crypt$ = "on") or ($MasterFlag$ = "on")
 		endif
 
 	endif ; 4.11.6
+	
+    if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.6.0") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "HashFromFile "
+
+		set $ConstTest$ = HashFromFile("%ScriptPath%\test-files\crypt\dummy.msi", "MD5")
+		set $CompValue$ = md5sumFromFile("%ScriptPath%\test-files\crypt\dummy.msi")
+		if ($ConstTest$ = $CompValue$)
+			comment "Testing HashFromFile - MD5 passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing HashFromFile - MD5 failed"
+		endif
+		
+		set $ConstTest$ = HashFromFile("%ScriptPath%\test-files\crypt\dummy.msi", "SHA3_256")
+		set $CompValue$ = "11EEE302ECCD537AB36AB9A2D4672B8F651BC2FC5A485E68BCD3ACB8DB247357"
+		if ($ConstTest$ = $CompValue$)
+			comment "Testing HashFromFile - SHA3_256 passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing HashFromFile - SHA3_256 failed"
+		endif
+		
+		set $ConstTest$ = HashFromFile("%ScriptPath%\test-files\crypt\dummy.msi", "Blake2XS")
+		set $CompValue$ = "FAA8C735571EA08522CA64B1622B7598D8F153BB479243B76BAAAC69A152BCCF"
+		if ($ConstTest$ = $CompValue$)
+			comment "Testing HashFromFile - Blake2XS passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Testing HashFromFile - Blake2XS failed"
+		endif
+
+	endif ; 4.12.6
+	
 	sub_compareResult
 	set $winst_crypt$ = $SubResult$
 
