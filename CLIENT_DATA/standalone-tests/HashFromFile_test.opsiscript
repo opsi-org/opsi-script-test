@@ -8,24 +8,39 @@ DefVar $CompValue$
 
 ; This online tool can be used to double check hash results : https://emn178.github.io/online-tools/
 
-Set $FilePath$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/dummy.txt"
+Set $FilePath$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/crypt/dummy.msi"
 
-
-comment "Testing HashFromFile - MD5"
 if FileExists($FilePath$)
+
+    comment "Testing HashFromFile - MD5"
     Set $HashResult$ = HashFromFile($FilePath$, "MD5")
-    Set $CompValue$ = md5sumFromFile($FilePath$)
-    if $HashResult$ = $CompValue$ 
-        comment "HashFromFile succeeded"
+    Set $CompValue$ = "68B391799C1E5418334902BF6CE2DE6E"
+    if ($HashResult$ = $CompValue$)
+        comment "Testing HashFromFile - MD5 passed"
     else
-        LogWarning "HashFromFile failed"
+        LogWarning "Testing HashFromFile - MD5 failed"
     endif
+
+
+    comment "Testing HashFromFile - SHA3_256"
+    Set $HashResult$ = HashFromFile($FilePath$, "SHA3_256")
+    set $CompValue$ = "11EEE302ECCD537AB36AB9A2D4672B8F651BC2FC5A485E68BCD3ACB8DB247357"
+    if ($HashResult$ = $CompValue$)
+        comment "Testing HashFromFile - SHA3_256 passed"
+    else
+        LogWarning "Testing HashFromFile - SHA3_256 failed"
+    endif
+    
+    
+    comment "Testing HashFromFile - Blake2XS"
+    Set $HashResult$ = HashFromFile($FilePath$, "Blake2XS")
+    set $CompValue$ = "FAA8C735571EA08522CA64B1622B7598D8F153BB479243B76BAAAC69A152BCCF"
+    if ($HashResult$ = $CompValue$)
+        comment "Testing HashFromFile - Blake2XS passed"
+    else
+        LogWarning "Testing HashFromFile - Blake2XS failed"
+    endif
+
 else
 	LogWarning "File not found"
 endif
-
-comment "Testing HashFromFile - SHA3_256"
-Set $HashResult$ = HashFromFile($FilePath$, "SHA3_256")
-
-comment "Testing HashFromFile - Blake2XS"
-Set $HashResult$ = HashFromFile($FilePath$, "Blake2XS")
