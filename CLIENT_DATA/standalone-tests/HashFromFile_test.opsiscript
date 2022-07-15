@@ -2,13 +2,29 @@ encoding=utf8
 
 [Actions]
 
+DefVar $OS$
 DefVar $FilePath$
 DefVar $HashResult$
 DefVar $CompValue$
 
 ; This online tool can be used to double check hash results : https://emn178.github.io/online-tools/
 
-Set $FilePath$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/crypt/dummy.msi"
+Set $OS$ = GetOS
+
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		Set $FilePath$ = "C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\test-files\crypt\dummy.msi"
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		Set $FilePath$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/crypt/dummy.msi"
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		Set $FilePath$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/crypt/dummy.msi"
+	endcase
+endswitch
 
 if FileExists($FilePath$)
 
