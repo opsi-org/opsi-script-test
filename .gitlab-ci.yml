@@ -6,6 +6,10 @@ stages:
 
 package:makeopsipackage:
   stage: package
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: always
+    - when: manual
   script:
     - opsi-dev-tool --binary-pull
     - version=`grep OPSI/control -A 10 -e "\[Product\]" | grep "version:" | tr -d "^a-zA-Z :"`

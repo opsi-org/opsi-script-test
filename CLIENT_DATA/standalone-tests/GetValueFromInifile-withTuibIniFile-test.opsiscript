@@ -1,0 +1,154 @@
+[Actions]
+comment "Testing: "
+message "GetValueFromInifile"
+encoding=utf8
+
+DefVar $TestResult$
+DefVar $OS$
+DefVar $HomeTestFiles$
+DefVar $FilePath$
+DefVar $value1$
+DefVar $CompValue1$
+DefVar $value2$
+DefVar $CompValue2$
+
+; This test needs opsi-script-test.opsiscript to be run first
+; That will create the $HomeTestFiles$ file
+
+Set $OS$ = GetOS
+
+switch $OS$
+	case "Windows_nt"
+		comment "We are running on Windows"
+		;Set $HomeTestFiles$ = "%opsiTmpDir%\testFiles"
+		Set $HomeTestFiles$ = "C:\Users\Jinene\Documents\gituib\opsi-script-test\CLIENT_DATA\test-files\ini\"
+
+	endcase
+	case "Linux"
+		comment "We are running on Linux"
+		;Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		Set $HomeTestFiles$ = "/home/jinene/gitwork/opsi-script-test/CLIENT_DATA/test-files/ini/"
+	endcase
+	case "macos"
+		comment "We are running on macOS"
+		;Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
+		Set $HomeTestFiles$ = "/home/gitwork/opsi-script-test/CLIENT_DATA/test-files/ini/"
+	endcase
+endswitch
+
+;Set $HomeTestFiles$ = "test-files/"
+
+if $OS$ = "Windows_nt"
+    Set $FilePath$ = $HomeTestFiles$+"dummy.ini"
+
+    if (FileExists($FilePath$))
+        ;GetValueFromInifile
+
+        set $value1$ = "add1"
+        Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default")
+        
+        set $value2$ = "üöäßÜÖÄ"
+        Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default")
+        
+        if $value1$=$CompValue1$ AND $value2$=$CompValue2$
+            comment "GetValueFromInifile for dummy.ini [cp1252] without encoding parameter passed"
+        else
+            set $TestResult$ = "not o.k."
+            LogWarning "GetValueFromInifile for dummy.ini [cp1252] without encoding parameter failed"
+        endif
+    else
+        set $TestResult$ = "not o.k."
+        logError "Fatal: could not create .ini file"
+        isFatalError
+    endif
+
+    if (FileExists($FilePath$))
+        ;GetValueFromInifile
+
+        set $value1$ = "add1"
+        Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "system")
+        
+        set $value2$ = "üöäßÜÖÄ"
+        Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "system")
+        
+        if $value1$=$CompValue1$ AND $value2$=$CompValue2$
+            comment "GetValueFromInifile for dummy.ini [cp1252] with system-encoding passed"
+        else
+            set $TestResult$ = "not o.k."
+            LogWarning "GetValueFromInifile for dummy.ini [cp1252] with system-encoding failed"
+        endif
+    else
+        set $TestResult$ = "not o.k."
+        logError "Fatal: could not create .ini file"
+        isFatalError
+    endif
+endif
+
+Set $FilePath$ = $HomeTestFiles$+"dummy_utf8.ini"
+
+if (FileExists($FilePath$))
+	;GetValueFromInifile
+
+	set $value1$ = "add1"
+	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "utf8")
+	
+	set $value2$ = "üöäßÜÖÄ"
+	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "utf8")
+	
+	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
+		comment "GetValueFromInifile for dummy_utf8.ini passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "GetValueFromInifile for dummy_utf8.ini failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	logError "Fatal: could not create .ini file"
+	isFatalError
+endif
+
+Set $FilePath$ = $HomeTestFiles$+"dummy_utf16.ini"
+
+if (FileExists($FilePath$))
+	;GetValueFromInifile
+
+	set $value1$ = "add1"
+	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "utf16")
+	
+	set $value2$ = "üöäßÜÖÄ"
+	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "utf16")
+	
+	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
+		comment "GetValueFromInifile for dummy_utf16.ini passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "GetValueFromInifile for dummy_utf16.ini failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	logError "Fatal: could not create .ini file"
+	isFatalError
+endif
+
+Set $FilePath$ = $HomeTestFiles$+"dummy_utf16le.ini"
+
+if (FileExists($FilePath$))
+	;GetValueFromInifile
+
+	set $value1$ = "add1"
+	Set $CompValue1$ = GetValueFromInifile($FilePath$, "secdummy", "dummy1", "default", "utf16le")
+	
+	set $value2$ = "üöäßÜÖÄ"
+	Set $CompValue2$ = GetValueFromInifile($FilePath$, "secdüöä", "dümmy7", "default", "utf16le")
+	
+	if $value1$=$CompValue1$ AND $value2$=$CompValue2$
+		comment "GetValueFromInifile for dummy_utf16le.ini passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "GetValueFromInifile for dummy_utf16le.ini failed"
+	endif
+else
+	set $TestResult$ = "not o.k."
+	logError "Fatal: could not create .ini file"
+	isFatalError
+endif
