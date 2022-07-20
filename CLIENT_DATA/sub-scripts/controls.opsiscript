@@ -127,13 +127,13 @@ Message "testing control functions"
 		endif
 	endif
 	
-	include_insert '%scriptpath%\sub-scripts\controlsFunctions\ShowBitMap.opsiscript'
+	include_insert $SubScriptBaseDir$+'\controlsFunctions\ShowBitMap.opsiscript'
 	
 	comment ""
 	comment "-------------------------------------"
 	comment "Testing: SetSkinDirectory"
 	message "SetSkinDirectory"
-	SetSkinDirectory "%ScriptPath%\testskin"
+	SetSkinDirectory $SubScriptBaseDir$+"\..\testskin"
 	sleepseconds 1
 	SetSkinDirectory ""
 	
@@ -179,7 +179,7 @@ Message "testing control functions"
 		diffTime
 	endif ; windows
 	
-	include_insert '%scriptpath%\sub-scripts\controlsFunctions\if_else_elseif_endif.opsiscript'
+	include_insert $SubScriptBaseDir$+'\controlsFunctions\if_else_elseif_endif.opsiscript'
 	
 	;  Boolean Expressions
 	
@@ -690,3 +690,65 @@ Message "testing control functions"
 
 [Files_empty_folder]
 Delete -s -f -c $HomeTestFiles$
+
+[WinBatch_prepare_killtask]
+notepad.exe
+
+[Execwith_autoit_close_showmessage]
+#include "%scriptpath%\autoitlib\opsi-autoit-lib.au3"
+; exact title match
+Opt("WinTitleMatchMode", 3)
+$winhandle = 0
+$hTimer = TimerInit()
+$mylog = FileOpen("%opsiLogDir%\au3.log", 2)
+FileWriteLine($mylog,"auto-it started - waiting for the window")
+FileClose($mylog)
+opsiLogWinList("%opsiLogDir%\au3.log")
+opsiwinwait("Systeminfo" , "", 60, "%opsiLogDir%\au3.log")
+$winhandle = opsiwinactivate("Systeminfo" , "", 20, "%opsiLogDir%\au3.log")
+WinSetState($winhandle, "",@SW_MAXIMIZE)
+opsiControlClick("Systeminfo" , "", "[CLASS:Button; INSTANCE:1]", 10, "%opsiLogDir%\au3.log")
+Sleep(500)
+;and good bye
+Exit
+
+
+[DosInAnIcon_prepare_fileExists]
+c:
+mkdir $HomeTestFiles$
+cd $HomeTestFiles$
+echo dummy> dummy.txt
+
+[execwith_autoit_close_trace_window]
+; waiting for the window
+WinWait("$opsi_message_title$","comment: in trace window")
+Sleep(500)
+; activating
+WinActivate("$opsi_message_title$","comment: in trace window")
+send ("!o")
+WinWait("$opsi_message_title$","comment: in trace window")
+Sleep(500)
+; activating
+WinActivate("$opsi_message_title$","comment: in trace window")
+send ("!o}")
+WinWait("$opsi_message_title$","comment: should be turned off by autoit")
+Sleep(500)
+; activating
+WinActivate("$opsi_message_title$","comment: should be turned off by autoit")
+Sleep(500)
+send ("!e")
+exit
+
+[opsiServiceCall_setFollowUp]
+"method": "setProductActionRequest"
+"params": [
+			"opsi-winst-test-followup",
+			"%HostID%",
+			"setup"
+			]
+
+[ShellInAnIcon_prepare_fileExists]
+mkdir -p $HomeTestFiles$
+cd $HomeTestFiles$
+echo dummy> dummy.txt
+

@@ -908,10 +908,10 @@ add [section1] key2=ädd1
 	endif 4.12.0.10
 	;endif ; macos
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.16")
-		sub "%scriptpath%\sub-scripts\encoding_utf8_bom.opsiscript"
-		sub "%scriptpath%\sub-scripts\encoding_utf8_bom_warn.opsiscript"
-		sub "%scriptpath%\sub-scripts\encoding_utf16le_bom.opsiscript"
-		sub "%scriptpath%\sub-scripts\encoding_utf16le_bom_warn.opsiscript"
+		sub $SubScriptBaseDir$+"\encoding_utf8_bom.opsiscript"
+		sub $SubScriptBaseDir$+"\encoding_utf8_bom_warn.opsiscript"
+		sub $SubScriptBaseDir$+"\encoding_utf16le_bom.opsiscript"
+		sub $SubScriptBaseDir$+"\encoding_utf16le_bom_warn.opsiscript"
 	endif
 	
 	;pause "test"

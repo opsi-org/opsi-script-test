@@ -300,7 +300,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "opsiservicecall with json syntax values in params"		
-		include_insert "%scriptpath%\sub-scripts\opsiServiceCall_jsonSyntaxParams.opsiscript"		
+		include_insert $SubScriptBaseDir$+"\opsiServiceCall_jsonSyntaxParams.opsiscript"		
 		TestJsonSyntaxParams("%HostID%")		
 	endif
 	

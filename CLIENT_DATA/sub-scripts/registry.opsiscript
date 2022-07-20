@@ -33,10 +33,10 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 	doHKEYAccessTest()
 	
 	
-	sub "%scriptpath%\sub-scripts\registryFunctions\umlauts_in_keys.opsiscript"
+	sub $SubScriptBaseDir$+"\registryFunctions\umlauts_in_keys.opsiscript"
 	
-	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\registrySections.opsiscript"
-	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\otherSections.opsiscript"
+	include_append $SubScriptBaseDir$+"\registryFunctions\SecondarySections\registrySections.opsiscript"
+	include_append $SubScriptBaseDir$+"\registryFunctions\SecondarySections\otherSections.opsiscript"
 
 	Set $ExpectedResult$ = "o.k."
 
@@ -56,13 +56,13 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
   	
-  		include_insert "%scriptpath%\sub-scripts\registryFunctions\GetRegistry\GetRegistryStringValue.opsiscript"
+  		include_insert $SubScriptBaseDir$+"\registryFunctions\GetRegistry\GetRegistryStringValue.opsiscript"
   		
-		include_insert "%scriptpath%\sub-scripts\registryFunctions\GetRegistry\GetRegistryValue.opsiscript"
+		include_insert $SubScriptBaseDir$+"\registryFunctions\GetRegistry\GetRegistryValue.opsiscript"
 
-		include_insert "%scriptpath%\sub-scripts\registryFunctions\create_delete_keys.opsiscript"
+		include_insert $SubScriptBaseDir$+"\registryFunctions\create_delete_keys.opsiscript"
 
-		include_insert "%scriptpath%\sub-scripts\registryFunctions\add_supp.opsiscript"
+		include_insert $SubScriptBaseDir$+"\registryFunctions\add_supp.opsiscript"
 		  	
 		if not (FileExists($HomeTestFiles$))
 			Files_testFiles
@@ -97,23 +97,23 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		include_insert "%scriptpath%\sub-scripts\registryFunctions\Write_Read_64Bit_Registry.opsiscript"
+		include_insert $SubScriptBaseDir$+"\registryFunctions\Write_Read_64Bit_Registry.opsiscript"
 		
-		include_insert "%scriptpath%\sub-scripts\registryFunctions\AllUserDats.opsiscript"  	
+		include_insert $SubScriptBaseDir$+"\registryFunctions\AllUserDats.opsiscript"  	
 
-		include_insert "%scriptpath%\sub-scripts\registryFunctions\GetRegistry\KeyList_VarList_VarMap.opsiscript"
+		include_insert $SubScriptBaseDir$+"\registryFunctions\GetRegistry\KeyList_VarList_VarMap.opsiscript"
 
-		include_insert "%scriptpath%\sub-scripts\registryFunctions\keys_with_brackets.opsiscript"		
+		include_insert $SubScriptBaseDir$+"\registryFunctions\keys_with_brackets.opsiscript"		
 		
-		include_insert "%scriptpath%\sub-scripts\registryFunctions\RegKeyExists_RegVarExists.opsiscript"
+		include_insert $SubScriptBaseDir$+"\registryFunctions\RegKeyExists_RegVarExists.opsiscript"
 		
-		include_insert "%scriptpath%\sub-scripts\registryFunctions\ACCESS_DENIED.opsiscript"
+		include_insert $SubScriptBaseDir$+"\registryFunctions\ACCESS_DENIED.opsiscript"
 				
 		Registry_opsi_org_delete_test
 		Registry_opsi_org_delete_test /64bit
 		Files_delete_SaveValueToFile_txt
 		
-		sub "%scriptpath%\sub-scripts\registryFunctions\deleteListEntries.opsiscript"
+		sub $SubScriptBaseDir$+"\registryFunctions\deleteListEntries.opsiscript"
 	
 	else ; windows
 		set $TestResult$ = "not implemented"

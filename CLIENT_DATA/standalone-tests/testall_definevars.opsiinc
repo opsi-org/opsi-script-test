@@ -10,6 +10,7 @@ DefVar $TestResult$
 DefVar $SubResult$
 DefVar $HomeTestFiles$
 DefVar $TestFilesBaseDir$
+DefVar $SubScriptBaseDir$
 DefVar $ConstTest$
 Defvar $ConstTest2$
 DefVar $CompValue$

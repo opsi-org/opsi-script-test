@@ -164,4 +164,7 @@ copy -se "$TestFilesBaseDir$\testfiles\*.*" "$HomeTestFiles$\files"
 rename "$HomeTestFiles$\files\subDirectory" "$HomeTestFiles$\files\renamedsubDirectory"
 
 [Files_bigdir]
-copy -sec "$TestFilesBaseDir$\bigdir\*.*" $HomeTestFiles$
+copy -sec "$TestFilesBaseDir$\bigdir\*.*" "$HomeTestFiles$"
+
+[Files_copy_test_to_system32]
+copy "$TestFilesBaseDir$\testFiles\dummy.txt" "%System%"

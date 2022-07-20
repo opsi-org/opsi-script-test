@@ -736,3 +736,6 @@ type "%scriptpath%\opsi-script-test.opsiscript"
 cat "%scriptpath%/opsi-script-test.opsiscript"
 
 ;----------------   stop   sections for dosbatch/winbatch tests ---------------------------------
+
+[Files_copy_test_to_system32]
+copy "$TestFilesBaseDir$\testFiles\dummy.txt" "%System%"

@@ -15,8 +15,8 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"
 	Set $FileCopyTestSubDirectory$ = $HomeTestFiles$+"\subDirectory\CopyTestSubDirectory.txt"
 	
-	include_append "%scriptpath%\sub-scripts\filesFunctions\SecondarySections\filesSections.opsiscript"
-	include_append "%scriptpath%\sub-scripts\filesFunctions\SecondarySections\otherSections.opsiscript"
+	include_append $SubScriptBaseDir$+"\filesFunctions\SecondarySections\filesSections.opsiscript"
+	include_append $SubScriptBaseDir$+"\filesFunctions\SecondarySections\otherSections.opsiscript"
 	
 	if ($INST_SystemType$ = "64 Bit System") and ($OS$="Windows_NT")
 		comment ""

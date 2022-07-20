@@ -1,0 +1,55 @@
+; This code is part of the opsi.org project
+;
+; Copyright (c) uib gmbh (www.uib.de)
+; This sourcecode is owned by the uib gmbh, D55118 Mainz, Germany
+; and published under the Terms of the GNU Affero General Public License.
+; Text of the AGPL: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+; credits: http://www.opsi.org/credits/
+
+
+
+
+
+; at the end set the return value
+comment ""
+comment "======================================"
+if $FinalResult$="failed"
+	comment "Fatal: one ore more tests failed"
+	Message "Fatal: one ore more tests failed"
+	logError "Fatal: one ore more tests failed"
+	isFatalError
+else
+	Message "All tests are passsed"
+	comment "All tests are passsed"
+endif
+comment "======================================"
+comment ""
+
+
+[sub_compareResult]
+comment ""
+comment "-------------------------------------"
+comment "expectedResult is >" +  $ExpectedResult$ + "<"
+comment "TestResult is >" +  $TestResult$ + "<"
+if $ExpectedResult$ = $TestResult$
+	set $SubResult$ ="passed"
+	comment "OK: Subtest passed"
+else
+	if $TestResult$ = "not implemented"
+		set $SubResult$ = $TestResult$
+	else
+		set $SubResult$ ="failed"
+		logError "Fatal: Subtest failed"
+		set $FinalResult$="failed"
+	endif
+endif
+comment ""
+comment ""
+
+;----------------   start   general helpers ---------------------------------
+
+[Files_testFiles]
+checkTargetPath = "$HomeTestFiles$"
+
+;----------------   end   general helpers ---------------------------------
+

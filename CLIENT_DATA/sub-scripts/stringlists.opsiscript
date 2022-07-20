@@ -1744,8 +1744,8 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		
 	endif ; 4.12.4.5
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.34")
-		if fileexists("%scriptpath%/sub-scripts/subsub_getoutstream_test2.opsiscript")
-			sub "%scriptpath%/sub-scripts/subsub_getoutstream_test2.opsiscript"
+		if fileexists($SubScriptBaseDir$+"/subsub_getoutstream_test2.opsiscript")
+			sub $SubScriptBaseDir$+"/subsub_getoutstream_test2.opsiscript"
 		else
 			sub "%scriptpath%/../sub-scripts/subsub_getoutstream_test2.opsiscript"
 		endif

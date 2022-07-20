@@ -28,6 +28,7 @@ DefVar $TestResult$
 DefVar $SubResult$
 DefVar $HomeTestFiles$
 DefVar $TestFilesBaseDir$
+DefVar $SubScriptBaseDir$
 DefVar $ConstTest$
 Defvar $ConstTest2$
 DefVar $CompValue$
@@ -241,6 +242,7 @@ defvar $orgpolicy$
 
 
 set $TestFilesBaseDir$ = forcePathDelims("%scriptpath%\test-files")
+set $SubScriptBaseDir$ = forcePathDelims("%scriptpath%\sub-scripts")
 Set $OS$ = GetOS
 ; retrieve current language
 set $languageInfo$ = getLocaleInfoMap
@@ -1124,7 +1126,7 @@ if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	sub "%scriptpath%\sub-scripts\subsub_constants.opsiscript"
+	sub $SubScriptBaseDir$+"\subsub_constants.opsiscript"
 	
 	sub_compareResult
 	set $winst_constants$ = $SubResult$
@@ -1334,8 +1336,8 @@ if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.11.3")
 			comment "Testing include commands"
 			
-			include_append "%scriptpath%\sub-scripts\section_Files_del_tmp_dummy.opsiinc"
-			include_insert "%scriptpath%\sub-scripts\include-test1.opsiinc"
+			include_append $SubScriptBaseDir$+"\section_Files_del_tmp_dummy.opsiinc"
+			include_insert $SubScriptBaseDir$+"\include-test1.opsiinc"
 			
 			comment "testing two sections with the same name"
 			include_append "sub-scripts\section_DosInAnIcon_echo.opsiinc"
@@ -3578,11 +3580,11 @@ if ($Flag_subtestsub$ = "on") or ($MasterFlag$ = "on")
 	set $subtestsub$ = $SubResult$
 endif
 
-sub "%scriptpath%\sub-scripts\filestest.opsiscript"
+sub $SubScriptBaseDir$+"\filestest.opsiscript"
 
 ;if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 ;	Message "testing patches functions"
-sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
+sub $SubScriptBaseDir$+"\patchesini.opsiscript"
 
 ;if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 ;	Message "testing patches functions"
@@ -5324,11 +5326,11 @@ endif
 
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.29")
-	sub "%scriptpath%\sub-scripts\ldap_search.opsiscript"
+	sub $SubScriptBaseDir$+"\ldap_search.opsiscript"
 endif
 
 if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
-	sub "%scriptpath%\sub-scripts\opsiServiceCalls.opsiscript"
+	sub $SubScriptBaseDir$+"\opsiServiceCalls.opsiscript"
 endif
 
 if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
@@ -5550,66 +5552,66 @@ endif
 
 
 ;$Flag_winst_dos$ = "on")
-sub "%scriptpath%\sub-scripts\shellcall.opsiscript"
+sub $SubScriptBaseDir$+"\shellcall.opsiscript"
 
-sub "%scriptpath%\sub-scripts\winbatch.opsiscript"
+sub $SubScriptBaseDir$+"\winbatch.opsiscript"
 
-sub "%scriptpath%\sub-scripts\internalundocumented.opsiscript"
+sub $SubScriptBaseDir$+"\internalundocumented.opsiscript"
 
-sub "%scriptpath%\sub-scripts\encodingtest.opsiscript"
+sub $SubScriptBaseDir$+"\encodingtest.opsiscript"
 
-sub "%scriptpath%\sub-scripts\jsontest.opsiscript"
+sub $SubScriptBaseDir$+"\jsontest.opsiscript"
 
-sub "%scriptpath%\sub-scripts\crypttest.opsiscript"
+sub $SubScriptBaseDir$+"\crypttest.opsiscript"
 
-sub "%scriptpath%\sub-scripts\xml2test.opsiscript"
+sub $SubScriptBaseDir$+"\xml2test.opsiscript"
 
-sub "%scriptpath%\sub-scripts\registry.opsiscript"
+sub $SubScriptBaseDir$+"\registry.opsiscript"
 
-sub "%scriptpath%\sub-scripts\stringlists.opsiscript"
+sub $SubScriptBaseDir$+"\stringlists.opsiscript"
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.0")
-	sub "%scriptpath%\sub-scripts\localfunctions.opsiscript"
+	sub $SubScriptBaseDir$+"\localfunctions.opsiscript"
 endif
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
-	sub "%scriptpath%\sub-scripts\powershelltest.opsiscript"
+	sub $SubScriptBaseDir$+"\powershelltest.opsiscript"
 endif
 
-sub "%scriptpath%\sub-scripts\processinfotest.opsiscript"
+sub $SubScriptBaseDir$+"\processinfotest.opsiscript"
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
-	sub "%scriptpath%\sub-scripts\regex.opsiscript"
-endif
-
-if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
-	sub "%scriptpath%\sub-scripts\networkcalc.opsiscript"
+	sub $SubScriptBaseDir$+"\regex.opsiscript"
 endif
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
-	sub "%scriptpath%\sub-scripts\urlparser.opsiscript"
+	sub $SubScriptBaseDir$+"\networkcalc.opsiscript"
+endif
+
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
+	sub $SubScriptBaseDir$+"\urlparser.opsiscript"
 endif
 
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
-	sub "%scriptpath%\sub-scripts\macos.opsiscript"
+	sub $SubScriptBaseDir$+"\macos.opsiscript"
 endif
 
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
-	sub "%scriptpath%\sub-scripts\wmitest.opsiscript"
+	sub $SubScriptBaseDir$+"\wmitest.opsiscript"
 endif
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.9")
-	sub "%scriptpath%\sub-scripts\var_as_param.opsiscript"
+	sub $SubScriptBaseDir$+"\var_as_param.opsiscript"
 endif
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.37")
-	sub "%scriptpath%\sub-scripts\certificates.opsiscript"
+	sub $SubScriptBaseDir$+"\certificates.opsiscript"
 endif
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.38")
-	sub "%scriptpath%\sub-scripts\TOMLtest.opsiscript"
+	sub $SubScriptBaseDir$+"\TOMLtest.opsiscript"
 endif
 
 DefFunc resultoutput( $name$ : string, $value$ : string) : void
@@ -6112,23 +6114,23 @@ netstat -n
 ;[Files_empty_folder2]
 ;del -f "$HomeTestFiles$\files\symlink.txt"
 
-[WinBatch_prepare_killtask]
-notepad.exe
+;[WinBatch_prepare_killtask]
+;notepad.exe
 
-[WinBatch_prepare_killtask_lin]
-ping localhost
+;[WinBatch_prepare_killtask_lin]
+;ping localhost
 
-[DosInAnIcon_prepare_fileExists]
-c:
-mkdir $HomeTestFiles$
-cd $HomeTestFiles$
-echo dummy> dummy.txt
+;[DosInAnIcon_prepare_fileExists]
+;c:
+;mkdir $HomeTestFiles$
+;cd $HomeTestFiles$
+;echo dummy> dummy.txt
 
-[ShellInAnIcon_prepare_fileExists]
-mkdir -p $HomeTestFiles$
-cd $HomeTestFiles$
-echo dummy> dummy.txt
-
+;[ShellInAnIcon_prepare_fileExists]
+;mkdir -p $HomeTestFiles$
+;cd $HomeTestFiles$
+;echo dummy> dummy.txt
+;
 [ExecWith_autoit_opsiservicecall_interactive]
 ; waiting for the window
 WinWait("DialogServicePassword")
@@ -6154,25 +6156,25 @@ send ("{ENTER}")
 @echo off
 nslookup %opsiserver%
 
-[execwith_autoit_close_trace_window]
-; waiting for the window
-WinWait("$opsi_message_title$","comment: in trace window")
-Sleep(500)
-; activating
-WinActivate("$opsi_message_title$","comment: in trace window")
-send ("!o")
-WinWait("$opsi_message_title$","comment: in trace window")
-Sleep(500)
-; activating
-WinActivate("$opsi_message_title$","comment: in trace window")
-send ("!o}")
-WinWait("$opsi_message_title$","comment: should be turned off by autoit")
-Sleep(500)
-; activating
-WinActivate("$opsi_message_title$","comment: should be turned off by autoit")
-Sleep(500)
-send ("!e")
-exit
+;[execwith_autoit_close_trace_window]
+;; waiting for the window
+;WinWait("$opsi_message_title$","comment: in trace window")
+;Sleep(500)
+;; activating
+;WinActivate("$opsi_message_title$","comment: in trace window")
+;send ("!o")
+;WinWait("$opsi_message_title$","comment: in trace window")
+;Sleep(500)
+;; activating
+;WinActivate("$opsi_message_title$","comment: in trace window")
+;send ("!o}")
+;WinWait("$opsi_message_title$","comment: should be turned off by autoit")
+;Sleep(500)
+;; activating
+;WinActivate("$opsi_message_title$","comment: should be turned off by autoit")
+;Sleep(500)
+;send ("!e")
+;exit
 
 ;[Execwith_autoit_close_showmessage]
 ;Func opsiwinwait($title, $text, $maxseconds, $logname)
@@ -6215,23 +6217,23 @@ exit
 ;;and good bye
 ;Exit
 
-[Execwith_autoit_close_showmessage]
-#include "%scriptpath%\autoitlib\opsi-autoit-lib.au3"
-; exact title match
-Opt("WinTitleMatchMode", 3)
-$winhandle = 0
-$hTimer = TimerInit()
-$mylog = FileOpen("%opsiLogDir%\au3.log", 2)
-FileWriteLine($mylog,"auto-it started - waiting for the window")
-FileClose($mylog)
-opsiLogWinList("%opsiLogDir%\au3.log")
-opsiwinwait("Systeminfo" , "", 60, "%opsiLogDir%\au3.log")
-$winhandle = opsiwinactivate("Systeminfo" , "", 20, "%opsiLogDir%\au3.log")
-WinSetState($winhandle, "",@SW_MAXIMIZE)
-opsiControlClick("Systeminfo" , "", "[CLASS:Button; INSTANCE:1]", 10, "%opsiLogDir%\au3.log")
-Sleep(500)
-;and good bye
-Exit
+;[Execwith_autoit_close_showmessage]
+;#include "%scriptpath%\autoitlib\opsi-autoit-lib.au3"
+;; exact title match
+;Opt("WinTitleMatchMode", 3)
+;$winhandle = 0
+;$hTimer = TimerInit()
+;$mylog = FileOpen("%opsiLogDir%\au3.log", 2)
+;FileWriteLine($mylog,"auto-it started - waiting for the window")
+;FileClose($mylog)
+;opsiLogWinList("%opsiLogDir%\au3.log")
+;opsiwinwait("Systeminfo" , "", 60, "%opsiLogDir%\au3.log")
+;$winhandle = opsiwinactivate("Systeminfo" , "", 20, "%opsiLogDir%\au3.log")
+;WinSetState($winhandle, "",@SW_MAXIMIZE)
+;opsiControlClick("Systeminfo" , "", "[CLASS:Button; INSTANCE:1]", 10, "%opsiLogDir%\au3.log")
+;Sleep(500)
+;;and good bye
+;Exit
 
 
 [DosInAnIcon_getTask_autoit3]
@@ -6267,13 +6269,13 @@ else
 	comment "not found"
 endif
 
-[opsiServiceCall_setFollowUp]
-"method": "setProductActionRequest"
-"params": [
-			"opsi-winst-test-followup",
-			"%HostID%",
-			"setup"
-			]
+;[opsiServiceCall_setFollowUp]
+;"method": "setProductActionRequest"
+;"params": [
+;			"opsi-winst-test-followup",
+;			"%HostID%",
+;			"setup"
+;			]
 
 
 ;----------------   end   sections for controls test ---------------------------------
@@ -7259,8 +7261,8 @@ dir $testfilepath$
 del -f "$testfilepath$"
 ;----------------   stop   internal undocumented functions tests ---------------------------------
 
-[Files_copy_test_to_system32]
-copy "$TestFilesBaseDir$\testFiles\dummy.txt" "%System%"
+;[Files_copy_test_to_system32]
+;copy "$TestFilesBaseDir$\testFiles\dummy.txt" "%System%"
 
 [ExecWith_Powershell_HelloWorld]
 	$strString = "Hello World"
