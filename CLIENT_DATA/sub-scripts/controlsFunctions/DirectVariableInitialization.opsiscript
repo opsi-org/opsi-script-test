@@ -1,0 +1,134 @@
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Variable declaration with initialization"
+		
+		DefVar $strvarinittest$ = "str init value"
+		set $ConstTest$ = "str init value"
+		set $CompValue$ = $strvarinittest$
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		DefStringlist $listvarinittest$ = '["list","init","value"]'
+		if areListsEqual($listvarinittest$,'["list","init","value"]', "FLAG_AUTOMODE")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif
+
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "Direct variable initialization"
+	
+	deffunc TestDirectInitializationInDefVar():void
+		DefVar $NormalInitialization$
+		
+		DefVar $DirectInitializationString$ = "TestString"
+		set $NormalInitialization$ = "TestString"
+		if ($NormalInitialization$ = $DirectInitializationString$)
+			comment "Direct initialization by string passed in DefVar"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by string failed in DefVar"
+		endif
+		
+		DefVar $DirectInitializationEmptyString$ = ""
+		set $NormalInitialization$ = ""
+		if ($NormalInitialization$ = $DirectInitializationEmptyString$)
+			comment "Direct initialization by empty string passed in DefVar"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by empty string failed in DefVar"
+		endif
+		
+		DefVar $DirectInitializationConstantAndVariable$ = "%scriptpath%/" + $NormalInitialization$
+		set $NormalInitialization$ = "%scriptpath%/" + $NormalInitialization$
+		if ($NormalInitialization$ = $DirectInitializationConstantAndVariable$)
+			comment "Direct initialization by variable passed in DefVar"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by variable failed in DefVar"
+		endif
+		
+		DefVar $DirectInitializationFunctions$ = lower(GetOS) + takestring(0,createstringlist('!','?'))
+		set $NormalInitialization$ = lower(GetOS) + takestring(0,createstringlist('!','?'))
+		if ($NormalInitialization$ = $DirectInitializationFunctions$)
+			comment "Direct initialization by functions passed in DefVar"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by functions failed in DefVar"
+		endif
+	endfunc
+
+
+	deffunc TestDirectInitializationInDefStringList():void
+		DefStringList $NormalInitializationList$
+		
+		DefStringList $DirectInitializationListCreate$ = createstringlist('a','b')
+		set $NormalInitializationList$ = createstringlist('a','b')
+		if areListsEqual($NormalInitializationList$,$DirectInitializationListCreate$,'FLAG_AUTO_CS')
+			comment "Direct initialization by createStringList passed in DefStringList"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by createStringList failed in DefStringList"
+		endif
+		
+		DefStringList $DirectInitializationEmptyListCreate$ = createstringlist()
+		set $NormalInitializationList$ = createstringlist()
+		if (count($NormalInitializationList$) = '0') and (count($NormalInitializationList$) = count($DirectInitializationEmptyListCreate$))
+			comment "Direct initialization by empty createStringList passed in DefStringList"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by empty createStringList failed in DefStringList"
+		endif
+		
+		DefStringList $DirectInitializationListGeneric$ = "['c','d','e']"
+		set $NormalInitializationList$ = createstringlist('c','d','e')
+		if areListsEqual($NormalInitializationList$,$DirectInitializationListGeneric$,'FLAG_AUTO_CS')
+			comment "Direct initialization by generic definition passed in DefStringList"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by generic definition failed in DefStringList"
+		endif
+		
+		set $NormalInitializationList$ = createstringlist('fg','h')
+		DefStringList $DirectInitializationListVariable$ = $NormalInitializationList$
+		if areListsEqual($NormalInitializationList$,$DirectInitializationListVariable$,'FLAG_AUTO_CS')
+			comment "Direct initialization by variable passed in DefStringList"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by variable failed in DefStringList"
+		endif
+		
+		DefStringList $DirectInitializationListFunctions$ = removeFromListByContaining('try2',getKeyList(createstringlist('entry1=x','entry2=y','entry3=z')))
+		set $NormalInitializationList$ = removeFromListByContaining('try2',getKeyList(createstringlist('entry1=x','entry2=y','entry3=z')))
+		if areListsEqual($NormalInitializationList$,$DirectInitializationListFunctions$,'FLAG_AUTO_CS')
+			comment "Direct initialization by functions passed in DefStringList"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by functions failed in DefStringList"
+		endif
+		
+		DefStringList $DirectInitializationEmptyListFunctions$ = removeFromListByContaining('try2',getKeyList(createstringlist()))
+		set $NormalInitializationList$ = removeFromListByContaining('try2',getKeyList(createstringlist()))
+		if (count($NormalInitializationList$) = '0') and (count($NormalInitializationList$) = count($DirectInitializationEmptyListFunctions$))
+			comment "Direct initialization by empty functions passed in DefStringList"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "Direct initialization by empty functions failed in DefStringList"
+		endif
+	endfunc
+	
+	
+	TestDirectInitializationInDefVar()
+	TestDirectInitializationInDefStringList()
+endif 
