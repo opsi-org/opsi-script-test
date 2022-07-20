@@ -1,0 +1,24 @@
+[actions]
+
+;setDebug_prog=true
+FatalOnSyntaxError = false
+
+DefVar $service$ = "https://bonifax.uib.local:4447/rpc"
+;define before execution!
+DefVar $UserFQDN$ = ""
+DefVar $opsiHostKey$ = ""
+
+opsiservicecall_authenticated /serviceurl $service$ /username $UserFQDN$ /password $opsiHostKey$
+
+DefVar $TestResult$
+
+include_insert "%scriptpath%\..\sub-scripts\opsiServiceCall_boolean_numeric_params.opsiscript"
+
+TestNumericBooleanParams($UserFQDN$)
+
+[opsiservicecall_authenticated]
+"method": "authenticated"
+"params": [
+			]
+
+[stop]
