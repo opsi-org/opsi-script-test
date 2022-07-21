@@ -196,16 +196,16 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	
 	Files_remove_folder
 	
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.4.27") >= "0"
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
-		message "Patches /AllNTUserProfiles"
-		Patches_dummy_ini "%userprofiledir%\opsi-winst-test.ini" /AllNTUserProfiles
+		message "Patches /AllUserProfiles"
+		Patches_dummy_ini "%userprofiledir%\opsi-winst-test.ini" /AllUserProfiles
 		set $list1$ = getProfilesDirList
 		for %s% in $list1$ do sub_check_profile_ini
-		Files_remove_profile_ini /AllNTUserProfiles
-	endif ; 4.11.3.2
+		Files_remove_profile_ini /AllUserProfiles
+	endif ; 4.12.4.27
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.5.0")
 		comment ""
@@ -329,7 +329,7 @@ if ($ConstTest$ = $CompValue$)
 	comment "GetValueFromInifile passed"
 else
 	set $TestResult$ = "not o.k."
-	LogWarning "Patches /AllNTUserProfiles"
+	LogWarning "Patches /AllUserProfiles"
 endif
 
 
@@ -343,5 +343,5 @@ if ($ConstTest$ = $CompValue$)
 	comment "GetValueFromInifile passed"
 else
 	set $TestResult$ = "not o.k."
-	LogWarning "Patches /AllNTUserProfiles"
+	LogWarning "Patches /AllUserProfiles"
 endif

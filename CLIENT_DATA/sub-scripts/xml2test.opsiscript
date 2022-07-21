@@ -1105,8 +1105,10 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		;	LogWarning "failed"
 		;endif
 		
+
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.27")
 		comment "Testing: "
-		message "XML2 Sections with /AllNTUserProfiles parameter"
+		message "XML2 Sections with /AllUserProfiles parameter"
 		sub_clean_xml2cmdLines
 		set $xml2strictMode$ = 'false'
 		
@@ -1117,11 +1119,12 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
 		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
 		set $xml2cmdLine4$ = "rootnodeOnCreate = myrootnode"
-		XML2_dummy_xml "%userprofiledir%\dummy-encoding-utf8.xml" /AllNTUserProfiles
+		XML2_dummy_xml "%userprofiledir%\dummy-encoding-utf8.xml" /AllUserProfiles
 		set $list1$ = getProfilesDirList
 		for %s% in $list1$ do sub_check_profile_xml2
-		Files_remove_profile_xml2 /AllNTUserProfiles
-		
+		Files_remove_profile_xml2 /AllUserProfiles
+		endif
+
 		
 		comment ""
 		comment "-------------------------------------"
@@ -1318,14 +1321,14 @@ if fileexists("%s%\dummy-encoding-utf8.xml")
 	set $list2$ = xml2GetFirstChildNodeByName($list1$,"node_level-2_B")
 	set $CompValue$ = getXml2AttributeValueByKey($list2$,"encoding")
 	if ($ConstTest$ = $CompValue$)
-		comment "XML2 /AllNTUserProfiles passed"
+		comment "XML2 /AllUserProfiles passed"
 	else
 		set $TestResult$ = "not o.k."
-		LogWarning "xml2 /AllNTUserProfiles failed"
+		LogWarning "xml2 /AllUserProfiles failed"
 	endif
 else
 	;set $TestResult$ = "not o.k."
-	LogWarning "xml2 /AllNTUserProfiles file not found: "+"%s%\dummy-encoding-utf8.xml"
+	LogWarning "xml2 /AllUserProfiles file not found: "+"%s%\dummy-encoding-utf8.xml"
 endif
 
 [Files_remove_profile_xml2]
