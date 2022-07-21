@@ -4103,14 +4103,14 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	Files_empty_folder
 	
 	;if not($OS$ = 'macos')
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.4") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.4.27") >= "0"
 		
-		Files_profile_copy /AllNTUserProfiles
+		Files_profile_copy /AllUserProfiles
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "DeleteTheLine / AdvanceLine"
-		PatchTextFile_AdvanceLine_DeleteTheLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_AdvanceLine_DeleteTheLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $tmp$ = "0"
 		set $ConstTest$ = "Line containing dummy1."
 		set $list1$ = getProfilesDirList
@@ -4120,7 +4120,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "FindLine"
-		PatchTextFile_findLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_findLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line1 with no sense"
 		set $tmp$ = "0"
 		set $list1$ = getProfilesDirList
@@ -4130,7 +4130,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "FindLine_StartingWith"
-		PatchTextFile_FindLine_StartingWith "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_FindLine_StartingWith "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line3 with no sense"
 		set $tmp$ = "3"
 		set $list1$ = getProfilesDirList
@@ -4140,7 +4140,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "FindLine_Containing"
-		PatchTextFile_FindLine_Containing "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_FindLine_Containing "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line2 with no sense"
 		set $tmp$ = "1"
 		set $list1$ = getProfilesDirList
@@ -4150,7 +4150,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "GoToTop"
-		PatchTextFile_GoToTop "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_GoToTop "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line2 with no sense"
 		set $tmp$ = "0"
 		set $list1$ = getProfilesDirList
@@ -4160,7 +4160,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "GoToBottom"
-		PatchTextFile_GoToBottom "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_GoToBottom "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line2 with no sense"
 		set $tmp$ = "0"
 		set $list1$ = getProfilesDirList
@@ -4170,7 +4170,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "AddLine"
-		PatchTextFile_AddLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_AddLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line added by winst"
 		set $tmp$ = "1"
 		set $list1$ = getProfilesDirList
@@ -4180,7 +4180,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "InsertLine"
-		PatchTextFile_InsertLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_InsertLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line inserted by winst"
 		set $tmp$ = "1"
 		set $list1$ = getProfilesDirList
@@ -4190,7 +4190,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "AppendLine"
-		PatchTextFile_AppendLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_AppendLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line appended by winst"
 		set $tmp$ = "3"
 		set $list1$ = getProfilesDirList
@@ -4200,7 +4200,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Append_File"
-		PatchTextFile_Append_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_Append_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line3appendbyFile"
 		set $tmp$ = "6"
 		set $list1$ = getProfilesDirList
@@ -4210,7 +4210,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Subtract_File"
-		PatchTextFile_Subtract_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_Subtract_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line1appendbyFile"
 		set $list1$ = getProfilesDirList
 		set $tmp$ = "0"
@@ -4220,7 +4220,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		;comment "-------------------------------------"
 		;comment "Testing: "
 		;message "SaveToFile"
-		;PatchTextFile_SaveToFile "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		;PatchTextFile_SaveToFile "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		;set $ConstTest$ = "Line1appendbyFile"
 		;if (fileExists("%CurrentProfileDir%\opsi-winst-test\savetofile.txt"))
 		;	set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\savetofile.txt")
@@ -4236,9 +4236,9 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		;	LogWarning "failed"
 		;endif
 		
-		Files_profile_del /AllNTUserProfiles
+		Files_profile_del /AllUserProfiles
 		
-	endif ; 4.11.3.4
+	endif ; 4.12.4.27
 	;endif ; not macos
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.6") >= "0"
@@ -6118,7 +6118,7 @@ if ($ConstTest$ = $CompValue$)
 	comment "passed"
 else
 	set $TestResult$ = "not o.k."
-	LogWarning "failed: PatchText /AllNTUserProfiles"
+	LogWarning "failed: PatchText /AllUserProfiles"
 endif
 
 [Files_profile_copy]
