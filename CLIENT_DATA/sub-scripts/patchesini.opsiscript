@@ -215,7 +215,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 		Patches_userprofiledir "%userprofiledir%\opsi-winst-test.ini" /AllUserProfiles
 		set $list1$ = getProfilesDirList
 		for %s% in $list1$ do sub_check_profile_dir
-		Files_remove_profile_ini /AllNTUserProfiles
+		Files_remove_profile_ini /AllUserProfiles
 	endif ; 4.12.5.0
 	
 	switch $OS$

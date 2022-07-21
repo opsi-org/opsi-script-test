@@ -1176,12 +1176,12 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			
 			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
 				markErrorNumber
-				Files_unzipfile_to_profiles /AllNTUserProfiles
+				Files_unzipfile_to_profiles /AllUserProfiles
 				if errorsOccuredSinceMark > 0
 					LogWarning "failed"
 					set $TestResult$ = "not o.k."
 				endif
-				Files_work_on_profiles_del_userp /AllNTUserProfiles
+				Files_work_on_profiles_del_userp /AllUserProfiles
 			endif
 			Files_empty_folder
 			set $HomeTestFiles$ = takestring(0,splitstring($HomeTestFiles$,"_2"))
