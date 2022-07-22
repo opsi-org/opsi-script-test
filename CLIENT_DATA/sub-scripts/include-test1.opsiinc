@@ -1,7 +1,7 @@
 encoding=utf8
 DefVar $inctestvar$
 set $inctestvar$ = "inctest"
-comment "The section Files_del_tmp_dummy is really missing"
+LogWarning "The section Files_del_tmp_dummy is really missing"
 Files_del_tmp_dummy
 include_append "sub-scripts\section_Files_copy_inctest.opsiinc"
 if $OS$ = "Windows_NT"

@@ -1,4 +1,6 @@
-Message "testing control functions"
+
+if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
+	Message "testing control functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
 	comment "testing control functions"
@@ -686,6 +688,7 @@ Message "testing control functions"
 	sub_compareResult
 	
 	set $winst_controls$ = $SubResult$
+endif
 
 
 [Files_empty_folder]

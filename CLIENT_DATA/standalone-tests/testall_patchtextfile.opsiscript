@@ -27,9 +27,9 @@ include_insert "testall_start.opsiinc"
 
 
 set $MasterFlag$                   = GetProductProperty ("alltest", "off")
-set $Flag_winst_controls$           = GetProductProperty ("controlfunctions", "on")
+set $Flag_winst_patch_text_file$   = GetProductProperty ("patchtextfile", "on")
 
-sub $SubScriptBaseDir$+"\controls.opsiscript"
+sub $SubScriptBaseDir$+"\patchtextfile.opsiscript"
 
 comment ""
 comment ""
@@ -37,5 +37,5 @@ comment ""
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 comment "All sub results:"
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-comment "$winst_controls$                  --> " + $winst_controls$
+comment "$winst_patch_text_file$         --> " + $winst_patch_text_file$
 
