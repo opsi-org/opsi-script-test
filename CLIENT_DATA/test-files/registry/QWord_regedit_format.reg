@@ -1,0 +1,7 @@
+encoding=utf8
+
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\opsi.org\TestQWord]
+"QWordValueRegedit"=QWORD:18446744073709551615
+"QWordValueHexRegedit"=QWORD:0xFFFFFFFFFFFFFFFF

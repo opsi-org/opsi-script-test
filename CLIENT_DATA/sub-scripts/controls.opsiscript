@@ -660,31 +660,9 @@ if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
 		endif
 	endif
 	
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "Variable declaration with initialization"
-		
-		DefVar $strvarinittest$ = "str init value"
-		set $ConstTest$ = "str init value"
-		set $CompValue$ = $strvarinittest$
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		DefStringlist $listvarinittest$ = '["list","init","value"]'
-		if areListsEqual($listvarinittest$,'["list","init","value"]', "FLAG_AUTOMODE")
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-	endif
-		
+	include_insert '%scriptpath%\sub-scripts\controlsFunctions\DirectVariableInitialization.opsiscript'
+	include_insert '%scriptpath%\sub-scripts\controlsFunctions\StringListGenericDefinition.opsiscript'
+	
 	sub_compareResult
 	
 	set $winst_controls$ = $SubResult$

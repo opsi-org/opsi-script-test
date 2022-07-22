@@ -1,0 +1,54 @@
+encoding=utf8
+
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "QWord data type in normal registry section and regedit format (not addreg format since not provided there!)"
+	
+	DefVar $QWordKeyName$ = "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\TestQWord"	
+	DefVar $VariableName$ = "QWordValue"
+	DefVar $VariableValue$ = '18446744073709551615'
+	DefVar $VariableNameHex$ = "QWordValueHex"
+
+	deffunc TestQWordInNormalRegistrySection(): void		
+		Registry_CreateQWordVariable /SysNative
+		DefVar $CompValue$ = GetRegistryValue($QWordKeyName$,$VariableName$,'SysNative')
+		DefVar $CompValueHex$ = GetRegistryValue($QWordKeyName$,$VariableNameHex$,'SysNative')
+		if ($CompValue$ = $VariableValue$) and ($CompValueHex$ = $VariableValue$)
+			comment "creating QWord variable in normal registry section succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "creating QWord variable in normal registry section failed"
+		endif
+		
+		[Registry_CreateQWordVariable]
+		openkey [$QWordKeyName$]	
+		set '$VariableName$'=REG_QWORD:$VariableValue$
+		set '$VariableNameHex$'=REG_QWORD:0xFFFFFFFFFFFFFFFF
+	endfunc
+		
+	deffunc TestQWordInRegeditFormat(): void
+		registry "%scriptpath%\test-files\registry\QWord_regedit_format.reg" /regedit /SysNative
+		DefVar $CompValue$ = GetRegistryValue($QWordKeyName$,$VariableName$+'Regedit','SysNative')
+		DefVar $CompValueHex$ = GetRegistryValue($QWordKeyName$,$VariableNameHex$+'Regedit','SysNative')
+		if ($CompValue$ = $VariableValue$) and ($CompValueHex$ = $VariableValue$)
+			comment "creating QWord variable in regedit format succeeded"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "creating QWord variable in regedit format failed"
+		endif
+	endfunc
+	
+	deffunc deleteQWordKey(): void
+		Registry_DeleteQWordKey /SysNative
+		
+		[Registry_DeleteQWordKey]
+		deletekey [$QWordKeyName$]
+	endfunc
+		
+	TestQWordInNormalRegistrySection()
+	deleteQWordKey()
+	TestQWordInRegeditFormat()
+	deleteQWordKey()	
+endif
