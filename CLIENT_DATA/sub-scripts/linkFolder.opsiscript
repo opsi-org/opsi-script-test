@@ -272,6 +272,3 @@
 	
 	sub_compareResult
 	set $winst_link_folder$ = $SubResult$
-	;else  ; windows
-	;	set $TestResult$ = "not implemented"
-	;endif  ; windows
