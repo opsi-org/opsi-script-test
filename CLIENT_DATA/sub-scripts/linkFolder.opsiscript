@@ -1,3 +1,6 @@
+
+	include_append "%scriptpath%\sub-scripts\linkFolderFunctions\SecondarySections\secondarySections.opsiscript"
+
 	if $OS$ = 'macos'
 		comment "linkFolder not tested on macos"
 		set $TestResult$ = "not implemented"

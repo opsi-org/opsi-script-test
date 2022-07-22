@@ -3997,45 +3997,6 @@ SaveToFile "%userprofiledir%\opsi-winst-test\savetofile.txt"
 
 
 ;----------------  end  sections for patch textfile test ---------------------------------
-;----------------  start  sections for linkfolder test ---------------------------------
-[Files_delete_linkFolder]
-Delete -s -f $tmp$
-
-[Files_delete_linkFolder2]
-Del $tmp$
-
-[LinkFolder_del_Dummy]
-set_basefolder $var$
-set_subfolder ""
-delete_element $string1$
-
-[LinkFolder_Dummy2]
-set_basefolder $var$
-set_subfolder ""
-set_link
-	name: Dummy
-	target: $target$
-	;parameters:
-	working_dir: $workdir$
-	;icon_file:
-	;icon_index:
-end_link
-
-
-[LinkFolder_Dummy]
-set_basefolder $var$
-set_subfolder "Dummy"
-set_link
-	name: Dummy
-	target: $target$
-	parameters:
-	working_dir: $workdir$
-	icon_file:
-	icon_index:
-end_link
-
-
-;----------------  end  sections for linkfolder test ---------------------------------
 ;----------------   start   sections for registry test ---------------------------------
 ;
 ;[sub_retrieve_registry_data]
