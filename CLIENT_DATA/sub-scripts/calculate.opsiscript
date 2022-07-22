@@ -1,0 +1,258 @@
+	Message "testing calculate functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing calculate functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.5") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "calculate"
+		set $ConstTest$ = "0"
+		set $CompValue$ = calculate("-1+1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "1"
+		set $CompValue$ = calculate("0+1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "2"
+		set $CompValue$ = calculate("1+1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "3"
+		set $CompValue$ = calculate("2+1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "10"
+		set $CompValue$ = calculate("9+1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "11"
+		set $CompValue$ = calculate("10+1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "10"
+		set $CompValue$ = calculate("11-1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "9"
+		set $CompValue$ = calculate("10-1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "2"
+		set $CompValue$ = calculate("3-1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "1"
+		set $CompValue$ = calculate("2-1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "0"
+		set $CompValue$ = calculate("1-1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "-1"
+		set $CompValue$ = calculate("0-1")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = "5"
+		set $ConstTest$ = "25"
+		set $CompValue$ = calculate($string1$+"*"+$string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = "5"
+		set $ConstTest$ = "1"
+		set $CompValue$ = calculate($string1$+"/"+$string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = "0"
+		set $ConstTest$ = ""
+		comment " expecting division by zero error and empty string result"
+		set $CompValue$ = calculate($string1$+"/"+$string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "9"
+		set $string2$ = "10"
+		set $ConstTest$ = "1"
+		comment "result 0.9 is rounded to 1 "
+		set $CompValue$ = calculate($string1$+"/"+$string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "10"
+		set $string2$ = "9"
+		set $ConstTest$ = "1"
+		comment "result 1.1111 is rounded to 1 "
+		set $CompValue$ = calculate($string1$+"/"+$string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = "5"
+		set $ConstTest$ = "55"
+		comment " rule * before +"
+		set $CompValue$ = calculate($string1$+"+"+$string2$+"*10")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = "5"
+		set $ConstTest$ = "100"
+		comment "brackets before  rule * before + "
+		set $CompValue$ = calculate("("+$string1$+"+"+$string2$+")*10")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = "ten"
+		set $ConstTest$ = ""
+		comment "invalid char error"
+		set $CompValue$ = calculate($string1$+"*"+$string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = ""
+		set $ConstTest$ = "25"
+		comment "5* is interpreted as 5*5"
+		set $CompValue$ = calculate($string1$+"*")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = ""
+		set $ConstTest$ = "10"
+		comment "5+ is interpreted as 5+5"
+		set $CompValue$ = calculate($string1$+"+")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = "ten 10"
+		set $ConstTest$ = ""
+		comment "invalid char error"
+		set $CompValue$ = calculate($string1$+"*"+$string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "nothing"
+		set $string2$ = "foo"
+		set $ConstTest$ = ""
+		comment "invalid char error"
+		set $CompValue$ = calculate($string1$+"*"+$string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $string1$ = "5"
+		set $string2$ = "foo"
+		set $ConstTest$ = ""
+		comment "invalid char error"
+		set $CompValue$ = calculate($string1$+"/"+$string2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+	endif ; 4.11.3.5
+	
+	sub_compareResult
+	set $winst_calculate$ = $SubResult$

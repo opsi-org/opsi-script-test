@@ -41,13 +41,13 @@ set $Flag_subtestsub$              = GetProductProperty ("sub", "off")
 set $Flag_var_as_param$            = GetProductProperty ("var_as_param", "off")
 set $Flag_subwmi$                  = GetProductProperty ("WMI", "off")
 set $Flag_winst_winbatch$          = GetProductProperty ("Winbatch", "off")
-set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 set $Flag_winst_xml2$              = GetProductProperty ("XML2", "off")
 set $Flag_toml$                    = GetProductProperty ("TOML", "off")
 
 ;--------------------------------------------------------
 set $Flag_compare_to_python$       = GetProductProperty ("ExecPython", "off")
 set $Flag_internalundocumented$    = GetProductProperty ("internalundocumented", "off")
+; xml is deprecated!
 set $Flag_winst_xml$               = GetProductProperty ("XMLPatch", "off")
 ;--------------------------------------------------------
 ;set $Flag_winst_idapiconfig$       = GetProductProperty ("idapiconfig", "off")
