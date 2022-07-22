@@ -1,3 +1,6 @@
+
+	include_append "%scriptpath%\sub-scripts\execWithFunctions\SecondarySections\secondarySections.opsiscript"
+
 	Message "testing execWith "
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
