@@ -1,3 +1,6 @@
+
+	include_append "%scriptpath%\sub-scripts\patchHostsFunctions\SecondarySections\secondarySections.opsiscript"
+
 	Message "testing patchHosts functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
