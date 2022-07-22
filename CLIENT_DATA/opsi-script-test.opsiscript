@@ -4212,62 +4212,6 @@ deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
 ;
 ;;----------------   end   sections for registry test ---------------------------------
 
-;----------------   start   sections for xml test ---------------------------------
-[Files_copy_xml]
-copy "%ScriptPath%\test-files\xmlpatch2\*.xml" $HomeTestFiles$
-
-;[XMLPatch_XMLAddNamespace]
-
-
-[XMLPatch_SetAttribute]
-openNodeSet 'node_level-1_number-1 /node_level-2_B /'
-SetAttribute "color" value="yellow"
-
-[XMLPatch_AddAttribute]
-openNodeSet
-	documentroot
-	all_childelements_with:
-	elementname:"node_level-1_number-1"
-		all_childelements_with:
-		elementname:"node_level-2_A"
-		attribute: "color" value="blue"
-end
-AddAttribute "name" value="OpenOfficeWriter"
-
-[XMLPatch_DeleteAttribute]
-openNodeSet 'node_level-1_number-1 /node_level-2_B /'
-DeleteAttribute "color"
-
-[XMLPatch_DeleteElement]
-openNodeSet 'node_level-1_number-1 /node_level-2_B / '
-DeleteElement "node_level-2_B"
-
-[XMLPatch_SetText]
-openNodeSet 'node_level-1_number-1 /node_level-2_A / '
-SetText "node_level-2_A"
-
-[XMLPatch_AddText]
-openNodeSet 'node_level-1_number-1 /node_level-2_C / '
-AddText "node_level-2_C"
-
-[XMLPatch_SetText_dummy2]
-OpenNodeSet
-- error_when_no_node_existing false
-- warning_when_no_node_existing true
-- error_when_nodecount_greater_1 false
-- warning_when_nodecount_greater_1 true
-- create_when_node_not_existing false
-- attributes_strict false
-documentroot
-all_childelements_with:
-elementname: "PROFIL"
-all_childelements_with:
-elementname: "VALUE"
-text:"K1S114"
-end
-SetText "K1S120"
-
-;----------------   end   sections for xml test ---------------------------------
 ;----------------   start   sections for info map tests ---------------------------------
 [DosInAnIcon_wmi_get_locale]
 @echo off

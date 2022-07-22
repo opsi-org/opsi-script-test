@@ -1,3 +1,6 @@
+	
+	include_append "%scriptpath%\sub-scripts\xmlFunctions\SecondarySections\secondarySections.opsiscript"
+
 	Message "testing XMLPatch functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
