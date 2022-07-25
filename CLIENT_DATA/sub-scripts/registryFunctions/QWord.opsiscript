@@ -29,7 +29,7 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
 	endfunc
 		
 	deffunc TestQWordInRegeditFormat(): void
-		registry "%scriptpath%\test-files\registry\QWord_regedit_format.reg" /regedit /SysNative
+		registry $TestFilesBaseDir$+"\registry\QWord_regedit_format.reg" /regedit /SysNative
 		DefVar $CompValue$ = GetRegistryValue($QWordKeyName$,$VariableName$+'Regedit','SysNative')
 		DefVar $CompValueHex$ = GetRegistryValue($QWordKeyName$,$VariableNameHex$+'Regedit','SysNative')
 		if ($CompValue$ = $VariableValue$) and ($CompValueHex$ = $VariableValue$)
