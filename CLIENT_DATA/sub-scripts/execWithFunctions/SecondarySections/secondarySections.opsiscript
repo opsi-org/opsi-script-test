@@ -1,0 +1,54 @@
+[dosbatch_create_testfile]
+makedirectory "$testfilepath$"
+echo def > "$testfilepath$$testfile$"
+
+[winbatch_notepad]
+notepad "$testfilepath$$testfile$"
+
+[ExecWith_close_helper_window]
+; wait for helper window and write something
+WinWaitActive("opsi-helper-child")
+WinActivate("opsi-helper-child")
+Sleep(50)
+Send("abc")
+Sleep(50)
+Send("{TAB}")
+Send("{ENTER}")
+Exit
+
+[winbatch_helper_showwindow_50]
+"%ScriptPath%\$opsi_script_test_helper_bin$" --wait=2 --showwindow=50
+
+
+[ExecWith_save_notepad]
+WinWait("Editor", "")
+;send j for ja
+Send("j")
+;send y for yes
+Send("y")
+;send s for save
+Send("s")
+;and good bye
+Exit
+
+[ExecWith_parameters]
+@echo off
+echo param1= %1%
+echo param2= %2%
+echo param3= %3%
+echo param4= %4%
+echo param5= %5%
+
+[ExecWith_parameters_bash]
+echo param1= $1
+echo param2= $2
+echo param3= $3
+echo param4= $4
+echo param5= $5
+
+[Execwith_Autoit_param2]
+Const $ADS_UF_DONT_EXPIRE_PASSWD = 0X10000
+Const $ADS_UF_PASSWD_CANT_CHANGE = 0X40
+$UserName = "$UserPassWord$"
+$Password = "$UserName$"
+$UserGroup = "$UserGroup$"

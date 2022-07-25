@@ -1,4 +1,7 @@
-Message "testing control functions"
+
+	include_append "%scriptpath%\sub-scripts\controlsFunctions\SecondarySections\secondarySections.opsiscript"
+
+	Message "testing control functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
 	comment "testing control functions"
