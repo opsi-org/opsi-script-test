@@ -1,0 +1,41 @@
+; This code is part of the opsi.org project
+;
+; Copyright (c) uib gmbh (www.uib.de)
+; This sourcecode is owned by the uib gmbh, D55118 Mainz, Germany
+; and published under the Terms of the GNU Affero General Public License.
+; Text of the AGPL: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+; credits: http://www.opsi.org/credits/
+
+
+
+
+[Actions]
+requiredWinstVersion >= "4.11.4.1"
+ScriptErrorMessages = false
+encoding=utf8
+setOutputLevel = 3
+
+;setdebug_prog = true
+
+include_insert "testall_definevars.opsiinc"
+; first include the end and than the start, becaus star need sections from end
+include_append "testall_end.opsiinc"
+include_insert "testall_start.opsiinc"
+
+
+
+
+
+set $MasterFlag$                = GetProductProperty ("alltest", "off")
+set $Flag_winst_xml2$           = GetProductProperty ("xml2", "on")
+
+sub "%scriptpath%\..\sub-scripts\xml2test.opsiscript"
+
+comment ""
+comment ""
+comment ""
+comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+comment "All sub results:"
+comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+comment "$winst_xml2$                  --> " + $winst_xml2$
+

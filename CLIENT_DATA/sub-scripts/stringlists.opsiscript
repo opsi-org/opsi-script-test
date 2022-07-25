@@ -1747,9 +1747,25 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 		if fileexists($SubScriptBaseDir$+"/subsub_getoutstream_test2.opsiscript")
 			sub $SubScriptBaseDir$+"/subsub_getoutstream_test2.opsiscript"
 		else
-			sub "%scriptpath%/../sub-scripts/subsub_getoutstream_test2.opsiscript"
+			sub $SubScriptBaseDir$+"/subsub_getoutstream_test2.opsiscript"
 		endif
 	endif ; 4.12.4.34
+
+	; ###############################
+	comment "uib_strlistutils"
+	
+	importlib "uib_strlistutils"
+	
+	set $list1$ = createStringList ("opsi-vhd-control","jedit","opsi-logviewer","classic-shell","config-win10")
+	set $list2$ = createStringList("classic-shell","config-win10","javavm","jedit","opsi-client-agent","opsi-logviewer","opsi-vhd-control","opsi-vhd-tester","opsi-winst")
+	
+	set $list3$ = getListContainingList($list1$,$list2$)
+	if stringToBool(compareLists($list3$,$list1$))
+		comment "passed"
+	else
+		LogWarning "failed"
+	endif
+
 	
 	Files_empty_folder ;remove test files
 	;End of Testing listFiles

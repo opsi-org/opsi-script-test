@@ -241,7 +241,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 		endif ;4.12.10
 		
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.13")
-			importLib "%scriptpath%\standalone-tests\functionlib.opsiscript"
+			importLib $ScriptTestBaseDir$+"\standalone-tests\functionlib.opsiscript"
 			switch $OS$
 				case "Windows_nt"
 					set $ConstTest$ = "9"
@@ -263,7 +263,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 			
-			sub "%scriptpath%\standalone-tests\sub_defined_functions12.opsiscript"
+			sub $ScriptTestBaseDir$+"\standalone-tests\sub_defined_functions12.opsiscript"
 			if count($list1$) int= $ConstTest$
 				comment "passed"
 			else
@@ -460,21 +460,7 @@ if ($Flag_winst_local_functions$ = "on") or ($MasterFlag$ = "on")
 			comment "passed"
 		endif
 		
-		; ###############################
-		comment "uib_strlistutils"
 		
-		importlib "uib_strlistutils"
-		
-		set $list1$ = createStringList ("opsi-vhd-control","jedit","opsi-logviewer","classic-shell","config-win10")
-		set $list2$ = createStringList("classic-shell","config-win10","javavm","jedit","opsi-client-agent","opsi-logviewer","opsi-vhd-control","opsi-vhd-tester","opsi-winst")
-		
-		set $list3$ = getListContainingList($list1$,$list2$)
-		if stringToBool(compareLists($list3$,$list1$))
-			comment "passed"
-		else
-			LogWarning "failed"
-		endif
-
 	endif ; 4.12.0.20
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.36")

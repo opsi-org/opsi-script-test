@@ -1191,7 +1191,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			killtask $helper_child_bin_name$
 			killtask $opsi_script_test_helper_bin_name$
 			marktime
-			set $tmp$ = '"%ScriptPath%' + $pathDelim$ + $opsi_script_test_helper_bin$ + '" --fork-and-stop=2'
+			set $tmp$ = '"'+$ScriptTestBaseDir$ + $pathDelim$ + $opsi_script_test_helper_bin$ + '" --fork-and-stop=2'
 			set $tmp$ = processCall($tmp$)  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
 			difftime
 			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"

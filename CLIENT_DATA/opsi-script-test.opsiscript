@@ -29,6 +29,7 @@ DefVar $SubResult$
 DefVar $HomeTestFiles$
 DefVar $TestFilesBaseDir$
 DefVar $SubScriptBaseDir$
+DefVar $ScriptTestBaseDir$
 DefVar $ConstTest$
 Defvar $ConstTest2$
 DefVar $CompValue$
@@ -243,6 +244,8 @@ defvar $orgpolicy$
 
 set $TestFilesBaseDir$ = forcePathDelims("%scriptpath%\test-files")
 set $SubScriptBaseDir$ = forcePathDelims("%scriptpath%\sub-scripts")
+set $ScriptTestBaseDir$ = forcePathDelims("%scriptpath%")
+
 Set $OS$ = GetOS
 ; retrieve current language
 set $languageInfo$ = getLocaleInfoMap

@@ -26,7 +26,7 @@ if $OS$ = "Windows_NT"
 	set $MsVersion$ = GetMsVersionInfo
 	Set $HomeTestFiles$ = "C:\tmp\testFiles"
 endif
-set $ProductId$ = "opsi-winst-test"
+set $ProductId$ = "opsi-script-test"
 if $OS$ = "LINUX"
 	comment "We are running on Linux"
 	Set $HomeTestFiles$ = "/tmp/opsi-script-test/testFiles"
@@ -39,7 +39,7 @@ Files_testFiles
 set $FinalResult$ = "passed"
 
 
-set $Lic_ProductId$ = "opsi-winst-test"
+set $Lic_ProductId$ = "opsi-script-test"
 set $LicensePool$ = "opsi-winst-test-pool"
 
 
@@ -65,3 +65,4 @@ endif
 
 set $TestFilesBaseDir$ = forcePathDelims("%scriptpath%\..\test-files")
 set $SubScriptBaseDir$ = forcePathDelims("%scriptpath%\..\sub-scripts")
+set $ScriptTestBaseDir$ = forcePathDelims("%scriptpath%\..")
