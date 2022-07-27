@@ -193,7 +193,7 @@ tasklist /FI "IMAGENAME eq $string2$"
 "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard]
-msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+msiexec /i "$TestFilesBaseDir$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard_from_c]
 msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
@@ -211,10 +211,10 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 "%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 
 [Winbatch_regedit_s_64]
-"%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+"%systemroot%\regedit.exe" /s "$TestFilesBaseDir$\64bit.reg"
 
 [Winbatch_regedit_s_32]
-"%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+"%system%\regedit.exe" /s "$TestFilesBaseDir$\64bit.reg"
 
 [winbatch_wow_myinno_from_c]
 "%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
@@ -242,8 +242,8 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 ;"$HomeTestFiles$\testFiles\opsi-script-test-helper-win\opsiwinsttesthelperasinvoker.exe" --log="$HomeTestFiles$\testFiles\opsi-script-test-helper-win\admin.log"
 ;
 [Files_copy_msi_exe_2_c]
-copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
-copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.exe" "$HomeTestFiles$\testFiles"
 
 [Files_copy_helper_2_c]
 copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"

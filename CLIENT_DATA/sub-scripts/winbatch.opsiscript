@@ -956,7 +956,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 		
 		
 		
-		if FileExists("%ScriptPath%\test-files\testFiles\myinnosetup.exe")
+		if FileExists($TestFilesBaseDir$+"\testFiles\myinnosetup.exe")
 			winbatch_myinno  /TimeOutSeconds 20
 			if FileExists("%CurrentAppdataDir%\myprog.exe")
 				comment "winbatch_myinno passed"
@@ -973,7 +973,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			winbatch_myinno_uninstall  /TimeOutSeconds 20
 		endif
 		
-		if FileExists("%ScriptPath%\test-files\testFiles\myinnosetup.exe")
+		if FileExists($TestFilesBaseDir$+"\testFiles\myinnosetup.exe")
 			winbatch_wow_myinno  /TimeOutSeconds 20
 			includelog "c:\opsi.org\log\winbatch_wow_myinno.log" "100"
 			if FileExists("%CurrentAppdataDir%\myprog.exe")
@@ -1191,7 +1191,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			killtask $helper_child_bin_name$
 			killtask $opsi_script_test_helper_bin_name$
 			marktime
-			set $tmp$ = '"%ScriptPath%' + $pathDelim$ + $opsi_script_test_helper_bin$ + '" --fork-and-stop=2'
+			set $tmp$ = '"'+$ScriptTestBaseDir$ + $pathDelim$ + $opsi_script_test_helper_bin$ + '" --fork-and-stop=2'
 			set $tmp$ = processCall($tmp$)  /WaitForProcessEnding $helper_child_bin_name$ /TimeOutSeconds 20
 			difftime
 			includelog "%opsiLogDir%"+$pathDelim$+$opsi_script_test_helper_bin_log$ "100"
@@ -1796,7 +1796,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 			message "processCall msiexec call"
 			;Winbatch_msi_standard
 			set $ConstTest$ = "0"
-			set $CompValue$ = processCall('msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "'+$HomeTestFiles$+'\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress')
+			set $CompValue$ = processCall('msiexec /i $TestFilesBaseDir$+"\testFiles\dummy.msi" /l* "'+$HomeTestFiles$+'\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress')
 			if ($ConstTest$ = $CompValue$)
 				comment "processCall msiexec call passed"
 			else
@@ -1920,7 +1920,7 @@ tasklist /FI "IMAGENAME eq $helper_child_bin_name$"
 "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard]
-msiexec /i "%ScriptPath%\test-files\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
+msiexec /i "$TestFilesBaseDir$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
 
 [Winbatch_msi_standard_from_c]
 msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.install_log.txt" /qb! ALLUSERS=2 REBOOT=ReallySuppress
@@ -1938,10 +1938,10 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 "%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\standalone-tests\myinno_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
 
 [Winbatch_regedit_s_64]
-"%systemroot%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+"%systemroot%\regedit.exe" /s "$TestFilesBaseDir$\64bit.reg"
 
 [Winbatch_regedit_s_32]
-"%system%\regedit.exe" /s "%scriptpath%\test-files\64bit.reg"
+"%system%\regedit.exe" /s "$TestFilesBaseDir$\64bit.reg"
 
 [winbatch_wow_myinno_from_c]
 "%OpsiscriptDir%\opsi-script.exe" "%scriptpath%\myinno_from_c_winbatch.ins" /logfile "c:\opsi.org\log\winbatch_wow_myinno.log" /batch
@@ -1966,8 +1966,8 @@ msiexec /i "$HomeTestFiles$\testFiles\dummy.msi" /l* "$HomeTestFiles$\dummy.inst
 checkTargetPath = "$HomeTestFiles$"
 
 [Files_copy_msi_exe_2_c]
-copy "%ScriptPath%\test-files\testFiles\*.msi" "$HomeTestFiles$\testFiles"
-copy "%ScriptPath%\test-files\testFiles\*.exe" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.msi" "$HomeTestFiles$\testFiles"
+copy "$TestFilesBaseDir$\testFiles\*.exe" "$HomeTestFiles$\testFiles"
 
 [Files_copy_helper_2_c]
 copy "%ScriptPath%\opsi-script-test-helper-win\*.exe" "$HomeTestFiles$\testFiles\opsi-script-test-helper-win"

@@ -1,0 +1,707 @@
+encoding=utf8
+
+
+if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
+	Message "testing PatchTextFile functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing PatchTextFile functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	
+	set $TestResult$ = "o.k."
+	Files_copy_patchtextfile
+	; 7.5 PatchTextFile Sections
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Set_Netscape_User_Pref"
+	PatchTextFile_Set_Netscape_User_Pref $HomeTestFiles$+"\prefs.js"
+	set $ConstTest$ = 'user_pref("browser.startup.homepage", "http://uib.de");'
+	set $list1$ = loadTextFile($HomeTestFiles$+"\prefs.js")
+	Set $CompValue$ = Trim(takeFirstStringContaining($list1$, "http://uib.de"))
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "AddStringListElement_To_Netscape_User_Pref"
+	PatchTextFile_AddStringListElement_To_Netscape_User_Pref $HomeTestFiles$+"\prefs.js"
+	set $ConstTest$ = 'user_pref("intl.charsetmenu.browser.cache", "us-ascii, ISO-8859-1, UTF-8,UTF-16, UTF-32");'
+	set $list1$ = loadTextFile($HomeTestFiles$+"\prefs.js")
+	Set $CompValue$ = Trim(takeFirstStringContaining($list1$,"intl.charsetmenu.browser.cache"))
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Set_Mozilla_Pref"
+	PatchTextFile_Set_Mozilla_pref_Pref $HomeTestFiles$+"\prefs.js"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\prefs.js")
+	set $ConstTest$ = 'user_pref("key.1", "http://opsi.org");'
+	Set $CompValue$ = Trim(takeFirstStringContaining($list1$,"key.1"))
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	set $ConstTest$ = 'pref("key.2", "http://opsi.org");'
+	Set $CompValue$ = Trim(takeFirstStringContaining($list1$,"key.2"))
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	set $ConstTest$ = 'lock_pref("key.3", "http://opsi.org");'
+	Set $CompValue$ = Trim(takeFirstStringContaining($list1$,"key.3"))
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	set $ConstTest$ = 'foobar("key.4", "http://opsi.org");'
+	Set $CompValue$ = Trim(takeFirstStringContaining($list1$,"key.4"))
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "AddStringListElement_To_Netscape_User_Pref"
+	PatchTextFile_AddStringListElement_To_Mozilla_Pref $HomeTestFiles$+"\prefs.js"
+	set $ConstTest$ = 'user_pref("network.proxy.no_proxies_on", "localhost, 127.0.0.1, vmix, bonifax, opsi.org");'
+	set $list1$ = loadTextFile($HomeTestFiles$+"\prefs.js")
+	Set $CompValue$ = Trim(takeFirstStringContaining($list1$,"network.proxy.no_proxies_on"))
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "DeleteTheLine / AdvanceLine"
+	PatchTextFile_AdvanceLine_DeleteTheLine $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line containing dummy1."
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeString(0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "FindLine"
+	PatchTextFile_findLine $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line1 with no sense"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeString(0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "FindLine_StartingWith"
+	PatchTextFile_FindLine_StartingWith $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line3 with no sense"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeString(3, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "FindLine_Containing"
+	PatchTextFile_FindLine_Containing $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line2 with no sense"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeString(1, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "GoToTop"
+	PatchTextFile_GoToTop $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line2 with no sense"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeString(0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "GoToBottom"
+	PatchTextFile_GoToBottom $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line2 with no sense"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeString(0, $list1$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "AddLine"
+	PatchTextFile_AddLine $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line added by winst"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeFirstStringContaining($list1$, $ConstTest$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "InsertLine"
+	PatchTextFile_InsertLine $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line inserted by winst"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeFirstStringContaining($list1$, $ConstTest$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "AppendLine"
+	PatchTextFile_AppendLine $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line appended by winst"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeFirstStringContaining($list1$, $ConstTest$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Append_File"
+	PatchTextFile_Append_File $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line3appendbyFile"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeFirstStringContaining($list1$, $ConstTest$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Subtract_File"
+	PatchTextFile_Subtract_File $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line1appendbyFile"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeFirstStringContaining($list1$, $ConstTest$)
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "SaveToFile"
+	PatchTextFile_SaveToFile $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line1appendbyFile"
+	if (fileExists($HomeTestFiles$+"\savetofile.txt"))
+		set $list1$ = loadTextFile($HomeTestFiles$+"\savetofile.txt")
+		Set $CompValue$ = takeFirstStringContaining($list1$, $ConstTest$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "Sorted"
+	PatchTextFile_Sorted $HomeTestFiles$ + "\dummy.txt"
+	set $ConstTest$ = "Line0appendbyFile"
+	set $ConstTest2$ = "Line4appendbyFile"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+	Set $CompValue$ = takeString(0, $list1$)
+	Set $CompValue2$ = takeString(-1, $list1$)
+	if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.6") >= "0"
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "key value pairs"
+		PatchTextFile_setvalues $HomeTestFiles$ + "\dummy.txt"
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+		set $ConstTest$ = 'no'
+		set $ConstTest2$ = "so_tight"
+		Set $CompValue$ = getValue("set me to no", $list1$)
+		Set $CompValue2$ = getValue("tight", $list1$)
+		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = "java!"
+		set $ConstTest2$ = "great"
+		Set $CompValue$ = getValuebySeparator("divided by a colon", ":", $list1$)
+		Set $CompValue2$ = getValuebySeparator("divided by a greater-than sign", ">",$list1$)
+		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "search and replace"
+		PatchTextFile_searchAndReplace $HomeTestFiles$ + "\dummy.txt"
+		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.txt")
+		set $ConstTest$ = "lazarus!"
+		Set $CompValue$ = getValuebySeparator("divided by a colon", ":", $list1$)
+		if (($ConstTest$ = $CompValue$))
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.11.4.6
+	
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "config file example"
+	PatchTextFile_vmnet8_config $HomeTestFiles$ + "\vmnet8.txt"
+	set $ConstTest$ = "0"
+	set $list1$ = loadTextFile($HomeTestFiles$+"\vmnet8.txt")
+	Set $CompValue$ = count($list1$)
+	if $ConstTest$ = $CompValue$
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	Files_empty_folder
+	
+	;if not($OS$ = 'macos')
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.4") >= "0"
+		
+		Files_profile_copy /AllNTUserProfiles
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DeleteTheLine / AdvanceLine"
+		PatchTextFile_AdvanceLine_DeleteTheLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $tmp$ = "0"
+		set $ConstTest$ = "Line containing dummy1."
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "FindLine"
+		PatchTextFile_findLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line1 with no sense"
+		set $tmp$ = "0"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "FindLine_StartingWith"
+		PatchTextFile_FindLine_StartingWith "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line3 with no sense"
+		set $tmp$ = "3"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "FindLine_Containing"
+		PatchTextFile_FindLine_Containing "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line2 with no sense"
+		set $tmp$ = "1"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GoToTop"
+		PatchTextFile_GoToTop "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line2 with no sense"
+		set $tmp$ = "0"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "GoToBottom"
+		PatchTextFile_GoToBottom "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line2 with no sense"
+		set $tmp$ = "0"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "AddLine"
+		PatchTextFile_AddLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line added by winst"
+		set $tmp$ = "1"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "InsertLine"
+		PatchTextFile_InsertLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line inserted by winst"
+		set $tmp$ = "1"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "AppendLine"
+		PatchTextFile_AppendLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line appended by winst"
+		set $tmp$ = "3"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Append_File"
+		PatchTextFile_Append_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line3appendbyFile"
+		set $tmp$ = "6"
+		set $list1$ = getProfilesDirList
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "Subtract_File"
+		PatchTextFile_Subtract_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		set $ConstTest$ = "Line1appendbyFile"
+		set $list1$ = getProfilesDirList
+		set $tmp$ = "0"
+		for %s% in $list1$ do sub_check_profile_txt
+		
+		;comment ""
+		;comment "-------------------------------------"
+		;comment "Testing: "
+		;message "SaveToFile"
+		;PatchTextFile_SaveToFile "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		;set $ConstTest$ = "Line1appendbyFile"
+		;if (fileExists("%CurrentProfileDir%\opsi-winst-test\savetofile.txt"))
+		;	set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\savetofile.txt")
+		;	Set $CompValue$ = takeString(0, $list1$)
+		;	if ($ConstTest$ = $CompValue$)
+		;		comment "passed"
+		;	else
+		;		set $TestResult$ = "not o.k."
+		;		LogWarning "failed"
+		;	endif
+		;else
+		;	set $TestResult$ = "not o.k."
+		;	LogWarning "failed"
+		;endif
+		
+		Files_profile_del /AllNTUserProfiles
+		
+	endif ; 4.11.3.4
+	;endif ; not macos
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.6") >= "0"
+		;Files_copy_patchtextfile_system /sysnative
+		; Patchtextfile is not sysnative enabled yet
+		Files_copy_patchtextfile_system
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "DeleteTheLine / AdvanceLine"
+		PatchTextFile_AdvanceLine_DeleteTheLine "%system%\opsi-script-test" + "\dummy.txt"
+		set $ConstTest$ = "Line containing dummy1."
+		set $list1$ = loadTextFile("%system%\opsi-script-test"+"\dummy.txt")
+		Set $CompValue$ = takeString(0, $list1$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		Files_empty_folder_system
+	endif ; 4.11.3.6
+	
+	
+	
+	sub_compareResult
+	set $winst_patch_text_file$ = $SubResult$
+endif
+
+
+;---------------- start sections for patch textfile test ---------------------------
+
+[sub_check_profile_txt]
+set $list2$ = loadTextFile("%s%\opsi-winst-test\dummy.txt")
+Set $CompValue$ = takeFirstStringContaining($list2$, $ConstTest$)
+;if $tmp$ = "0"
+;	Set $CompValue$ = takeString(0, $list2$)
+;endif
+;if $tmp$ = "1"
+;	Set $CompValue$ = takeString(1, $list2$)
+;endif
+;if $tmp$ = "3"
+;	Set $CompValue$ = takeString(3, $list2$)
+;endif
+;if $tmp$ = "6"
+;	Set $CompValue$ = takeString(6, $list2$)
+;endif
+if ($ConstTest$ = $CompValue$)
+	comment "passed"
+else
+	set $TestResult$ = "not o.k."
+	LogWarning "failed: PatchText /AllNTUserProfiles"
+endif
+
+[Files_profile_copy]
+;copy "%Scriptpath%\profiles\*.*" "%CurrentAppdataDir%\ACME"
+copy "$TestFilesBaseDir$\PatchTextFile\*.*" "%userprofiledir%\opsi-winst-test"
+
+[Files_profile_del]
+;del -s -f "%CurrentAppdataDir%\ACME"
+del "%userprofiledir%\opsi-winst-test.ini"
+del -s -f -c "%userprofiledir%\opsi-winst-test"
+
+[Files_copy_patchtextfile]
+copy "$TestFilesBaseDir$\PatchTextFile\*.*" $HomeTestFiles$
+
+[Files_empty_folder]
+Delete -s -f -c $HomeTestFiles$
+
+[Files_copy_patchtextfile_system]
+copy "$TestFilesBaseDir$\PatchTextFile\*.*" "%system%\opsi-script-test"
+
+[Files_empty_folder_system]
+Delete -s -f -c "%system%\opsi-script-test"
+
+
+[PatchTextFile_Set_Netscape_User_Pref]
+Set_Netscape_User_Pref ("browser.startup.homepage", "http://uib.de")
+
+[PatchTextFile_AddStringListElement_To_Netscape_User_Pref]
+AddStringListElement_To_Netscape_User_Pref ("intl.charsetmenu.browser.cache", "UTF-16, UTF-32")
+
+[PatchTextFile_Set_Mozilla_pref_Pref]
+Set_Mozilla_Pref ("user_pref","key.1", "http://opsi.org")
+Set_Mozilla_Pref ("pref","key.2", "http://opsi.org")
+Set_Mozilla_Pref ("lock_pref","key.3", "http://opsi.org")
+Set_Mozilla_Pref ("foobar","key.4", "http://opsi.org")
+
+[PatchTextFile_AddStringListElement_To_Mozilla_Pref]
+AddStringListElement_To_Mozilla_Pref("user_pref","network.proxy.no_proxies_on", "opsi.org")
+
+[PatchTextFile_AdvanceLine_DeleteTheLine]
+AdvanceLine 1
+DeleteTheLine
+
+[PatchTextFile_findLine]
+FindLine "Line containing dummy1."
+DeleteTheLine
+
+[PatchTextFile_FindLine_StartingWith]
+FindLine_StartingWith "Additional"
+DeleteTheLine
+
+[PatchTextFile_FindLine_Containing]
+FindLine_Containing "dummy2"
+DeleteTheLine
+
+[PatchTextFile_GoToTop]
+GoToTop
+AdvanceLine 1
+DeleteTheLine
+
+[PatchTextFile_GoToBottom]
+GoToBottom
+DeleteTheLine
+
+[PatchTextFile_AddLine]
+GoToBottom
+AddLine "Line added by winst"
+
+[PatchTextFile_InsertLine]
+GoToBottom
+InsertLine "Line inserted by winst"
+
+[PatchTextFile_AppendLine]
+GoToBottom
+AppendLine "Line appended by winst"
+
+[PatchTextFile_Append_File]
+Append_File "$HomeTestFiles$\fileappend.txt"
+
+[PatchTextFile_Subtract_File]
+Subtract_File "$HomeTestFiles$\filesubstract.txt"
+
+[PatchTextFile_SaveToFile]
+SaveToFile "$HomeTestFiles$\savetofile.txt"
+
+[PatchTextFile_Sorted]
+AddLine "Line0appendbyFile"
+AddLine "Line4appendbyFile"
+sorted
+
+[PatchTextFile_setvalues]
+setValueByKey "newkey" "onTop"
+setValueByKey "set me to no" "no"
+setKeyValueSeparator ":"
+setValueByKey "divided by a colon" "java!"
+setKeyValueSeparator ">"
+setValueByKey "divided by a greater-than sign" "great"
+setKeyValueSeparator "="
+setValueByKey  "tight" "so_tight"
+setValueByKey  "comment" "no"
+GoToBottom
+setValueByKey "newkey2" "atBottom"
+
+[PatchTextFile_searchAndReplace]
+searchAndReplace "java" "lazarus"
+
+[PatchTextFile_vmnet8_config]
+GoToTop
+FindLine_StartingWith "# Virtual ethernet segment 8"
+FindLine_StartingWith "subnet"
+DeleteTheLine
+InsertLine "subnet 172.16.116.0 netmask 255.255.255.0 {"
+
+FindLine_Containing "range"
+DeleteTheLine
+InsertLine "#range 172.16.116.128 172.16.116.254;            # default allows up to 125 VM's"
+
+FindLine_StartingWith "option broadcast-address"
+DeleteTheLine
+InsertLine "option broadcast-address 172.16.116.255;"
+
+FindLine_StartingWith "option domain-name-servers"
+DeleteTheLine
+InsertLine "option domain-name-servers 172.16.116.2;"
+
+FindLine_StartingWith "option netbios-name-servers"
+DeleteTheLine
+InsertLine "option netbios-name-servers 172.16.116.2;"
+
+FindLine_StartingWith "option routers"
+DeleteTheLine
+InsertLine "option routers 172.16.116.2;"
+
+FindLine_Containing "fixed-address"
+DeleteTheLine
+InsertLine "    fixed-address 172.16.116.1;"
+
+Subtract_File "$HomeTestFiles$\vmnet8-target.txt"
+
+[PatchTextFile_Append_File_prof]
+Append_File "%userprofiledir%\opsi-winst-test\fileappend.txt"
+
+[PatchTextFile_Subtract_File_prof]
+Subtract_File "%userprofiledir%\opsi-winst-test\filesubstract.txt"
+
+[PatchTextFile_SaveToFile_prof]
+SaveToFile "%userprofiledir%\opsi-winst-test\savetofile.txt"
+
+
+
+;----------------  end  sections for patch textfile test ---------------------------------

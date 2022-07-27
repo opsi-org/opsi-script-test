@@ -12,7 +12,7 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	set $TestResult$ = "o.k."
 	
 	DefVar $depotfilepath$
-	set $depotfilepath$ = "%Scriptpath%\test-files\TOML\"
+	set $depotfilepath$ = $TestFilesBaseDir$+"\TOML\"
 	if DirectoryExists ($depotfilepath$)
 		
 		DefVar $TOMLFile$

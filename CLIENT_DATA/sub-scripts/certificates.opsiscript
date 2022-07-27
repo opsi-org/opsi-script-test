@@ -12,7 +12,7 @@ if ($Flag_certificates$ = "on") or ($MasterFlag$ = "on")
 	set $TestResult$ = "o.k."
 	
 	
-	set $testfilepath$ = forcePathDelims("%Scriptpath%\test-files\certificates")
+	set $testfilepath$ = forcePathDelims($TestFilesBaseDir$+"\certificates")
 	if DirectoryExists ($testfilepath$)
 		set $list$ = listFiles($testfilepath$,"*.pem;*.crt","False")
 		if count($list$) int> "0"

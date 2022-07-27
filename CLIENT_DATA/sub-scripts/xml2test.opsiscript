@@ -60,6 +60,16 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
+
+		set $ConstTest$ = ""
+		set $list2$ = xml2GetFirstChildNodeByName($list1$,"ModifyPartitions")
+		set $CompValue$ = getXml2AttributeValueByKey($list2$,"name3")
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
 		
 		
 		set $testfile$ = $HomeTestFiles$+"\unattend_win10_x64.xml"
@@ -1190,7 +1200,7 @@ endif
 
 [Files_copy_xml2]
 ; sub test:
-copy "%scriptpath%\test-files\xmlpatch2\*" "$HomeTestFiles$"
+copy "$TestFilesBaseDir$\xmlpatch2\*" "$HomeTestFiles$"
 ; standalone test:
 copy "%scriptpath%\..\test-files\xmlpatch2\*" "$HomeTestFiles$"
 
@@ -1206,7 +1216,7 @@ SetAttribute 'name1' 'value1'
 AddAttribute 'name2' 'value2'
 AddAttribute 'name2' 'value1'
 AddAttribute 'name3' 'value3'
-delAttribute 'name3'
+deleteAttribute 'name3'
 
 [xml2_w10una_test_2]
 strictMode = $xml2strictMode$

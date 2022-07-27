@@ -25,10 +25,11 @@ include_insert "testall_start.opsiinc"
 
 
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "off")
-set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "on")
 
-sub "%scriptpath%\..\sub-scripts\stringlists.opsiscript"
+set $MasterFlag$                = GetProductProperty ("alltest", "off")
+set $Flag_winst_xml2$           = GetProductProperty ("xml2", "on")
+
+sub "%scriptpath%\..\sub-scripts\xml2test.opsiscript"
 
 comment ""
 comment ""
@@ -36,5 +37,5 @@ comment ""
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 comment "All sub results:"
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-comment "$winst_string_list$                  --> " + $winst_string_list$
+comment "$winst_xml2$                  --> " + $winst_xml2$
 

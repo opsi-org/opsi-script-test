@@ -685,7 +685,7 @@ reg add "HKEY_USERS\%UsercontextSID%\SOFTWARE\opsi.org\opsi-winst-test\test-4.0"
 ; examples from/for the manual
 [Files_profile_copy]
 copy "%Scriptpath%\profiles\*.*" "%CurrentAppdataDir%\ACME"
-copy "%ScriptPath%\test-files\PatchTextFile\*.*" "%userprofiledir%\opsi-winst-test"
+copy "$TestFilesBaseDir$\PatchTextFile\*.*" "%userprofiledir%\opsi-winst-test"
 
 [Files_profile_del]
 del -s -f "%CurrentAppdataDir%\ACME"

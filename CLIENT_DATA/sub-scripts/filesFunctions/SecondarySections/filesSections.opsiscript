@@ -1,9 +1,9 @@
 
 [Files_copy_test_to_programfiles]
-copy "%ScriptPath%\test-files\testFiles\dummy.txt" "%ProgramFilesDir%\opsi.org\test"
+copy "$TestFilesBaseDir$\testFiles\dummy.txt" "%ProgramFilesDir%\opsi.org\test"
 
 [Files_copy_test_to_programfiles2]
-copy "%ScriptPath%\test-files\testFiles\dummy.txt" "c:\program files\opsi.org\test"
+copy "$TestFilesBaseDir$\testFiles\dummy.txt" "c:\program files\opsi.org\test"
 
 [Files_fill_testfiles]
 copy -s "%ScriptPath%/test-files/testFiles/*.*" "$HomeTestFiles$"
@@ -60,29 +60,29 @@ copy -s "%ScriptPath%\$opsi_script_test_helper_path$\*" "%opsiTmpDir%\del_c_test
 del -crsf "%opsiTmpDir%\del_c_test\"
 
 [Files_copy_s]
-copy -s "%ScriptPath%\test-files\testFiles\*.*" $HomeTestFiles$
+copy -s "$TestFilesBaseDir$\testFiles\*.*" $HomeTestFiles$
 
 [Files_copy_v]
-copy -v "%ScriptPath%\test-files\testFiles\old\*.*" $HomeTestFiles$
+copy -v "$TestFilesBaseDir$\testFiles\old\*.*" $HomeTestFiles$
 
 [Files_copy_v_dllnew]
-copy "%ScriptPath%\test-files\testFiles\new\*.*" $HomeTestFiles$
+copy "$TestFilesBaseDir$\testFiles\new\*.*" $HomeTestFiles$
 
 [Files_copy_d]
-copy -d "%ScriptPath%\test-files\testFiles\old\dummy.exe" $HomeTestFiles$
+copy -d "$TestFilesBaseDir$\testFiles\old\dummy.exe" $HomeTestFiles$
 
 [Files_copy_d_exenew]
-copy "%ScriptPath%\test-files\testFiles\new\dummy.exe" $HomeTestFiles$
+copy "$TestFilesBaseDir$\testFiles\new\dummy.exe" $HomeTestFiles$
 
 [Files_copy_u]
 copy -u "$HomeTestFiles$\files\dummy.txt" $HomeTestFiles$
 copy -u "$HomeTestFiles$\files\dummy2.txt" $HomeTestFiles$
 
 [Files_copy_e]
-copy -e "%ScriptPath%\test-files\testFiles\*.*" $HomeTestFiles$
+copy -e "$TestFilesBaseDir$\testFiles\*.*" $HomeTestFiles$
 
 [Files_copy_x]
-copy -x "%ScriptPath%\test-files\testFiles\dummy.zip" "$HomeTestFiles$\dummy"
+copy -x "$TestFilesBaseDir$\testFiles\dummy.zip" "$HomeTestFiles$\dummy"
 
 [Files_copy_w]
 copy -w "$HomeTestFiles$\files\*.*" $HomeTestFiles$
@@ -106,7 +106,7 @@ checktargetpath = "$HomeTestFiles$\"
 unzipfile "%opsiTmpDir%\testfile.zip" "$HomeTestFiles$\"
 
 [Files_unzipfile_to_profiles]
-unzipfile "%ScriptPath%\test-files\zips\opsi-script-0.1.2.vsix" "%UserProfileDir%\opsi-script-test"
+unzipfile "$TestFilesBaseDir$\zips\opsi-script-0.1.2.vsix" "%UserProfileDir%\opsi-script-test"
 
 [Files_zipfile_bigfolder]
 zipfile "%ScriptPath%\" "%opsiTmpDir%\testbigdir.zip"
@@ -122,19 +122,19 @@ zip "$HomeTestFiles$\files\zip" "$HomeTestFiles$\files\*.*"
 copy -c "%ScriptPath%\$opsi_script_test_helper_path$\*" "$HomeTestFiles$\$opsi_script_test_helper_path$"
 
 [Files_work_on_profiles]
-copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
+copy "$TestFilesBaseDir$\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
 del -sfc "%UserProfileDir%\opsi-script-test"
-copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
+copy "$TestFilesBaseDir$\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
 del -sfc "%CurrentProfileDir%\opsi-script-test"
 
 [Files_work_on_profiles_copy_userp]
-copy "%ScriptPath%\test-files\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
+copy "$TestFilesBaseDir$\testFiles\*.*" "%UserProfileDir%\opsi-script-test"
 
 [Files_work_on_profiles_del_userp]
 del -sfc "%UserProfileDir%\opsi-script-test"
 
 [Files_work_on_profiles_copy_currp]
-copy "%ScriptPath%\test-files\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
+copy "$TestFilesBaseDir$\testFiles\*.*" "%CurrentProfileDir%\opsi-script-test"
 
 [Files_work_on_profiles_del_currp]
 del -sfc "%CurrentProfileDir%\opsi-script-test"
@@ -158,10 +158,13 @@ copy "$HomeTestFiles$\files\dummy2.txt" "$HomeTestFiles$\files\temp\"
 move "$HomeTestFiles$\files\temp\dummy2.txt" "$HomeTestFiles$\files\temp\move.txt"
 
 [Files_prep_move_dir]
-copy -se "%ScriptPath%\test-files\testfiles\*.*" "$HomeTestFiles$\files"
+copy -se "$TestFilesBaseDir$\testfiles\*.*" "$HomeTestFiles$\files"
 
 [Files_move_dir]
 rename "$HomeTestFiles$\files\subDirectory" "$HomeTestFiles$\files\renamedsubDirectory"
 
 [Files_bigdir]
-copy -sec "%ScriptPath%\test-files\bigdir\*.*" $HomeTestFiles$
+copy -sec "$TestFilesBaseDir$\bigdir\*.*" "$HomeTestFiles$"
+
+[Files_copy_test_to_system32]
+copy "$TestFilesBaseDir$\testFiles\dummy.txt" "%System%"

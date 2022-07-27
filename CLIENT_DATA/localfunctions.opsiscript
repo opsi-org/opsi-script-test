@@ -40,7 +40,7 @@ Set $OS$ = GetOS
 set $Flag_winst_local_functions$   = GetProductProperty ("LocalFunctions", "on")
 
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.0")
-	sub "%scriptpath%\sub-scripts\localfunctions.opsiscript"
+	sub $SubScriptBaseDir$+"\localfunctions.opsiscript"
 endif
 
 [sub_compareResult]

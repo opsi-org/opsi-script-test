@@ -18,17 +18,18 @@ setOutputLevel = 3
 ;setdebug_prog = true
 
 include_insert "testall_definevars.opsiinc"
-; first include the end and than the start, becaus star need sections from end
+; first include the end and than the start, becaus start need sections from end
 include_append "testall_end.opsiinc"
 include_insert "testall_start.opsiinc"
 
 
 
 
-set $MasterFlag$                   = GetProductProperty ("alltest", "off")
-set $Flag_winst_string_list$       = GetProductProperty ("stringListFunctions", "on")
 
-sub "%scriptpath%\..\sub-scripts\stringlists.opsiscript"
+set $MasterFlag$                = GetProductProperty ("alltest", "off")
+set $Flag_winst_winbatch$           = GetProductProperty ("winbatch", "on")
+
+sub "%scriptpath%\..\sub-scripts\winbatch.opsiscript"
 
 comment ""
 comment ""
@@ -36,5 +37,5 @@ comment ""
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 comment "All sub results:"
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-comment "$winst_string_list$                  --> " + $winst_string_list$
+comment "$winst_winbatch$                  --> " + $winst_winbatch$
 

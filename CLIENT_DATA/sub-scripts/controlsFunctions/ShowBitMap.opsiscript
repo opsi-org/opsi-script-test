@@ -2,37 +2,37 @@ comment ""
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "ShowBitMap"
-	ShowBitmap "%ScriptPath%\test-files\images\opsi.png" "png"
+	ShowBitmap $TestFilesBaseDir$+"\images\opsi.png" "png"
 	sleepseconds 1
 	ShowBitmap "" "no picture"
 	sleepseconds 1
-	ShowBitmap "%ScriptPath%\test-files\images\opsi.png" "png: very long name with a lot of chars"
+	ShowBitmap $TestFilesBaseDir$+"\images\opsi.png" "png: very long name with a lot of chars"
 	sleepseconds 1
 	ShowBitmap "" "no picture"
 	sleepseconds 1
-	ShowBitmap "%ScriptPath%\test-files\images\opsi.jpg" "jpeg"
+	ShowBitmap $TestFilesBaseDir$+"\images\opsi.jpg" "jpeg"
 	sleepseconds 1
 	if "1" =CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.0.0")
-		ShowBitmap "%ScriptPath%\test-files\images\tortoisesvn_test.png" $ProductId$
+		ShowBitmap $TestFilesBaseDir$+"\images\tortoisesvn_test.png" $ProductId$
 		sleepseconds 1
 	endif
-	ShowBitmap "%ScriptPath%\test-files\images\blitzrechnen.png" 'blitzrechnen ohne /3'
+	ShowBitmap $TestFilesBaseDir$+"\images\blitzrechnen.png" 'blitzrechnen ohne /3'
 	sleepseconds 1
 	if $OS$ = "Windows_NT"
-		ShowBitmap /3 "%ScriptPath%\test-files\images\blitzrechnen.png" 'blitzrechnen mit /3'
+		ShowBitmap /3 $TestFilesBaseDir$+"\images\blitzrechnen.png" 'blitzrechnen mit /3'
 		sleepseconds 1
 	endif
 	ShowBitmap "" "no picture"
 	sleepseconds 1
-	ShowBitmap "%ScriptPath%\test-files\images\acrobat_logo.png" "0"
+	ShowBitmap $TestFilesBaseDir$+"\images\acrobat_logo.png" "0"
 	sleepseconds 1
 	ShowBitmap "" "01"
 	sleepseconds 1
-	ShowBitmap "%ScriptPath%\test-files\images\acrobat_logo1.png" "012"
+	ShowBitmap $TestFilesBaseDir$+"\images\acrobat_logo1.png" "012"
 	sleepseconds 1
 	ShowBitmap "" "0123"
 	sleepseconds 1
-	ShowBitmap "%ScriptPath%\test-files\images\acrobat_logo2.png" "01234"
+	ShowBitmap $TestFilesBaseDir$+"\images\acrobat_logo2.png" "01234"
 	sleepseconds 1
 	ShowBitmap "" "012345"
 	sleepseconds 1

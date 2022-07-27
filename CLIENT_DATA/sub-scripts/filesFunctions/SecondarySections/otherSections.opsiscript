@@ -128,7 +128,7 @@ mkdir "$HomeTestFiles$\subDirectory"
 mkdir "$HomeTestFiles$\subDirectory\subsubDirectory"
 c:
 cd "$HomeTestFiles$"
-copy "%ScriptPath%\test-files\testFiles\dummy.txt"
+copy "$TestFilesBaseDir$\testFiles\dummy.txt"
 echo Hello World > dummyToday.txt
 echo Hello World > readonly.txt
 attrib +R "$HomeTestFiles$\readonly.txt"

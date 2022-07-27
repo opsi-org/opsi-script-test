@@ -34,7 +34,7 @@ endif
 
 [Files_copy_macos]
 ; sub test:
-copy "%scriptpath%\test-files\macos\*" "$HomeTestFiles$"
+copy "$TestFilesBaseDir$\macos\*" "$HomeTestFiles$"
 ; standalone test:
 copy "%scriptpath%\..\test-files\macos\*" "$HomeTestFiles$"
 
