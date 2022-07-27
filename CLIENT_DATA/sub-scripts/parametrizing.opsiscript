@@ -1,0 +1,298 @@
+	Message "testing string functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment "testing Parametrizing opsi-script"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	; start testing
+	set $TestResult$ = "o.k."
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "SetLogLevel / LogLevel (deprecated)"
+	set $tmp$ = getLogLevel
+	set $ConstTest$ = "8"
+	logLevel=4
+	Set $CompValue$ = getLogLevel
+	setLogLevel=$tmp$
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	message "LogLevel"
+	set $tmp$ = getLogLevel
+	set $ConstTest$ = "7"
+	setLogLevel=7
+	Set $CompValue$ = getLogLevel
+	setLogLevel=$tmp$
+	if ($ConstTest$ = $CompValue$)
+		comment "passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "failed"
+	endif
+	setLogLevel=$ScriptLoglevel$
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: SetConfidential"
+	message "SetConfidential"
+	SetConfidential "forbidden"
+	comment "This is a forbidden string"
+	comment "should be in the log file: This is a ***(confidential)*** string"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
+		if isConfidential("forbidden")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		
+		message "asConfidential"
+		set $ConstTest$ = asConfidential("hidden")
+		comment "This is a hidden string"
+		comment "should be in the log file: This is a ***(confidential)*** string"
+		if isConfidential("hidden")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		set $ConstTest$ = asConfidential(stringReplace("this is my old secret", "old", "new"))
+		comment "this is my new secret"
+		comment "should be in the log file:  ***(confidential)*** "
+		if isConfidential("this is my new secret")
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		; asConfidential - StringList
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.16")
+			message "asConfidential - StringList"
+			set $list$ = asConfidential(createStringList('confidential-aa','confidential-bb', 'confidential-cc', 'confidential-dd'))
+			comment "This is a hidden stringlist"
+			comment "should be in the log file: This is a ***(confidential)*** stringlist"
+			if isConfidential("confidential-aa")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			
+			set $list$ = asConfidential(addtolist($list$,"confidential-ee"))
+			comment "confidential-ee"
+			comment "should be in the log file:  ***(confidential)***"
+			if isConfidential("confidential-ee")
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif ; 4.12.4.15 (asCofindential - StringList)
+		
+	endif ; 4.12.0.16
+	
+	if not ("%installingProdName%" = "")
+		comment "we are in opsi service mode"
+		message "IniVar ("key")"
+		comment "IniVar is deprecated - use GetProductProperty)"
+		set $ConstTest$ = "off"
+		set $CompValue$ = IniVar ("dummy")
+		if ($ConstTest$ = $CompValue$)
+			comment "IniVar passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "IniVar failed"
+		endif
+		
+		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
+		set $ConstTest$ = "off"
+		set $CompValue$ = GetProductProperty ("dummy","on")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty failed"
+		endif
+		
+		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
+		set $ConstTest$ = "False"
+		set $CompValue$ = GetProductProperty ("dummybool","True")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty failed"
+		endif
+		
+		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
+		comment "Attention: Reading a multi value property, gives you the"
+		comment "values comma separeted, so you get in trouble if a value contains a comma"
+		set $ConstTest$ = "ab,cd,ef,g,h"
+		set $CompValue$ = GetProductProperty ("dummymulti","True")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty failed"
+		endif
+		
+		
+		
+		set $ConstTest$ = "True"
+		set $CompValue$ = GetProductProperty ("notexistingmulti","True")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty failed"
+		endif
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.11.3")
+			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
+			;set $list1$ = createStringList("ab", "cd", "ef", "g,h")
+			set $list$ = GetProductPropertyList ("dummymulti","True")
+			if not ("" = takeFirstStringContaining($list$,"g,h"))
+				comment "GetProductPropertyList passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetProductPropertyList failed"
+			endif
+			
+			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
+			set $list$ = GetProductPropertyList ("notexistingmulti","True")
+			if not ("" = takeFirstStringContaining($list$,"True"))
+				comment "GetProductPropertyList passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetProductPropertyList failed"
+			endif
+			set $list1$ = createStringList("ab", "cd", "ef", "g,h")
+			set $list$ = GetProductPropertyList ("notexistingmulti",$list1$)
+			if not ("" = takeFirstStringContaining($list$,"g,h"))
+				comment "GetProductPropertyList passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetProductPropertyList failed"
+			endif
+		endif ; 4.11.3
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.12.4.32")
+			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
+			set $list$ = GetProductPropertyList ("notexistingmulti",'["ab", "cd", "ef", "g,h"]')
+			if not ("" = takeFirstStringContaining($list$,"g,h"))
+				comment "GetProductPropertyList passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetProductPropertyList failed"
+			endif
+		endif ; 4.12.4.32
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.11.3")
+			comment "Testing include commands"
+			
+			include_append "%scriptpath%\sub-scripts\section_Files_del_tmp_dummy.opsiinc"
+			include_insert "%scriptpath%\sub-scripts\include-test1.opsiinc"
+			
+			comment "testing two sections with the same name"
+			include_append "sub-scripts\section_DosInAnIcon_echo.opsiinc"
+			DosInAnIcon_echo
+			
+		endif ; 4.11.3
+		
+	else
+		comment "we are not in opsi service mode"
+		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
+		set $ConstTest$ = "on"
+		set $CompValue$ = GetProductProperty ("dummy","on")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty failed"
+		endif
+		
+		message "GetProductProperty (<PropertyName>, <DefaultValue>)"
+		set $ConstTest$ = "True"
+		set $CompValue$ = GetProductProperty ("dummybool","True")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty failed"
+		endif
+	endif
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.5.2")
+		message "GetConfidentialProductProperty (<PropertyName>, <DefaultValue>)"
+		if not("%opsiserviceURL%" = "")
+			set $ConstTest$ = "This is confidential"
+			set $CompValue$ = GetConfidentialProductProperty ("confidentialstring","")
+			if ($ConstTest$ = $CompValue$)
+				comment "GetConfidentialProductProperty passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "GetConfidentialProductProperty failed"
+			endif
+		endif
+		set $ConstTest$ = "confidential test"
+		set $CompValue$ = GetConfidentialProductProperty ("not-existing-property","confidential test")
+		if ($ConstTest$ = $CompValue$)
+			comment "GetConfidentialProductProperty passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetConfidentialProductProperty failed"
+		endif
+	endif ; 4.11.5.2
+	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.36")
+		message "GetProductProperty / list - with properties.conf"
+		set $ConstTest$ = "from file"
+		set $CompValue$ = GetProductProperty('propstr','')
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty from properties.conf failed"
+		endif
+		
+		set $ConstTest$ = "from default"
+		set $CompValue$ = GetProductProperty('not_existing',$ConstTest$)
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductProperty from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductProperty from properties.conf failed"
+		endif
+		
+		set $ConstTest$ = "from file"
+		set $CompValue$ = takeString(0,GetProductPropertyList('proplist',''))
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductPropertyList from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductPropertyList from properties.conf failed"
+		endif
+		
+		set $ConstTest$ = "from default"
+		set $CompValue$ = takeString(0,GetProductPropertyList('not_existing',$ConstTest$))
+		if ($ConstTest$ = $CompValue$)
+			comment "GetProductPropertyList from properties.conf passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "GetProductPropertyList from properties.conf failed"
+		endif
+	endif : 4.12.4.36
+	
+	sub_compareResult
+	set $winst_parametrizing$ = $SubResult$

@@ -1,0 +1,277 @@
+
+	include_append "%scriptpath%\sub-scripts\linkFolderFunctions\SecondarySections\secondarySections.opsiscript"
+
+	if $OS$ = 'macos'
+		comment "linkFolder not tested on macos"
+		set $TestResult$ = "not implemented"
+	else
+		Message "testing linkFolder functions"
+		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		comment ""
+		comment "testing linkFolder functions"
+		comment ""
+		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		Set $ExpectedResult$ = "o.k."
+		
+		; start testing
+		;Set $HomeTestFiles$ = "C:\tmp\testFiles"
+		set $TestResult$ = "o.k."
+		
+		if $OS$ = "windows_NT"
+			set $link_extension$ = ".LNK"
+			set $target$ = "C:\Programme\PuTTY\1234567890.exe"
+			set $workdir$ ="C:\Programme\PuTTY"
+		endif
+		if $OS$ = "Linux"
+			set $link_extension$ = ".desktop"
+			set $target$ = "/usr/bin/exeutablebinary"
+			set $workdir$ = "/var/run"
+		endif
+		
+		comment "check if we running in opsi mode"
+		if not ("%installingProdName%" = "opsi-script-test")
+			comment "we not running in opsi mode - user specific link folder will be tested"
+			
+			comment ""
+			comment "-------------------------------------"
+			comment "Testing: "
+			comment "linkFolder @ desktop, sendto, startmenu, startup, programs, desktopdirectory"
+			
+			if $OS$ = "windows_NT"
+				set $list1$ = createStringList ('desktop', 'sendto', 'startmenu', 'programs', 'startup', 'desktopdirectory')
+				set $link_subfolder$ = "Dummy"
+			endif
+			if $OS$ = "Linux"
+				set $list1$ = createStringList ('desktop', 'startup', 'desktopdirectory')
+				set $link_subfolder$ = ""
+			endif
+			
+			message "startup"
+			for $var$ in $list1$ do LinkFolder_Dummy
+			
+			if $OS$ = "windows_NT"
+				message "sendto"
+				if (FileExists("%CurrentSendToDir%\Dummy\Dummy"+$link_extension$))
+					comment "sendto passed"
+					set $tmp$ = "%SendToDir%\Dummy"
+					Files_delete_linkFolder
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "sendto failed"
+				endif
+				
+				
+				message "startmenu"
+				if (FileExists("%CurrentStartmenuDir%\Dummy\Dummy"+$link_extension$))
+					comment "startmenu passed"
+					set $tmp$ = "%StartmenuDir%\Dummy"
+					Files_delete_linkFolder
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "startmenu failed"
+				endif
+				
+				message "programs"
+				if (FileExists("%CurrentProgramsDir%\Dummy\Dummy"+$link_extension$))
+					comment "programs passed"
+					set $tmp$ = "%ProgramsDir%\Dummy"
+					Files_delete_linkFolder
+				else
+					set $TestResult$ = "not o.k."
+					LogWarning "programs failed"
+				endif
+			endif ; windows
+			
+			
+			message "desktop"
+			if (FileExists("%CurrentDesktopDir%\"+$link_subfolder$+"\dummy"+$link_extension$))
+				comment "desktop passed"
+				set $tmp$ = "%DesktopDir%\"+$link_subfolder$
+				Files_delete_linkFolder
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "desktop failed"
+			endif
+			
+			
+			message "startup"
+			if (FileExists("%CurrentStartupDir%\"+$link_subfolder$+"\dummy"+$link_extension$))
+				comment "startup passed"
+				set $tmp$ = "%StartupDir%\"+$link_subfolder$
+				Files_delete_linkFolder
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "startup failed"
+			endif
+			
+		endif ; opsi service mode
+		
+		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		comment "linkFolder @ common_startmenu, common_programs, common_startup, common_desktopdirectory"
+		
+		if $OS$ = "windows_NT"
+			set $list2$ = createStringList ('common_startmenu', 'common_programs', 'common_startup', 'common_desktopdirectory')
+			set $link_subfolder$ = "Dummy\"
+		endif
+		if $OS$ = "Linux"
+			;set $list2$ = createStringList ('common_programs', 'common_startup')
+			set $list2$ = emptylist($list2$)
+			set $link_subfolder$ = ""
+		endif
+		
+		for $var$ in $list2$ do LinkFolder_Dummy
+		
+		if $OS$ = "windows_NT"
+			message "common_desktopdirectory"
+			if (FileExists("%CommonDesktopDir%\"+$link_subfolder$+"Dummy"+$link_extension$))
+				comment "common_desktopdirectory passed"
+				set $tmp$ = "%CommonDesktopDir%\"+$link_subfolder$
+				Files_delete_linkFolder
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_desktopdirectory failed"
+			endif
+			
+			message "common_startmenu"
+			if (FileExists("%CommonStartMenuPath%\"+$link_subfolder$+"Dummy"+$link_extension$))
+				comment "common_startmenu passed"
+				set $tmp$ = "%CommonStartMenuPath%\"+$link_subfolder$
+				Files_delete_linkFolder
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_startmenu failed"
+			endif
+			
+			message "common_startup"
+			if (FileExists("%CommonStartupDir%\"+$link_subfolder$+"Dummy"+$link_extension$))
+				comment "common_startup passed"
+				set $tmp$ = "%CommonStartupDir%\"+$link_subfolder$
+				Files_delete_linkFolder
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_startup failed"
+			endif
+			
+			message "common_programs"
+			if (FileExists("%CommonProgramsDir%\"+$link_subfolder$+"Dummy"+$link_extension$))
+				comment "common_programs passed"
+				set $tmp$ = "%CommonProgramsDir%\"+$link_subfolder$
+				Files_delete_linkFolder
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_programs failed"
+			endif
+		endif ; windows
+		
+		
+		if $OS$ = "windows_NT"
+			set $list2$ = createStringList ('common_startmenu', 'common_programs', 'common_startup', 'common_desktopdirectory')
+		endif
+		if $OS$ = "Linux"
+			set $list2$ = createStringList ('common_programs', 'common_startup')
+		endif
+		
+		for $var$ in $list2$ do LinkFolder_Dummy2
+		
+		if $OS$ = "windows_NT"
+			message "common_desktopdirectory"
+			if (FileExists("%CommonDesktopDir%\Dummy"+$link_extension$))
+				comment "common_desktopdirectory passed"
+				set $tmp$ = "%CommonDesktopDir%\Dummy"+$link_extension$
+				Files_delete_linkFolder2
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_desktopdirectory failed"
+			endif
+			
+			message "common_startmenu"
+			if (FileExists("%CommonStartMenuPath%\Dummy"+$link_extension$))
+				comment "common_startmenu passed"
+				set $tmp$ = "%CommonStartMenuPath%\Dummy"+$link_extension$
+				Files_delete_linkFolder2
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_startmenu failed"
+			endif
+		endif ; windows
+		
+		message "common_startup"
+		if (FileExists("%CommonStartupDir%\dummy"+$link_extension$))
+			comment "common_startup passed"
+			set $tmp$ = "%CommonStartupDir%\dummy"+$link_extension$
+			Files_delete_linkFolder2
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "common_startup failed"
+		endif
+		
+		message "common_programs"
+		if (FileExists("%CommonProgramsDir%\dummy"+$link_extension$))
+			comment "common_programs passed"
+			set $tmp$ = "%CommonProgramsDir%\dummy"+$link_extension$
+			Files_delete_linkFolder2
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "common_programs failed"
+		endif
+		
+		if $OS$ = "windows_NT"
+			set $list2$ = createStringList ('common_startmenu', 'common_programs', 'common_startup', 'common_desktopdirectory')
+		endif
+		if $OS$ = "Linux"
+			set $list2$ = createStringList ('common_programs', 'common_startup')
+		endif
+		
+		for $var$ in $list2$ do LinkFolder_Dummy2
+		set $string1$ = "dummy"
+		for $var$ in $list2$ do LinkFolder_del_Dummy
+		
+		if $OS$ = "windows_NT"
+			message "common_desktopdirectory"
+			if not (FileExists("%CommonDesktopDir%\Dummy"+$link_extension$))
+				comment "common_desktopdirectory passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_desktopdirectory failed"
+				set $tmp$ = "%CommonDesktopDir%\Dummy"+$link_extension$
+				Files_delete_linkFolder
+			endif
+			
+			message "common_startmenu"
+			if not(FileExists("%CommonStartMenuPath%\Dummy"+$link_extension$))
+				comment "common_startmenu passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_startmenu failed"
+				set $tmp$ = "%CommonStartMenuPath%\Dummy"+$link_extension$
+				Files_delete_linkFolder
+			endif
+			
+			message "common_startup"
+			if not(FileExists("%CommonStartupDir%\Dummy"+$link_extension$))
+				comment "common_startup passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_startup failed"
+				set $tmp$ = "%CommonStartupDir%\Dummy"+$link_extension$
+				Files_delete_linkFolder
+			endif
+			
+			message "common_programs"
+			if not(FileExists("%CommonProgramsDir%\Dummy"+$link_extension$))
+				comment "common_programs passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "common_programs failed"
+				set $tmp$ = "%CommonProgramsDir%\Dummy"+$link_extension$
+				Files_delete_linkFolder
+			endif
+		endif ;windows
+	endif ; macos
+	
+	
+	sub_compareResult
+	set $winst_link_folder$ = $SubResult$

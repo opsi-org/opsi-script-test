@@ -1,5 +1,6 @@
 
-if ($Flag_winst_controls$ = "on") or ($MasterFlag$ = "on")
+	include_append "%scriptpath%\sub-scripts\controlsFunctions\SecondarySections\secondarySections.opsiscript"
+
 	Message "testing control functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
