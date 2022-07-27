@@ -374,11 +374,11 @@ endif
 
 
 if ($Flag_winst_constants$ = "on") or ($MasterFlag$ = "on")
-	include_insert '%scriptpath%\sub-scripts\constants.opsiscript'
+	include_insert $SubScriptBaseDir$+'\constants.opsiscript'
 endif
 
 if ($Flag_winst_parametrizing$ = "on") or ($MasterFlag$ = "on")
-	include_insert '%scriptpath%\sub-scripts\parametrizing.opsiscript'
+	include_insert $SubScriptBaseDir$+'\parametrizing.opsiscript'
 endif
 
 if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
@@ -1994,7 +1994,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 endif
 
 if ($Flag_calculate$ = "on") or ($MasterFlag$ = "on")
-	include_insert '%scriptpath%\sub-scripts\calculate.opsiscript'
+	include_insert $SubScriptBaseDir$+'\calculate.opsiscript'
 endif
 
 
@@ -2527,7 +2527,7 @@ sub $SubScriptBaseDir$+"\patchesini.opsiscript"
 
 
 if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
-	include_insert '%scriptpath%\sub-scripts\patchHosts.opsiscript'
+	include_insert $SubScriptBaseDir$+'\patchHosts.opsiscript'
 endif
 
 ;if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
@@ -2538,11 +2538,11 @@ endif
 ;	comment ""
 ;	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 ;	Set $ExpectedResult$ = "o.k."
-;	
+;
 ;	set $TestResult$ = "o.k."
 ;	Files_copy_patchtextfile
 ;	; 7.5 PatchTextFile Sections
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2557,7 +2557,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2572,7 +2572,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2611,7 +2611,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2626,9 +2626,9 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
-;	
-;	
+;
+;
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2643,7 +2643,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2658,7 +2658,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2673,7 +2673,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2688,7 +2688,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2703,7 +2703,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2718,7 +2718,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2733,7 +2733,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2748,7 +2748,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2763,7 +2763,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2778,7 +2778,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2793,7 +2793,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2813,7 +2813,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2830,7 +2830,7 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.4.6") >= "0"
 ;		comment ""
 ;		comment "-------------------------------------"
@@ -2873,8 +2873,8 @@ endif
 ;			LogWarning "failed"
 ;		endif
 ;	endif ; 4.11.4.6
-;	
-;	
+;
+;
 ;	comment ""
 ;	comment "-------------------------------------"
 ;	comment "Testing: "
@@ -2889,12 +2889,12 @@ endif
 ;		set $TestResult$ = "not o.k."
 ;		LogWarning "failed"
 ;	endif
-;	
+;
 ;	Files_empty_folder
-;	
+;
 ;	;if not($OS$ = 'macos')
 ;	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.4") >= "0"
-;		
+;
 ;		Files_profile_copy /AllNTUserProfiles
 ;		comment ""
 ;		comment "-------------------------------------"
@@ -2905,7 +2905,7 @@ endif
 ;		set $ConstTest$ = "Line containing dummy1."
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -2915,7 +2915,7 @@ endif
 ;		set $tmp$ = "0"
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -2925,7 +2925,7 @@ endif
 ;		set $tmp$ = "3"
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -2935,7 +2935,7 @@ endif
 ;		set $tmp$ = "1"
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -2945,7 +2945,7 @@ endif
 ;		set $tmp$ = "0"
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -2955,7 +2955,7 @@ endif
 ;		set $tmp$ = "0"
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -2965,7 +2965,7 @@ endif
 ;		set $tmp$ = "1"
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -2975,7 +2975,7 @@ endif
 ;		set $tmp$ = "1"
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -2985,7 +2985,7 @@ endif
 ;		set $tmp$ = "3"
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -2995,7 +2995,7 @@ endif
 ;		set $tmp$ = "6"
 ;		set $list1$ = getProfilesDirList
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -3005,7 +3005,7 @@ endif
 ;		set $list1$ = getProfilesDirList
 ;		set $tmp$ = "0"
 ;		for %s% in $list1$ do sub_check_profile_txt
-;		
+;
 ;		;comment ""
 ;		;comment "-------------------------------------"
 ;		;comment "Testing: "
@@ -3025,17 +3025,17 @@ endif
 ;		;	set $TestResult$ = "not o.k."
 ;		;	LogWarning "failed"
 ;		;endif
-;		
+;
 ;		Files_profile_del /AllNTUserProfiles
-;		
+;
 ;	endif ; 4.11.3.4
 ;	;endif ; not macos
-;	
+;
 ;	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.6") >= "0"
 ;		;Files_copy_patchtextfile_system /sysnative
 ;		; Patchtextfile is not sysnative enabled yet
 ;		Files_copy_patchtextfile_system
-;		
+;
 ;		comment ""
 ;		comment "-------------------------------------"
 ;		comment "Testing: "
@@ -3050,12 +3050,12 @@ endif
 ;			set $TestResult$ = "not o.k."
 ;			LogWarning "failed"
 ;		endif
-;		
+;
 ;		Files_empty_folder_system
 ;	endif ; 4.11.3.6
-;	
-;	
-;	
+;
+;
+;
 ;	sub_compareResult
 ;	set $winst_patch_text_file$ = $SubResult$
 ;endif
@@ -3107,17 +3107,17 @@ endif
 
 
 if ($Flag_winst_link_folder$ = "on") or ($MasterFlag$ = "on")
-	include_insert '%scriptpath%\sub-scripts\linkFolder.opsiscript'
+	include_insert $SubScriptBaseDir$+'\linkFolder.opsiscript'
 endif
 
 ; do not execute if $MasterFlag$ = "on" because xml is deprecated
 if ($Flag_winst_xml$ = "on")
-	include_insert '%scriptpath%\sub-scripts\xml.opsiscript'
+	include_insert $SubScriptBaseDir$+'\xml.opsiscript'
 endif
 
 
 if ($Flag_execwith_test$ = "on") or ($MasterFlag$ = "on")
-	include_insert '%scriptpath%\sub-scripts\execWith.opsiscript'
+	include_insert $SubScriptBaseDir$+'\execWith.opsiscript'
 endif
 ;if ($Flag_compare_to_python$ = "on") or ($MasterFlag$ = "on")
 if ($Flag_compare_to_python$ = "on")
@@ -3169,7 +3169,7 @@ if ($Flag_winst_opsiServiceCall$ = "on") or ($MasterFlag$ = "on")
 endif
 
 if ($Flag_licensemanagement$ = "on") or ($MasterFlag$ = "on")
-	include_insert '%scriptpath%\sub-scripts\licensemanagement.opsiscript'
+	include_insert $SubScriptBaseDir$+'\licensemanagement.opsiscript'
 endif
 
 if ($Flag_ProfileActions$ = "on") or ($MasterFlag$ = "on")
