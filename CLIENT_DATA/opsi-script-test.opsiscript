@@ -2272,254 +2272,6 @@ sub "%scriptpath%\sub-scripts\filestest.opsiscript"
 ;	Message "testing patches functions"
 sub "%scriptpath%\sub-scripts\patchesini.opsiscript"
 
-;if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
-;	Message "testing patches functions"
-;	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-;	comment ""
-;	comment "testing patches functions"
-;	comment ""
-;	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-;	Set $ExpectedResult$ = "o.k."
-;	; start testing
-;	;Set $HomeTestFiles$ = "C:\tmp\testFiles"
-;	set $TestResult$ = "o.k."
-;
-;	; Chapter 7.2 Patches Sectione
-;
-;	comment ""
-;	comment "-------------------------------------"
-;	comment "Testing: "
-;	comment "add, set, addnew, change, del, replace"
-;
-;	if $OS$ = "Linux"
-;		ShellInAnIcon_create_ini
-;	else
-;		DosInAnIcon_create_ini
-;	endif
-;	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
-;	if (FileExists($HometestFiles$+"\dummy.ini"))
-;		message "add"
-;		set $ConstTest$ = "[secdummy]"
-;		set $ConstTest2$ = "dummy1=add1"
-;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-;		Set $CompValue$ = Trim(takeString(0, $list1$))
-;		Set $CompValue2$ = Trim(takeString(1, $list1$))
-;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-;			comment "add passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "add failed"
-;		endif
-;
-;		message "set"
-;		set $ConstTest$ = "[secdummy]"
-;		set $ConstTest2$ = "dummy2=set1"
-;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-;		Set $CompValue$ = Trim(takeString(0, $list1$))
-;		Set $CompValue2$ = Trim(takeString(2, $list1$))
-;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-;			comment "set passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "set failed"
-;		endif
-;
-;		message "addnew"
-;		set $ConstTest$ = "[secdummy]"
-;		set $ConstTest2$ = "dummy1=addnew1"
-;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-;		Set $CompValue$ = Trim(takeString(0, $list1$))
-;		Set $CompValue2$ = Trim(takeString(6, $list1$))
-;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-;			comment "addnew passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "addnew failed"
-;		endif
-;
-;		message "change"
-;		set $ConstTest$ = "[secdummy]"
-;		set $ConstTest2$ = "dummy3=change1"
-;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-;		Set $CompValue$ = Trim(takeString(0, $list1$))
-;		Set $CompValue2$ = Trim(takeString(3, $list1$))
-;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-;			comment "change passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "change failed"
-;		endif
-;
-;		message "delete"
-;		set $ConstTest$ = "[secdummy]"
-;		set $ConstTest2$ = "dummy5=add5"
-;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-;		Set $CompValue$ = Trim(takeString(0, $list1$))
-;		Set $CompValue2$ = Trim(takeString(4, $list1$))
-;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-;			comment "delete passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "delete failed"
-;		endif
-;
-;		message "replace"
-;		set $ConstTest$ = "[secdummy]"
-;		set $ConstTest2$ = "replace1=replace1"
-;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-;		Set $CompValue$ = Trim(takeString(0, $list1$))
-;		Set $CompValue2$ = Trim(takeString(5, $list1$))
-;		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
-;			comment "replace passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "replace failed"
-;		endif
-;	else
-;		set $TestResult$ = "not o.k."
-;		logError "Fatal: could not create .ini file"
-;		isFatalError
-;	endif
-;
-;	comment ""
-;	comment "-------------------------------------"
-;	comment "Testing: "
-;	message "GetValueFromInifile"
-;	if (FileExists($HometestFiles$+"\dummy.ini"))
-;		;GetValueFromInifile
-;		set $ConstTest$ = "add1"
-;		Set $CompValue$ = GetValueFromInifile($HometestFiles$+"\dummy.ini", "secdummy", "dummy1", "failed")
-;		if ($ConstTest$ = $CompValue$)
-;			comment "GetValueFromInifile passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "GetValueFromInifile failed"
-;		endif
-;
-;		message "GetIni"
-;		comment "GetIni is deprecated - use GetValueFromInifile)
-;		set $ConstTest$ = "add1"
-;		Set $CompValue$ = GetIni($HometestFiles$+"\dummy.ini"[secdummy] dummy1)
-;		if ($ConstTest$ = $CompValue$)
-;			comment "GetIni passed"
-;		else
-;			set $TestResult$ = "not o.k."
-;			LogWarning "GetIni failed"
-;		endif
-;
-;		comment "Here comes the actual ini file:"
-;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-;	else
-;		set $TestResult$ = "not o.k."
-;		logError "Fatal: could not create .ini file"
-;		isFatalError
-;	endif
-;
-;
-;	comment ""
-;	comment "-------------------------------------"
-;	comment "Testing: "
-;	message "delsec"
-;
-;	set $SectionName$ ="[secdummy]"
-;	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-;	;if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.1.0")
-;	;; encoding in patches has to be fixed
-;	;	if (FileExists($HometestFiles$+"\dummy.ini"))
-;	;		set $ConstTest$ = "[secdüöä]"
-;	;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-;	;		Set $CompValue$ = Trim(takeString(0, $list1$))
-;	;		if ($ConstTest$ = $CompValue$)
-;	;			comment "passed"
-;	;		else
-;	;			set $TestResult$ = "not o.k."
-;	;			LogWarning "failed"
-;	;		endif
-;	;	else
-;	;		set $TestResult$ = "not o.k."
-;	;		logError "Fatal: could not find .ini file"
-;	;		isFatalError
-;	;	endif
-;	;	set $SectionName$ ="[secdüöä]"
-;	;	Patches_dummy_ini_delsec $HomeTestFiles$+"\dummy.ini"
-;	;	if (FileExists($HometestFiles$+"\dummy.ini"))
-;	;		set $ConstTest$ = ""
-;	;		Set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.ini")
-;	;		Set $CompValue$ = Trim(takeString(0, $list1$))
-;	;		if ($ConstTest$ = $CompValue$)
-;	;			comment "passed"
-;	;		else
-;	;			set $TestResult$ = "not o.k."
-;	;			LogWarning "failed"
-;	;		endif
-;	;	else
-;	;		set $TestResult$ = "not o.k."
-;	;		logError "Fatal: could not find .ini file"
-;	;		isFatalError
-;	;	endif
-;	;endif ; 4.12.1.0
-;
-;	;Files_remove_folder
-;
-;	if not($OS$ = "macos")
-;		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.2") >= "0"
-;			comment ""
-;			comment "-------------------------------------"
-;			comment "Testing: "
-;			message "Patches /AllNTUserProfiles"
-;			Patches_dummy_ini "%userprofiledir%\opsi-winst-test.ini" /AllNTUserProfiles
-;			set $list1$ = getProfilesDirList
-;			for %s% in $list1$ do sub_check_profile_ini
-;			Files_remove_profile_ini /AllNTUserProfiles
-;		endif ; 4.11.3.2
-;	endif
-;
-;
-;	if $OS$ = "Linux"
-;		ShellInAnIcon_create_ini
-;	else
-;		DosInAnIcon_create_ini
-;	endif
-;	Patches_dummy_ini $HomeTestFiles$+"\dummy.ini"
-;	;if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.5")
-;	if $test_experimental$ = "true"
-;
-;		comment "Testing: "
-;		message "GetSectionFromInifile"
-;
-;		if (FileExists($HometestFiles$+"\dummy.ini"))
-;			;GetSectionFromInifile
-;
-;			set $list1$ = createStringList ('dummy1=add1', 'dummy2=set1', 'dummy3=change1', 'dummy5=add5', 'replace1=replace1', 'dummy1=addnew1')
-;			Set $CompList1$ = GetSectionFromInifile("secdummy", $HometestFiles$+"\dummy.ini")
-;
-;			set $list2$ = createStringList ('dümmy7=üöäßÜÖÄ')
-;			Set $CompList2$ = GetSectionFromInifile("secdüöä", $HometestFiles$+"\dummy.ini")
-;
-;			set $test1list1$ = getSubListByMatch($list1$,$CompList1$)
-;			set $test2list1$ = getSubListByMatch($CompList1$,$list1$)
-;
-;			set $test1list2$ = getSubListByMatch($list2$,$CompList2$)
-;			set $test2list2$ = getSubListByMatch($CompList2$,$list2$)
-;
-;			if (count($test1list1$)=count($list1$) AND count($test2list1$)=count($CompList1$) AND count($test1list2$)=count($list2$) AND count($test2list2$)=count($CompList2$))
-;				comment "GetSectionFromInifile passed"
-;			else
-;				set $TestResult$ = "not o.k."
-;				LogWarning "GetSectionFromInifile failed"
-;			endif
-;		else
-;			set $TestResult$ = "not o.k."
-;			logError "Fatal: could not create .ini file"
-;			isFatalError
-;		endif
-;	endif
-;
-;
-;	sub_compareResult
-;	set $winst_patches$ = $SubResult$
-;endif
-
 
 if ($Flag_winst_patch_hosts$ = "on") or ($MasterFlag$ = "on")
 	include_insert '%scriptpath%\sub-scripts\patchHosts.opsiscript'
@@ -2888,14 +2640,14 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	Files_empty_folder
 	
 	;if not($OS$ = 'macos')
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.4") >= "0"
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.4.27") >= "0"
 		
-		Files_profile_copy /AllNTUserProfiles
+		Files_profile_copy /AllUserProfiles
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "DeleteTheLine / AdvanceLine"
-		PatchTextFile_AdvanceLine_DeleteTheLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_AdvanceLine_DeleteTheLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $tmp$ = "0"
 		set $ConstTest$ = "Line containing dummy1."
 		set $list1$ = getProfilesDirList
@@ -2905,7 +2657,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "FindLine"
-		PatchTextFile_findLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_findLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line1 with no sense"
 		set $tmp$ = "0"
 		set $list1$ = getProfilesDirList
@@ -2915,7 +2667,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "FindLine_StartingWith"
-		PatchTextFile_FindLine_StartingWith "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_FindLine_StartingWith "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line3 with no sense"
 		set $tmp$ = "3"
 		set $list1$ = getProfilesDirList
@@ -2925,7 +2677,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "FindLine_Containing"
-		PatchTextFile_FindLine_Containing "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_FindLine_Containing "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line2 with no sense"
 		set $tmp$ = "1"
 		set $list1$ = getProfilesDirList
@@ -2935,7 +2687,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "GoToTop"
-		PatchTextFile_GoToTop "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_GoToTop "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line2 with no sense"
 		set $tmp$ = "0"
 		set $list1$ = getProfilesDirList
@@ -2945,7 +2697,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "GoToBottom"
-		PatchTextFile_GoToBottom "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_GoToBottom "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line2 with no sense"
 		set $tmp$ = "0"
 		set $list1$ = getProfilesDirList
@@ -2955,7 +2707,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "AddLine"
-		PatchTextFile_AddLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_AddLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line added by winst"
 		set $tmp$ = "1"
 		set $list1$ = getProfilesDirList
@@ -2965,7 +2717,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "InsertLine"
-		PatchTextFile_InsertLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_InsertLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line inserted by winst"
 		set $tmp$ = "1"
 		set $list1$ = getProfilesDirList
@@ -2975,7 +2727,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "AppendLine"
-		PatchTextFile_AppendLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_AppendLine "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line appended by winst"
 		set $tmp$ = "3"
 		set $list1$ = getProfilesDirList
@@ -2985,7 +2737,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Append_File"
-		PatchTextFile_Append_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_Append_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line3appendbyFile"
 		set $tmp$ = "6"
 		set $list1$ = getProfilesDirList
@@ -2995,7 +2747,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Subtract_File"
-		PatchTextFile_Subtract_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		PatchTextFile_Subtract_File_prof "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		set $ConstTest$ = "Line1appendbyFile"
 		set $list1$ = getProfilesDirList
 		set $tmp$ = "0"
@@ -3005,7 +2757,7 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		;comment "-------------------------------------"
 		;comment "Testing: "
 		;message "SaveToFile"
-		;PatchTextFile_SaveToFile "%userprofiledir%\opsi-winst-test\dummy.txt" /AllNTUserProfiles
+		;PatchTextFile_SaveToFile "%userprofiledir%\opsi-winst-test\dummy.txt" /AllUserProfiles
 		;set $ConstTest$ = "Line1appendbyFile"
 		;if (fileExists("%CurrentProfileDir%\opsi-winst-test\savetofile.txt"))
 		;	set $list1$ = loadTextFile("%CurrentProfileDir%\opsi-winst-test\savetofile.txt")
@@ -3021,9 +2773,9 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 		;	LogWarning "failed"
 		;endif
 		
-		Files_profile_del /AllNTUserProfiles
+		Files_profile_del /AllUserProfiles
 		
-	endif ; 4.11.3.4
+	endif ; 4.12.4.27
 	;endif ; not macos
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.3.6") >= "0"
@@ -3765,55 +3517,6 @@ set $TestResult$=$TestResult$+"2"
 comment "test sub_giveString " + "%letter%"
 set $TestResult$=$TestResult$+"5"
 ;----------------   end   sections for sub test ---------------------------------
-;----------------   start   sections for patches test ---------------------------------
-;[DosInAnIcon_create_ini]
-;c:
-;mkdir $HomeTestFiles$
-;cd $HomeTestFiles$
-;del dummy.ini
-;
-;[ShellInAnIcon_create_ini]
-;set -x
-;mkdir -p "$HomeTestFiles$"
-;cd "$HomeTestFiles$"
-;rm dummy.ini
-
-;[Patches_dummy_ini]
-;add [secdummy] dummy1=add1
-;; will be overwritten by other functions
-;add [secdummy] dummy2=add2
-;add [secdummy] dummy3=add3
-;add [secdummy] dummy4=add4
-;add [secdummy] dummy5=add5
-;add [secdummy] dummy6=add6
-;add [secdüöä] dümmy7=üöäßÜÖÄ
-;
-;set [secdummy] dummy2=set1
-;addnew [secdummy] dummy1=addnew1
-;change [secdummy] dummy3=change1
-;del [secdummy] dummy4
-;Replace dummy6=add6 replace1=replace1
-
-;[Patches_dummy_ini_delsec]
-;delsec $SectionName$
-
-;[Files_remove_folder]
-;Delete -s -f $HomeTestFiles$
-
-;[Files_remove_profile_ini]
-;del "%userprofiledir%\opsi-winst-test.ini"
-
-;[sub_check_profile_ini]
-;set $ConstTest$ = "add1"
-;Set $CompValue$ = GetValueFromInifile("%s%\opsi-winst-test.ini", "secdummy", "dummy1", "failed")
-;if ($ConstTest$ = $CompValue$)
-;	comment "GetValueFromInifile passed"
-;else
-;	set $TestResult$ = "not o.k."
-;	LogWarning "Patches /AllNTUserProfiles"
-;endif
-
-;----------------   end   sections for patches test ---------------------------------
 ;;---------------- start sections for idapiconfig test ---------------------------
 ;[IdapiConfig_winsttest]
 ;alias:opsiwinst
@@ -3845,7 +3548,7 @@ if ($ConstTest$ = $CompValue$)
 	comment "passed"
 else
 	set $TestResult$ = "not o.k."
-	LogWarning "failed: PatchText /AllNTUserProfiles"
+	LogWarning "failed: PatchText /AllUserProfiles"
 endif
 
 [Files_profile_copy]

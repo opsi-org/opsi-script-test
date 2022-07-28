@@ -720,6 +720,12 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			logError "Fatal: could not delete all files"
 			isFatalError
 		endif
+
+
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "copy for all nt user profiles"
 		markErrorNumber
 		Files_work_on_profiles /AllNTUserProfiles
 		if errorsOccuredSinceMark > 0
@@ -732,13 +738,34 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		for %prof% in $list$ do sub_check_dir_exist_inprof
 		Files_work_on_profiles_del_userp /AllNTUserProfiles
 		for %prof% in $list$ do sub_check_dir_not_exist_inprof
-		Files_work_on_profiles_copy_currp /AllNTUserProfiles
-		for %prof% in $list$ do sub_check_dir_exist_inprof
-		Files_work_on_profiles_del_currp /AllNTUserProfiles
-		for %prof% in $list$ do sub_check_dir_not_exist_inprof
 		
 	endif ; windows
+
+
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.27")
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "copy for all user profiles"
+		markErrorNumber
+		Files_work_on_profiles /AllUserProfiles
+		if errorsOccuredSinceMark > 0
+			LogWarning "failed"
+			set $TestResult$ = "not o.k."
+		endif
+		Files_work_on_profiles_del_userp /AllUserProfiles
+		set $list$ = getProfilesDirList
+		Files_work_on_profiles_copy_userp /AllUserProfiles
+		for %prof% in $list$ do sub_check_dir_exist_inprof
+		Files_work_on_profiles_del_userp /AllUserProfiles
+		for %prof% in $list$ do sub_check_dir_not_exist_inprof
+		Files_work_on_profiles_copy_currp /AllUserProfiles
+		for %prof% in $list$ do sub_check_dir_exist_inprof
+		Files_work_on_profiles_del_currp /AllUserProfiles
+		for %prof% in $list$ do sub_check_dir_not_exist_inprof
+	endif
 	
+
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.5.1")
 		comment ""
 		comment "-------------------------------------"
@@ -1176,12 +1203,12 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 			
 			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
 				markErrorNumber
-				Files_unzipfile_to_profiles /AllNTUserProfiles
+				Files_unzipfile_to_profiles /AllUserProfiles
 				if errorsOccuredSinceMark > 0
 					LogWarning "failed"
 					set $TestResult$ = "not o.k."
 				endif
-				Files_work_on_profiles_del_userp /AllNTUserProfiles
+				Files_work_on_profiles_del_userp /AllUserProfiles
 			endif
 			Files_empty_folder
 			set $HomeTestFiles$ = takestring(0,splitstring($HomeTestFiles$,"_2"))
