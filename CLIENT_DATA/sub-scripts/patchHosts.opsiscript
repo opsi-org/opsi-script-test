@@ -1,0 +1,206 @@
+
+	include_append "%scriptpath%\sub-scripts\patchHostsFunctions\SecondarySections\secondarySections.opsiscript"
+
+	Message "testing patchHosts functions"
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	comment ""
+	comment "testing patchHosts functions"
+	comment ""
+	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	Set $ExpectedResult$ = "o.k."
+	set $TestResult$ = "o.k."
+	
+	; 7.3 PatchHost s Sections
+	
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "setAddr, setname, setalias, setalias, setComment"
+	
+	switch $OS$
+		case "Windows_nt"
+			DosInAnIcon_create_hosts
+		endcase
+		case "Linux"
+			ShellInAnIcon_create_hosts
+		endcase
+		case "macos"
+			ShellInAnIcon_create_hosts
+		endcase
+	endswitch
+	
+	PatchHosts_add $HomeTestFiles$+"\hosts"
+	if (FileExists($HometestFiles$+"\hosts"))
+		
+		message "setAddr"
+		set $ConstTest$ = "111.111.111.111"
+		set $ConstTest2$ = "ServerNo1.mydom.org"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(0, splitString (takeString(1, $list1$), "	"))
+		set $CompValue2$ = takeString(1, splitString (takeString(1, $list1$), "	"))
+		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			comment "setAddr passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setAddr failed"
+		endif
+		
+		message "setName"
+		set $ConstTest$ = "222.222.222.222"
+		set $ConstTest2$ = "ServerNo2.mydom.org"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(0, splitString (takeString(2, $list1$), "	"))
+		set $CompValue2$ = takeString(1, splitString (takeString(2, $list1$), "	"))
+		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			comment "setName passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setName failed"
+		endif
+		
+		message "setAlias <hostname> <alias>"
+		set $ConstTest$ = "myServerNo1"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(2, splitString (takeString(1, $list1$), "	"))
+		if ($ConstTest$ = $CompValue$)
+			comment "setAlias <hostname> <alias> passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setAlias <hostname> <alias> failed"
+		endif
+		
+		message "setAlias <ipadresse> <alias>"
+		set $ConstTest$ = "myServerNo2"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(2, splitString (takeString(2, $list1$), "	"))
+		if ($ConstTest$ = $CompValue$)
+			comment "setAlias <ipadresse> <alias> passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setAlias <ipadresse> <alias> failed"
+		endif
+		
+		message "setComment"
+		set $ConstTest$ = "# Hello World"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(3, splitString (takeString(2, $list1$), "	"))
+		if ($ConstTest$ = $CompValue$)
+			comment "setComment passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setComment failed"
+		endif
+	endif
+	
+	comment "once again ....."
+	
+	PatchHosts_add $HomeTestFiles$+"\hosts"
+	if (FileExists($HometestFiles$+"\hosts"))
+		
+		message "setAddr"
+		set $ConstTest$ = "111.111.111.111"
+		set $ConstTest2$ = "ServerNo1.mydom.org"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(0, splitString (takeString(1, $list1$), "	"))
+		set $CompValue2$ = takeString(1, splitString (takeString(1, $list1$), "	"))
+		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			comment "setAddr passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setAddr failed"
+		endif
+		
+		message "setName"
+		set $ConstTest$ = "222.222.222.222"
+		set $ConstTest2$ = "ServerNo2.mydom.org"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(0, splitString (takeString(2, $list1$), "	"))
+		set $CompValue2$ = takeString(1, splitString (takeString(2, $list1$), "	"))
+		if (($ConstTest$ = $CompValue$) AND ($ConstTest2$ = $CompValue2$))
+			comment "setName passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setName failed"
+		endif
+		
+		message "setAlias <hostname> <alias>"
+		set $ConstTest$ = "myServerNo1"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(2, splitString (takeString(1, $list1$), "	"))
+		if ($ConstTest$ = $CompValue$)
+			comment "setAlias <hostname> <alias> passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setAlias <hostname> <alias> failed"
+		endif
+		
+		message "setAlias <ipadresse> <alias>"
+		set $ConstTest$ = "myServerNo2"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(2, splitString (takeString(2, $list1$), "	"))
+		if ($ConstTest$ = $CompValue$)
+			comment "setAlias <ipadresse> <alias> passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setAlias <ipadresse> <alias> failed"
+		endif
+		
+		message "setComment"
+		set $ConstTest$ = "# Hello World"
+		Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts")
+		set $CompValue$ = takeString(3, splitString (takeString(2, $list1$), "	"))
+		if ($ConstTest$ = $CompValue$)
+			comment "setComment passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setComment failed"
+		endif
+	endif
+	
+	Files_copy_vmnat_hosts
+	PatchHosts_vmnat $HomeTestFiles$+"\hosts_vmnat"
+	Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts_vmnat")
+	PatchHosts_vmnat $HomeTestFiles$+"\hosts_vmnat"
+	Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts_vmnat")
+	PatchHosts_vmnat $HomeTestFiles$+"\hosts_vmnat"
+	Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts_vmnat")
+	PatchHosts_vmnat $HomeTestFiles$+"\hosts_vmnat"
+	Set $list1$ = loadTextFile($HomeTestFiles$+"\hosts_vmnat")
+	
+	if runningAsAdmin
+		message "setAddr"
+		set $ConstTest$ = ""
+		PatchHosts_system_add
+		if $OS$ = "Windows_NT"
+			set $SectionName$ = "DosInAnIcon_hosts_ping"
+		else
+			set $SectionName$ = "ShellInAnIcon_hosts_ping"
+		endif
+		Set $list1$ = getoutstreamfromsection($SectionName$)
+		PatchHosts_system_delete
+		set $CompValue$ = takeFirstStringContaining($list1$, "1.2.3.4")
+		if not ($ConstTest$ = $CompValue$)
+			Set $list1$ = getoutstreamfromsection($SectionName$)
+			set $CompValue$ = takeFirstStringContaining($list1$, "1.2.3.4")
+			if $OS$ = "Linux"
+				if LineContaining_ExistsIn( "1.2.3.4","/etc/hosts")
+					set $CompValue$ = "failed"
+				else
+					set $CompValue$ = ""
+				endif
+			endif
+			if $ConstTest$ = $CompValue$
+				comment "setAddr passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "setAddr failed"
+			endif
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "setAddr failed"
+		endif
+	endif
+	
+	
+	sub_compareResult
+	set $winst_patch_hosts$ = $SubResult$
