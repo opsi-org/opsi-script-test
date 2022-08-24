@@ -202,6 +202,9 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	message "delete -f -d[n] -s"
 	message "delete"
 	
+	message "Empty string in_del command should give a warning"
+    Files_empty_string_in_del_command
+	
 	if (FileExists($HomeTestFiles$))
 		Files_empty_folder_files
 	endif
