@@ -43,3 +43,9 @@ project:
   homepage: https://www.opsi.org
   maintainer: uib GmbH info@uib.de
   licenses: AGPL-3.0
+
+jenkins-test:
+  ACTIONREQUEST: setup
+  PRODUCTS: opsi-script-test
+  PROPERTIES: {}
+  SYSTEMS: win10-x64-21h2
