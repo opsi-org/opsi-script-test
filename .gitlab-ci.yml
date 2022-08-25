@@ -33,4 +33,4 @@ test:win10:
     - version=$(grep OPSI/control -A 10 -e "\[Product\]" | grep "version:" | tr -d "^a-zA-Z :")
     - package=$(grep OPSI/control -A 5 -e "\[Package\]" | grep "version:" | tr -d "^a-zA-Z :")
     # any opsi-script-test version x-y~z is testing opsi-script x.y (no prerelease)
-    - opsi-dev-cli -l info jenkins test --dependencies="{\"opsi-script\":\"$version-$(echo $package | cut -f 1 -d '.')\"}" --versions="$version-$package"
+    - opsi-dev-cli -l info jenkins test --dependencies="{\"opsi-script\":\"$version-$(echo $package | cut -f 1 -d '.')\"}" --versions="$version-$(echo $package | tr '.' '~')"
