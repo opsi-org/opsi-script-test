@@ -13,12 +13,11 @@ package:makeopsipackage:
   script:
     - sed -i s'/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
     - locale-gen
-    - env
     - opsi-dev-tool --binary-pull
     - version=`grep OPSI/control -A 10 -e "\[Product\]" | grep "version:" | tr -d "^a-zA-Z :"`
     - package=`grep OPSI/control -A 5 -e "\[Package\]" | grep "version:" | tr -d "^a-zA-Z :"`
     - '[ "$CI_COMMIT_TAG" = "" ] && sed -i "0,/version: $package\$/s/version: $package\$/version: $package.$CI_JOB_ID/" OPSI/control'
-    - opsi-makepackage --no-set-rights -l 6
+    - LC_ALL="de_DE.UTF-8" opsi-makepackage --no-set-rights -l 6
     - upload-package opsi-script-test*.opsi
   artifacts:
     name: controlfile
