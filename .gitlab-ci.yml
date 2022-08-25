@@ -11,6 +11,9 @@ package:makeopsipackage:
       when: always
     - when: manual
   script:
+    - sed -i s'/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
+    - locale-gen
+    - env | grep "LC_"
     - opsi-dev-tool --binary-pull
     - version=`grep OPSI/control -A 10 -e "\[Product\]" | grep "version:" | tr -d "^a-zA-Z :"`
     - package=`grep OPSI/control -A 5 -e "\[Package\]" | grep "version:" | tr -d "^a-zA-Z :"`
