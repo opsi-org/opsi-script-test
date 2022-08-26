@@ -32,7 +32,6 @@ Delete -d2 "$HomeTestFiles$\*.*"
 [Files_delete_s]
 Delete -s "$HomeTestFiles$"
 
-
 [Files_del_empty_folder]
 Del -s -f -c "$HomeTestFiles$"
 
@@ -58,6 +57,9 @@ copy -s "%ScriptPath%\$opsi_script_test_helper_path$\*" "%opsiTmpDir%\del_c_test
 
 [Files_del_c]
 del -crsf "%opsiTmpDir%\del_c_test\"
+
+[Files_empty_string_in_del_command]
+del -sf ""
 
 [Files_copy_s]
 copy -s "%ScriptPath%\test-files\testFiles\*.*" $HomeTestFiles$
