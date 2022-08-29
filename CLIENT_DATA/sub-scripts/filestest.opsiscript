@@ -762,10 +762,6 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 		for %prof% in $list$ do sub_check_dir_exist_inprof
 		Files_work_on_profiles_del_userp /AllUserProfiles
 		for %prof% in $list$ do sub_check_dir_not_exist_inprof
-		Files_work_on_profiles_copy_currp /AllUserProfiles
-		for %prof% in $list$ do sub_check_dir_exist_inprof
-		Files_work_on_profiles_del_currp /AllUserProfiles
-		for %prof% in $list$ do sub_check_dir_not_exist_inprof
 	endif
 	
 
