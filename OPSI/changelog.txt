@@ -1,4 +1,19 @@
-[Changelog] 
+[Changelog]
+
+opsi-script-test (4.12.6.0-1) stable; urgency=low
+  
+  [new] tests for function HashFromFile (!11, j.laajili) 
+  [new] test case empty string in del command (e.g. del -sf "") (!15, j.werner)
+  [new] New test for new registry type QWord (!10, a.schmitz)
+  [new] direct variable initialization (!9, a.schmitz)
+  [new] Implementing tests for copy -u in Linux (!8, j.laajili)
+  [change] Exchange deprecated AllNTUserProfiles (!12 a.schmitz)
+  [change] Outsource Code From Main Script (!13, a.schmitz)
+  [change] crypttest.opsiscript rework MD5 checksum test (cc6efb33, j.werner)
+  [remove] test for statement LocalAdmin (!7, a.schmitz) 
+  [remove] unnecessary/unlogical test for current user profile in filestest.opsiscript (06cc3d5a, j.werner)
+   
+-- j.werner <j.werner@uib.de> Tue, 31 May 2022 
 
 opsi-script-test (4.12.5.1-1) stable; urgency=low
   
