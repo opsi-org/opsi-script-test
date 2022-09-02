@@ -22,7 +22,7 @@ mkdir -p $HomeTestFiles$
 cd $HomeTestFiles$
 echo dummy> dummy.txt
 
-[ExecWith_autoit_opsiservicecall_interactive]}
+[ExecWith_autoit_opsiservicecall_interactive]
 ; waiting for the window
 WinWait("DialogServicePassword")
 ; activating
@@ -131,12 +131,12 @@ Exit
 @echo off
 tasklist /FI "IMAGENAME eq autoit3.exe"
 
-[DosInAnIcon_dir]
+[DosInAnIcon_controls_getWorkingDirectory]
 @echo off
 rem this should print the working directory:
 echo %cd%
 
-[ShellInAnIcon_dir]
+[ShellInAnIcon_controls_getWorkingDirectory]
 # this should print the working directory:
 pwd
 

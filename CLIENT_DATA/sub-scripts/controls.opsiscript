@@ -101,9 +101,9 @@
 		message "ChangeDirectory"
 		comment "backup actual working directory"
 		if $OS$ = "Windows_NT"
-			set $SectionName$ = "DosInAnIcon_dir"
+			set $SectionName$ = "DosInAnIcon_controls_getWorkingDirectory"
 		else
-			set $SectionName$ = "ShellInAnIcon_dir"
+			set $SectionName$ = "ShellInAnIcon_controls_getWorkingDirectory"
 		endif
 		set $list1$ = getOutstreamfromSection($SectionName$)
 		set $tmp$ = takeString(0,$list1$)
