@@ -690,9 +690,10 @@ if ($Flag_encoding$ = "on") or ($MasterFlag$ = "on")
 			endif
 			
 			[Patches_encoding_ini_loc]
-set [section1] key1=sät1
-add [section1] key2=ädd1
-				endfunc
+			set [section1] key1=sät1
+			add [section1] key2=ädd1
+			
+		endfunc
 		
 		;Patches_encoding_ini $HomeTestFiles$+"\test_ucs2be.ini" /encoding "unicode"
 		;if (FileExists($HometestFiles$+"\test_ucs2be.ini"))
