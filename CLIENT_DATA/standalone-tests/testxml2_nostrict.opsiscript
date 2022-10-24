@@ -1,0 +1,31 @@
+
+encoding=utf8
+[actions]
+DefStringlist $list1$
+DefVar $CompValue$
+DefVar $ConstTest$
+DefVar $TestResult$
+DefVar $tmp$
+
+files_copy_temp
+XML2_testFalseStrictMode "%opsiTmpDir%\nostrictmode_test.xml"
+set $ConstTest$ = '<node_level-3_B time="today"/>'
+		set $list1$ = loadTextFile("%opsiTmpDir%\nostrictmode_test.xml")
+		set $tmp$ = takeString (4,$list1$)
+		set $CompValue$ = trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+
+
+
+[files_copy_temp]
+copy "%scriptpath%\..\test-files\xmlpatch2\nostrictmode_test.xml" "%opsiTmpDir%"
+
+[XML2_testFalseStrictMode]
+strictMode = false
+openNode 'node_level-1_number-1 // node_level-2_A // node_level-3_B'
+SetAttribute "time" "today"

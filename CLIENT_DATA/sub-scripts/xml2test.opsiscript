@@ -1118,26 +1118,26 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		;	LogWarning "failed"
 		;endif
 		
-
-		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.27")
-		comment "Testing: "
-		message "XML2 Sections with /AllUserProfiles parameter"
-		sub_clean_xml2cmdLines
-		set $xml2strictMode$ = 'false'
 		
-		;set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green"'
-		set $xml2nodepath$ ='node_level-1 // node_level-2_B'
-		set $xml2changeValue$ = '"encoding" "äüöß"'
-		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
-		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
-		set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
-		set $xml2cmdLine4$ = "rootnodeOnCreate = myrootnode"
-		XML2_dummy_xml "%userprofiledir%\dummy-encoding-utf8.xml" /AllUserProfiles
-		set $list1$ = getProfilesDirList
-		for %s% in $list1$ do sub_check_profile_xml2
-		Files_remove_profile_xml2 /AllUserProfiles
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.27")
+			comment "Testing: "
+			message "XML2 Sections with /AllUserProfiles parameter"
+			sub_clean_xml2cmdLines
+			set $xml2strictMode$ = 'false'
+			
+			;set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="green"'
+			set $xml2nodepath$ ='node_level-1 // node_level-2_B'
+			set $xml2changeValue$ = '"encoding" "äüöß"'
+			set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
+			set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+			set $xml2cmdLine3$ = "SetAttribute "+$xml2changeValue$
+			set $xml2cmdLine4$ = "rootnodeOnCreate = myrootnode"
+			XML2_dummy_xml "%userprofiledir%\dummy-encoding-utf8.xml" /AllUserProfiles
+			set $list1$ = getProfilesDirList
+			for %s% in $list1$ do sub_check_profile_xml2
+			Files_remove_profile_xml2 /AllUserProfiles
 		endif
-
+		
 		
 		comment ""
 		comment "-------------------------------------"
@@ -1184,7 +1184,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $xml2nodepath$ ='dict'
 		set $xml2cmdLine1$ = "strictMode = "+$xml2strictMode$
 		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
-		; setNodePair <keyNodeName> <keyNodeTextContent> <valueNodeName> <valueNodeTextContent> 
+		; setNodePair <keyNodeName> <keyNodeTextContent> <valueNodeName> <valueNodeTextContent>
 		set $xml2cmdLine3$ = 'setNodePair "key" "CFBundleShortVersionString" "string" "4.12.4.28"'
 		XML2_dummy_xml $HomeTestFiles$+"\info-osgui.plist"
 		set $list1$ = loadTextFile($HomeTestFiles$+"\info-osgui.plist")
@@ -1220,7 +1220,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-		; uib#2022092117000032 — XML2 in OPSI Script verändert falsche Zeile 
+		; uib#2022092117000032 — XML2 in OPSI Script verändert falsche Zeile
 		; test on unchanged rootnode
 		set $xml2nodepath$ ='RegistrationInfo'
 		set $xml2cmdLine1$ = "strictMode = false"
@@ -1237,10 +1237,32 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "node creation with and without strict mode"
+		Files_copy_xml2
+		; with strictmode=false
 		XML2_testFalseStrictMode $HomeTestFiles$+"\nostrictmode_test.xml"
-		set $ConstTest$ = '<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">'
-		set $list1$ = loadTextFile($HomeTestFiles$+"\mssched.xml")
-		set $tmp$ = takeString (<index>, <list>`)
+		set $ConstTest$ = '<node_level-3_B time="today"/>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\nostrictmode_test.xml")
+		; expect node_level-3_B in existing node_level-2_A
+		set $tmp$ = takeString (4,$list1$)
+		set $CompValue$ = trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		Files_copy_xml2
+		; with strictmode=true
+		XML2_testTrueStrictMode $HomeTestFiles$+"\nostrictmode_test.xml"
+		set $ConstTest$ = '<node_level-3_B time="today"/>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\nostrictmode_test.xml")
+		; expect node_level-3_B in new (additional) node_level-2_A
+		set $tmp$ = takeString (5,$list1$)
 		set $CompValue$ = trim($tmp$)
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
@@ -1396,10 +1418,15 @@ else
 	LogWarning "xml2 /AllUserProfiles file not found: "+"%s%\dummy-encoding-utf8.xml"
 endif
 
-[Files_remove_profile_xml2]
-del "%userprofiledir%\dummy-encoding-utf8.xml"
+[files_copy_temp]
+copy "%scriptpath%\..\test-files\xmlpatch2\nostrictmode_test.xml" "%opsiTmpDir%"
 
 [XML2_testFalseStrictMode]
 strictMode = false
+openNode 'node_level-1_number-1 // node_level-2_A // node_level-3_B'
+SetAttribute "time" "today"
+
+[XML2_testTrueStrictMode]
+strictMode = true
 openNode 'node_level-1_number-1 // node_level-2_A // node_level-3_B'
 SetAttribute "time" "today"

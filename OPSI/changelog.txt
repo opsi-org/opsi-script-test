@@ -5,6 +5,7 @@ opsi-script-test (4.12.7.0-1) stable; urgency=low
      [change] xml2test: AddAttribute: change index in takeString (strictmode true and false)
      [change] xml2test: DeleteAttribute: change teststring
      [new] xml2test: test for "preseve attribute sequence"
+     [new] xml2test: test for "node creation with and without strict mode"
    
 -- detlef oertel <d.oertel@uib.de>  Mon,  24 Oct 2022 15:00:00 +0200
 
