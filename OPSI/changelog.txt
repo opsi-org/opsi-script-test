@@ -1,5 +1,14 @@
 [Changelog]
 
+opsi-script-test (4.12.7.0-1) stable; urgency=low
+  [change] xml2:changed attribute order since 4.12.7
+     [change] xml2test: AddAttribute: change index in takeString (strictmode true and false)
+     [change] xml2test: DeleteAttribute: change teststring
+     [new] xml2test: test for "preseve attribute sequence"
+   
+-- detlef oertel <d.oertel@uib.de>  Mon,  24 Oct 2022 15:00:00 +0200
+
+
 opsi-script-test (4.12.6.0-1) stable; urgency=low
   
   [new] tests for function HashFromFile (!11, j.laajili) 

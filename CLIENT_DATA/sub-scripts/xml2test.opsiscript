@@ -219,7 +219,12 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = "OpenOfficeWriter"
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
 		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.7.0")
+			set $CompValue$ = takeString(5, splitString ($tmp$, '"'))
+		else
+			; changed attribute sequence since 4.12.7
+			set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -582,7 +587,12 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		set $ConstTest$ = "OpenOfficeWriter"
 		set $list1$ = loadTextFile($HomeTestFiles$+"\dummy.xml")
 		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
-		set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.7.0")
+			set $CompValue$ = takeString(5, splitString ($tmp$, '"'))
+		else
+			; changed attribute sequence since 4.12.7
+			set $CompValue$ = takeString(1, splitString ($tmp$, '"'))
+		endif
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -609,8 +619,11 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		;markErrorNumber
 		comment "should create a new (second) node with name=node_level-2_B because of wrong number of attributes at strict mode"
 		set $xml2nodepath$ ='node_level-1_number-1 // node_level-2_B color="yellow" count="65"'
+		; will call'DeleteAttribute "color"'
 		XML2_DeleteAttribute $HomeTestFiles$+"\dummy.xml"
-		set $ConstTest$ = '<node_level-2_B name="OpenOfficeWriter" color="green" count="65"/>'
+		; changed attribute order since 4.12.7
+		set $ConstTest$ = '<node_level-2_B color="green" count="65" name="OpenOfficeWriter"/>'
+		;set $ConstTest$ = '<node_level-2_B name="OpenOfficeWriter" color="green" count="65"/>'
 		set $list1$ = getXml2DocumentFromFile($HomeTestFiles$+"\dummy.xml")
 		set $tmp$ = takeFirstStringContaining($list1$,"node_level-2_B")
 		set $CompValue$ = Trim($tmp$)
@@ -1185,6 +1198,58 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 		Files_cleanup_xml2
 	endif ; 4.12.4.28
 	
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.7.0")
+		Files_copy_xml2
+		comment ""
+		comment "-------------------------------------"
+		comment "Testing: "
+		message "preseve attribute sequence"
+		sub_clean_xml2cmdLines
+		set $xml2nodepath$ ='node1'
+		set $xml2cmdLine1$ = "strictMode = false"
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		XML2_dummy_xml $HomeTestFiles$+"\attributesequence.xml"
+		set $ConstTest$ = '<node1 cttrib="1" attrib="2" bttrib="3">Hello World</node1>'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\attributesequence.xml")
+		set $tmp$ = takeFirstStringContaining($list1$,"node1")
+		set $CompValue$ = trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		; uib#2022092117000032 — XML2 in OPSI Script verändert falsche Zeile 
+		; test on unchanged rootnode
+		set $xml2nodepath$ ='RegistrationInfo'
+		set $xml2cmdLine1$ = "strictMode = false"
+		set $xml2cmdLine2$ = "openNode '"+$xml2nodepath$+"'"
+		XML2_dummy_xml $HomeTestFiles$+"\mssched.xml"
+		set $ConstTest$ = '<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\mssched.xml")
+		set $tmp$ = takeFirstStringContaining($list1$,'Task version="1.2"')
+		set $CompValue$ = trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		XML2_testFalseStrictMode $HomeTestFiles$+"\nostrictmode_test.xml"
+		set $ConstTest$ = '<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">'
+		set $list1$ = loadTextFile($HomeTestFiles$+"\mssched.xml")
+		set $tmp$ = takeString (<index>, <list>`)
+		set $CompValue$ = trim($tmp$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+	endif ; 4.12.7.0
+	
 	sub_compareResult
 	
 	set $winst_xml2$ = $SubResult$
@@ -1209,7 +1274,7 @@ SetAttribute 'name1' 'value1'
 AddAttribute 'name2' 'value2'
 AddAttribute 'name2' 'value1'
 AddAttribute 'name3' 'value3'
-delAttribute 'name3'
+deleteAttribute 'name3'
 
 [xml2_w10una_test_2]
 strictMode = $xml2strictMode$
@@ -1333,3 +1398,8 @@ endif
 
 [Files_remove_profile_xml2]
 del "%userprofiledir%\dummy-encoding-utf8.xml"
+
+[XML2_testFalseStrictMode]
+strictMode = false
+openNode 'node_level-1_number-1 // node_level-2_A // node_level-3_B'
+SetAttribute "time" "today"
