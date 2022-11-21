@@ -306,7 +306,7 @@
 			comment "Testing FileOrFolderExists succeeded"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "Testing FileOrFolderExists failed"
+			LogError "Testing FileOrFolderExists("+$filePath$+")  failed"
 		endif
 	endfunc
 	
@@ -317,7 +317,7 @@
 			comment "Testing FileOrFolderExists succeeded"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "Testing FileOrFolderExists failed"
+			LogError "Testing FileOrFolderExists("+$filePath$+","+ $accessStr$+")  failed"
 		endif
 	endfunc
 	
