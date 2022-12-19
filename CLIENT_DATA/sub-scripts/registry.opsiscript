@@ -10,7 +10,11 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 	comment "testing registry functions"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"	
-	
+	 
+	set $ExpectedResult$ = "o.k."
+
+	set $TestResult$ = "o.k."
+
 	deffunc doHKEYAccessTest():void
 		comment ""
 		comment "-------------------------------------"
@@ -37,9 +41,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\registrySections.opsiscript"
 	include_append "%scriptpath%\sub-scripts\registryFunctions\SecondarySections\otherSections.opsiscript"
 
-	Set $ExpectedResult$ = "o.k."
 
-	set $TestResult$ = "o.k."
 		; 6.3.7 Reading Values from the Windows Registry and Transforming Values into Registry Format
   	
 		comment ""
@@ -104,7 +106,8 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 		Registry_opsi_org_delete_test /64bit
 		Files_delete_SaveValueToFile_txt
 		
-		sub "%scriptpath%\sub-scripts\registryFunctions\deleteListEntries.opsiscript"		
+		sub "%scriptpath%\sub-scripts\registryFunctions\deleteListEntries.opsiscript"
+		sub "%scriptpath%\sub-scripts\registryFunctions\RegeditFormat\import_regeditformat.opsiscript"		
 	
 	else ; windows
 		set $TestResult$ = "not implemented"
