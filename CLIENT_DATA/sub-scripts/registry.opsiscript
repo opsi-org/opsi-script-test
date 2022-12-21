@@ -107,7 +107,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 		Files_delete_SaveValueToFile_txt
 		
 		sub "%scriptpath%\sub-scripts\registryFunctions\deleteListEntries.opsiscript"
-		sub "%scriptpath%\sub-scripts\registryFunctions\RegeditFormat\import_regeditformat.opsiscript"		
+		include_insert "%scriptpath%\sub-scripts\registryFunctions\RegeditFormat\import_regeditformat.opsiscript"		
 	
 	else ; windows
 		set $TestResult$ = "not implemented"
