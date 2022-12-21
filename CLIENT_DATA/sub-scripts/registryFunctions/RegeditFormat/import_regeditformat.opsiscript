@@ -8,34 +8,34 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
 	comment "Testing: import registry information form regedit format file (.reg) "
 	comment "regedit format with QWord data type + hexdecimal dword value with letters"
 
-	;registry loadUnicodeTextFile("%scriptpath%\sub-scripts\registryFunctions\RegeditFormat\registry_exportformat.reg") /regedit
-	registry loadUnicodeTextFile("%scriptpath%\registry_exportformat.reg") /regedit
+	registry loadUnicodeTextFile("%scriptpath%\sub-scripts\registryFunctions\RegeditFormat\registry_exportformat.reg") /regedit
+	;for stand-alone testing: registry loadUnicodeTextFile("%scriptpath%\registry_exportformat.reg") /regedit
 
 
 	;set some test values as given in regedit fortmat file
 	DefVar $KeyPath$ = "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\regeditformat-test"
     
 	DefVar $KeyName1$ = "Fax"
-	DefVar $KeyData1_TestValue$ = "ff000001"
+	DefVar $KeyData1_TestValue$ = "4278190081"
     Comment "Hex: ff000001, Decimal: 4278190081"
-	DefVar $KeyData1_CompareValue$ = getRegistryValue($KeyPath$, $KeyName1$)
+	DefVar $KeyData1_CompareValue$ = getRegistryValue($KeyPath$, $KeyName1$,"32bit")
 
 	if $KeyData1_CompareValue$ = $KeyData1_TestValue$ 
 	    comment "REG_DWORD Value as expected, 1. from 2 regedit format tests passed"
 	else
-		;set $TestResult$ = "not o.k."
+		set $TestResult$ = "not o.k."
 		LogWarning "REG_DWORD Value is " + $KeyData1_CompareValue$ +  " expected value is " + $KeyData1_TestValue$ + ", 1. from 2 regedit format tests failed"
 	endif    
 	
 	DefVar $KeyName2$ = "OneNote"
-	DefVar $KeyData2_TestValue$ = "58028E44000"
+	DefVar $KeyData2_TestValue$ = "6048000000000"
 	Comment "Hex: 58028E44000, Decimal: 6048000000000" 
-	DefVar $KeyData2_CompareValue$ = getRegistryValue($KeyPath$, $KeyName2$)
+	DefVar $KeyData2_CompareValue$ = getRegistryValue($KeyPath$, $KeyName2$, "32bit")
 
 	if $KeyData1_CompareValue$ = $KeyData1_TestValue$ 
 	    comment "REG_DWORD Value as expected, 2. from 2 regedit format tests passed"
 	else
-		;set $TestResult$ = "not o.k."
+		set $TestResult$ = "not o.k."
 		LogWarning "REG_QWORD Value is " + $KeyData2_CompareValue$ +  " expected value is " + $KeyData2_TestValue$ + ", 2. from 2 regedit format tests failed"
 	endif
 endif    
