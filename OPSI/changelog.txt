@@ -1,5 +1,12 @@
 [Changelog]
 
+opsi-script-test (4.12.7.0-3) stable; urgency=low
+
+  [update] wmitest.opsiscript: increase number of bytes added or substituted from the free disk space in the freespace test, 
+           to make the test more robust against fluctuations of the disk space on the test system.
+   
+-- jan werner <j.werner@uib.de>  Mon, 09 Jan 2023
+
 opsi-script-test (4.12.7.0-2) stable; urgency=low
 
   [change] controls.opsiscript: better logging in case of an error while testing FileOrFolderExists
