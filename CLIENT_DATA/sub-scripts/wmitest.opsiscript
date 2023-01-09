@@ -64,14 +64,14 @@ if ($Flag_subwmi$ = "on") or ($MasterFlag$ = "on")
 		set $resultlist$ = getListFromWMI($str1$,$str2$,$list1$,$str3$)
 		if errorsOccuredSinceMark = 0
 			set $CompValue$ = getValue("freespace", $resultlist$)
-			set $CompValue$ = calculate($CompValue$+ '-4000')
+			set $CompValue$ = calculate($CompValue$+ '-40000')
 			if (HasMinimumSpace ("%Systemdrive%", $CompValue$))
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			set $CompValue$ = calculate($CompValue$+ '+4200')
+			set $CompValue$ = calculate($CompValue$+ '+42000')
 			if (HasMinimumSpace ("%Systemdrive%", $CompValue$))
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
