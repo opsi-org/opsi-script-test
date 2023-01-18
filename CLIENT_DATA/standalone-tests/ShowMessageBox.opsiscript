@@ -1,0 +1,107 @@
+[actions]
+
+defstringlist $message$
+defstringlist $MessageWait$ = '["Please do nothing and wait for the countdown to end"]'
+defstringlist $buttons$
+Defvar $exitcode$
+
+set $buttons$ = '[]'
+set $exitcode$ = Showmessagebox("Test 1: No buttons, wait", $MessageWait$, $buttons$, '5')
+if $exitcode$ = '0'
+	comment "Test 1 passed"
+else
+	LogError "Test 1 failed"
+endif
+
+set $message$ = '["Please close this window by the X in the upper right corner."]'
+set $buttons$ = '[]'
+set $exitcode$ = Showmessagebox("Test 2: No buttons, no countdown, close window", $message$, $buttons$, '0')
+if $exitcode$ = '0'
+	comment "Test 2 passed"
+else
+	LogError "Test 2 failed"
+endif
+
+
+
+set $message$ = '["Please click the button before the countdown ends!"]'
+set $buttons$ = '["Click me!"]'
+set $exitcode$ = Showmessagebox("Test 3: One button, click", $message$, $buttons$, '30')
+if $exitcode$ = '1'
+	comment "Test 3 passed"
+else
+	LogError "Test 3 failed: You should have clicked the button before the countdown ended!"
+endif
+
+set $buttons$ = '["Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 4: One button, wait", $MessageWait$, $buttons$, '5')
+if $exitcode$ = '0'
+	comment "Test 4 passed"
+else
+	LogError "Test 4 failed: You should have waited for the countdown to end!"
+endif
+
+
+
+set $message$ = '["Please click the left button before the countdown ends!"]'
+set $buttons$ = '["Click me!", "Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 5: Two buttons, click left", $message$, $buttons$, '30')
+if $exitcode$ = '1'
+	comment "Test 5 passed"
+else
+	LogError "Test 5 failed: You should have clicked the left button before the countdown ended!"
+endif
+
+set $message$ = '["Please click the right button before the countdown ends!"]'
+set $buttons$ = '["Do NOT click me!", "Click me!"]'
+set $exitcode$ = Showmessagebox("Test 6: Two buttons, click right", $message$, $buttons$, '30')
+if $exitcode$ = '2'
+	comment "Test 6 passed"
+else
+	LogError "Test 6 failed: You should have clicked the right button before the countdown ended!"
+endif
+
+set $buttons$ = '["Do NOT click me!", "Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 7: Two buttons, wait", $MessageWait$, $buttons$, '5')
+if $exitcode$ = '0'
+	comment "Test 7 passed"
+else
+	LogError "Test 7 failed: You should have waited for the countdown to end!"
+endif
+
+
+
+set $message$ = '["Please click the left button before the countdown ends!"]'
+set $buttons$ = '["Click me!", "Do NOT click me!", "Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 8: Three buttons, click left", $message$, $buttons$, '30')
+if $exitcode$ = '1'
+	comment "Test 8 passed"
+else
+	LogError "Test 8 failed: You should have clicked the left button before the countdown ended!"
+endif
+
+set $message$ = '["Please click the middle button before the countdown ends!"]'
+set $buttons$ = '["Do NOT click me!", "Click me!", "Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 9: Three buttons, click middle", $message$, $buttons$, '30')
+if $exitcode$ = '2'
+	comment "Test 9 passed"
+else
+	LogError "Test 9 failed: You should have clicked the middle button before the countdown ended!"
+endif
+
+set $message$ = '["Please click the right button before the countdown ends!"]'
+set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Click me!"]'
+set $exitcode$ = Showmessagebox("Test 10: Three buttons, click right", $message$, $buttons$, '30')
+if $exitcode$ = '3'
+	comment "Test 10 passed"
+else
+	LogError "Test 10 failed: You should have clicked the right button before the countdown ended!"
+endif
+
+set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 11: Three buttons, wait", $MessageWait$, $buttons$, '5')
+if $exitcode$ = '0'
+	comment "Test 11 passed"
+else
+	LogError "Test 11 failed: You should have waited for the countdown to end!"
+endif
