@@ -22,6 +22,14 @@ else
 	LogError "Test 2 failed"
 endif
 
+; test everything empty
+set $exitcode$ = Showmessagebox("", '[]', '[]', '0')
+if $exitcode$ = '0'
+	comment "Test 2a passed"
+else
+	LogError "Test 2a failed"
+endif
+
 
 
 set $message$ = '["Please click the button before the countdown ends!"]'
