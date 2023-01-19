@@ -16,7 +16,7 @@ endif
 set $message$ = '["Please close this window by the X in the upper right corner."]'
 set $buttons$ = '[]'
 set $exitcode$ = Showmessagebox("Test 2: No buttons, no countdown, close window", $message$, $buttons$, '0')
-if $exitcode$ = '0'
+if $exitcode$ = '-1'
 	comment "Test 2 passed"
 else
 	LogError "Test 2 failed"
@@ -24,11 +24,22 @@ endif
 
 ; test everything empty
 set $exitcode$ = Showmessagebox("", '[]', '[]', '0')
-if $exitcode$ = '0'
+if $exitcode$ = '-1'
 	comment "Test 2a passed"
 else
 	LogError "Test 2a failed"
 endif
+
+set $message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
+set $buttons$ = '[]'
+set $exitcode$ = Showmessagebox("Test 2b: No buttons, close window", $message$, $buttons$, '30')
+if $exitcode$ = '-1'
+	comment "Test 2b passed"
+else
+	LogError "Test 2b failed: You should have closed the window before the countdown ended!"
+endif
+
+
 
 
 
@@ -48,6 +59,24 @@ if $exitcode$ = '1'
 	comment "Test 3a passed"
 else
 	LogError "Test 3a failed: You should have clicked the button"
+endif
+
+set $message$ = '["Please close this window by the X in the upper right corner."]'
+set $buttons$ = '["Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 3b: One button, no countdown, close window", $message$, $buttons$, '0')
+if $exitcode$ = '-1'
+	comment "Test 3b passed"
+else
+	LogError "Test 3b failed"
+endif
+
+set $message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
+set $buttons$ = '["Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 3c: One button, close window", $message$, $buttons$, '30')
+if $exitcode$ = '-1'
+	comment "Test 3c passed"
+else
+	LogError "Test 3c failed: You should have closed the window before the countdown ended!"
 endif
 
 set $buttons$ = '["Do NOT click me!"]'
@@ -158,6 +187,24 @@ if $exitcode$ = '3'
 	comment "Test 10a passed"
 else
 	LogError "Test 10a failed: You should have clicked the right button"
+endif
+
+set $message$ = '["Please close this window by the X in the upper right corner."]'
+set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 10b: Three buttons, no countdown, close window", $message$, $buttons$, '0')
+if $exitcode$ = '-1'
+	comment "Test 10b passed"
+else
+	LogError "Test 10b failed"
+endif
+
+set $message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
+set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
+set $exitcode$ = Showmessagebox("Test 10c: Three buttons, close window", $message$, $buttons$, '30')
+if $exitcode$ = '-1'
+	comment "Test 10c passed"
+else
+	LogError "Test 10c failed: You should have closed the window before the countdown ended!"
 endif
 
 set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
