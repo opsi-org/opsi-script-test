@@ -1,5 +1,8 @@
 [actions]
 
+setloglevel=6
+setdebug_prog=false
+
 defstringlist $message$
 defstringlist $MessageWait$ = '["Please do nothing and wait for the countdown to end"]'
 defstringlist $buttons$
