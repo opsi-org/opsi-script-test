@@ -10,7 +10,7 @@ DefVar $CountdownMessage$
 Defvar $exitcode$
 
 set $buttons$ = '[]'
-set $exitcode$ = Showmessagebox("Test 1: No buttons, wait", $MessageWait$, $buttons$, '', '5')
+set $exitcode$ = Showmessagebox("Test 1: No buttons, wait", $MessageWait$, $buttons$, '', '00:00:05')
 if $exitcode$ = '-1'
 	comment "Test 1 passed"
 else
@@ -20,7 +20,7 @@ endif
 set $message$ = '["Please close this window by the X in the upper right corner."]'
 set $buttons$ = '[]'
 set $CountdownMessage$ = 'This box has no countdown.'
-set $exitcode$ = Showmessagebox("Test 2: No buttons, no countdown, close window", $message$, $buttons$, $CountdownMessage$, '0')
+set $exitcode$ = Showmessagebox("Test 2: No buttons, no countdown, close window", $message$, $buttons$, $CountdownMessage$, '00:00:00')
 if $exitcode$ = '-2'
 	comment "Test 2 passed"
 else
@@ -28,7 +28,7 @@ else
 endif
 
 ; test everything empty
-set $exitcode$ = Showmessagebox("", '[]', '[]', '', '0')
+set $exitcode$ = Showmessagebox("", '[]', '[]', '', '')
 if $exitcode$ = '-2'
 	comment "Test 2a passed"
 else
@@ -38,7 +38,7 @@ endif
 set $message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
 set $buttons$ = '[]'
 set $CountdownMessage$ = 'This window will automatically close in'
-set $exitcode$ = Showmessagebox("Test 2b: No buttons, close window", $message$, $buttons$, $CountdownMessage$, '30')
+set $exitcode$ = Showmessagebox("Test 2b: No buttons, close window", $message$, $buttons$, $CountdownMessage$, '00:00:30')
 if $exitcode$ = '-2'
 	comment "Test 2b passed"
 else
@@ -51,7 +51,7 @@ endif
 
 set $message$ = '["Please click the button before the countdown ends!"]'
 set $buttons$ = '["Click me!"]'
-set $exitcode$ = Showmessagebox("Test 3: One button, click", $message$, $buttons$, '', '30')
+set $exitcode$ = Showmessagebox("Test 3: One button, click", $message$, $buttons$, '', '00:00:30')
 if $exitcode$ = '0'
 	comment "Test 3 passed"
 else
@@ -60,7 +60,7 @@ endif
 
 set $message$ = '["Please click the button"]'
 set $buttons$ = '["Click me!"]'
-set $exitcode$ = Showmessagebox("Test 3a: One button, no countdown, click", $message$, $buttons$, '', '0')
+set $exitcode$ = Showmessagebox("Test 3a: One button, no countdown, click", $message$, $buttons$, '', '00:00:00')
 if $exitcode$ = '0'
 	comment "Test 3a passed"
 else
@@ -69,7 +69,7 @@ endif
 
 set $message$ = '["Please close this window by the X in the upper right corner."]'
 set $buttons$ = '["Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 3b: One button, no countdown, close window", $message$, $buttons$, '', '0')
+set $exitcode$ = Showmessagebox("Test 3b: One button, no countdown, close window", $message$, $buttons$, '', '00:00:00')
 if $exitcode$ = '-2'
 	comment "Test 3b passed"
 else
@@ -78,7 +78,7 @@ endif
 
 set $message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
 set $buttons$ = '["Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 3c: One button, close window", $message$, $buttons$, '', '30')
+set $exitcode$ = Showmessagebox("Test 3c: One button, close window", $message$, $buttons$, '', '00:00:30')
 if $exitcode$ = '-2'
 	comment "Test 3c passed"
 else
@@ -86,7 +86,7 @@ else
 endif
 
 set $buttons$ = '["Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 4: One button, wait", $MessageWait$, $buttons$, '', '5')
+set $exitcode$ = Showmessagebox("Test 4: One button, wait", $MessageWait$, $buttons$, '', '00:00:05')
 if $exitcode$ = '-1'
 	comment "Test 4 passed"
 else
@@ -97,7 +97,7 @@ endif
 
 set $message$ = '["Please click the left button before the countdown ends!"]'
 set $buttons$ = '["Click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 5: Two buttons, click left", $message$, $buttons$, '', '30')
+set $exitcode$ = Showmessagebox("Test 5: Two buttons, click left", $message$, $buttons$, '', '00:00:30')
 if $exitcode$ = '0'
 	comment "Test 5 passed"
 else
@@ -106,7 +106,7 @@ endif
 
 set $message$ = '["Please click the left button"]'
 set $buttons$ = '["Click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 5a: Two buttons, no countdown, click left", $message$, $buttons$, '', '0')
+set $exitcode$ = Showmessagebox("Test 5a: Two buttons, no countdown, click left", $message$, $buttons$, '', '00:00:00')
 if $exitcode$ = '0'
 	comment "Test 5a passed"
 else
@@ -115,7 +115,7 @@ endif
 
 set $message$ = '["Please click the right button before the countdown ends!"]'
 set $buttons$ = '["Do NOT click me!", "Click me!"]'
-set $exitcode$ = Showmessagebox("Test 6: Two buttons, click right", $message$, $buttons$, '', '30')
+set $exitcode$ = Showmessagebox("Test 6: Two buttons, click right", $message$, $buttons$, '', '00:00:30')
 if $exitcode$ = '1'
 	comment "Test 6 passed"
 else
@@ -124,7 +124,7 @@ endif
 
 set $message$ = '["Please click the right button"]'
 set $buttons$ = '["Do NOT click me!", "Click me!"]'
-set $exitcode$ = Showmessagebox("Test 6a: Two buttons, no countdown, click right", $message$, $buttons$, '', '0')
+set $exitcode$ = Showmessagebox("Test 6a: Two buttons, no countdown, click right", $message$, $buttons$, '', '00:00:00')
 if $exitcode$ = '1'
 	comment "Test 6a passed"
 else
@@ -132,7 +132,7 @@ else
 endif
 
 set $buttons$ = '["Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 7: Two buttons, wait", $MessageWait$, $buttons$, '', '5')
+set $exitcode$ = Showmessagebox("Test 7: Two buttons, wait", $MessageWait$, $buttons$, '', '00:00:05')
 if $exitcode$ = '-1'
 	comment "Test 7 passed"
 else
@@ -143,7 +143,7 @@ endif
 
 set $message$ = '["Please click the left button before the countdown ends!"]'
 set $buttons$ = '["Click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 8: Three buttons, click left", $message$, $buttons$, '', '30')
+set $exitcode$ = Showmessagebox("Test 8: Three buttons, click left", $message$, $buttons$, '', '00:00:30')
 if $exitcode$ = '0'
 	comment "Test 8 passed"
 else
@@ -152,7 +152,7 @@ endif
 
 set $message$ = '["Please click the left button"]'
 set $buttons$ = '["Click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 8a: Three buttons, no countdown, click left", $message$, $buttons$, '', '0')
+set $exitcode$ = Showmessagebox("Test 8a: Three buttons, no countdown, click left", $message$, $buttons$, '', '00:00:00')
 if $exitcode$ = '0'
 	comment "Test 8a passed"
 else
@@ -161,7 +161,7 @@ endif
 
 set $message$ = '["Please click the middle button before the countdown ends!"]'
 set $buttons$ = '["Do NOT click me!", "Click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 9: Three buttons, click middle", $message$, $buttons$, '', '30')
+set $exitcode$ = Showmessagebox("Test 9: Three buttons, click middle", $message$, $buttons$, '', '00:00:30')
 if $exitcode$ = '1'
 	comment "Test 9 passed"
 else
@@ -170,7 +170,7 @@ endif
 
 set $message$ = '["Please click the middle button"]'
 set $buttons$ = '["Do NOT click me!", "Click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 9a: Three buttons, no countdown, click middle", $message$, $buttons$, '', '0')
+set $exitcode$ = Showmessagebox("Test 9a: Three buttons, no countdown, click middle", $message$, $buttons$, '', '00:00:00')
 if $exitcode$ = '1'
 	comment "Test 9a passed"
 else
@@ -179,7 +179,7 @@ endif
 
 set $message$ = '["Please click the right button before the countdown ends!"]'
 set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Click me!"]'
-set $exitcode$ = Showmessagebox("Test 10: Three buttons, click right", $message$, $buttons$, '', '30')
+set $exitcode$ = Showmessagebox("Test 10: Three buttons, click right", $message$, $buttons$, '', '00:00:30')
 if $exitcode$ = '2'
 	comment "Test 10 passed"
 else
@@ -188,7 +188,7 @@ endif
 
 set $message$ = '["Please click the right button"]'
 set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Click me!"]'
-set $exitcode$ = Showmessagebox("Test 10a: Three buttons, no countdown, click right", $message$, $buttons$, '', '0')
+set $exitcode$ = Showmessagebox("Test 10a: Three buttons, no countdown, click right", $message$, $buttons$, '', '00:00:00')
 if $exitcode$ = '2'
 	comment "Test 10a passed"
 else
@@ -197,7 +197,7 @@ endif
 
 set $message$ = '["Please close this window by the X in the upper right corner."]'
 set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 10b: Three buttons, no countdown, close window", $message$, $buttons$, '', '0')
+set $exitcode$ = Showmessagebox("Test 10b: Three buttons, no countdown, close window", $message$, $buttons$, '', '00:00:00')
 if $exitcode$ = '-2'
 	comment "Test 10b passed"
 else
@@ -206,7 +206,7 @@ endif
 
 set $message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
 set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 10c: Three buttons, close window", $message$, $buttons$, '', '30')
+set $exitcode$ = Showmessagebox("Test 10c: Three buttons, close window", $message$, $buttons$, '', '00:00:30')
 if $exitcode$ = '-2'
 	comment "Test 10c passed"
 else
@@ -214,7 +214,7 @@ else
 endif
 
 set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 11: Three buttons, wait", $MessageWait$, $buttons$, '', '5')
+set $exitcode$ = Showmessagebox("Test 11: Three buttons, wait", $MessageWait$, $buttons$, '', '00:00:05')
 if $exitcode$ = '-1'
 	comment "Test 11 passed"
 else
