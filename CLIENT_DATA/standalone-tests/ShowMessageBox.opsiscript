@@ -28,6 +28,7 @@ else
 endif
 
 ; test everything empty
+comment "An error should occur here due to the incorrect time format:"
 set $exitcode$ = Showmessagebox("", '[]', '[]', '', '')
 if $exitcode$ = '-2'
 	comment "Test 2a passed"
