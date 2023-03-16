@@ -1,7 +1,5 @@
 encoding=utf8
 
-[Actions]
-
 if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
 	comment ""
 	comment "-------------------------------------"
@@ -13,7 +11,7 @@ if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.6.0")
 
 
 	;set some test values as given in regedit fortmat file
-	DefVar $KeyPath$ = "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\regeditformat-test"
+	Set $KeyPath$ = "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\regeditformat-test"
     
 	DefVar $KeyName1$ = "Fax"
 	DefVar $KeyData1_TestValue$ = "4278190081"
