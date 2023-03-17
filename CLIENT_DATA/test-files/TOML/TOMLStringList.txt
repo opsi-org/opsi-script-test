@@ -6,7 +6,7 @@ dob = 1979-05-27T07:32:00Z-07:32
 server = "192.168.1.1"
 ports = [ 8001, 8001, 8002 ]
 connection_max = 5000
-enabled = True
+enabled = true
 [servers]
 [servers.alpha]
 ip = "10.0.0.1"
