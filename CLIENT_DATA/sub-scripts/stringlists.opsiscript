@@ -1383,13 +1383,17 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		
+	endif
+
+
+	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.1") >= "0"	
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
-		message "removeFromListByContaining"
-		set $string1$ = "%Scriptpath%\test-files\encoding\10lines-cp1252.txt"
-		set $list1$ = loadTextFileWithEncoding($string1$, "cp1252")
+		message "Testing removeFromListByContaining ..."
+		
+		comment "Create input list for the tests"
+		set $list1$ = createStringList('line 1', 'line 2', 'line 3', 'line 4', 'line 5', 'line 6', 'line 7', 'line 8', 'line 9', 'line 10', 'üöäÜÖÄß')
+			
 		comment "search with string"
 		comment "search with string constant"
 		set $ConstTest$ = "10"
@@ -1412,7 +1416,6 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		
 		
 		set $ConstTest$ = "1"
 		set $list2$ = removeFromListByContaining("line", $list1$)
@@ -1484,8 +1487,22 @@ if ($Flag_winst_string_list$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "failed"
 		endif
 		
-	endif ; 4.11.5
-	
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.8.0") >= "0"
+			comment "search with string list variable containing search criteria (1, line 1) which match entries twice (line 1, line 10 )"
+			comment "searchstr '1'  and 'line 1' will found in 'line 1' and 'line 10'"
+			set $TestList1$ = removeFromListByContaining(createStringList ('1', 'line 1', '3', '4', '5'), $list1$)
+			set $CompList1$ = createStringList ('line 2', 'line 6', 'line 7', 'line 8', 'line 9', 'üöäÜÖÄß')
+			if areListsEqual($TestList1$, $CompList1$, 'FLAG_AUTO_CS')
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+		
+		message "removeFromListByContaining test result:  " + $TestResult$
+		comment "-------------------------------------"
+	endif
 	
 	; Tests for WinstVersion >= 4.12.3
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3")

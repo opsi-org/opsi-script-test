@@ -1,5 +1,12 @@
 [Changelog]
 
+opsi-script-test (4.12.8.0-3) stable; urgency=low
+
+  [new] test in stringlist.opsiscript: 
+        search with string list variable containing search criteria (1, line 1) which match entries twice (line 1, line 10 )
+   
+-- jan werner <j.werner@uib.de>  Tue, 07 Feb 2023
+
 opsi-script-test (4.12.7.0-3) stable; urgency=low
 
   [update] wmitest.opsiscript: increase number of bytes added or substituted from the free disk space in the freespace test, 
