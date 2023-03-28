@@ -1,0 +1,108 @@
+
+
+[actions]
+setloglevel=8
+ScriptErrorMessages = false
+
+importFunc "functionlib.opsiscript"
+
+DefVar $mystr$
+DefVar $str1$
+DefVar $str2$
+DefStringlist $list1$
+DefStringlist $list2$
+set $str1$ = 'ha'
+set $str2$ = 'hi'
+set $mystr$ = $str1$ + $str2$
+
+set $list2$ = splitstring("/etc/opsi/huhu","/")
+
+;DefFunc myFunc8($str1$ : string) : stringlist
+;	DefStringlist $loclist1$
+;	set $loclist1$ = getoutstreamfromsection("shellInAnIcon_test")
+;	set $result$ = $loclist1$
+;	
+;	[shellinanicon_test]
+;	set -x
+;	$str1$
+;endfunc
+
+set $list1$ = myFunc8('pwd')
+
+
+DefFunc myFunc7(ref $list1$ : stringlist) : stringlist
+	DefStringlist $loclist1$
+	set $loclist1$ = splitstring("/a/b/c","/")
+	set $list1$ = createStringList('setinlocal')
+	set $loclist1$ = addListToList($loclist1$,$list1$)
+	set $result$ = $loclist1$
+endfunc
+
+set $list1$ = myFunc7($list2$)
+comment "$list2$ index 0: " + takestring(0,$list2$)
+
+
+DefFunc myFunc6(ref $str1$ : string) : string
+	DefVar $locstr1$
+	set $locstr1$ = '123'
+	set $str1$ = 'setinlocal'
+	set $result$ = $locstr1$ + $str1$
+endfunc
+
+set $mystr$ = myFunc6($str2$)
+set $mystr$ = $str1$ + $str2$
+
+
+
+DefFunc myFunc4($str1$ : string) : string
+	DefVar $locstr1$
+	
+	DefFunc myFunc5($str1$ : string) : string
+		set $result$ = 'inner' + $str1$
+	endfunc
+
+	set $locstr1$ = '123'
+	set $result$ = $str1$ + myFunc5($locstr1$)
+endfunc
+
+set $mystr$ = myFunc4("outer")
+
+
+DefFunc myFunc3($str1$ : string) : string
+	DefVar $locstr1$
+	set $locstr1$ = '123'
+	set $result$ = $locstr1$ + $str1$
+endfunc
+
+set $mystr$ = myFunc3("he")
+
+; this should give a sytax error because $locstr1$ is global not known
+;set $mystr$ = $locstr1$
+
+DefFunc myFunc(val $str1$ : string, $str2$ : string) : string
+	set $result$ = $str1$ + $str2$
+endfunc
+
+DefFunc myFunc1(val $str1$ : string, $list1$ : stringlist) : stringlist
+	set $result$ = createStringlist($str1$ , takeString(2,$list1$))
+endfunc
+
+DefFunc myFunc2($str1$ : string) : string
+	set $result$ = booltostring($str1$)
+endfunc
+
+
+set $list2$ = splitstring("/etc/opsi/huhu","/")
+
+set $mystr$ = myFunc("he",timeStampAsFloatStr)
+set $list1$ = myFunc1("hi",$list2$)
+
+if stringtobool(myfunc2('true'))
+	comment "truu"
+else
+ 	comment "phalse"
+endif
+
+[stop]
+/home/detlef/gitwork/opsi-script-test/CLIENT_DATA/standalone-tests/defined_functions.opsiscript
+

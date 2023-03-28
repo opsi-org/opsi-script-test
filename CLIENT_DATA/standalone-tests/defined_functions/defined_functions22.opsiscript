@@ -1,0 +1,150 @@
+[Initial]
+setLogLevel=8
+encoding=UTF-8
+
+[Actions]
+requiredWinstVersion >= "4.12.0.0" 
+
+DefVar $retVal$
+DefVar $FuncParam$
+DefVar $Param1$
+DefVar $Param2$
+
+; Variablen initialisieren.
+Set $FuncParam$ = "true" 
+Set $Param1$ = "huh"
+Set $Param2$ = "hah"
+
+; Funktion definieren.
+DefFunc TestFunction(val $param$ : string) : string
+Set $result$ = $param$
+endfunc
+
+DefFunc TestFunction1($p1$ : string, val $param$ : string) : string
+Set $result$ = $param$
+endfunc
+
+DefFunc TestFunction2($p1$ : string, val $param$ : string, $p2$ : string) : string
+Set $result$ = $param$
+endfunc
+
+
+Message "Teste die Funktion..." 
+
+Set $retVal$ = TestFunction("true")
+if ($retVal$ = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if (TestFunction("true") = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+Set $retVal$ = TestFunction($FuncParam$)
+if ($retVal$ = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if (TestFunction($FuncParam$) = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if ("true" = TestFunction($FuncParam$))
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if stringtobool(TestFunction($FuncParam$))
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+;;################################################
+
+Set $retVal$ = TestFunction1($Param1$,"true")
+if ($retVal$ = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if (TestFunction1($Param1$,"true") = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+Set $retVal$ = TestFunction1("huhu",$FuncParam$)
+if ($retVal$ = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if (TestFunction1($Param1$,$FuncParam$) = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if ("true" = TestFunction1($Param1$,$FuncParam$))
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if stringtobool(TestFunction1($Param1$,$FuncParam$))
+	comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+;;################################################
+
+Set $retVal$ = TestFunction2($Param1$,"true",$Param1$)
+if ($retVal$ = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if (TestFunction2($Param1$,"true",$Param1$) = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+Set $retVal$ = TestFunction2("huhu",$FuncParam$,$Param1$)
+if ($retVal$ = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if (TestFunction2($Param1$,$FuncParam$,$Param1$) = "true")
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if ("true" = TestFunction2($Param1$,$FuncParam$,$Param1$))
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif
+
+if stringtobool(TestFunction2($Param1$,$FuncParam$,$Param1$))
+   comment "Wahr." 
+else
+   comment "Falsch." 
+endif

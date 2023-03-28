@@ -1,0 +1,61 @@
+[Actions]
+DefVar $ProductId$
+DefVar $INST_ClientId$
+DefVar $action$
+DefVar $OCA_ServiceAddress$
+DefVar $OCA_ServiceUsername$
+DefVar $OCA_ServicePassword$
+Set $OCA_ServiceAddress$ = "https://bonifax.uib.gmbh:4447"
+Set $OCA_ServiceUsername$ = "desktop-83kni74.uib.local"
+Set $OCA_ServicePassword$ = "0e84340d680eb8b659a7b40925701eb3"
+
+Message "Testing..."
+;OpsiServiceCall_authenticated /serviceurl $OCA_ServiceAddress$ /username $OCA_ServiceUsername$ /password 
+; $OCA_ServicePassword$
+opsiservicecall_backendInfo /serviceurl $OCA_ServiceAddress$ /username $OCA_ServiceUsername$ /password $OCA_ServicePassword$
+;if ErrorsOccuredSinceMark > 0
+;    LogError "Opsi service authentication failed"
+;    IsFatalError
+;endif
+;Message "success"
+
+
+set $action$ = "setup"
+set $ProductId$ = "7zip"
+set $INST_ClientId$ = "desktop-83kni74.uib.local"
+
+;set $action$ = "setup"
+;set $ProductId$ = "%installingProdName%"
+;set $INST_ClientId$ = "%opsiserviceClientId%"
+
+;Set $OCA_ServiceAddress$ = "https://bonifax.uib.gmbh:4447"
+;Set $OCA_ServiceUsername$ = "desktop-83kni74.uib.local"
+;Set $OCA_ServicePassword$ = "0e84340d680eb8b659a7b40925701eb3"
+
+
+comment "Actions: " + $action$
+comment "ProductID: " + $ProductId$
+comment "INST_ClientId: " + $INST_ClientId$
+
+opsiservicecall_setActionRequest /serviceurl $OCA_ServiceAddress$ /username $OCA_ServiceUsername$ /password $OCA_ServicePassword$
+
+; opsi-admin -d method setProductActionRequest dell_bios_update_1_20 rs-haag-adm99.rs-haag.intra setup
+
+message "Reload ProductInstallationSequence"
+reloadInstallationSequence
+
+[OpsiServiceCall_authenticated]
+"method": "authenticated"
+"params": []
+
+[opsiservicecall_backendInfo]
+"method":"backend_info"
+"params":[]
+
+[opsiservicecall_setActionRequest]
+"method": "setProductActionRequest"
+"params": [
+"$ProductId$",
+"$INST_ClientId$",
+"$action$"
+]

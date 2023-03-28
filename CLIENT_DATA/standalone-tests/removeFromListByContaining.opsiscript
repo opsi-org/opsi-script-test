@@ -1,0 +1,364 @@
+	[Actions]
+
+    requiredWinstVersion >= "4.11.4.1"
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.6")
+	requiredOpsiscriptVersion >= "4.12.3.6"
+endif
+ScriptErrorMessages = false
+encoding=utf8
+setOutputLevel = 3
+DefVar $ProductId$
+
+DefVar $MasterFlag$
+DefVar $FinalResult$
+DefVar $AktTestSubScript$
+DefVar $ExpectedResult$
+DefVar $TestNr$
+DefVar $TestResult$
+DefVar $SubResult$
+DefVar $HomeTestFiles$
+DefVar $ConstTest$
+Defvar $ConstTest2$
+DefVar $CompValue$
+DefVar $CompValue2$
+DefVar $tmp$
+DefVar $tmp1$
+DefVar $tmp2$
+DefVar $tmp3$
+DefVar $tmp4$
+DefVar $str$
+DefVar $str1$
+DefVar $str2$
+DefVar $str3$
+DefVar $str4$
+DefVar $refstr$
+DefVar $MsVersion$
+DefVar $string1$
+DefVar $string2$
+DefVar $string3$
+DefVar $xmlnodepath$
+DefVar $ScriptLoglevel$
+
+DefVar $winst_constants$
+DefVar $winst_parametrizing$
+DefVar $winst_string$
+DefVar $infostest$
+DefVar $winst_string_list$
+DefVar $winst_controls$
+DefVar $subtestsub$
+DefVar $winst_file$
+DefVar $winst_patches$
+DefVar $winst_patch_hosts$
+DefVar $winst_patch_text_file$
+DefVar $winst_link_folder$
+DefVar $subregistry$
+DefVar $winst_xml$
+DefVar $winst_dos$
+DefVar $winst_winbatch$
+DefVar $execwith_test$
+DefVar $compare_to_python$
+DefVar $winst_ldap_search$
+DefVar $winst_opsiServiceCall$
+DefVar $winst_licensemanagement$
+DefVar $winst_internalundocumented$
+DefVar $winst_RunAsLoggedOnAdmin$
+DefVar $winst_ProfileActions$
+DefVar $winst_calculate$
+DefVar $winst_encoding$
+DefVar $winst_jsonfunctions$
+DefVar $winst_crypt$
+DefVar $winst_xml2$
+DefVar $winst_macos$
+DefVar $winst_wmi$
+DefVar $winst_processinfo$
+DefVar $winst_local_functions$
+DefVar $winst_powershell$
+DefVar $winst_regex$
+DefVar $winst_networkcalc$
+DefVar $winst_urlparser$
+DefVar $winst_var_as_param$
+DefVar $winst_certificates$
+DefVar $winst_toml$
+DefVar $InterestingFile$
+DefVar $key$
+DefVar $value$
+DefVar $example$
+DefVar $testfilepath$
+DefVar $testfile$
+DefVar $testfilesize$
+DefVar $ErrorClientId$
+DefVar $LdapSearchDn$
+DefVar $LdapSearchAttributes$
+DefVar $LdapHost$
+DefVar $LdapPort$
+DefVar $LdapUser$
+DefVar $LdapPassword$
+DefVar $LDAPBaseDN$
+DefVar $LdapResultType$
+DefVar $LdapFilter$
+DefVar $SectionName$
+DefVar $link_extension$
+DefVar $link_subfolder$
+DefVar $target$
+DefVar $workdir$
+DefVar $workfile$
+DefVar $systemroot$
+DefVar $pspolicy$
+DefVar $architecture$
+DefVar $GUI$
+DefVar $mypython$
+
+DefVar $opsi_script_test_helper_bin$
+DefVar $opsi_script_test_helper_child_bin$
+DefVar $opsi_script_test_helper_path$
+DefVar $opsi_script_test_helper_bin_name$
+DefVar $helper_child_bin_name$
+DefVar $opsi_script_test_helper_bin_log$
+DefVar $helper_child_bin_log$
+DefVar $test_experimental$
+DefVar $test_speed$
+
+
+DefVar $Flag_winst_constants$
+DefVar $Flag_winst_parametrizing$
+DefVar $Flag_winst_string$
+DefVar $Flag_infostest$
+DefVar $Flag_winst_string_list$
+DefVar $Flag_winst_controls$
+DefVar $Flag_subtestsub$
+DefVar $Flag_winst_file$
+DefVar $Flag_winst_patches$
+DefVar $Flag_winst_patch_hosts$
+DefVar $Flag_winst_patch_text_file$
+DefVar $Flag_winst_link_folder$
+DefVar $Flag_winst_local_functions$
+DefVar $Flag_subregistry$
+DefVar $Flag_winst_xml$
+DefVar $Flag_winst_xml2$
+DefVar $Flag_winst_macos$
+DefVar $Flag_winst_dos$
+DefVar $Flag_winst_winbatch$
+DefVar $Flag_execwith_test$
+DefVar $Flag_compare_to_python$
+DefVar $Flag_winst_ldap_search$
+DefVar $Flag_winst_opsiServiceCall$
+DefVar $Flag_licensemanagement$
+;DefVar $Flag_winst_idapiconfig$
+DefVar $Flag_internalundocumented$
+DefVar $Flag_RunAsLoggedOnAdmin$
+DefVar $Flag_ProfileActions$
+DefVar $Flag_calculate$
+DefVar $Flag_encoding$
+DefVar $Flag_jsonfunctions$
+DefVar $Flag_crypt$
+DefVar $Flag_powershell$
+DefVar $Flag_subregex$
+DefVar $Flag_subnetworkcalc$
+DefVar $Flag_suburlparser$
+DefVar $Flag_subwmi$
+DefVar $Flag_var_as_param$
+DefVar $Flag_processinfo$
+DefVar $Flag_certificates$
+DefVar $Flag_toml$
+
+DefStringList $list$
+DefStringList $list1$
+DefStringList $list2$
+DefStringList $list3$
+DefStringList $list4$
+DefStringList $testlist0$
+DefStringList $testlist1$
+DefStringList $testlist2$
+DefStringList $testlist3$
+DefStringList $testlist4$
+DefStringList $testlist5$
+DefStringList $testlist6$
+DefStringList $testlist7$
+DefStringList $test1list1$
+DefStringList $test2list1$
+DefStringList $test1list2$
+DefStringList $test2list2$
+DefStringList $CompList1$
+DefStringList $CompList2$
+
+DefStringList $INST_ResultList$
+DefStringList $INST_ResultList2$
+DefStringList $INST_ResultList3$
+DefStringList $languageInfo$
+DefStringList $resultlist$
+
+DefVar $INST_SearchKey$
+DefVar $INST_SearchValue$
+DefVar $INST_SearchResult$
+DefVar $INST_SystemType$
+DefVar $INST_error$
+DefVar $language$
+DefVar $OS$
+DefVar $NTVersion$
+DefVar $opsi_message_title$
+DefVar $exitcode$
+DefVar $pathDelim$
+DefVar $pingcommand$
+DefVar $ping5command$
+DefVar $pingregex$
+DefVar $difftime$
+DefVar $foundsubsection$
+
+DefVar $regWriteValue$
+
+;File
+DefVar $FileCopyTest$
+DefVar $FileCopyTestSubDirectory$
+DefVar $DirectorySubDirectory
+
+; comapre_to_python
+DefVar $result$
+
+; LicenseManagement
+DefVar $Lic_ProductId$
+DefVar $LicensePool$
+DefVar $licensekey$
+
+defvar $captureproduct$
+defvar $imagename$
+defvar $depotid$
+defvar $valuesListStr$
+defvar $dotest$
+defvar $adminuser_password$
+defvar $orgpolicy$
+
+
+; retrieve OS and NT Version
+
+
+Set $OS$ = GetOS
+; retrieve current language
+set $languageInfo$ = getLocaleInfoMap
+set $language$ = getValue("language_id_2chars", $languageInfo$)
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3")
+	set $GUI$ = booltostring(runningWithGui)
+else
+	set $GUI$ = "true"
+endif
+;set $GUI$ = "false"
+
+set $ProductId$ = "opsi-script-test"
+set $TestResult$ = "o.k."
+
+    if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.5.1") >= "0"	
+		comment ""
+		comment "-------------------------------------"
+		message "Testing removeFromListByContaining ..."
+		
+		comment "Create input list for the tests"
+		set $list1$ = createStringList('line 1', 'line 2', 'line 3', 'line 4', 'line 5', 'line 6', 'line 7', 'line 8', 'line 9', 'line 10', 'üöäÜÖÄß')
+			
+		comment "search with string"
+		comment "search with string constant"
+		set $ConstTest$ = "10"
+		set $list2$ = removeFromListByContaining("line 5", $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "10"
+		set $list2$ = removeFromListByContaining("LINE 5", $list1$)
+		comment "the match is case insensitive"
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "1"
+		set $list2$ = removeFromListByContaining("line", $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		set $ConstTest$ = "9"
+		comment "searchstr 1 will found in 'line 1' and 'line 10'"
+		set $list2$ = removeFromListByContaining("1", $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "search with string function"
+		set $ConstTest$ = "10"
+		set $list2$ = removeFromListByContaining(trim(" line 5 "), $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "search with string variable"
+		set $string1$ = "line 5"
+		set $ConstTest$ = "10"
+		set $list2$ = removeFromListByContaining($string1$, $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "search with string list"
+		comment "search with string list variable"
+		set $list3$ = createStringList ('1', '2', '3', '4', '5')
+		comment "searchstr 1 will found in 'line 1' and 'line 10'"
+		set $ConstTest$ = "5"
+		set $list2$ = removeFromListByContaining($list3$, $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		comment "search with string list variable"
+		comment "searchstr 1 will found in 'line 1' and 'line 10'"
+		set $ConstTest$ = "5"
+		set $list2$ = removeFromListByContaining(createStringList ('1', '2', '3', '4', '5'), $list1$)
+		set $CompValue$ = count($list2$)
+		if ($ConstTest$ = $CompValue$)
+			comment "passed"
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "failed"
+		endif
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.8.0") >= "0"
+			comment "search with string list variable containing search criteria (1, line 1) which match entries twice (line 1, line 10 )"
+			comment "searchstr '1'  and 'line 1' will found in 'line 1' and 'line 10'"
+			set $TestList1$ = removeFromListByContaining(createStringList ('1', 'line 1', '3', '4', '5'), $list1$)
+			set $CompList1$ = createStringList ('line 2', 'line 6', 'line 7', 'line 8', 'line 9', 'üöäÜÖÄß')
+			if areListsEqual($TestList1$, $CompList1$, 'FLAG_AUTO_CS')
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+		endif
+		
+		message "removeFromListByContaining test result:  " + $TestResult$
+		comment "-------------------------------------"
+	endif

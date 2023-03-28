@@ -1,0 +1,136 @@
+[actions]
+setloglevel=8
+DefVar $ConstTest$
+Defvar $ConstTest2$
+DefVar $CompValue$
+DefVar $CompValue2$
+DefVar $tmp$
+DefVar $TestResult$
+DefVar $INST_error$
+
+DefStringList $INST_ResultList$
+
+  markErrorNumber
+	opsiservicecall_backend_info  /opsiclientd
+	opsiservicecall_start_notepad  /opsiclientd
+	if errorsOccuredSinceMark > 0
+		set $INST_error$ = "true"
+		comment "scripted login by default user/password failed -> retry interactive"
+	else
+		comment "login successful"		
+	endif
+
+;markErrorNumber
+;opsiservicecall_authenticated 
+;if errorsOccuredSinceMark > 0
+;	set $INST_error$ = "true"
+;	comment "was not authenticated "
+;else
+;	Set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_UserIsAdmin')
+;endif 
+;if (takeString(0,$INST_ResultList$) = "false") or ($INST_error$ = "true") 
+;	comment "was not authenticated as admin-> retry scripted login by default user/password"
+;	markErrorNumber
+;	set $INST_error$ = "false"
+opsiservicecall_authenticated  /serviceurl "https://bonifax:4447" /username "adminuser" /password "linux123"
+;	if errorsOccuredSinceMark > 0
+;		set $INST_error$ = "true"
+;		comment "scripted login by default user/password failed -> retry interactive"
+;	else
+;		markErrorNumber
+;		Set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_UserIsAdmin')
+;		if errorsOccuredSinceMark > 0
+;			set $INST_error$ = "true"
+;			comment "check for user is admin failed failed -> retry interactive"
+;		endif
+;	endif
+;endif
+;comment "logged in as admin"
+;
+;;opsiservicecall_authenticated /interactive /serviceurl "https://bonifax:4447"
+;
+;	comment ""
+;	comment "-------------------------------------"
+;	comment "Testing: "
+;	message "opsiservicecall"
+;	set $ConstTest$ = "bonifax.uib.local"
+;	set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_ServerIdsList')
+;	;set $list1$ = getReturnListFromSection('opsiservicecall_ServerIdsList /serviceurl "%opsiserviceURL%" /username "%hostId%" /password "%opsiservicePassword%"')
+;	set $CompValue$ = takeString(0, $INST_ResultList$)
+;	if ($ConstTest$ = $CompValue$)
+;		comment "passed"
+;	else
+;		LogWarning "failed"
+;		set $TestResult$ = "not o.k."
+;	endif
+;	
+;		set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getClientIds_list')
+;		set $CompValue$ = takeString(0, $INST_ResultList$)
+		set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getSoftwareInformation_hash')
+		set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_getHardwareInformation_hash')
+;		set $CompValue$ = takeString(0, $INST_ResultList$)
+		set $INST_ResultList$ = getReturnListFromSection('opsiservicecall_auditHardwareOnHost_getHashes_listOfHashes')
+;		set $CompValue$ = takeString(0, $INST_ResultList$)
+;		
+;opsiservicecall_authenticated /preloginservice
+
+[opsiservicecall_start_notepad]
+"method": "runCommand"
+"params": [
+"notepad.exe",
+					]
+
+
+
+[opsiservicecall_backend_info]
+"method": "backend_info"
+"params": [
+					]
+
+
+[opsiservicecall_authenticated]
+"method": "authenticated"
+"params": [
+					]
+
+[opsiservicecall_userIsAdmin]
+"method": "userIsAdmin"
+"params": [
+					]
+
+
+[opsiservicecall_ServerIdsList]
+"method":"getServerIds_list"
+"params":[]
+
+[opsiservicecall_getClientIds_list]
+"method":"getClientIds_list"
+"params":[]
+
+
+[opsiservicecall_getSoftwareInformation_hash]
+"method":"getSoftwareInformation_hash"
+"params":[
+					"pcbon4.uib.local",
+					]
+
+
+[opsiservicecall_getHardwareInformation_hash]
+"method":"getHardwareInformation_hash"
+"params":[
+					"pcbon4.uib.local",
+					]
+
+[opsiservicecall_getProductInstallationStatus_listOfHashes]
+"method":"getProductInstallationStatus_listOfHashes"
+"params":[
+					"pcbon4.uib.local",
+					]
+
+[opsiservicecall_auditHardwareOnHost_getHashes_listOfHashes]
+"method":"auditHardwareOnHost_getHashes"
+"params":[
+          '[]',
+					'{"hostId":"pcbon4.uib.local"}',
+					]
+

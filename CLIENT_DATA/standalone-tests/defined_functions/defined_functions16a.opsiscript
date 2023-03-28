@@ -1,0 +1,7 @@
+
+[actions]
+ScriptErrorMessages = false
+setloglevel=8
+importlib "functionlib.opsiscript"
+comment "ho"
+myNoResultFuncVal('haha')

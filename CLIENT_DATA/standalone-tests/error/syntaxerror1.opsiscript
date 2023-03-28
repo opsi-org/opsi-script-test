@@ -1,0 +1,7 @@
+[actions]
+DefVar $myError$
+set $myError$ = "test error"
+;hallo
+This-is-a-syntax-error
+
+

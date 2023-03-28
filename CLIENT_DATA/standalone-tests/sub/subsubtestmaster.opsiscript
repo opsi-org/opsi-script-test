@@ -1,0 +1,27 @@
+
+
+[actions]
+ScriptErrorMessages = false
+setloglevel = 8
+DefVar $str$
+
+deffunc callsub0() : string
+	comment "callsub0 "
+	sub_def_func
+	
+	[sub_def_func]
+	comment "sub_def_func in level 0"
+	set $result$ = "level 0"
+endfunc
+
+set $str$ = callsub0()
+sub_subsub_sec
+sub_subsub_sec0
+
+sub "%scriptpath%\subsubsub1.opsiscript"
+
+[sub_subsub_sec]
+comment "sub_subsub_sec in level 0"
+
+[sub_subsub_sec0]
+comment "sub_subsub_sec0 in level 0"

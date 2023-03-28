@@ -1,0 +1,31 @@
+
+[Actions]
+; https://forum.opsi.org/viewtopic.php?f=6&t=10205
+SetLogLevel=9
+
+DefFunc ShowProgress(Val $Name$:String,Val $Version$:String,Val $Architecture$:String,Val $ActionMessage$:String,Val $ActionProgress$:String):Void
+   DefVar $Message$
+   DefStringList $MessageList$
+   
+   Set $MessageList$ = CreateStringList()
+   If Not ($Name$='')
+      Set $MessageList$ = AddToList($MessageList$,$Name$)
+      If Not ($Version$='')
+         Set $MessageList$ = AddToList($MessageList$,$Version$)
+      EndIf
+      If Not ($Architecture$='') And Not ($Architecture$='SysNative')
+         Set $MessageList$ = AddToList($MessageList$,$Architecture$)
+      EndIf
+   EndIf
+   Set $Message$ = $ActionMessage$
+   If (Count($MessageList$)INT>"0")
+      Set $Message$ = $Message$+' - '+ComposeString($MessageList$,' - ')
+   EndIf
+   Message $Message$
+   ;SetActionProgress $ActionProgress$
+EndFunc
+
+;ImportLib "lib"
+
+ShowProgress('','','','Test1','preparing')
+ShowProgress('','','','Test2','preparing')
