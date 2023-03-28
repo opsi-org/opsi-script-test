@@ -2,6 +2,9 @@
 
 opsi-script-test (4.12.8.0-3) stable; urgency=low
 
+  [fix] correct syntax errors in opsiServiceCalls.opsiscript and import_regeditformat.opsiscript
+  [fix] QWord_regedit_format.reg: in regedit format only hexdecimal values are allowed and only without any prefix
+  [fix] TOML: booleans must be lowercase
   [new] test in stringlist.opsiscript: 
         search with string list variable containing search criteria (1, line 1) which match entries twice (line 1, line 10 )
    
