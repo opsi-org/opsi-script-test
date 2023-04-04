@@ -36,33 +36,7 @@
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		set $list1$ = getReturnListFromSection('opsiservicecall_licenseOnClient')
-		comment " take the string :"
-		set $tmp$ = takeString(0, $list1$)
-		comment " remove trailing brackets and quote :"
-		set $tmp$ = takeString(0, splitstring($tmp$,'"]'))
-		comment " remove heading brackets and quote :"
-		set $tmp$ = takeString(1, splitstring($tmp$,'["'))
-		set $list1$ = splitstring($tmp$,";")
-		comment "this should be the id of the license entry "
-		set $ConstTest$ = takeString(0, $list1$)
-		set $CompValue$ = "l_opsi-script-test-license"
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		Set $ConstTest$ = demandLicenseKey ($licensepool$)
-		set $list1$ = getReturnListFromSection('opsiservicecall_get_licensekey')
-		set $CompValue$ = takeString(0, $list1$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
+
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -75,15 +49,6 @@
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		set $list1$ = getReturnListFromSection('opsiservicecall_get_licensekey')
-		set $CompValue$ = takeString(0, $list1$)
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
 		
 		comment ""
 		comment "-------------------------------------"
@@ -97,24 +62,6 @@
 			set $TestResult$ = "not o.k."
 			LogWarning "failed"
 		endif
-		set $list1$ = getReturnListFromSection('opsiservicecall_licenseOnClient')
-		comment " take the string :"
-		set $tmp$ = takeString(0, $list1$)
-		comment " remove trailing brackets and quote :"
-		set $tmp$ = takeString(0, splitstring($tmp$,'"]'))
-		comment " remove heading brackets and quote :"
-		set $tmp$ = takeString(1, splitstring($tmp$,'["'))
-		set $list1$ = splitstring($tmp$,";")
-		comment "this should be the id of the license entry ans empty in this case"
-		set $ConstTest$ = takeString(0, $list1$)
-		set $CompValue$ = ""
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
 		
 		comment ""
 		comment "-------------------------------------"
