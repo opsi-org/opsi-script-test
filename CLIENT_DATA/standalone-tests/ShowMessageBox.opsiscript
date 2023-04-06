@@ -3,25 +3,25 @@
 setloglevel=6
 setdebug_prog=false
 
-defstringlist $message$
+defstringlist $Message$
 defstringlist $MessageWait$ = '["Please do nothing and wait for the countdown to end"]'
-defstringlist $buttons$
+defstringlist $Buttons$
 DefVar $CountdownMessage$
-Defvar $exitcode$
+Defvar $ExitCode$
 
-set $buttons$ = '[]'
-set $exitcode$ = Showmessagebox("Test 1: No buttons, wait", $MessageWait$, $buttons$, '', '00:00:05')
-if $exitcode$ = '-1'
+set $Buttons$ = '[]'
+set $ExitCode$ = Showmessagebox("Test 1: No buttons, wait", $MessageWait$, $Buttons$, '', '00:00:05')
+if $ExitCode$ = '-1'
 	comment "Test 1 passed"
 else
 	LogError "Test 1 failed"
 endif
 
-set $message$ = '["Please close this window by the X in the upper right corner."]'
-set $buttons$ = '[]'
+set $Message$ = '["Please close this window by the X in the upper right corner."]'
+set $Buttons$ = '[]'
 set $CountdownMessage$ = 'This box has no countdown.'
-set $exitcode$ = Showmessagebox("Test 2: No buttons, no countdown, close window", $message$, $buttons$, $CountdownMessage$, '00:00:00')
-if $exitcode$ = '-2'
+set $ExitCode$ = Showmessagebox("Test 2: No buttons, no countdown, close window", $Message$, $Buttons$, $CountdownMessage$, '00:00:00')
+if $ExitCode$ = '-2'
 	comment "Test 2 passed"
 else
 	LogError "Test 2 failed"
@@ -29,18 +29,18 @@ endif
 
 ; test everything empty
 comment "An error should occur here due to the incorrect time format:"
-set $exitcode$ = Showmessagebox("", '[]', '[]', '', '')
-if $exitcode$ = '-2'
+set $ExitCode$ = Showmessagebox("", '[]', '[]', '', '')
+if $ExitCode$ = '-2'
 	comment "Test 2a passed"
 else
 	LogError "Test 2a failed"
 endif
 
-set $message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
-set $buttons$ = '[]'
+set $Message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
+set $Buttons$ = '[]'
 set $CountdownMessage$ = 'This window will automatically close in'
-set $exitcode$ = Showmessagebox("Test 2b: No buttons, close window", $message$, $buttons$, $CountdownMessage$, '00:00:30')
-if $exitcode$ = '-2'
+set $ExitCode$ = Showmessagebox("Test 2b: No buttons, close window", $Message$, $Buttons$, $CountdownMessage$, '00:00:30')
+if $ExitCode$ = '-2'
 	comment "Test 2b passed"
 else
 	LogError "Test 2b failed: You should have closed the window before the countdown ended!"
@@ -50,45 +50,45 @@ endif
 
 
 
-set $message$ = '["Please click the button before the countdown ends!"]'
-set $buttons$ = '["Click me!"]'
-set $exitcode$ = Showmessagebox("Test 3: One button, click", $message$, $buttons$, '', '00:00:30')
-if $exitcode$ = '0'
+set $Message$ = '["Please click the button before the countdown ends!"]'
+set $Buttons$ = '["Click me!"]'
+set $ExitCode$ = Showmessagebox("Test 3: One button, click", $Message$, $Buttons$, '', '00:00:30')
+if $ExitCode$ = '0'
 	comment "Test 3 passed"
 else
 	LogError "Test 3 failed: You should have clicked the button before the countdown ended!"
 endif
 
-set $message$ = '["Please click the button"]'
-set $buttons$ = '["Click me!"]'
-set $exitcode$ = Showmessagebox("Test 3a: One button, no countdown, click", $message$, $buttons$, '', '00:00:00')
-if $exitcode$ = '0'
+set $Message$ = '["Please click the button"]'
+set $Buttons$ = '["Click me!"]'
+set $ExitCode$ = Showmessagebox("Test 3a: One button, no countdown, click", $Message$, $Buttons$, '', '00:00:00')
+if $ExitCode$ = '0'
 	comment "Test 3a passed"
 else
 	LogError "Test 3a failed: You should have clicked the button"
 endif
 
-set $message$ = '["Please close this window by the X in the upper right corner."]'
-set $buttons$ = '["Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 3b: One button, no countdown, close window", $message$, $buttons$, '', '00:00:00')
-if $exitcode$ = '-2'
+set $Message$ = '["Please close this window by the X in the upper right corner."]'
+set $Buttons$ = '["Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 3b: One button, no countdown, close window", $Message$, $Buttons$, '', '00:00:00')
+if $ExitCode$ = '-2'
 	comment "Test 3b passed"
 else
 	LogError "Test 3b failed"
 endif
 
-set $message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
-set $buttons$ = '["Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 3c: One button, close window", $message$, $buttons$, '', '00:00:30')
-if $exitcode$ = '-2'
+set $Message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
+set $Buttons$ = '["Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 3c: One button, close window", $Message$, $Buttons$, '', '00:00:30')
+if $ExitCode$ = '-2'
 	comment "Test 3c passed"
 else
 	LogError "Test 3c failed: You should have closed the window before the countdown ended!"
 endif
 
-set $buttons$ = '["Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 4: One button, wait", $MessageWait$, $buttons$, '', '00:00:05')
-if $exitcode$ = '-1'
+set $Buttons$ = '["Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 4: One button, wait", $MessageWait$, $Buttons$, '', '00:00:05')
+if $ExitCode$ = '-1'
 	comment "Test 4 passed"
 else
 	LogError "Test 4 failed: You should have waited for the countdown to end!"
@@ -96,45 +96,45 @@ endif
 
 
 
-set $message$ = '["Please click the left button before the countdown ends!"]'
-set $buttons$ = '["Click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 5: Two buttons, click left", $message$, $buttons$, '', '00:00:30')
-if $exitcode$ = '0'
+set $Message$ = '["Please click the left button before the countdown ends!"]'
+set $Buttons$ = '["Click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 5: Two buttons, click left", $Message$, $Buttons$, '', '00:00:30')
+if $ExitCode$ = '0'
 	comment "Test 5 passed"
 else
 	LogError "Test 5 failed: You should have clicked the left button before the countdown ended!"
 endif
 
-set $message$ = '["Please click the left button"]'
-set $buttons$ = '["Click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 5a: Two buttons, no countdown, click left", $message$, $buttons$, '', '00:00:00')
-if $exitcode$ = '0'
+set $Message$ = '["Please click the left button"]'
+set $Buttons$ = '["Click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 5a: Two buttons, no countdown, click left", $Message$, $Buttons$, '', '00:00:00')
+if $ExitCode$ = '0'
 	comment "Test 5a passed"
 else
 	LogError "Test 5a failed: You should have clicked the left button"
 endif
 
-set $message$ = '["Please click the right button before the countdown ends!"]'
-set $buttons$ = '["Do NOT click me!", "Click me!"]'
-set $exitcode$ = Showmessagebox("Test 6: Two buttons, click right", $message$, $buttons$, '', '00:00:30')
-if $exitcode$ = '1'
+set $Message$ = '["Please click the right button before the countdown ends!"]'
+set $Buttons$ = '["Do NOT click me!", "Click me!"]'
+set $ExitCode$ = Showmessagebox("Test 6: Two buttons, click right", $Message$, $Buttons$, '', '00:00:30')
+if $ExitCode$ = '1'
 	comment "Test 6 passed"
 else
 	LogError "Test 6 failed: You should have clicked the right button before the countdown ended!"
 endif
 
-set $message$ = '["Please click the right button"]'
-set $buttons$ = '["Do NOT click me!", "Click me!"]'
-set $exitcode$ = Showmessagebox("Test 6a: Two buttons, no countdown, click right", $message$, $buttons$, '', '00:00:00')
-if $exitcode$ = '1'
+set $Message$ = '["Please click the right button"]'
+set $Buttons$ = '["Do NOT click me!", "Click me!"]'
+set $ExitCode$ = Showmessagebox("Test 6a: Two buttons, no countdown, click right", $Message$, $Buttons$, '', '00:00:00')
+if $ExitCode$ = '1'
 	comment "Test 6a passed"
 else
 	LogError "Test 6a failed: You should have clicked the right button"
 endif
 
-set $buttons$ = '["Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 7: Two buttons, wait", $MessageWait$, $buttons$, '', '00:00:05')
-if $exitcode$ = '-1'
+set $Buttons$ = '["Do NOT click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 7: Two buttons, wait", $MessageWait$, $Buttons$, '', '00:00:05')
+if $ExitCode$ = '-1'
 	comment "Test 7 passed"
 else
 	LogError "Test 7 failed: You should have waited for the countdown to end!"
@@ -142,81 +142,81 @@ endif
 
 
 
-set $message$ = '["Please click the left button before the countdown ends!"]'
-set $buttons$ = '["Click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 8: Three buttons, click left", $message$, $buttons$, '', '00:00:30')
-if $exitcode$ = '0'
+set $Message$ = '["Please click the left button before the countdown ends!"]'
+set $Buttons$ = '["Click me!", "Do NOT click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 8: Three buttons, click left", $Message$, $Buttons$, '', '00:00:30')
+if $ExitCode$ = '0'
 	comment "Test 8 passed"
 else
 	LogError "Test 8 failed: You should have clicked the left button before the countdown ended!"
 endif
 
-set $message$ = '["Please click the left button"]'
-set $buttons$ = '["Click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 8a: Three buttons, no countdown, click left", $message$, $buttons$, '', '00:00:00')
-if $exitcode$ = '0'
+set $Message$ = '["Please click the left button"]'
+set $Buttons$ = '["Click me!", "Do NOT click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 8a: Three buttons, no countdown, click left", $Message$, $Buttons$, '', '00:00:00')
+if $ExitCode$ = '0'
 	comment "Test 8a passed"
 else
 	LogError "Test 8a failed: You should have clicked the left button"
 endif
 
-set $message$ = '["Please click the middle button before the countdown ends!"]'
-set $buttons$ = '["Do NOT click me!", "Click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 9: Three buttons, click middle", $message$, $buttons$, '', '00:00:30')
-if $exitcode$ = '1'
+set $Message$ = '["Please click the middle button before the countdown ends!"]'
+set $Buttons$ = '["Do NOT click me!", "Click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 9: Three buttons, click middle", $Message$, $Buttons$, '', '00:00:30')
+if $ExitCode$ = '1'
 	comment "Test 9 passed"
 else
 	LogError "Test 9 failed: You should have clicked the middle button before the countdown ended!"
 endif
 
-set $message$ = '["Please click the middle button"]'
-set $buttons$ = '["Do NOT click me!", "Click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 9a: Three buttons, no countdown, click middle", $message$, $buttons$, '', '00:00:00')
-if $exitcode$ = '1'
+set $Message$ = '["Please click the middle button"]'
+set $Buttons$ = '["Do NOT click me!", "Click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 9a: Three buttons, no countdown, click middle", $Message$, $Buttons$, '', '00:00:00')
+if $ExitCode$ = '1'
 	comment "Test 9a passed"
 else
 	LogError "Test 9a failed: You should have clicked the middle button"
 endif
 
-set $message$ = '["Please click the right button before the countdown ends!"]'
-set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Click me!"]'
-set $exitcode$ = Showmessagebox("Test 10: Three buttons, click right", $message$, $buttons$, '', '00:00:30')
-if $exitcode$ = '2'
+set $Message$ = '["Please click the right button before the countdown ends!"]'
+set $Buttons$ = '["Do NOT click me!", "Do NOT click me!", "Click me!"]'
+set $ExitCode$ = Showmessagebox("Test 10: Three buttons, click right", $Message$, $Buttons$, '', '00:00:30')
+if $ExitCode$ = '2'
 	comment "Test 10 passed"
 else
 	LogError "Test 10 failed: You should have clicked the right button before the countdown ended!"
 endif
 
-set $message$ = '["Please click the right button"]'
-set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Click me!"]'
-set $exitcode$ = Showmessagebox("Test 10a: Three buttons, no countdown, click right", $message$, $buttons$, '', '00:00:00')
-if $exitcode$ = '2'
+set $Message$ = '["Please click the right button"]'
+set $Buttons$ = '["Do NOT click me!", "Do NOT click me!", "Click me!"]'
+set $ExitCode$ = Showmessagebox("Test 10a: Three buttons, no countdown, click right", $Message$, $Buttons$, '', '00:00:00')
+if $ExitCode$ = '2'
 	comment "Test 10a passed"
 else
 	LogError "Test 10a failed: You should have clicked the right button"
 endif
 
-set $message$ = '["Please close this window by the X in the upper right corner."]'
-set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 10b: Three buttons, no countdown, close window", $message$, $buttons$, '', '00:00:00')
-if $exitcode$ = '-2'
+set $Message$ = '["Please close this window by the X in the upper right corner."]'
+set $Buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 10b: Three buttons, no countdown, close window", $Message$, $Buttons$, '', '00:00:00')
+if $ExitCode$ = '-2'
 	comment "Test 10b passed"
 else
 	LogError "Test 10b failed"
 endif
 
-set $message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
-set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 10c: Three buttons, close window", $message$, $buttons$, '', '00:00:30')
-if $exitcode$ = '-2'
+set $Message$ = '["Please close this window by the X in the upper right corner before the countdown ends!"]'
+set $Buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 10c: Three buttons, close window", $Message$, $Buttons$, '', '00:00:30')
+if $ExitCode$ = '-2'
 	comment "Test 10c passed"
 else
 	LogError "Test 10c failed: You should have closed the window before the countdown ended!"
 endif
 
-set $buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
-set $exitcode$ = Showmessagebox("Test 11: Three buttons, wait", $MessageWait$, $buttons$, '', '00:00:05')
-if $exitcode$ = '-1'
+set $Buttons$ = '["Do NOT click me!", "Do NOT click me!", "Do NOT click me!"]'
+set $ExitCode$ = Showmessagebox("Test 11: Three buttons, wait", $MessageWait$, $Buttons$, '', '00:00:05')
+if $ExitCode$ = '-1'
 	comment "Test 11 passed"
 else
 	LogError "Test 11 failed: You should have waited for the countdown to end!"
