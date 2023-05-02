@@ -1,0 +1,76 @@
+
+if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.10.0")
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "Multi line statements"
+		
+	; test with space+backslash
+	set $list$ = createstringlist('alpha','beta','gamma')
+	set $CompList1$ = \
+	"['alpha', \
+	'beta', \
+	'gamma']"
+	if areListsEqual($list$,$CompList1$,'FLAG_AUTO_CS')
+		comment "Multi line statements passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Multi line statements failed"
+	endif
+	
+	; test with tab+backslash
+	set $list$ = createstringlist('alpha','beta','gamma')
+	set $CompList1$ =	\
+	"['alpha',	\
+	'beta',	\
+	'gamma']"
+	if areListsEqual($list$,$CompList1$,'FLAG_AUTO_CS')
+		comment "Multi line statements passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Multi line statements failed"
+	endif
+	
+	set $list$ = createstringlist('alpha','beta','gamma')
+	set $CompList1$ = \
+	createstringlist( \
+	'alpha', \
+	'beta', \
+		'gamma')
+	if areListsEqual($list$,$CompList1$,'FLAG_AUTO_CS')
+		comment "Multi line statements passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Multi line statements failed"
+	endif
+	
+	if CompareDotSeparatedNumbers( \
+	"%OpsiscriptVersion%", \
+	">=", \
+	"4.12.10.0")
+		comment "Multi line statements passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Multi line statements failed"
+	endif
+	
+	; Multi line statements with EscapeString 
+	set $ConstTest$ = "hoheho"+" \ "+"hoheho"+" \"
+	Set $CompValue$ = \
+	EscapeString: hoheho \ hoheho \
+	if ($ConstTest$ = $CompValue$)
+		comment "Multi line statements with EscapeString passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Multi line statements with EscapeString failed"
+	endif
+	
+	set $ConstTest$ = "hoheho"+" \ "+"hoheho"+" \"
+	Set $CompValue$ = EscapeString: hoheho \ hoheho \
+	if ($ConstTest$ = $CompValue$)
+		comment "Multi line statements with EscapeString passed"
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "Multi line statements with EscapeString failed"
+	endif
+endif 
