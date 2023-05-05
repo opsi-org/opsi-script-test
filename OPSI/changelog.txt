@@ -1,5 +1,11 @@
 [Changelog]
 
+* [new] sub-scripts\controlsFunctions\multi_line_statements.opsiscript: 
+          testing multi line statements:
+          a opsi-script line will concatenated with the next line
+          if the line ends with whitespace+backslash
+          and not contains EscapeString  (d.oertel, 2.5.2023)
+
 opsi-script-test (4.12.8.0-3) stable; urgency=low
 
   [fix] correct syntax errors in opsiServiceCalls.opsiscript and import_regeditformat.opsiscript
