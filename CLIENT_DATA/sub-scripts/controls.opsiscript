@@ -663,6 +663,8 @@
 	
 	include_insert '%scriptpath%\sub-scripts\controlsFunctions\DirectVariableInitialization.opsiscript'
 	include_insert '%scriptpath%\sub-scripts\controlsFunctions\StringListGenericDefinition.opsiscript'
+	; statements over multiple lines:
+	include_insert '%scriptpath%\sub-scripts\controlsFunctions\multi_line_statements.opsiscript'
 	
 	sub_compareResult
 	
