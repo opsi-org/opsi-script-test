@@ -1,0 +1,8 @@
+[Actions]
+DefStringList $list$
+DefStringList $CompList1$
+DefVar $TestResult$
+DefVar $ConstTest$
+DefVar $CompValue$
+
+include_insert '..\sub-scripts\controlsFunctions\multi_line_statements.opsiscript'
