@@ -1,0 +1,35 @@
+encoding="utf-8"
+
+[Actions]
+
+setloglevel=8
+SetDebug_prog="true"
+
+Patches_test1.txt "C:\Users\Werner\Test1\test1.txt"
+
+defstringlist $list$
+set $list$ = loadTextFile("C:\Users\Werner\Test1\test1.txt")
+
+patches_modify $list$
+
+
+[Patches_test1.txt]
+add [secdummy] dummy1=add1
+; werden durch andere Funktionen ueberschrieben
+add [secdummy] dummy2=add2
+add [secdummy] dummy3=add3
+add [secdummy] dummy4=add4
+add [secdummy] dummy5=add5
+add [secdummy] dummy6=add6
+set [secdummy] dummy2=set1
+addnew [secdummy] dummy1=addnew1
+change [secdummy] dummy3=change1
+del [secdummy] dummy4
+Replace dummy6=add6 replace1=replace1
+
+
+[patches_modify]
+set [secdummy] key1=val3
+set [section1] nam1=val4
+
+
