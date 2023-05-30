@@ -1,10 +1,15 @@
 [Changelog]
 
-* [new] sub-scripts\controlsFunctions\multi_line_statements.opsiscript: 
+opsi-script-test (4.12.9.0-3) stable; urgency=low
+
+  [new] sub-scripts\controlsFunctions\multi_line_statements.opsiscript: 
           testing multi line statements:
           a opsi-script line will concatenated with the next line
           if the line ends with whitespace+backslash
           and not contains EscapeString  (d.oertel, 2.5.2023)
+  [fix]  correction of paths of standalone-tests used in sub-scripts/localfunctions.opsiscript
+
+-- jan werner <j.werner@uib.de>  Tue, 30 May 2023
 
 opsi-script-test (4.12.8.0-3) stable; urgency=low
 
@@ -13,6 +18,7 @@ opsi-script-test (4.12.8.0-3) stable; urgency=low
   [fix] TOML: booleans must be lowercase
   [new] test in stringlist.opsiscript: 
         search with string list variable containing search criteria (1, line 1) which match entries twice (line 1, line 10 )
+  [new] restructure standalone-tests folder
    
 -- jan werner <j.werner@uib.de>  Tue, 07 Feb 2023
 
