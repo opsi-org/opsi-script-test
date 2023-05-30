@@ -16,7 +16,7 @@ set $str1$ = 'ha'
 set $str2$ = 'hi'
 set $mystr$ = $str1$ + $str2$
 
-sub "%scriptpath%\sub_defined_functions12.opsiscript"
+sub "%scriptpath%\sub\sub_defined_functions12.opsiscript"
 
 set $str1$ = count($list1$)
 comment "we have "+$str1$+" lines"
