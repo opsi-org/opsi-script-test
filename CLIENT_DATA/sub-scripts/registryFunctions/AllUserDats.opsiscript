@@ -1,7 +1,13 @@
 		if ($INST_SystemType$ = "64 Bit System")
 			set $regWriteValue$ = "64"
 			set $ConstTest$  = $regWriteValue$
-			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.10.0") >= "0"
+				comment "use new modifier /AllUserProfiles"
+				Registry_hkcu_opsi_org_test /AllUserProfiles /64Bit
+			else
+				comment "use old modifier /AllNtUserDats"
+				Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
+			endif
 			set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
