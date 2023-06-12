@@ -20,8 +20,8 @@
 				LogWarning "failed"
 			endif
 			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
-			 Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-			 Registry_hkcu_opsi_org_deletekey /AllNtUserDats
+				Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
+				Registry_hkcu_opsi_org_deletekey /AllNtUserDats
 			endif
 		else
 			set $regWriteValue$ = "32"
