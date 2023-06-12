@@ -1,7 +1,16 @@
 		if ($INST_SystemType$ = "64 Bit System")
 			set $regWriteValue$ = "64"
 			set $ConstTest$  = $regWriteValue$
-			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
+			DefVar $AllUserModifier$
+			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.10.0") >= "0"
+				comment "use new modifier /AllUserProfiles"
+				set $AllUserModifier$ = "/AllUserProfiles"
+			else
+				comment "use old modifier /AllNtUserDats"
+				set $AllUserModifier$ = "/AllNtUserDats"
+			endif
+
+			Registry_hkcu_opsi_org_test $AllUserModifier$ /64Bit
 			set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -11,7 +20,7 @@
 			endif
 			set $regWriteValue$ = "32"
 			set $ConstTest$  = $regWriteValue$
-			Registry_hkcu_opsi_org_test /AllNtUserDats
+			Registry_hkcu_opsi_org_test $AllUserModifier$
 			set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -20,13 +29,13 @@
 				LogWarning "failed"
 			endif
 			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats
+				Registry_hkcu_opsi_org_deletekey $AllUserModifier$ /64Bit
+				Registry_hkcu_opsi_org_deletekey $AllUserModifier$
 			endif
 		else
 			set $regWriteValue$ = "32"
 			set $ConstTest$  = $regWriteValue$
-			Registry_hkcu_opsi_org_test /AllNtUserDats
+			Registry_hkcu_opsi_org_test $AllUserModifier$
 			set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -34,7 +43,7 @@
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
+			Registry_hkcu_opsi_org_test $AllUserModifier$/64Bit
 			set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -43,8 +52,8 @@
 				LogWarning "failed"
 			endif
 			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats
+				Registry_hkcu_opsi_org_deletekey $AllUserModifier$ /64Bit
+				Registry_hkcu_opsi_org_deletekey $AllUserModifier$
 			endif
 		endif
   	
