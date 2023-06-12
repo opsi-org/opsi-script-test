@@ -26,7 +26,7 @@ name: alltest
 multivalue: False
 editable: False
 description: Master property to run complete test (ignore the other properties)
-values: ["off", "on"]
+values: ["off","on"]
 default: ["on"]
 
 [ProductProperty]
@@ -35,7 +35,7 @@ name: licensemanagement
 multivalue: False
 editable: False
 description: License Management functions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -44,7 +44,7 @@ name: constants
 multivalue: False
 editable: False
 description: constants
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -53,7 +53,7 @@ name: parametrizing
 multivalue: False
 editable: False
 description: parametrizing
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -62,7 +62,7 @@ name: stringfunctions
 multivalue: False
 editable: False
 description: stringFunctions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -71,7 +71,7 @@ name: infofunctions
 multivalue: False
 editable: False
 description: infoFunctions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -80,7 +80,7 @@ name: stringlistfunctions
 multivalue: False
 editable: False
 description: stringListFunctions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -89,7 +89,7 @@ name: controlfunctions
 multivalue: False
 editable: False
 description: controlFunctions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -98,7 +98,7 @@ name: sub
 multivalue: False
 editable: False
 description: sub
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -107,7 +107,7 @@ name: files
 multivalue: False
 editable: False
 description: File Operations
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -116,7 +116,7 @@ name: patches
 multivalue: False
 editable: False
 description: Patches Ini-Files
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -125,7 +125,7 @@ name: patchhosts
 multivalue: False
 editable: False
 description: PatchHosts
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -134,7 +134,7 @@ name: idapiconfig
 multivalue: False
 editable: False
 description: IdapiConfig
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -143,7 +143,7 @@ name: patchtextfile
 multivalue: False
 editable: False
 description: PatchTextFile
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -152,7 +152,7 @@ name: linkfolder
 multivalue: False
 editable: False
 description: LinkFolder
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -161,7 +161,7 @@ name: xmlpatch
 multivalue: False
 editable: False
 description: XMLPatch
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -170,7 +170,7 @@ name: winbatch
 multivalue: False
 editable: False
 description: Winbatch
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -179,7 +179,7 @@ name: shellbatch
 multivalue: False
 editable: False
 description: DosBatch/DosInAnIcon/ShellBatch/ShellInAnIcon
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -188,7 +188,7 @@ name: registry
 multivalue: False
 editable: False
 description: Registry
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -197,7 +197,7 @@ name: opsiservicecall
 multivalue: False
 editable: False
 description: opsiServiceCall
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -206,7 +206,7 @@ name: execpython
 multivalue: False
 editable: False
 description: ExecPython
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -215,7 +215,7 @@ name: execwith
 multivalue: False
 editable: False
 description: ExecWith
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -224,7 +224,7 @@ name: ldapsearch
 multivalue: False
 editable: False
 description: LdapSearch
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -260,7 +260,7 @@ name: ldapport
 multivalue: False
 editable: True
 description: LdapSearch Server Port; Default 389; on 636 we use ssl
-values: ["389", "636"]
+values: ["389","636"]
 default: ["389"]
 
 [ProductProperty]
@@ -269,7 +269,7 @@ name: calculate
 multivalue: False
 editable: False
 description: string function calculate
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -278,7 +278,7 @@ name: dummy
 multivalue: False
 editable: False
 description: ProductProperty for GetProductproperty test, leave default
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -293,8 +293,8 @@ name: dummymulti
 multivalue: True
 editable: False
 description: ProductProperty for GetProductproperty test, leave default
-values: ["ab", "cd", "ef", "g,h"]
-default: ["ab", "cd", "ef", "g,h"]
+values: ["ab","cd","ef","g,h"]
+default: ["ab","cd","ef","g,h"]
 
 [ProductProperty]
 type: unicode
@@ -311,7 +311,7 @@ name: runasloggedonadmin
 multivalue: False
 editable: False
 description: experimental
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -320,7 +320,7 @@ name: profileactions
 multivalue: False
 editable: False
 description: run ProfileActions section as special sub
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -329,7 +329,7 @@ name: encoding
 multivalue: False
 editable: False
 description: Test encoding functions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -344,7 +344,7 @@ name: loglevel
 multivalue: False
 editable: False
 description: Use Log Level
-values: ["4", "5", "6", "7", "8", "9"]
+values: ["4","5","6","7","8","9"]
 default: ["7"]
 
 [ProductProperty]
@@ -362,7 +362,7 @@ name: jsonfunctions
 multivalue: False
 editable: False
 description: jsonfunctions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -371,7 +371,7 @@ name: cryptfunctions
 multivalue: False
 editable: False
 description: jsonfunctions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -380,7 +380,7 @@ name: xml2
 multivalue: False
 editable: False
 description: xml2 section and functions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -389,7 +389,7 @@ name: localfunctions
 multivalue: False
 editable: False
 description: LocalFunctions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -398,7 +398,7 @@ name: powershell
 multivalue: False
 editable: False
 description: powershell with opsi-script
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -407,7 +407,7 @@ name: regex
 multivalue: False
 editable: False
 description: Regex section and functions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -416,7 +416,7 @@ name: networkcalc
 multivalue: False
 editable: False
 description: NetworkCalc section and functions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -425,7 +425,7 @@ name: urlparser
 multivalue: False
 editable: False
 description: Urlparser section and functions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -434,7 +434,7 @@ name: var_as_param
 multivalue: False
 editable: False
 description: Variabe as Section Parameters (executeSection call)
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -443,7 +443,7 @@ name: wmi
 multivalue: False
 editable: False
 description: WMI interface
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -452,7 +452,7 @@ name: internalundocumented
 multivalue: False
 editable: False
 description: internalundocumented
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -461,7 +461,7 @@ name: macos
 multivalue: False
 editable: False
 description: Apple macOS Tests
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -491,7 +491,7 @@ name: processinfo
 multivalue: False
 editable: False
 description: process functions
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -500,7 +500,7 @@ name: certificate_test
 multivalue: False
 editable: False
 description: handle CA certificates
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
 
 [ProductProperty]
@@ -509,6 +509,5 @@ name: toml
 multivalue: False
 editable: False
 description: Tests for TOML files
-values: ["off", "on"]
+values: ["off","on"]
 default: ["off"]
-

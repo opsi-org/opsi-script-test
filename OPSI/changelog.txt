@@ -1,5 +1,12 @@
 [Changelog]
 
+[change] sub-scripts\registryFunctions\AllUserDats.opsiscript
+   test results of :
+     Registry_hkcu_opsi_org_test
+     Registry_hkcu_complete_opsi_org_test
+     should be ok with fix for #4839 (d.oertel 1.6.2023)
+
+
 opsi-script-test (4.12.9.0-3) stable; urgency=low
 
   [new] sub-scripts\controlsFunctions\multi_line_statements.opsiscript: 
