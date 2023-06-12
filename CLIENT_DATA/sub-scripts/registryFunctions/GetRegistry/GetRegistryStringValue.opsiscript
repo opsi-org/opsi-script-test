@@ -30,7 +30,7 @@
 		message "GetRegistryStringValue32 standard entry"
 		Registry_opsi_org_test
 		set $ConstTest$ = "standard entry"
-		set $CompValue$ = GetRegistryStringValue32 ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0]")
+		set $CompValue$ = GetRegistryStringValue32 ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0]")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else

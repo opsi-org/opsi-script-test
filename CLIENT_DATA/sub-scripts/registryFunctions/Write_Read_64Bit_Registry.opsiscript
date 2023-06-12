@@ -12,14 +12,14 @@
 			else
 				ExecWith_opsi_org_test '%SystemRoot%\cmd64.exe' /C
 			endif
-			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByReg")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -27,14 +27,14 @@
 				LogWarning "failed"
 			endif
 			Registry_opsi_org_test /SysNative
-			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			set $ConstTest$ = GetRegistryStringValueSysNative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByReg")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -45,14 +45,14 @@
 			set $CompValue$ = $regWriteValue$
 			Registry_opsi_org_test
 			ExecWith_opsi_org_test "cmd.exe" /c
-			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByReg")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -60,14 +60,14 @@
 				LogWarning "failed"
 			endif
 			Registry_opsi_org_test /32Bit
-			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByReg")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -76,14 +76,14 @@
 			endif
 			Registry_opsi_org_delete_test
 			set $CompValue$ = ""
-			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			set $ConstTest$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			set $ConstTest$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -92,14 +92,14 @@
 			endif
 			Registry_opsi_org_delete_test /64bit
 			set $CompValue$ = ""
-			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			set $ConstTest$ = GetRegistryStringValueSysnative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+			set $ConstTest$ = GetRegistryStringValueSysnative("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByWinst")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -115,14 +115,14 @@
 				set $CompValue$ = $regWriteValue$
 				Registry_opsi_org_test /64Bit
 				ExecWith_opsi_org_test "cmd.exe" /c
-				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByWinst")
+				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByWinst")
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
 					set $TestResult$ = "not o.k."
 					LogWarning "failed"
 				endif
-				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0] bitByReg")
+				set $ConstTest$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0] bitByReg")
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else

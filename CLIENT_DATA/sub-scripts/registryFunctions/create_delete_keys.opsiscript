@@ -3,7 +3,7 @@
 		comment "Testing: "
 		message "createkeys"
 		Registry_createkeys
-		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
+		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\b]")
 		if $CompValue$ = "C:\Program files\test\test.exe -a"
 			comment "passed"
 		else
@@ -13,7 +13,7 @@
   	
 		Registry_opsi_org_delete_test
 		Registry "%Scriptpath%\test-files\construct_subkeys.reg" /regedit
-		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
+		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\b]")
 		if $CompValue$ = "C:\Program Files\test\test.exe -a"
 			comment "/regedit passed"
 		else
@@ -23,7 +23,7 @@
   	
 		Registry_opsi_org_delete_test
 		Registry loadUnicodeTextFile("%Scriptpath%\test-files\unicode_subkeys.reg") /regedit
-		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
+		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\b]")
 		if $CompValue$ = "C:\Program Files\test\test.exe -a"
 			comment "/regedit passed"
 		else
@@ -34,7 +34,7 @@
 		;Registry_opsi_org_delete_test
 		;set $string1$ = "first line"+HexStrToDecStr(0x0d0a)+"second line"
 		;Registry_multiline
-		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
+		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\b]")
 		;if $CompValue$ = "C:\Program Files\test\test.exe -a"
 		;	comment "/regedit passed"
 		;else
@@ -44,7 +44,7 @@
   	
 		;Registry_opsi_org_delete_test
 		;Registry "%Scriptpath%\test-files\multiline.reg" /regedit
-		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\multiline]")
+		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\multiline]")
 		;if $CompValue$ = "C:\Program Files\test\test.exe -a"
 		;	comment "/regedit passed"
 		;else
@@ -54,7 +54,7 @@
   	
 		;Registry_opsi_org_delete_test
 		;Registry loadUnicodeTextFile("%Scriptpath%\test-files\unicode_multiline.reg") /regedit
-		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\multiline]")
+		;set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\multiline]")
 		;if $CompValue$ = "C:\Program Files\test\test.exe -a"
 		;	comment "/regedit passed"
 		;else
@@ -68,7 +68,7 @@
 		message "deleteKey"
 		;cleaning up
 		Registry_deleteKey
-		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]")
+		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\b]")
 		if $CompValue$ = ""
 			comment "passed"
 		else

@@ -35,12 +35,12 @@ Delete -f "$HomeTestFiles$\SaveValueToFile.txt"
 
 
 [ExecWith_opsi_org_test]
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0" /v "bitByReg" /t REG_SZ /d "$regWriteValue$" /f
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0" /v "bitByReg" /t REG_SZ /d "$regWriteValue$" /f
 
 
 [DosInAnIcon_export_hkcu_complete_opsi_org_test]
 @echo off
-regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test
+regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test
 
 
 [winbatch_hack_forbidden_key1]

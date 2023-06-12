@@ -5,7 +5,7 @@
 		Registry_opsi_org_delete_test
 		Registry_Add
 		set $ConstTest$ = "value"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -19,7 +19,7 @@
 		message "Supp"
 		Registry_Supp
 		set $ConstTest$ = "value;value1;value2;value3"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -33,7 +33,7 @@
 		message "Supp (again)"
 		Registry_Supp
 		set $ConstTest$ = "value;value1;value2;value3"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -47,7 +47,7 @@
 		message "Supp (again1)"
 		Registry_Supp1
 		set $ConstTest$ = "value;value1;value2;value3"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -61,7 +61,7 @@
 		message "Add (again)"
 		Registry_Add
 		set $ConstTest$ = "value;value1;value2;value3"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -96,7 +96,7 @@
 		message "Supp (again2)"
 		Registry_set4supp
 		set $ConstTest$ = "C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -106,7 +106,7 @@
 		
 		Registry_Supp2
 		set $ConstTest$ = "C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient;C:\Program Files (x86)\Java\jre8\bin"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -116,7 +116,7 @@
 		
 		Registry_Supp2
 		set $ConstTest$ = "C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient;C:\Program Files (x86)\Java\jre8\bin"
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -127,7 +127,7 @@
 		set $systemroot$ = '%'+'systemroot%'
 		Registry_set4supp3
 		set $ConstTest$ = '%'+'systemroot%'+';%'+'systemroot%\system32'
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -137,7 +137,7 @@
 		
 		Registry_Supp3
 		set $ConstTest$ = '%'+'systemroot%'+';%'+'systemroot%\system32'+';%'+'systemroot%\system32\wbem'
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else

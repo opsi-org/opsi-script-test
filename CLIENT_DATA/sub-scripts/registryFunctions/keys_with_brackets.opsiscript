@@ -7,8 +7,8 @@
 			
 			Registry_createkeys_with_brackets
 			set $ConstTest$ = "myentry1"
-			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]","entry1","32bit")
+			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\[brackets]] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\[brackets]","entry1","32bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -17,8 +17,8 @@
 			endif
 			set $ConstTest$ = "myentry1"
 			set $tmp1$ = "[brackets]"
-			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$,"entry1","32bit")
+			;set $CompValue$ = GetRegistryStringValue("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\"+$tmp1$+"] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\"+$tmp1$,"entry1","32bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -30,8 +30,8 @@
 			
 			Registry_createkeys_with_brackets /64bit
 			set $ConstTest$ = "myentry1"
-			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]] entry1")
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]","entry1","64bit")
+			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\[brackets]] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\[brackets]","entry1","64bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -40,8 +40,8 @@
 			endif
 						set $ConstTest$ = "myentry1"
 			set $tmp1$ = "[brackets]"
-			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$+"] entry1")
-			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\"+$tmp1$,"entry1","64bit")
+			;set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\"+$tmp1$+"] entry1")
+			set $CompValue$ = GetRegistryValue("HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\"+$tmp1$,"entry1","64bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else

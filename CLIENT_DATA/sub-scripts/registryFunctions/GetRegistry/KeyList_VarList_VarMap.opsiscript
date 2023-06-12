@@ -6,7 +6,7 @@
 			message "GetRegistryKeyList"
   	
 			set $ConstTest$ = "key3"
-			set $list$ = GetRegistryKeyList32("hklm\software\opsi.org\opsi-winst-test")
+			set $list$ = GetRegistryKeyList32("hklm\software\opsi.org\opsi-script-test")
 			set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -19,7 +19,7 @@
 				Registry_createkeys /64bit
   	
 				set $ConstTest$ = "key3"
-				set $list$ = GetRegistryKeyList64("hklm\software\opsi.org\opsi-winst-test")
+				set $list$ = GetRegistryKeyList64("hklm\software\opsi.org\opsi-script-test")
 				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
@@ -29,7 +29,7 @@
 				endif
   	
 				set $ConstTest$ = "key3"
-				set $list$ = GetRegistryKeyListSysNative("hklm\software\opsi.org\opsi-winst-test")
+				set $list$ = GetRegistryKeyListSysNative("hklm\software\opsi.org\opsi-script-test")
 				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
@@ -46,7 +46,7 @@
 			message "GetRegistryVarList"
   	
 			set $ConstTest$ = "var3"
-			set $list$ = GetRegistryVarList32("hklm\software\opsi.org\opsi-winst-test")
+			set $list$ = GetRegistryVarList32("hklm\software\opsi.org\opsi-script-test")
 			set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -57,7 +57,7 @@
   	
 			if ($INST_SystemType$ = "64 Bit System")
 				set $ConstTest$ = "var3"
-				set $list$ = GetRegistryVarList64("hklm\software\opsi.org\opsi-winst-test")
+				set $list$ = GetRegistryVarList64("hklm\software\opsi.org\opsi-script-test")
 				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
@@ -67,7 +67,7 @@
 				endif
   	
 				set $ConstTest$ = "var3"
-				set $list$ = GetRegistryVarListSysNative("hklm\software\opsi.org\opsi-winst-test")
+				set $list$ = GetRegistryVarListSysNative("hklm\software\opsi.org\opsi-script-test")
 				set $CompValue$ = takeFirstStringContaining($list$, $ConstTest$)
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
@@ -84,7 +84,7 @@
   	
 			set $ConstTest$ = "value3"
 				set $string1$ = "var3"
-				set $list$ = GetRegistryVarMap32("hklm\software\opsi.org\opsi-winst-test")
+				set $list$ = GetRegistryVarMap32("hklm\software\opsi.org\opsi-script-test")
 				set $CompValue$ = getValue($string1$,$list$)
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -96,7 +96,7 @@
 			if ($INST_SystemType$ = "64 Bit System")
 				set $ConstTest$ = "value3"
 				set $string1$ = "var3"
-				set $list$ = GetRegistryVarMap64("hklm\software\opsi.org\opsi-winst-test")
+				set $list$ = GetRegistryVarMap64("hklm\software\opsi.org\opsi-script-test")
 				set $CompValue$ = getValue($string1$,$list$)
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
@@ -107,7 +107,7 @@
   	
 				set $ConstTest$ = "value3"
 				set $string1$ = "var3"
-				set $list$ = GetRegistryVarMapSysNative("hklm\software\opsi.org\opsi-winst-test")
+				set $list$ = GetRegistryVarMapSysNative("hklm\software\opsi.org\opsi-script-test")
 				set $CompValue$ = getValue($string1$,$list$)
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
@@ -131,7 +131,7 @@
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
 				message "Set Environment Variables and check for it...."
 				Registry_add_environment /sysnative
-				set $list$ = shellCall('set opsi-winst-test')
+				set $list$ = shellCall('set opsi-script-test')
 				UpdateEnvironment
 				comment "Wait for Environment update ...."
 				for %index% = "1" to "2" do sub_check_environment
