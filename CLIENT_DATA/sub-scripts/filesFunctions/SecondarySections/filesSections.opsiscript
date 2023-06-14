@@ -10,6 +10,7 @@ copy -s "%ScriptPath%/test-files/testFiles/*.*" "$HomeTestFiles$"
 
 [Files_empty_folder_files]
 Delete -s -f -c -r "$HomeTestFiles$"
+del -sfcr "%opsiTmpDir%\testbigdir.zip"
 del -sfcr "%opsiTmpDir%\testdir.zip"
 del -sfcr "%opsiTmpDir%\testfile.zip"
 
