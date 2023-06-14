@@ -3726,7 +3726,7 @@ reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
 ;endif
 ;
 ;[Registry_createkeys]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;set "var1" = "value1"
 ;set "var2" = "value2"
 ;set "var3" = "value3"
@@ -3736,59 +3736,59 @@ reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
 ;set "var7" = REG_DWORD:777
 ;set "var8" = REG_BINARY:08 08 08 0F 10
 ;set "var9" = REG_MULTI_SZ:"value9|value10|de"
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\b]
 ;set ""="C:\Program files\test\test.exe -a"
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key1]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key2]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key3]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\key4]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\key1]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\key2]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\key3]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\key4]
 ;
 ;[Registry_deleteKey]
-;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a]
+;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a]
 ;
 ;[Registry_deleteKey_winst_test]
 ;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\winst-test]
 ;
 ;[Registry_Add]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;Add "test"=REG_EXPAND_SZ:"value"
 ;
 ;[Registry_Supp]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;supp "test" ; "value1;value2;value3;"
 ;
 ;[Registry_Supp1]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;supp "test" ; "value2"
 ;
 ;[Registry_set4supp]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;set "test"=REG_EXPAND_SZ:"C:\Program Files\CyberSafe\bin;C:\Program Files (x86)\CyberSafe\bin;C:\Oracle\product\11.2.0\client_1\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Gupta Framework;C:\PGIM\PlantConnect.BIN\System;C:\PGIM\PlantConnect.BIN\Signalexplorer;C:\PGIM\PlantConnect.BIN\Events\Client;C:\Program Files (x86)\Enterprise Vault\EVClient"
 ;
 ;[Registry_Supp2]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;supp "test" ; "C:\Program Files (x86)\Java\jre8\bin"
 ;
 ;[Registry_set4supp3]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;set "test"=REG_EXPAND_SZ:"$systemroot$;$systemroot$\system32"
 ;
 ;
 ;[Registry_Supp3]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;supp "test" ; "$systemroot$\System32\Wbem"
 ;
 ;
 ;[Registry_GetMultiSZFromFile]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;GetMultiSZFromFile "test2" "%ScriptPath%\test-files\reg_multisz_text.txt"
 ;
 ;[Registry_SaveValueToFile]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;SaveValueToFile "test" "$HomeTestFiles$\SaveValueToFile.txt"
 ;
 ;[Registry_DeleteVar]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;DeleteVar "test"
 ;DeleteVar "test2"
 ;
@@ -3796,7 +3796,7 @@ reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
 ;Delete -f "$HomeTestFiles$\SaveValueToFile.txt"
 ;
 ;[Registry_opsi_org_test]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0]
 ;set ""="standard entry"
 ;set "bitByWinst"="$regWriteValue$"
 ;set "str_bywinst"=REG_SZ:"my string"
@@ -3813,61 +3813,61 @@ reg query "$INST_SearchKey$" /v "$INST_SearchValue$"
 ;set "multi_sz_bywinst" = REG_MULTI_SZ:"A|BC|de"
 ;
 ;[Registry_set_quoted_string]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\quoted]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\quoted]
 ;set "quoted"="$tmp$"
 ;
 ;[Registry_createkeys_with_brackets]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\[brackets]]
 ;set "entry1"="myentry1"
 ;
 ;[Registry_deletekeys_with_brackets]
-;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\[brackets]]
+;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\[brackets]]
 ;
 ;[Registry_opsi_org_delete_test]
-;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+;deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 ;
 ;
 ;[ExecWith_opsi_org_test]
-;reg add "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\test-4.0" /v "bitByReg" /t REG_SZ /d "$regWriteValue$" /f
+;reg add "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0" /v "bitByReg" /t REG_SZ /d "$regWriteValue$" /f
 ;
 ;[Registry_hkcu_opsi_org_test]
-;openkey [SOFTWARE\opsi.org\opsi-winst-test]
+;openkey [SOFTWARE\opsi.org\opsi-script-test]
 ;set "bitByWinst"="$regWriteValue$"
 ;
 ;[Registry_hkcu_opsi_org_deletekey]
-;openkey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
-;deletekey [SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+;openkey [SOFTWARE\opsi.org\opsi-script-test\deleteme]
+;deletekey [SOFTWARE\opsi.org\opsi-script-test\deleteme]
 ;
 [Registry_hkcu_complete_opsi_org_test]
-openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test]
 set "bitByWinst"="$regWriteValue$"
-openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test\.a\b]
 set "bitByWinst"="$regWriteValue$"
-openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\.a\b\c]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test\.a\b\c]
 set "bitByWinst"="$regWriteValue$"
 
 
 [Registry_hkcu_complete_opsi_org_deletekey]
-openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
-deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
+openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test\deleteme]
+deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test\deleteme]
 ;
 ;[DosInAnIcon_export_hkcu_complete_opsi_org_test]
 ;@echo off
-;regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test
+;regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test
 ;
 ;[Registry_hkcu_userclasses_create_test]
-;openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a\b]
+;openkey [HKEY_CURRENT_USER\Software\Classes\opsi-script-test\.a\b]
 ;set "bitByWinst"="$regWriteValue$"
 ;
 ;[Registry_hkcu_userclasses_delete_test]
-;deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+;deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-script-test]
 ;
 ;[Registry_hkcu_userclasses_createkey]
-;openkey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test]
+;openkey [HKEY_CURRENT_USER\Software\Classes\opsi-script-test]
 ;set "bitByWinst"="$regWriteValue$"
 ;
 ;[Registry_hkcu_userclasses_deletekey]
-;deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-winst-test\.a]
+;deletekey [HKEY_CURRENT_USER\Software\Classes\opsi-script-test\.a]
 ;
 ;
 ;[Registry_hack_forbidden_key]
@@ -3882,7 +3882,7 @@ deletekey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-winst-test\deleteme]
 ;reg delete "HKLM\SYSTEM\ControlSet001\Control\Network\NetworkLocationWizard" /v "HideWizard" /f
 ;
 ;[Registry_multiline]
-;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+;openkey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\b]
 ;set ""="part1\npart2\npart3"
 ;;set "test" = "$string1$"
 ;

@@ -72,7 +72,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 		message "GetMultiSZFromFile"
 		Registry_GetMultiSZFromFile
 		set $ConstTest$ = "hello;world;how;are;you"
-		set $CompValue$ = Trim(GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test2"))
+		set $CompValue$ = Trim(GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test2"))
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else
@@ -87,7 +87,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 		message "DeleteVar"
 		Registry_DeleteVar
 		set $ConstTest$ = ""
-		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] test")
+		set $CompValue$ = GetRegistryStringValue ("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] test")
 		if ($ConstTest$ = $CompValue$)
 			comment "passed"
 		else

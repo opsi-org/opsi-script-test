@@ -1109,7 +1109,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				message "winbatch /64bit"
 				Winbatch_regedit_s_64 /64bit
 				set $ConstTest$ = "64"
-				set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] bitByRegedit-s")
+				set $CompValue$ = GetRegistryStringValue64("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] bitByRegedit-s")
 				if ($ConstTest$ = $CompValue$)
 					comment "Winbatch /64bit passed"
 				else
@@ -1120,7 +1120,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				Winbatch_regedit_s_32 /64bit
 				comment "This call should fail because ther is no c:\windows\system32\regedit.exe on 64 bit systems"
 				set $ConstTest$ = ""
-				set $CompValue$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] bitByRegedit-s")
+				set $CompValue$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] bitByRegedit-s")
 				if ($ConstTest$ = $CompValue$)
 					comment "Winbatch /32bit passed"
 				else
@@ -1129,7 +1129,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 				endif
 				Winbatch_regedit_s_32 /32bit
 				set $ConstTest$ = "64"
-				set $CompValue$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test] bitByRegedit-s")
+				set $CompValue$ = GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test] bitByRegedit-s")
 				if ($ConstTest$ = $CompValue$)
 					comment "Winbatch /32bit passed"
 				else
@@ -1992,7 +1992,7 @@ msiexec /x {E19B367E-992C-4BD5-86D1-804C10184D71} /qb! REBOOT=ReallySuppress
 powercfg /hibernate off
 
 [Registry_opsi_org_delete_test]
-deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test]
+deletekey [HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test]
 
 [sub_getprocess_by_shortcommand]
 ;comment " shortcommand gives only the first 15 chars)"
