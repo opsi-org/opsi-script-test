@@ -1,11 +1,11 @@
 Windows Registry Editor Version 5.00
-;öäü encoding win-1252
+;ï¿½ï¿½ï¿½ encoding win-1252
 
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a]
-[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\b]
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a]
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\b]
 @="C:\\Program Files\\test\\test.exe -a"
-[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-winst-test\.a\multiline]
+[HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\.a\multiline]
 "multi"="
 "
 "1234"="
