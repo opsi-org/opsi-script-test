@@ -1,13 +1,16 @@
 [Changelog]
 
+opsi-script-test (4.12.10.0-3) testing; urgency=low
+
 [change] sub-scripts\registryFunctions\AllUserDats.opsiscript
-   test results of :
-     Registry_hkcu_opsi_org_test
-     Registry_hkcu_complete_opsi_org_test
-     should be ok with fix for #4839 (d.oertel 1.6.2023)
+           test results of : Registry_hkcu_opsi_org_test, Registry_hkcu_complete_opsi_org_test
+           should be ok with fix for #4839 (d.oertel 1.6.2023)
+[change] replace opsi-winst-test with opsi-script-test
+[new]    test for new modifier AllUserProfiles in registry sections 
 
+-- jan werner <j.werner@uib.de>  Wed, 26 July 2023
 
-opsi-script-test (4.12.9.0-3) stable; urgency=low
+opsi-script-test (4.12.9.0-3) unreleased; urgency=low
 
   [new] sub-scripts\controlsFunctions\multi_line_statements.opsiscript: 
           testing multi line statements:
