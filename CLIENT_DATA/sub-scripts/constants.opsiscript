@@ -6,7 +6,8 @@
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	; start testing
 	set $TestResult$ = "o.k."
-	Set $ExpectedResult$ = "o.k."
+	set $ExpectedResult$ = "o.k."
+	set $TestName$ = "constants" 
 	
 	if $OS$ = "Windows_NT"
 		if $language$ = "DE"
@@ -652,6 +653,9 @@
 	endif
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
+		comment ""
+		comment "-------------------------------------"
+		message "START: Testing constant: "+"%"+"opsidata" +"%"
 		set $ConstTest$ = "%opsidata%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "C:\opsi.org\data"
@@ -659,11 +663,18 @@
 			set $CompValue$ = "/var/lib/opsi-client-agent"
 		endif
 		if ($ConstTest$ = $CompValue$)
-			comment "passed"
+			comment "passed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+			LogWarning "failed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
 		endif
+		message "END: Testing constant: "+"%"+"opsidata" +"%""
+		comment "-------------------------------------"
+		comment ""
+
+		comment ""
+		comment "-------------------------------------"
+		message "START: Testing constant: "+"%"+"opsiapplog" +"%"
 		set $ConstTest$ = "%opsiapplog%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "c:\opsi.org\applog"
@@ -671,12 +682,16 @@
 			set $CompValue$ = "~/opsi.org/applog"
 		endif
 		if ($ConstTest$ = $CompValue$)
-			comment "passed"
+			comment "passed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "failed"
+			LogWarning "failed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
 		endif
+		message "END: Testing constant: "+"%"+"opsiapplog" +"%""
+		comment "-------------------------------------"
+		comment ""
 	endif
+
 	
 	comment ""
 	comment "-------------------------------------"
@@ -684,42 +699,41 @@
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.4")
 		if ($OS$ = "Windows_NT")
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
-				comment " load test constants in stringlist"
+				comment "Test 1: load test constants in stringlist"
 				if (GetSystemType = "x86 System")
 				  set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x32_constants.txt")
 				else
 				  set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
 				endif
-				comment "replace opsi constants"
+				comment "Test 1: replace opsi constants"
 				set $list$ = replaceOpsiConstants($list$)
-				comment "compare values with expected values"
+				comment "Test 1: compare values with expected values"
 				set $list1$ = getKeyList($list$)
 				for %key% in $list1$ do sub_check_key_value_constants
 				
-				comment " load test constants in string"
+				comment "Test 2: load test constant in string"
 				if (GetSystemType = "x86 System")
   				  set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x32_constants.txt")
 				else
 				  set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
 				endif
-				comment "replace opsi constants"
+				comment "Test 2: replace opsi constants"
 				set $str$ = replaceOpsiConstants($str$)
-				comment "compare values with expected values"
+				comment "Test 2: compare value with expected value"
 				set $ConstTest$ = takestring(0,splitstring($str$,"="))
 				set $CompValue$ = takestring(1,splitstring($str$,"="))
 				if $ConstTest$ = $CompValue$
-					comment "passed: Testing function replaceOpsiConstants loading expected values as string"
+					comment "Test 2: passed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
 				else
 					set $TestResult$ = "not o.k."
-					LogWarning "failed: Testing function replaceOpsiConstants loading expected values as string"
+					LogWarning "Test 2: failed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
 				endif
 			endif
 		endif
 	endif
 	message "END: Testing function replaceOpsiConstants with system directory constants on windows"
 	comment "-------------------------------------"
-
-	sub "%scriptpath%\sub-scripts\subsub_constants.opsiscript"
+	comment ""
 	
 	sub_compareResult
 	set $winst_constants$ = $SubResult$

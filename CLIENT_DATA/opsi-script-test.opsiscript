@@ -24,6 +24,7 @@ DefVar $FinalResult$
 DefVar $AktTestSubScript$
 DefVar $ExpectedResult$
 DefVar $TestNr$
+DefVar $TestName$
 DefVar $TestResult$
 DefVar $SubResult$
 DefVar $HomeTestFiles$
@@ -3102,21 +3103,22 @@ endif
 
 [sub_compareResult]
 comment ""
-comment "-------------------------------------"
+comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 comment "expectedResult is >" +  $ExpectedResult$ + "<"
 comment "TestResult is >" +  $TestResult$ + "<"
 if $ExpectedResult$ = $TestResult$
 	set $SubResult$ ="passed"
-	comment "OK: Subtest passed"
+	comment "OK: Subtest " + $TestName$ + " passed"
 else
 	if $TestResult$ = "not implemented"
 		set $SubResult$ = $TestResult$
 	else
 		set $SubResult$ ="failed"
-		logError "Fatal: Subtest failed"
+		logError "Fatal: Subtest" + $TestName$ + "failed"
 		set $FinalResult$="failed"
 	endif
 endif
+comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 comment ""
 comment ""
 
@@ -3317,10 +3319,10 @@ set $tmp$ = "%CurrentSendToDir%"
 set $ConstTest$ = "%key%"
 set $CompValue$ = getValue("%key%",$list$)
 if ($ConstTest$ = $CompValue$)
-	comment "passed: Testing function replaceOpsiConstants loading expected values as stringlist"
+	comment "Test 1: passed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$
 else
 	set $TestResult$ = "not o.k."
-	LogWarning "failed: Testing function replaceOpsiConstants loading expected values as stringlis"
+	LogWarning "Test 1: failed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
 endif
 
 ;----------------   end   sections for constant test ---------------------------------
