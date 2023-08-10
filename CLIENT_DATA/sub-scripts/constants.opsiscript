@@ -683,7 +683,7 @@
 	message "START: Testing function replaceOpsiConstants with system directory constants on windows"
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.4")
 		if ($OS$ = "Windows_NT")
-			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0)
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 				comment " load test constants in stringlist"
 				if (GetSystemType = "x86 System")
 				  set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x32_constants.txt")
