@@ -1,4 +1,4 @@
-%ProgramFilesDir%=c:\program files
+%ProgramFilesDir%=c:\program files (x86)
 %ProgramFiles32Dir%=c:\Program Files (x86)
 %ProgramFiles64Dir%=c:\program files
 %ProgramFilesSysnativeDir%=c:\program files
