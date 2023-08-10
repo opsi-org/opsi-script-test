@@ -1,0 +1,8 @@
+%ProgramFilesDir%=c:\program files
+%ProgramFiles32Dir%=c:\Program Files
+%ProgramFiles64Dir%=c:\program files
+%ProgramFilesSysnativeDir%=c:\program files
+%Systemroot%=c:\windows
+%System%=c:\windows\system32
+%Systemdrive%=c:
+%ProfileDir%=C:\users

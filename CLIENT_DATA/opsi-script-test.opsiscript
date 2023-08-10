@@ -3317,10 +3317,10 @@ set $tmp$ = "%CurrentSendToDir%"
 set $ConstTest$ = "%key%"
 set $CompValue$ = getValue("%key%",$list$)
 if ($ConstTest$ = $CompValue$)
-	comment "passed"
+	comment "passed: Testing function replaceOpsiConstants loading expected values as stringlist"
 else
 	set $TestResult$ = "not o.k."
-	LogWarning "failed"
+	LogWarning "failed: Testing function replaceOpsiConstants loading expected values as stringlis"
 endif
 
 ;----------------   end   sections for constant test ---------------------------------
