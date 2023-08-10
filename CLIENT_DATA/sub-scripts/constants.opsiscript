@@ -571,11 +571,11 @@
 	comment "-------------------------------------"
 	comment "Testing: "
 	message "Testing constants: "+"%"+"winstversion" +"%"
-	set $ConstTest$ = "%OpsiscriptVersion%"
+	set $ConstTest$ = "%WinstVersion%"
 	if $OS$ = "Windows_NT"
-		set $InterestingFile$ = "%OpsiscriptDir%\opsi-script.exe"
+		set $InterestingFile$ = "%WinstDir%\opsi-script.exe"
 		if not (FileExists($InterestingFile$))
-			set $InterestingFile$ = "%OpsiscriptDir%\winst32.exe"
+			set $InterestingFile$ = "%WinstDir%\winst32.exe"
 		endif
 		set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 		set $CompValue$ = getValue("file version with dots", $INST_Resultlist$ )
