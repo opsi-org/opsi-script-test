@@ -3102,24 +3102,25 @@ else
 endif
 
 [sub_compareResult]
-comment ""
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-comment "expectedResult is >" +  $ExpectedResult$ + "<"
-comment "TestResult is >" +  $TestResult$ + "<"
+comment "Result of subtest " + $TestName$
+comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 if $ExpectedResult$ = $TestResult$
 	set $SubResult$ ="passed"
-	comment "OK: Subtest " + $TestName$ + " passed"
 else
 	if $TestResult$ = "not implemented"
 		set $SubResult$ = $TestResult$
 	else
 		set $SubResult$ ="failed"
-		logError "Fatal: Subtest" + $TestName$ + "failed"
 		set $FinalResult$="failed"
 	endif
 endif
+comment $SubResult$ 
+comment "Value: " + $TestResult$ + ", Expected: " + $ExpectedResult$
+if ($SubResult$ ="failed")
+	logError "failed"
+endif
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-comment ""
 comment ""
 
 [sub_find_section_test]
@@ -3319,10 +3320,10 @@ set $tmp$ = "%CurrentSendToDir%"
 set $ConstTest$ = "%key%"
 set $CompValue$ = getValue("%key%",$list$)
 if ($ConstTest$ = $CompValue$)
-	comment "Test 1: passed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$
+	comment "PASSED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
 else
 	set $TestResult$ = "not o.k."
-	LogWarning "Test 1: failed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
+	LogWarning "FAILED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$"
 endif
 
 ;----------------   end   sections for constant test ---------------------------------
