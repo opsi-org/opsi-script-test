@@ -20,40 +20,24 @@
 	
 	if $OS$ = "Windows_NT"
 		if $language$ = "DE"
-			comment ""
-			comment "-------------------------------------"
-			message "Testing: "+"%"+"AppdataDir" +"%"
-			comment "%"+"AppdataDir" +"%"
-			comment "(the app data for the current user)"
-			DosInAnIcon_set
-			if "%opsiserviceURL%" = ""
+			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
+				comment ""
+				comment "-------------------------------------"
+				message "Testing: "+"%"+"AppdataDir" +"%"
+				comment "%"+"AppdataDir" +"%"
+				comment "(the app data for the current user)"
 				set $ConstTest$="%AppdataDir%"
-				if $NTVersion$ = "WinXP"
-					set $CompValue$ = EnvVar("UserProfile") + "\Anwendungsdaten"
-					compareValueWithExpected()
-				else
-					if $NTVersion$ = "Windows Vista"
-						comment "Vista not tested"
-					endif
-				endif
-			endif
-			
-			comment ""
-			comment "-------------------------------------"
-			message "Testing: "+"%"+"CurrentAppdataDir" +"%"
-			comment "%"+"AppdataDir" +"%"
-			comment "(the app data for the current user)"
-			DosInAnIcon_set
-			if "%opsiserviceURL%" = ""
+				set $CompValue$ = "%ProfileDir%\%Username%\Appdata\Roaming"
+				compareValueWithExpected()
+				
+				comment ""
+				comment "-------------------------------------"
+				message "Testing: "+"%"+"CurrentAppdataDir" +"%"
+				comment "%"+"AppdataDir" +"%"
+				comment "(the app data for the current user)"
 				set $ConstTest$="%CurrentAppdataDir%"
-				if $NTVersion$ = "WinXP"
-					set $CompValue$ = EnvVar("UserProfile") + "\Anwendungsdaten"
-					compareValueWithExpected()
-				else
-					if $NTVersion$ = "Windows Vista"
-						comment "Vista not tested"
-					endif
-				endif
+				set $CompValue$ = "%ProfileDir%\%Username%\Appdata\Roaming"
+				compareValueWithExpected()
 			endif
 		endif  ; lang = de
 		

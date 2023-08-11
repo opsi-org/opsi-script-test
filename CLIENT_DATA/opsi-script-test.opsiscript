@@ -3117,8 +3117,7 @@ else
 		set $FinalResult$="FAILED"
 	endif
 endif
-comment $SubResult$ 
-comment "Value: " + $TestResult$ + ", Expected: " + $ExpectedResult$
+comment $SubResult$ +  " (Value: " + $TestResult$ + ", Expected: " + $ExpectedResult$ + ")"
 if ($SubResult$ ="FAILED")
 	logError "FAILED"
 endif
