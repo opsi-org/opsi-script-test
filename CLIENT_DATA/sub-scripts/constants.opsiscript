@@ -11,10 +11,10 @@
 
 	DefFunc compareValueWithExpected(): void
 		if ($ConstTest$ = $CompValue$)
-			comment "PASSED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
+			comment "PASSED (Value: " + $ConstTest$ + ", Expected: " + $CompValue$ + ")"
 		else
 			set $TestResult$ = "not o.k."
-			LogWarning "FAILED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
+			LogWarning "FAILED (Value: " + $ConstTest$ + ", Expected: " + $CompValue$ + ")"
 		endif
 	endfunc
 	
