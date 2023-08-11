@@ -1,10 +1,10 @@
-	Message "testing constants"
+	Message "Testing CONSTANTS"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
-	comment "testing constants"
+	comment "Testing CONSTANTS"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-	; start testing
+
 	set $TestResult$ = "o.k."
 	set $ExpectedResult$ = "o.k."
 	set $TestName$ = "constants" 
@@ -17,212 +17,120 @@
 			comment "%"+"AppdataDir" +"%"
 			comment "(the app data for the current user)"
 			DosInAnIcon_set
-			
 			if "%opsiserviceURL%" = ""
 				set $ConstTest$="%AppdataDir%"
 				if $NTVersion$ = "WinXP"
 					set $CompValue$ = EnvVar("UserProfile") + "\Anwendungsdaten"
-					;"C:\Dokumente und Einstellungen\%username%\Anwendungsdaten"
-					if ($ConstTest$= $CompValue$)
-						comment "passed"
-					else
-						set $TestResult$ = "not o.k."
-						LogWarning "failed"
-					endif
-					;if not ( ($ConstTest$ = $CompValue$) or ($ConstTest$ = '/-!! not found -!!-/'))
-					;	set $TestResult$ = "not o.k."
-					;endif
+					sub_compareValueWithExpected
 				else
 					if $NTVersion$ = "Windows Vista"
 						comment "Vista not tested"
-						;set $CompValue$ = EnvVar("AppData")
-						;if not ($ConstTest$ = $CompValue$)
-						;	set $TestResult$ = "not o.k."
-						;endif
 					endif
 				endif
 			endif
+			
 			comment ""
 			comment "-------------------------------------"
 			message "Testing: "+"%"+"CurrentAppdataDir" +"%"
 			comment "%"+"AppdataDir" +"%"
 			comment "(the app data for the current user)"
 			DosInAnIcon_set
-			
 			if "%opsiserviceURL%" = ""
 				set $ConstTest$="%CurrentAppdataDir%"
 				if $NTVersion$ = "WinXP"
 					set $CompValue$ = EnvVar("UserProfile") + "\Anwendungsdaten"
-					;"C:\Dokumente und Einstellungen\%username%\Anwendungsdaten"
-					if ($ConstTest$= $CompValue$)
-						comment "passed"
-					else
-						set $TestResult$ = "not o.k."
-						LogWarning "failed"
-					endif
-					;if not ( ($ConstTest$ = $CompValue$) or ($ConstTest$ = '/-!! not found -!!-/'))
-					;	set $TestResult$ = "not o.k."
-					;endif
+					sub_compareValueWithExpected
 				else
 					if $NTVersion$ = "Windows Vista"
 						comment "Vista not tested"
-						;set $CompValue$ = EnvVar("AppData")
-						;if not ($ConstTest$ = $CompValue$)
-						;	set $TestResult$ = "not o.k."
-						;endif
 					endif
 				endif
 			endif
 		endif  ; lang = de
 		
-		
+		comment ""
+		comment "-------------------------------------"		
 		message "Testing constants: "+"%"+"DefaultUserProfileDir"+"%"
 		set $ConstTest$="%DefaultUserProfileDir%"
-		;if $MsVersion$ < "6"
 		if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") < "0"
 			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] ProfilesDirectory"),"%"+"SystemDrive"+"%"))
 			set $CompValue$ = $CompValue$+"\"+GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] DefaultUserProfile")
 		else
 			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Default"),"%"+"SystemDrive"+"%"))
 		endif
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		
-		comment "-------------------------------------"
-		comment "Testing: "
-		message "Testing constants: "+"%"+"AllUsersProfileDir"+"%"
-		set $ConstTest$="%AllUsersProfileDir%"
-		;if $MsVersion$ < "6"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") < "0"
-			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] ProfilesDirectory"),"%"+"SystemDrive"+"%"))
-			set $CompValue$ = $CompValue$+"\"+GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] AllUsersProfile")
-		else
-			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Public"),"%"+"SystemDrive"+"%"))
-		endif
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
-		message "Testing constants: "+"%"+"CommonProfileDir"+"%"
-		set $ConstTest$="%CommonProfileDir%"
-		;if $MsVersion$ < "6"
-		if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") < "0"
-			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] ProfilesDirectory"),"%"+"SystemDrive"+"%"))
-			set $CompValue$ = $CompValue$+"\"+GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] AllUsersProfile")
-		else
-			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Public"),"%"+"SystemDrive"+"%"))
-		endif
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
+		message "Testing constants: "+"%"+"AllUsersProfileDir"+"%"
+		set $ConstTest$="%AllUsersProfileDir%"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") < "0"
+			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] ProfilesDirectory"),"%"+"SystemDrive"+"%"))
+			set $CompValue$ = $CompValue$+"\"+GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] AllUsersProfile")
+		else
+			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Public"),"%"+"SystemDrive"+"%"))
+		endif
+		sub_compareValueWithExpected
+		
+		comment ""
+		comment "-------------------------------------"
+		message "Testing constants: "+"%"+"CommonProfileDir"+"%"
+		set $ConstTest$="%CommonProfileDir%"
+		if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") < "0"
+			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] ProfilesDirectory"),"%"+"SystemDrive"+"%"))
+			set $CompValue$ = $CompValue$+"\"+GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] AllUsersProfile")
+		else
+			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Public"),"%"+"SystemDrive"+"%"))
+		endif
+		sub_compareValueWithExpected
+		
+		comment ""
+		comment "-------------------------------------"
 		message "Testing constants: "+"%"+"CommonStartMenuPath" +"%"
 		set $ConstTest$="%CommonStartMenuPath%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Start Menu")
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"CommonAppDataDir" +"%"
 		set $ConstTest$="%CommonAppDataDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common AppData")
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"CommonDesktopDir" +"%"
 		set $ConstTest$="%CommonDesktopDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Desktop")
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"CommonStartupDir" +"%"
 		set $ConstTest$="%CommonStartupDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Startup")
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"CommonProgramDir" +"%"
 		set $ConstTest$="%CommonProgramsDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Programs")
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"ProfileDir" +"%"
 		set $ConstTest$="%ProfileDir%"
 		set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] ProfilesDirectory"),"%"+"SystemDrive"+"%"))
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"ProgramFilesDir" +"%"
 		set $ConstTest$="%ProgramFilesDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion] ProgramFilesDir")
-		;if $MsVersion$ >= "6.0"
 		if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
 			if $INST_SystemType$ = "64 Bit System"
 				set $CompValue$ = "C:\Program Files (x86)"
@@ -230,22 +138,13 @@
 				set $CompValue$ = "C:\Program Files"
 			endif
 		endif
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"ProgramFiles32Dir" +"%"
 		set $ConstTest$="%ProgramFiles32Dir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion] ProgramFilesDir")
-		;if $MsVersion$ >= "6.0"
 		if CompareDotSeparatedNumbers(GetMsVersionInfo,"6.0") >= "0"
 			if $INST_SystemType$ = "64 Bit System"
 				set $CompValue$ = "C:\Program Files (x86)"
@@ -253,14 +152,7 @@
 				set $CompValue$ = "C:\Program Files"
 			endif
 		endif
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
@@ -276,25 +168,16 @@
 			LogWarning "failed"
 		endif
 		
-		
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		message "Testing constants: "+"%"+"ProgramFilesSysnativeDir" +"%"
 		set $ConstTest$="%ProgramFilesSysnativeDir%"
 		set $CompValue$ = GetRegistrystringvalue64("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion] ProgramFilesDir")
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"Systemroot" +"%"
 		set $ConstTest$="%Systemroot%"
 		if ( $NTVersion$ = "NT4" ) or ( $NTVersion$ = "Win2k" )
@@ -302,31 +185,17 @@
 		else
 			set $CompValue$= "C:\Windows"
 		endif
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
-		
+		sub_compareValueWithExpected
 		
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"System" +"%"
 		set $ConstTest$="%System%"
-		if ($ConstTest$= "%Systemroot%\system32")
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		sub_compareValueWithExpected
 	endif ; windows
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"PCName" +"%"
 	set $ConstTest$="%PCName%"
 	if $OS$ = "Windows_NT"
@@ -334,17 +203,10 @@
 	else
 		set $CompValue$= takeString(0,shellCall("hostname"))
 	endif
-	if ($ConstTest$=$CompValue$)
-		comment "passed"
-	else
-		LogWarning "failed"
-		set $TestResult$ = "not o.k."
-	endif
-	
+	sub_compareValueWithExpected
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"IPName" +"%"
 	set $ConstTest$="%IPName%"
 	if contains($ConstTest$, ".")
@@ -364,30 +226,20 @@
 			set $CompValue$ = takeString(0,shellCall("hostname -s"))
 		endcase
 	endswitch
-	
-	;comment ">>not tested"
-	if ($ConstTest$ = $CompValue$)
-		comment "passed"
-	else
-		LogWarning "failed"
-		set $TestResult$ = "not o.k."
-	endif
+    sub_compareValueWithExpected
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"IPAddress" +"%"
 	set $ConstTest$="%IPAddress%"
 	switch $OS$
 		case "Windows_nt"
 			set $list1$ = getOutStreamFromSection("DosInAnIcon_ipconfig_all")
-			;set $tmp$ = takeString(34, $list1$)
 			set $tmp$ = takeFirstStringContaining($list1$,"IPv4")
 			set $tmp$ = trim($tmp$)
 			set $CompValue$ = takeString(-1, splitString ($tmp$, ":"))
 			if contains($CompValue$, "(")
 				set $CompValue$ = trim(takeString(0, splitString ($CompValue$, "(")))
-				;trim(stringReplace($CompValue$,"(Preferred)",""))
 			endif
 		endcase
 		case "Linux"
@@ -410,7 +262,7 @@
 	endswitch
 	
 	if ($ConstTest$ = $CompValue$)
-		comment "passed"
+		comment "PASSED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
 	else
 		; removed from assesment because the use is diccouraged:
 		; %IPADDRESS% may be any IP-number of the system
@@ -420,7 +272,6 @@
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"Username" +"%"
 	set $ConstTest$="%Username%"
 	switch $OS$
@@ -435,142 +286,87 @@
 		endcase
 	endswitch
 	comment ">>not tested"
-	;if ($ConstTest$= $CompValue$)
-	;	comment "passed"
-	;else
-	;	LogWarning "failed"
-	;	set $TestResult$ = "not o.k."
-	;endif
-	
+
 	; the following constants are not in a script testable if not a specific execution environment can be guaranteed
-	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"ScriptPath" +"%"
 	set $ConstTest$="%ScriptPath%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"ScriptPath"+"%"+" is %ScriptPath%"
-	;if not ($ConstTest$= "")
-	;	set $TestResult$ = "not o.k."
-	;endif
-	
+
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"ScriptDrive" +"%"
 	set $ConstTest$="%ScriptDrive%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"ScriptDrive"+"%"+" is %ScriptDrive%"
-	;if not ($ConstTest$= "%OpsiscriptDir%")
-	;	set $TestResult$ = "not o.k."
-	;endif
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"Logfile" +"%"
 	set $ConstTest$="%LogFile%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"LogFile"+"%"+" is %LogFile%"
-	;if not ($ConstTest$= "")
-	;	set $TestResult$ = "not o.k."
-	;endif
-	
+
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"HostID" +"%"
 	set $ConstTest$="%HostID%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"HostID"+"%"+" is %HostID%"
-	;if not ($ConstTest$= EnvVar(""))
-	;	set $TestResult$ = "not o.k."
-	;endif
-	
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"opsiserviceURL" +"%"
 	set $ConstTest$="%opsiserviceURL%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"opsiserviceURL"+"%"+" is %opsiserviceURL%"
-	;if not ($ConstTest$= EnvVar(""))
-	;	set $TestResult$ = "not o.k."
-	;endif
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"opsiserver" +"%"
 	set $ConstTest$="%opsiserver%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"opsiserver"+"%"+" is %opsiserver%"
-	;if not ($ConstTest$= EnvVar(""))
-	;	set $TestResult$ = "not o.k."
-	;endif
-	
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"opsiserviceUser" +"%"
 	set $ConstTest$="%opsiserviceUser%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"opsiserviceUser"+"%"+" is %opsiserviceUser%"
-	;if not ($ConstTest$= EnvVar(""))
-	;	set $TestResult$ = "not o.k."
-	;endif
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"opsiservicePassword" +"%"
 	set $ConstTest$="%opsiservicePassword%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"opsiservicePassword"+"%"+" is %opsiservicePassword%"
-	;if not ($ConstTest$= EnvVar(""))
-	;	set $TestResult$ = "not o.k."
-	;endif
-	
+
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"installingProduct" +"%"
 	set $ConstTest$="%installingProduct%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"installingProduct"+"%"+" is %installingProduct%"
-	;if not ($ConstTest$= EnvVar(""))
-	;	set $TestResult$ = "not o.k."
-	;endif
 	
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"installingProdName" +"%"
 	set $ConstTest$="%installingProdName%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"installingProdName"+"%"+" is %installingProdName%"
-	;if not ($ConstTest$= EnvVar(""))
-	;	set $TestResult$ = "not o.k."
-	;endif
-	
+
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"installingProdVersion" +"%"
 	set $ConstTest$="%installingProdVersion%"
 	comment ">>not tested"
 	comment "Value of "+"%"+"installingProdVersion"+"%"+" is %installingProdVersion%"
-	;if not ($ConstTest$= EnvVar(""))
-	;	set $TestResult$ = "not o.k."
-	;endif
-	
-	
+
 	comment ""
 	comment "-------------------------------------"
-	comment "Testing: "
 	message "Testing constants: "+"%"+"winstversion" +"%"
 	set $ConstTest$ = "%WinstVersion%"
 	if $OS$ = "Windows_NT"
@@ -580,19 +376,12 @@
 		endif
 		set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 		set $CompValue$ = getValue("file version with dots", $INST_Resultlist$ )
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		sub_compareValueWithExpected
 	endif
-	
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.6")
 		comment ""
 		comment "-------------------------------------"
-		comment "Testing: "
 		message "Testing constants: "+"%"+"OpsiscriptVersion" +"%"
 		set $ConstTest$ = "%OpsiscriptVersion%"
 		if $OS$ = "Windows_NT"
@@ -602,38 +391,25 @@
 			endif
 			set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 			set $CompValue$ = getValue("file version with dots", $INST_Resultlist$ )
-			if ($ConstTest$ = $CompValue$)
-				comment "passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "failed"
-			endif
+			sub_compareValueWithExpected
 		endif
 	endif ; 4.12.3.6
 	
-	
-	set $ConstTest$ = "%CurrentAppdataDir%"
-	set $ConstTest$ = "%CurrentStartmenuDir%"
-	set $ConstTest$ = "%CurrentDesktopDir%"
-	set $ConstTest$ = "%CurrentStartupDir%"
-	set $ConstTest$ = "%CurrentProgramsDir%"
-	set $ConstTest$ = "%CurrentSendToDir%"
-	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.4")
-		set $ConstTest$ = "%opsiDepotId%"
-	endif
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.11.4.4")
+		comment ""
+		comment "-------------------------------------"
+		message "Testing constant: "+"%"+"opsiTmpDir" +"%"
 		set $ConstTest$ = "%opsiTmpDir%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "C:\opsi.org\tmp"
 		else
 			set $CompValue$ = "/tmp"
 		endif
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		sub_compareValueWithExpected
+
+		comment ""
+		comment "-------------------------------------"
+		message "Testing constant: "+"%"+"opsiLogDir" +"%"
 		set $ConstTest$ = "%opsiLogDir%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "c:\opsi.org\log"
@@ -644,96 +420,79 @@
 				set $CompValue$ = "/tmp"
 			endif
 		endif
-		if ($ConstTest$ = $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		sub_compareValueWithExpected
 	endif
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
 		comment ""
 		comment "-------------------------------------"
-		message "START: Testing constant: "+"%"+"opsidata" +"%"
+		message "Testing constant: "+"%"+"opsidata" +"%"
 		set $ConstTest$ = "%opsidata%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "C:\opsi.org\data"
 		else
 			set $CompValue$ = "/var/lib/opsi-client-agent"
 		endif
-		if ($ConstTest$ = $CompValue$)
-			comment "passed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
-		endif
-		message "END: Testing constant: "+"%"+"opsidata" +"%""
-		comment "-------------------------------------"
-		comment ""
+		sub_compareValueWithExpected
+
 
 		comment ""
 		comment "-------------------------------------"
-		message "START: Testing constant: "+"%"+"opsiapplog" +"%"
+		message "Testing constant: "+"%"+"opsiapplog" +"%"
 		set $ConstTest$ = "%opsiapplog%"
 		if $OS$ = "Windows_NT"
 			set $CompValue$ = "c:\opsi.org\applog"
 		else
 			set $CompValue$ = "~/opsi.org/applog"
 		endif
-		if ($ConstTest$ = $CompValue$)
-			comment "passed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
-		endif
-		message "END: Testing constant: "+"%"+"opsiapplog" +"%""
-		comment "-------------------------------------"
-		comment ""
+		sub_compareValueWithExpected
 	endif
-
 	
 	comment ""
 	comment "-------------------------------------"
-	message "START: Testing function replaceOpsiConstants with system directory constants on windows"
+	message "Testing function replaceOpsiConstants"
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.4")
 		if ($OS$ = "Windows_NT")
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
-				comment "Test 1: load test constants in stringlist"
+				comment ""
+				comment "Test with stringlist"
+				comment "load constants and expected values in stringlist from file"
 				if (GetSystemType = "x86 System")
 				  set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x32_constants.txt")
 				else
 				  set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
 				endif
-				comment "Test 1: replace opsi constants"
+				comment "replace opsi constants"
 				set $list$ = replaceOpsiConstants($list$)
-				comment "Test 1: compare values with expected values"
+				comment "compare values with expected values"
 				set $list1$ = getKeyList($list$)
 				for %key% in $list1$ do sub_check_key_value_constants
 				
-				comment "Test 2: load test constant in string"
+				comment ""
+				comment "Test with single string"
+				comment "load constant and excpected value in string from file"
 				if (GetSystemType = "x86 System")
   				  set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x32_constants.txt")
 				else
 				  set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
 				endif
-				comment "Test 2: replace opsi constants"
+				comment "replace opsi constant"
 				set $str$ = replaceOpsiConstants($str$)
-				comment "Test 2: compare value with expected value"
+				comment "compare value with expected value"
 				set $ConstTest$ = takestring(0,splitstring($str$,"="))
 				set $CompValue$ = takestring(1,splitstring($str$,"="))
-				if $ConstTest$ = $CompValue$
-					comment "Test 2: passed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "Test 2: failed, Value = " + $ConstTest$ + " Expected value = " + $CompValue$"
-				endif
+				sub_compareValueWithExpected
 			endif
 		endif
 	endif
-	message "END: Testing function replaceOpsiConstants with system directory constants on windows"
-	comment "-------------------------------------"
-	comment ""
 	
 	sub_compareResult
 	set $winst_constants$ = $SubResult$
+
+	[sub_compareValueWithExpected]
+	if ($ConstTest$ = $CompValue$)
+		comment "PASSED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
+	else
+		set $TestResult$ = "not o.k."
+		LogWarning "FAILED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
+	endif
