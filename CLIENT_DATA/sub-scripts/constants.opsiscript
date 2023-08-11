@@ -8,6 +8,15 @@
 	set $TestResult$ = "o.k."
 	set $ExpectedResult$ = "o.k."
 	set $TestName$ = "constants" 
+
+	DefFunc compareValueWithExpected(): void
+		if ($ConstTest$ = $CompValue$)
+			comment "PASSED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
+		else
+			set $TestResult$ = "not o.k."
+			LogWarning "FAILED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
+		endif
+	endfunc
 	
 	if $OS$ = "Windows_NT"
 		if $language$ = "DE"
@@ -21,7 +30,7 @@
 				set $ConstTest$="%AppdataDir%"
 				if $NTVersion$ = "WinXP"
 					set $CompValue$ = EnvVar("UserProfile") + "\Anwendungsdaten"
-					sub_compareValueWithExpected
+					compareValueWithExpected()
 				else
 					if $NTVersion$ = "Windows Vista"
 						comment "Vista not tested"
@@ -39,7 +48,7 @@
 				set $ConstTest$="%CurrentAppdataDir%"
 				if $NTVersion$ = "WinXP"
 					set $CompValue$ = EnvVar("UserProfile") + "\Anwendungsdaten"
-					sub_compareValueWithExpected
+					compareValueWithExpected()
 				else
 					if $NTVersion$ = "Windows Vista"
 						comment "Vista not tested"
@@ -58,7 +67,7 @@
 		else
 			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Default"),"%"+"SystemDrive"+"%"))
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
@@ -70,7 +79,7 @@
 		else
 			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Public"),"%"+"SystemDrive"+"%"))
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
@@ -82,49 +91,49 @@
 		else
 			set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] Public"),"%"+"SystemDrive"+"%"))
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
 		message "Testing constants: "+"%"+"CommonStartMenuPath" +"%"
 		set $ConstTest$="%CommonStartMenuPath%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Start Menu")
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
 		message "Testing constants: "+"%"+"CommonAppDataDir" +"%"
 		set $ConstTest$="%CommonAppDataDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common AppData")
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
 		message "Testing constants: "+"%"+"CommonDesktopDir" +"%"
 		set $ConstTest$="%CommonDesktopDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Desktop")
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
 		message "Testing constants: "+"%"+"CommonStartupDir" +"%"
 		set $ConstTest$="%CommonStartupDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Startup")
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
 		message "Testing constants: "+"%"+"CommonProgramDir" +"%"
 		set $ConstTest$="%CommonProgramsDir%"
 		set $CompValue$ = GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders] Common Programs")
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
 		message "Testing constants: "+"%"+"ProfileDir" +"%"
 		set $ConstTest$="%ProfileDir%"
 		set $CompValue$ = "%SYSTEMDRIVE%"+takestring(1,splitString(GetRegistrystringvalue("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList] ProfilesDirectory"),"%"+"SystemDrive"+"%"))
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
@@ -138,7 +147,7 @@
 				set $CompValue$ = "C:\Program Files"
 			endif
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
@@ -152,7 +161,7 @@
 				set $CompValue$ = "C:\Program Files"
 			endif
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
@@ -174,7 +183,7 @@
 		message "Testing constants: "+"%"+"ProgramFilesSysnativeDir" +"%"
 		set $ConstTest$="%ProgramFilesSysnativeDir%"
 		set $CompValue$ = GetRegistrystringvalue64("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion] ProgramFilesDir")
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
@@ -185,13 +194,13 @@
 		else
 			set $CompValue$= "C:\Windows"
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
 		message "Testing constants: "+"%"+"System" +"%"
 		set $ConstTest$="%System%"
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 	endif ; windows
 	
 	comment ""
@@ -203,7 +212,7 @@
 	else
 		set $CompValue$= takeString(0,shellCall("hostname"))
 	endif
-	sub_compareValueWithExpected
+	compareValueWithExpected()
 	
 	comment ""
 	comment "-------------------------------------"
@@ -226,7 +235,7 @@
 			set $CompValue$ = takeString(0,shellCall("hostname -s"))
 		endcase
 	endswitch
-    sub_compareValueWithExpected
+    compareValueWithExpected()
 	
 	comment ""
 	comment "-------------------------------------"
@@ -376,7 +385,7 @@
 		endif
 		set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 		set $CompValue$ = getValue("file version with dots", $INST_Resultlist$ )
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 	endif
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.6")
@@ -391,7 +400,7 @@
 			endif
 			set $INST_Resultlist$ = getFileInfoMap($InterestingFile$)
 			set $CompValue$ = getValue("file version with dots", $INST_Resultlist$ )
-			sub_compareValueWithExpected
+			compareValueWithExpected()
 		endif
 	endif ; 4.12.3.6
 	
@@ -405,7 +414,7 @@
 		else
 			set $CompValue$ = "/tmp"
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 
 		comment ""
 		comment "-------------------------------------"
@@ -420,7 +429,7 @@
 				set $CompValue$ = "/tmp"
 			endif
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 	endif
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.0.16")
@@ -433,7 +442,7 @@
 		else
 			set $CompValue$ = "/var/lib/opsi-client-agent"
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 
 
 		comment ""
@@ -445,7 +454,7 @@
 		else
 			set $CompValue$ = "~/opsi.org/applog"
 		endif
-		sub_compareValueWithExpected
+		compareValueWithExpected()
 	endif
 	
 	comment ""
@@ -481,18 +490,10 @@
 				comment "compare value with expected value"
 				set $ConstTest$ = takestring(0,splitstring($str$,"="))
 				set $CompValue$ = takestring(1,splitstring($str$,"="))
-				sub_compareValueWithExpected
+				compareValueWithExpected()
 			endif
 		endif
 	endif
 	
 	sub_compareResult
 	set $winst_constants$ = $SubResult$
-
-	[sub_compareValueWithExpected]
-	if ($ConstTest$ = $CompValue$)
-		comment "PASSED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
-	else
-		set $TestResult$ = "not o.k."
-		LogWarning "FAILED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
-	endif
