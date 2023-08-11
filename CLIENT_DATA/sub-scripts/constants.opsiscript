@@ -200,6 +200,7 @@
 		comment "-------------------------------------"
 		message "Testing constants: "+"%"+"System" +"%"
 		set $ConstTest$="%System%"
+		set $CompValue$="%Systemroot%\system32"
 		compareValueWithExpected()
 	endif ; windows
 	
