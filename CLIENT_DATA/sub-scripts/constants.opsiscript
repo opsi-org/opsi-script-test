@@ -18,6 +18,7 @@
 		endif
 	endfunc
 	
+	; could not be testetd because user specific (system or logged in user)
 	if $OS$ = "Windows_NT"
 		if $language$ = "DE"
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
@@ -27,8 +28,7 @@
 				comment "%"+"AppdataDir" +"%"
 				comment "(the app data for the current user)"
 				set $ConstTest$="%AppdataDir%"
-				set $CompValue$ = "%ProfileDir%\%Username%\Appdata\Roaming"
-				compareValueWithExpected()
+				comment "NOT TESTED (Value: %AppdataDir%)"
 				
 				comment ""
 				comment "-------------------------------------"
@@ -36,8 +36,7 @@
 				comment "%"+"AppdataDir" +"%"
 				comment "(the app data for the current user)"
 				set $ConstTest$="%CurrentAppdataDir%"
-				set $CompValue$ = "%ProfileDir%\%Username%\Appdata\Roaming"
-				compareValueWithExpected()
+				comment "NOT TESTED (Value: %CurrentAppdataDir%)"
 			endif
 		endif  ; lang = de
 		

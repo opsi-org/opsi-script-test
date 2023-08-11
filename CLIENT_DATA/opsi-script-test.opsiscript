@@ -3117,9 +3117,10 @@ else
 		set $FinalResult$="FAILED"
 	endif
 endif
-comment $SubResult$ +  " (Value: " + $TestResult$ + ", Expected: " + $ExpectedResult$ + ")"
 if ($SubResult$ ="FAILED")
-	logError "FAILED"
+	logError $SubResult$ +  " (Value: " + $TestResult$ + ", Expected: " + $ExpectedResult$ + ")"
+else
+	comment $SubResult$ +  " (Value: " + $TestResult$ + ", Expected: " + $ExpectedResult$ + ")"
 endif
 comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 comment ""
@@ -3306,8 +3307,6 @@ checkTargetPath = "$HomeTestFiles$"
 
 ;----------------   end   general helpers ---------------------------------
 ;----------------   start   sections for constant test ---------------------------------
-[DosInAnIcon_set]
-set
 
 [sub_current_path]
 set $tmp$ = "%CurrentAppdataDir%"
