@@ -169,13 +169,7 @@
 		message "Testing constants: "+"%"+"ProgramFiles64Dir" +"%"
 		set $ConstTest$="%ProgramFiles64Dir%"
 		set $CompValue$ = GetRegistrystringvalue64("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion] ProgramFilesDir")
-		
-		if ($ConstTest$= $CompValue$)
-			comment "passed"
-		else
-			set $TestResult$ = "not o.k."
-			LogWarning "failed"
-		endif
+		compareValueWithExpected()
 		
 		comment ""
 		comment "-------------------------------------"
@@ -272,7 +266,7 @@
 	endswitch
 	
 	if ($ConstTest$ = $CompValue$)
-		comment "PASSED, Value: " + $ConstTest$ + ", Expected: " + $CompValue$
+		comment "PASSED (Value: " + $ConstTest$ + ", Expected: " + $CompValue$ + ")"
 	else
 		; removed from assesment because the use is diccouraged:
 		; %IPADDRESS% may be any IP-number of the system
@@ -295,85 +289,74 @@
 			set $CompValue$ = EnvVar("USER")
 		endcase
 	endswitch
-	comment ">>not tested"
+	comment "NOT TESTED (Value: %Username%)"
 
 	; the following constants are not in a script testable if not a specific execution environment can be guaranteed
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"ScriptPath" +"%"
 	set $ConstTest$="%ScriptPath%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"ScriptPath"+"%"+" is %ScriptPath%"
+	comment "NOT TESTED (Value: %ScriptPath%)"
 
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"ScriptDrive" +"%"
 	set $ConstTest$="%ScriptDrive%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"ScriptDrive"+"%"+" is %ScriptDrive%"
+	comment "NOT TESTED (Value: %ScriptDrive%)"
 	
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"Logfile" +"%"
 	set $ConstTest$="%LogFile%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"LogFile"+"%"+" is %LogFile%"
+	comment "NOT TESTED (Value: %LogFile%)"
 
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"HostID" +"%"
 	set $ConstTest$="%HostID%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"HostID"+"%"+" is %HostID%"
+	comment "NOT TESTED (Value: %HostID%)"
 	
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"opsiserviceURL" +"%"
 	set $ConstTest$="%opsiserviceURL%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"opsiserviceURL"+"%"+" is %opsiserviceURL%"
+	comment "NOT TESTED (Value: %opsiserviceURL%)"
 	
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"opsiserver" +"%"
 	set $ConstTest$="%opsiserver%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"opsiserver"+"%"+" is %opsiserver%"
+	comment "NOT TESTED (Value: %opsiserver%)"
 	
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"opsiserviceUser" +"%"
 	set $ConstTest$="%opsiserviceUser%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"opsiserviceUser"+"%"+" is %opsiserviceUser%"
+	comment "NOT TESTED (Value: %opsiserviceUser%)"
 	
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"opsiservicePassword" +"%"
 	set $ConstTest$="%opsiservicePassword%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"opsiservicePassword"+"%"+" is %opsiservicePassword%"
+	comment "NOT TESTED (Value: %opsiservicePassword%)"
 
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"installingProduct" +"%"
 	set $ConstTest$="%installingProduct%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"installingProduct"+"%"+" is %installingProduct%"
+	comment "NOT TESTED (Value: %installingProduct%)"
 	
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"installingProdName" +"%"
 	set $ConstTest$="%installingProdName%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"installingProdName"+"%"+" is %installingProdName%"
+	comment "NOT TESTED (Value: %installingProdName%)"
 
 	comment ""
 	comment "-------------------------------------"
 	message "Testing constants: "+"%"+"installingProdVersion" +"%"
 	set $ConstTest$="%installingProdVersion%"
-	comment ">>not tested"
-	comment "Value of "+"%"+"installingProdVersion"+"%"+" is %installingProdVersion%"
+	comment "NOT TESTED (Value: %installingProdVersion%)"
 
 	comment ""
 	comment "-------------------------------------"
@@ -458,37 +441,39 @@
 		compareValueWithExpected()
 	endif
 	
-	comment ""
-	comment "-------------------------------------"
-	message "Testing function replaceOpsiConstants"
+
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.3.4")
 		if ($OS$ = "Windows_NT")
 			if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.0")
 				comment ""
+				comment "-------------------------------------"
+				message "Testing function replaceOpsiConstants"
 				comment "Test with stringlist"
-				comment "load constants and expected values in stringlist from file"
+				; load constants and expected values in stringlist from file
 				if (GetSystemType = "x86 System")
 				  set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x32_constants.txt")
 				else
 				  set $list$ = loadTextFile ("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
 				endif
-				comment "replace opsi constants"
+				; replace opsi constants"
 				set $list$ = replaceOpsiConstants($list$)
-				comment "compare values with expected values"
+				; compare values with expected values
 				set $list1$ = getKeyList($list$)
 				for %key% in $list1$ do sub_check_key_value_constants
 				
 				comment ""
+				comment "-------------------------------------"
+				message "Testing function replaceOpsiConstants"
 				comment "Test with single string"
-				comment "load constant and excpected value in string from file"
+				; load constant and excpected value in string from file
 				if (GetSystemType = "x86 System")
   				  set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x32_constants.txt")
 				else
 				  set $str$ = strLoadTextFile("%ScriptPath%\test-files\constants\nt6x64_constants.txt")
 				endif
-				comment "replace opsi constant"
+				; replace opsi constant
 				set $str$ = replaceOpsiConstants($str$)
-				comment "compare value with expected value"
+				; compare value with expected value
 				set $ConstTest$ = takestring(0,splitstring($str$,"="))
 				set $CompValue$ = takestring(1,splitstring($str$,"="))
 				compareValueWithExpected()
