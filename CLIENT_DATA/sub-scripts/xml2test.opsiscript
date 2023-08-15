@@ -25,6 +25,7 @@ if ($Flag_winst_xml2$ = "on") or ($MasterFlag$ = "on")
 	
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "xml2"
 	
 	; change back the following lines for not only encoding tests
 	; if stringToBool("false")

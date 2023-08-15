@@ -12,6 +12,7 @@ if ($Flag_winst_patches$ = "on") or ($MasterFlag$ = "on")
 	; start testing
 	;Set $HomeTestFiles$ = "C:\tmp\testFiles"
 	set $TestResult$ = "o.k."
+	set $TestName$ = "patches"
 	
 	; Chapter 7.2 Patches Sectione
 	

@@ -10,6 +10,7 @@ if ($Flag_crypt$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "cryptfunctions"
 	
 	comment ""
 	comment "-------------------------------------"

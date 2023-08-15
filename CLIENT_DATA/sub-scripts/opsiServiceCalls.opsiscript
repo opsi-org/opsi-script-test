@@ -10,6 +10,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
+	set $TestName$ = "opsiservicecall"
 	set $adminuser_password$   = GetProductProperty ("adminuser_password", "linux123")
 	
 	;set $depotid$ = "bonifax.uib.local"

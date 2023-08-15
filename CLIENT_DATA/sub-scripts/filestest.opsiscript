@@ -10,6 +10,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "files"
 		
 	Set $DirectorySubDirectory = $HomeTestFiles$+"\subDirectory"
 	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"

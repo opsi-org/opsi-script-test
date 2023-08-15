@@ -14,6 +14,7 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 	set $ExpectedResult$ = "o.k."
 
 	set $TestResult$ = "o.k."
+	set $TestName$ = "registry"
 
 	deffunc doHKEYAccessTest():void
 		comment ""

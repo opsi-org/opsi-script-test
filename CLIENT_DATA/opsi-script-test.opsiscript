@@ -387,6 +387,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "stringfunctions"
 	
 	; Strings in Strings (Nested String Values)
 	
@@ -2286,8 +2287,9 @@ if ($Flag_winst_patch_text_file$ = "on") or ($MasterFlag$ = "on")
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
-	
 	set $TestResult$ = "o.k."
+    set $TestName$ = "patchtextfile"
+
 	Files_copy_patchtextfile
 	; 7.5 PatchTextFile Sections
 	
@@ -2929,6 +2931,7 @@ if ($Flag_ProfileActions$ = "on") or ($MasterFlag$ = "on")
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
+	set $TestName$ = "profileactions"
 	
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 		switch $OS$

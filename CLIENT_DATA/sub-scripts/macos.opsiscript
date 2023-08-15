@@ -11,6 +11,7 @@ if ($Flag_winst_macos$ = "on") or ($MasterFlag$ = "on")
 		comment "testing macOS functions"
 		comment ""
 		comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+		set $TestName$ = "macos"
 	
 		
 		Set $ExpectedResult$ = "o.k."

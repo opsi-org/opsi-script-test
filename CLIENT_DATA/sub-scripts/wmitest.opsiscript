@@ -14,6 +14,7 @@ if ($Flag_subwmi$ = "on") or ($MasterFlag$ = "on")
 		Set $ExpectedResult$ = "o.k."
 		; start testing
 		set $TestResult$ = "o.k."
+		set $TestName$ = "wmi"
 		
 		comment ""
 		comment "-------------------------------------"

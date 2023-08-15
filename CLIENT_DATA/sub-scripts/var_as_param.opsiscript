@@ -11,6 +11,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "var_as_param"
 	
 	DefVar $seconds$
 	DefVar $sLetThemGo$
