@@ -207,7 +207,10 @@
 		endcase
 		case "Linux"
 			set $CompValue$ = takeString(0,shellCall("hostname -f"))
-			set $CompValue$= takestring(0,splitstring($CompValue$, "."))
+			set $tmp$ = takestring(0,splitstring($CompValue$, "."))
+			if not($tmp$ = "") 
+				set $CompValue$= takestring(0,splitstring($CompValue$, "."))
+			endif
 		endcase
 		case "macos"
 			set $CompValue$ = takeString(0,shellCall("hostname -s"))
