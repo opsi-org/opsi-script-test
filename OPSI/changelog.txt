@@ -1,5 +1,17 @@
 [Changelog]
 
+opsi-script-test (4.12.12.0-3) unreleased; urgency=low
+
+[refactoring] several changes in files test, constant test etc. to make the tests more consistent and robust:
+                - postinst: change file date of CLIENT_DATA/test-files/testFiles/dummy.txt, to a older date,  necessary for file test with option -d to pass
+                - fileSection/filestest.opsiscript: improve test for zipping/unzipping a large directory (many files of different size)
+                - wmitest.opsiscript: increase threshold for testing freespace
+                - constants.opsiscript: several fixes, better test report
+                - opsi-script-test.opsiscript: better test report
+              For more details see merge request !24
+
+-- jan werner <j.werner@uib.de>  Wed, 26 July 2023
+
 opsi-script-test (4.12.10.0-3) testing; urgency=low
 
 [change] sub-scripts\registryFunctions\AllUserDats.opsiscript
