@@ -16,6 +16,7 @@
 		; start testing
 		;Set $HomeTestFiles$ = "C:\tmp\testFiles"
 		set $TestResult$ = "o.k."
+		set $TestName$ = "linkfolder"
 		
 		if $OS$ = "windows_NT"
 			set $link_extension$ = ".LNK"

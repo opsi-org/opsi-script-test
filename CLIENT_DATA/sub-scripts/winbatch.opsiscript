@@ -11,6 +11,7 @@ if ($Flag_winst_winbatch$ = "on") or ($MasterFlag$ = "on")
 	
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "winbatch"
 	
 	Files_testFiles
 	

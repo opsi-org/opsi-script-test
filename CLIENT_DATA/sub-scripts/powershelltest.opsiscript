@@ -14,6 +14,7 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 		Set $ExpectedResult$ = "o.k."
 		; start testing
 		set $TestResult$ = "o.k."
+		set $TestName$ = "powershell"
 		
 		if CompareDotSeparatedNumbers(GetMsVersionInfo,">=","6.1")
 			comment "backup old powershell executionpolicy (sysnative)"

@@ -1,16 +1,18 @@
 encoding=utf8
 
 if ($Flag_winst_dos$ = "on") or ($MasterFlag$ = "on")
-	Message "testing Dos / DosInAnIcon functions"
+	Message "testing ShellScript / Shellcall functions"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	comment ""
-	comment "testing  Dos / DosInAnIcon functions"
+	comment "testing  ShellScript/Shellbatch/ShellInAnIcon/Shellcall functions"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
 	
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "shellbatch"
+
 	
 	if $OS$ = "Windows_NT"
 		

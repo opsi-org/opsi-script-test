@@ -10,6 +10,7 @@
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "controlfunctions"
 	
 	if $OS$ = "Windows_NT"
 		;if $MsVersion$ <= "5.0"

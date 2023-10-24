@@ -4,6 +4,7 @@
 	comment "testing licensemanagement functions"
 	comment ""
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	set $TestName$ = "licensemanagment"
 	
 	if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") or ("%opsiserver%" = "172.16.166.1")
 		;if "%opsiserver%" = "bonifax.uib.local"

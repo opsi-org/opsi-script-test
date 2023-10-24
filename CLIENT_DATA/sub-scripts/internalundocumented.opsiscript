@@ -11,6 +11,7 @@ if $Flag_internalundocumented$ = "on"
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
+	set $TestName$ = "internalundocumented"
 
 	if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 

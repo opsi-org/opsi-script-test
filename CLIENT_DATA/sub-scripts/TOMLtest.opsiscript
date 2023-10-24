@@ -10,6 +10,7 @@ if ($Flag_toml$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "toml"
 	
 	DefVar $depotfilepath$
 	set $depotfilepath$ = "%Scriptpath%\test-files\TOML\"

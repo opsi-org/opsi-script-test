@@ -8,6 +8,9 @@ copy "%ScriptPath%\test-files\testFiles\dummy.txt" "c:\program files\opsi.org\te
 [Files_fill_testfiles]
 copy -s "%ScriptPath%/test-files/testFiles/*.*" "$HomeTestFiles$"
 
+[Files_fill_testfiles_for_bigzip]
+copy -s "%ScriptPath%/test-files/*.*" "$HomeTestFiles$"
+
 [Files_empty_folder_files]
 Delete -s -f -c -r "$HomeTestFiles$"
 del -sfcr "%opsiTmpDir%\testbigdir.zip"
@@ -112,7 +115,7 @@ unzipfile "%opsiTmpDir%\testfile.zip" "$HomeTestFiles$\"
 unzipfile "%ScriptPath%\test-files\zips\opsi-script-0.1.2.vsix" "%UserProfileDir%\opsi-script-test"
 
 [Files_zipfile_bigfolder]
-zipfile "%ScriptPath%\" "%opsiTmpDir%\testbigdir.zip"
+zipfile "$HomeTestFiles$\" "%opsiTmpDir%\testbigdir.zip"
 
 [Files_unzipfile_bigfolder]
 checktargetpath = "$HomeTestFiles$\"

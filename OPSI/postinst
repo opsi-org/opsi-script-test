@@ -10,3 +10,9 @@
 
 chmod ugo+x $CLIENT_DATA_DIR/opsi-script-test-helper-lin/64/*
 chmod ugo+x $CLIENT_DATA_DIR/opsi-script-test-helper-mac/*
+
+# necessary for opsi-script files test with option -d (otherwise the test fails due to the file is not older than 2 days):
+# -d [n] n = 2
+# message "delete -d[n]"
+# Files_delete_d
+touch -t 202301010000.00 $CLIENT_DATA_DIR/test-files/testFiles/dummy.txt

@@ -13,6 +13,7 @@ if ($Flag_winst_ldap_search$ = "on")
 	
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "ldapsearch"
 	
 	Set $LdapHost$ = getproductproperty('ldapserver',"ad.opsi.local")
 	if isPingReachable($LdapHost$)

@@ -9,6 +9,7 @@
 	comment ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	Set $ExpectedResult$ = "o.k."
 	set $TestResult$ = "o.k."
+	set $TestName$ = "execwith"
 	
 	if $OS$ = "Windows_NT"
 		;stop all running instances beforehand

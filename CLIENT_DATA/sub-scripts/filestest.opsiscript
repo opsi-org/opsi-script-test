@@ -10,6 +10,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	Set $ExpectedResult$ = "o.k."
 	; start testing
 	set $TestResult$ = "o.k."
+	set $TestName$ = "files"
 		
 	Set $DirectorySubDirectory = $HomeTestFiles$+"\subDirectory"
 	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"
@@ -1186,20 +1187,30 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				LogWarning "failed"
 			endif
 			
-			Files_del_empty_folder
-			Set  $list1$ = listFiles("%ScriptPath%\","*.*","True")
+			;testing zip/unzip with a big directory
+			Files_empty_folder_files
+			Files_fill_testfiles_for_bigzip
+			Set  $list1$ = listFiles($HomeTestFiles$,"*.*","True")
 			Files_zipfile_bigfolder
+			if fileexists("%opsiTmpDir%\testbigdir.zip")
+				comment "PASSED: zip big dir"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "FAILED: zip big dir" 
+			endif
+			Files_del_empty_folder
 			Files_unzipfile_bigfolder
 			Set  $list2$ = listFiles($HomeTestFiles$,"*.*","True")
 			set $ConstTest$ = count($list1$)
 			set $CompValue$ = count($list2$)
 			if ($ConstTest$ = $CompValue$)
-				comment "passed"
+				comment "PASSED: unzip big dir"
 			else
 				set $TestResult$ = "not o.k."
-				LogWarning "failed"
+				LogWarning "FAILED: unzip big dir"
 			endif
-			
+			Files_empty_folder_files
+
 			if CompareDotSeparatedNumbers("%OpsiscriptVersion%",">=","4.12.4.32")
 				markErrorNumber
 				Files_unzipfile_to_profiles /AllUserProfiles
@@ -1209,7 +1220,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 				endif
 				Files_work_on_profiles_del_userp /AllUserProfiles
 			endif
-			Files_empty_folder_files
+		
 			set $HomeTestFiles$ = takestring(0,splitstring($HomeTestFiles$,"_2"))
 		else
 			set $TestResult$ = "not o.k."
