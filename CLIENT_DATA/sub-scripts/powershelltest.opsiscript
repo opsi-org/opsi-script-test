@@ -43,12 +43,38 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 			Comment "- ExcutionPolicy CurrentUser = Restricted"
 			sub_run_powershell_tests
 		else
-			LogError "Tests for testing environment 1 were not run because an error occured during initialisation"  
+			LogError "Tests for testing environment 1 (group policy Undefined) were not run because an error occured during initialisation"  
 		endif
 		
+		;INIT testing environment 2:
+		;ExecutionPolicy per group policy is set to "RemoteSigned"
+		;ExcutionPolicy = RemoteSigned"
+		Registry_RemoveExecutionPoliy_set_per_policy
+		Registry_SetExecutionPolicy_RemoteSigned_per_Policy
+
+		comment "Get powershell executionpolicy (sysnative)"
+		set $list$ = shellCall('powershell.exe get-executionpolicy')
+		if not (getlastexitcode = "0")
+			set $TestResult$ = "not o.k."
+			LogWarning "shellCall('powershell.exe get-executionpolicy') failed"
+		endif
+		set $pspolicy$ = takestring(0,$list$)
+		if not ($pspolicy$ = "RemoteSigned")
+			set $TestResult$ = "not o.k."
+			LogWarning "ExecutionPolicy is not RemoteSigned"
+		endif
+		; START Test with testing environment 2
+		if ($TestResult$ = "o.k.") 
+			Comment "Run powershell tests with the following setting:"
+			Comment "- ExecutionPolicy per group policy is set MachinePolicy/UserPolicy =  RemoteSigned"
+			Comment "- ExcutionPolicy therefore is RemoteSigned"
+			sub_run_powershell_tests
+		else
+			LogError "Tests for testing environment 2 (group policy RemoteSigned) were not run because an error occured during initialisation"  
+		endif
 
 		;INIT testing environment 3:
-		;ExecutionPolicy per group policy is not set to "AllSigned"
+		;ExecutionPolicy per group policy is set to "AllSigned"
 		;ExcutionPolicy = AllSigned"
 		Registry_RemoveExecutionPoliy_set_per_policy
 		Registry_SetExecutionPolicy_AllSigned_per_Policy
@@ -59,7 +85,7 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 			LogWarning "shellCall('powershell.exe get-executionpolicy') failed"
 		endif
 		set $pspolicy$ = takestring(0,$list$)
-		if not $pspolicy$ = "AllSigned")
+		if not ($pspolicy$ = "AllSigned")
 			set $TestResult$ = "not o.k."
 			LogWarning "ExecutionPolicy is not AllSigned"
 		endif
@@ -70,20 +96,13 @@ if ($Flag_powershell$ = "on") or ($MasterFlag$ = "on")
 			Comment "- ExcutionPolicy therefore is AllSigned"
 			sub_run_powershell_tests
 		else
-			LogError "Tests for testing environment 3 were not run because an error occured during initialisation"  
+			LogError "Tests for testing environment 2 (group policy AllSigned) were not run because an error occured during initialisation"  
 		endif
 
-
 		Registry_RemoveExecutionPoliy_set_per_policy
-		Registry_SetExecutionPolicy_RemoteSigned_per_Policy
-		sub_run_powershell_tests
-		
-		Registry_RemoveExecutionPoliy_set_per_policy
-
-
 		sub_compareResult
 		set $winst_powershell$ = $SubResult$
-	endif ; windows
+	endif ;windows
 	
 endif
 
