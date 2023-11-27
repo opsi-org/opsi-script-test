@@ -284,7 +284,7 @@ if ("%opsiserver%" = "192.168.1.14") or ("%opsiserver%" = "bonifax.uib.local") o
 					LogWarning "failed"
 				endif
 				DosInAnIcon_kill_notepad
-				opsiservicecall /preloginservice
+				opsiservicecall_authenticated /preloginservice
 				opsiservicecall_authenticated
 			endif
 		endif
@@ -315,7 +315,7 @@ else
 endif
 
 [opsiServiceCall_opsiclientd_wait]
-"timeout" : 200
+"timeout": 200
 "method": "wait"
 "params":	[
 			'100'
