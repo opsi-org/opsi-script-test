@@ -1,3 +1,5 @@
+		DefStringList $ProfileList$
+		DefVar $SID$ 
 		if ($INST_SystemType$ = "64 Bit System")
 			set $regWriteValue$ = "64"
 			set $ConstTest$  = $regWriteValue$
@@ -8,7 +10,10 @@
 				comment "use old modifier /AllNtUserDats"
 				Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
 			endif
-			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+			
+            set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+			set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+			set $CompValue$ = getRegistryValue ('HKEY_USERS\'+ $SID$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -18,7 +23,10 @@
 			set $regWriteValue$ = "32"
 			set $ConstTest$  = $regWriteValue$
 			Registry_hkcu_opsi_org_test /AllNtUserDats
-			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+			
+            set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+			set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+			set $CompValue$ = getRegistryValue ('HKEY_USERS\'+ $SID$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -33,7 +41,9 @@
 			set $regWriteValue$ = "32"
 			set $ConstTest$  = $regWriteValue$
 			Registry_hkcu_opsi_org_test /AllNtUserDats
-			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+			set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+			set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+			set $CompValue$ = getRegistryValue ('HKEY_USERS\'+ $SID$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -43,7 +53,9 @@
 			set $regWriteValue$ = "64"
 			set $ConstTest$  = $regWriteValue$
 			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
-			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+			            set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+			set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+			set $CompValue$ = getRegistryValue ('HKEY_USERS\'+ $SID$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -79,7 +91,9 @@
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
 				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
 				set $ConstTest$  = $regWriteValue$
-				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+				set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\'+ $SID$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
@@ -90,7 +104,9 @@
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
 				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
-				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+				set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\'+ $SID$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 				set $ConstTest$  = $regWriteValue$
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
@@ -107,7 +123,9 @@
 				set $regWriteValue$ = "32"
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
 				set $ConstTest$  = $regWriteValue$
-				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+				set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\'+ $SID$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
@@ -117,7 +135,9 @@
 				set $regWriteValue$ = "64"
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
 				set $ConstTest$  = $regWriteValue$
-				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+				set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\'+ $SID$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
@@ -140,12 +160,16 @@
 				set $regWriteValue$ = "64"
 				set $CompValue$ = $regWriteValue$
 				Registry_hkcu_userclasses_createkey /AllUsrClassDats
-				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-script-test", "bitByWinst", "64bit")
+				set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+				set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+				set $ConstTest$ = GetRegistryValue("HKEY_USERS\"+ $SID$ +"\Software\Classes\opsi-script-test", "bitByWinst", "64bit")
 			else
 				set $regWriteValue$ = "32"
 				set $CompValue$ = $regWriteValue$
 				Registry_hkcu_userclasses_createkey /AllUsrClassDats
-				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-script-test", "bitByWinst", "32bit")
+				set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+				set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+				set $ConstTest$ = GetRegistryValue("HKEY_USERS\"+ $SID$ +"\Software\Classes\opsi-script-test", "bitByWinst", "64bit")
 			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -159,7 +183,9 @@
 			Registry_hkcu_userclasses_create_test /AllUsrClassDats
 			set $ConstTest$ = ""
 			Registry_hkcu_userclasses_deletekey /AllUsrClassDats
-			set $CompValue$ = GetRegistrystringvalue("[HKEY_CURRENT_USER\Software\Classes\opsi-script-test\.a\b] bitByWinst")
+			set $ProfileList$ = getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', '64bit')
+			set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
+			set $ConstTest$ = GetRegistryValue("HKEY_USERS\"+ $SID$ +"\Software\Classes\opsi-script-test", "bitByWinst", "32bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
