@@ -8,7 +8,7 @@
 				comment "use old modifier /AllNtUserDats"
 				Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
 			endif
-			set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -18,7 +18,7 @@
 			set $regWriteValue$ = "32"
 			set $ConstTest$  = $regWriteValue$
 			Registry_hkcu_opsi_org_test /AllNtUserDats
-			set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -33,7 +33,7 @@
 			set $regWriteValue$ = "32"
 			set $ConstTest$  = $regWriteValue$
 			Registry_hkcu_opsi_org_test /AllNtUserDats
-			set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -43,7 +43,7 @@
 			set $regWriteValue$ = "64"
 			set $ConstTest$  = $regWriteValue$
 			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
-			set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -79,7 +79,7 @@
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
 				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
 				set $ConstTest$  = $regWriteValue$
-				set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
@@ -90,7 +90,7 @@
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
 				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
-				set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 				set $ConstTest$  = $regWriteValue$
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
@@ -107,7 +107,7 @@
 				set $regWriteValue$ = "32"
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
 				set $ConstTest$  = $regWriteValue$
-				set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
@@ -117,7 +117,7 @@
 				set $regWriteValue$ = "64"
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
 				set $ConstTest$  = $regWriteValue$
-				set $CompValue$ = getRegistryValue ('HKEY_USERS\.DEFAULT\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
