@@ -220,7 +220,7 @@ DefVar $regWriteValue$
 ;File
 DefVar $FileCopyTest$
 DefVar $FileCopyTestSubDirectory$
-DefVar $DirectorySubDirectory
+DefVar $DirectorySubDirectory$
 
 ; comapre_to_python
 DefVar $result$
@@ -238,10 +238,12 @@ defvar $dotest$
 defvar $adminuser_password$
 defvar $orgpolicy$
 
+; ALlNTUserDats Registry
+defStringList $ProfileList$
+defvar $SID$
+
 
 ; retrieve OS and NT Version
-
-
 Set $OS$ = GetOS
 ; retrieve current language
 set $languageInfo$ = getLocaleInfoMap
