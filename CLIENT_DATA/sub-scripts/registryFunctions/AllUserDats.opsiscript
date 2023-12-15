@@ -144,17 +144,18 @@
   	
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.0.27") >= "0"
 			comment "Testing create registry key with /AllUsrClassDats"
-			set $ConstTest$ = ""
 			if ($INST_SystemType$ = "64 Bit System")
 				set $regWriteValue$ = "64"
-				set $CompValue$ = $regWriteValue$
-				Registry_hkcu_userclasses_createkey /AllUsrClassDats
-				set $ConstTest$ = GetRegistryValue("HKEY_USERS\"+ $SID$ +"\Software\Classes\opsi-script-test", "bitByWinst", "64bit")
+				set $ConstTest$ = $regWriteValue$
+				Registry_hkcu_userclasses_createkey /AllUsrClassDats /64bit
+				set $CompValue$ = GetRegistryValue("HKEY_USERS\"+ $SID$ +"\Software\Classes\opsi-script-test", "bitByWinst", "64bit")
+				Registry_hkcu_userclasses_delete_test /AllUsrClassDats /64bit
 			else
 				set $regWriteValue$ = "32"
-				set $CompValue$ = $regWriteValue$
+				set $ConstTest$ = $regWriteValue$
 				Registry_hkcu_userclasses_createkey /AllUsrClassDats
-				set $ConstTest$ = GetRegistryValue("HKEY_USERS\"+ $SID$ +"\Software\Classes\opsi-script-test", "bitByWinst", "64bit")
+				set $CompValue$ = GetRegistryValue("HKEY_USERS\"+ $SID$ +"\Software\Classes\opsi-script-test", "bitByWinst", "32bit")
+			    Registry_hkcu_userclasses_delete_test /AllUsrClassDats
 			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -162,13 +163,12 @@
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			Registry_hkcu_userclasses_delete_test /AllUsrClassDats
 
 			comment "Testing delete registry key with /AllUsrClassDats"
-			Registry_hkcu_userclasses_create_test /AllUsrClassDats
 			set $ConstTest$ = ""
+			Registry_hkcu_userclasses_create_test /AllUsrClassDats
 			Registry_hkcu_userclasses_deletekey /AllUsrClassDats
-			set $ConstTest$ = GetRegistryValue("HKEY_USERS\"+ $SID$ +"\Software\Classes\opsi-script-test", "bitByWinst", "32bit")
+			set $CompValue$ = GetRegistryValue("HKEY_USERS\"+ $SID$ +"\Software\Classes\opsi-script-test", "bitByWinst", "32bit")
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
