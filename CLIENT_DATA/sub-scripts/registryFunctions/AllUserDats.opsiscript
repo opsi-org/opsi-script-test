@@ -3,7 +3,7 @@
 		;Thus HKEY_USERS\.DEFAULT is the same as HKEY_USERS\S-1-5-18
 		;https://devblogs.microsoft.com/oldnewthing/20070302-00/?p=27783
 		;https://helgeklein.com/blog/why-is-almost-everybody-wrong-about-hkudefault/
-		set $ProfileList$ = getRegistryKeyList('HKEY_USERS', 'Sysnative')
+		set $ProfileList$ = Shellcall("reg query HKU")
 		;getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', 'Sysnative')
 		set $SID$ = takeFirstStringContaining($ProfileList$, 'S-1-5-21')
 		if not ($SID$ = '')
