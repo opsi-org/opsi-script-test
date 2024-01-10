@@ -19,7 +19,7 @@
 			if not ($Key$ = '')
 				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			else
-				Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 				Shellcall('reg unload HKU\TestHive')
 			endif
@@ -35,7 +35,7 @@
 			if not ($Key$ = '')
 				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			else
-				Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 				Shellcall('reg unload HKU\TestHive')
 			endif
@@ -56,7 +56,7 @@
 			if not ($Key$ = '')
 				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			else
-				Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 				Shellcall('reg unload HKU\TestHive')
 			endif
@@ -72,7 +72,7 @@
 			if not ($Key$ = '')
 				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			else
-				Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 				Shellcall('reg unload HKU\TestHive')
 			endif
@@ -114,7 +114,7 @@
 				if not ($Key$ = '')
 					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 					Shellcall('reg unload HKU\TestHive')
 				endif
@@ -131,7 +131,7 @@
 				if not ($Key$ = '')
 					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 					Shellcall('reg unload HKU\TestHive')
 				endif
@@ -154,7 +154,7 @@
 				if not ($Key$ = '')
 					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 					Shellcall('reg unload HKU\TestHive')
 				endif
@@ -170,7 +170,7 @@
 				if not ($Key$ = '')
 					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 					Shellcall('reg unload HKU\TestHive')
 				endif
@@ -196,9 +196,10 @@
 				if not ($Key$ = '')
 					set $CompValue$ = getRegistryValue ($Key$ +"\Software\Classes\opsi-script-test", 'bitByWinst','64bit' )
 				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test"', 'bitByWinst','64bit' )
 					Shellcall('reg unload HKU\TestHive')
+				endif
 				Registry_hkcu_userclasses_delete_test /AllUsrClassDats /64bit
 			else
 				set $regWriteValue$ = "32"
@@ -207,9 +208,10 @@
 				if not ($Key$ = '')
 					set $CompValue$ = getRegistryValue ($Key$ +"\Software\Classes\opsi-script-test", 'bitByWinst','32bit' )
 				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test"', 'bitByWinst','32bit' )
 					Shellcall('reg unload HKU\TestHive')
+				endif
 				Registry_hkcu_userclasses_delete_test /AllUsrClassDats
 			endif
 			if ($ConstTest$ = $CompValue$)
@@ -226,9 +228,10 @@
 			if not ($Key$ = '')
 				set $CompValue$ = getRegistryValue ($Key$ +"\Software\Classes\opsi-script-test", 'bitByWinst','32bit' )
 			else
-				Shellcall('reg load HKU\TestHive "C:\Users\Default"')
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test"', 'bitByWinst','32bit' )
 				Shellcall('reg unload HKU\TestHive')
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
