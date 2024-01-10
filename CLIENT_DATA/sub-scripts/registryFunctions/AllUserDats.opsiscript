@@ -197,7 +197,7 @@
 					set $CompValue$ = getRegistryValue ($Key$ +"\Software\Classes\opsi-script-test", 'bitByWinst','64bit' )
 				else
 					Shellcall('reg load HKU\TestHive "C:\Users\Administrator\AppData\Local\Microsoft\Windows\UsrClass.dat"')
-					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test"', 'bitByWinst','64bit' )
+					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test', 'bitByWinst','64bit' )
 					Shellcall('reg unload HKU\TestHive')
 				endif
 				Registry_hkcu_userclasses_delete_test /AllUsrClassDats /64bit
@@ -209,7 +209,7 @@
 					set $CompValue$ = getRegistryValue ($Key$ +"\Software\Classes\opsi-script-test", 'bitByWinst','32bit' )
 				else
 					Shellcall('reg load HKU\TestHive "C:\Users\Administrator\AppData\Local\Microsoft\Windows\UsrClass.dat"')
-					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test"', 'bitByWinst','32bit' )
+					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test', 'bitByWinst','32bit' )
 					Shellcall('reg unload HKU\TestHive')
 				endif
 				Registry_hkcu_userclasses_delete_test /AllUsrClassDats
@@ -229,7 +229,7 @@
 				set $CompValue$ = getRegistryValue ($Key$ +"\Software\Classes\opsi-script-test", 'bitByWinst','32bit' )
 			else
 				Shellcall('reg load HKU\TestHive "C:\Users\Administrator\AppData\Local\Microsoft\Windows\UsrClass.dat"')
-				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test"', 'bitByWinst','32bit' )
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test', 'bitByWinst','32bit' )
 				Shellcall('reg unload HKU\TestHive')
 			endif
 			if ($ConstTest$ = $CompValue$)
