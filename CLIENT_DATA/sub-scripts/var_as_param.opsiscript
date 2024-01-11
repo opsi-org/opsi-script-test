@@ -655,7 +655,7 @@ if ($Flag_var_as_param$ = "on") or ($MasterFlag$ = "on")
 	;########################################################################################################
 	; ################   Files
 	
-	Set $DirectorySubDirectory = $HomeTestFiles$+"\subDirectory"
+	Set $DirectorySubDirectory$ = $HomeTestFiles$+"\subDirectory"
 	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"
 	Set $FileCopyTestSubDirectory$ = $HomeTestFiles$+"\subDirectory\CopyTestSubDirectory.txt"
 	
