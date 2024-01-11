@@ -12,7 +12,7 @@ if ($Flag_winst_file$ = "on") or ($MasterFlag$ = "on")
 	set $TestResult$ = "o.k."
 	set $TestName$ = "files"
 		
-	Set $DirectorySubDirectory = $HomeTestFiles$+"\subDirectory"
+	Set $DirectorySubDirectory$ = $HomeTestFiles$+"\subDirectory"
 	Set $FileCopyTest$ = $HomeTestFiles$+"\dummy.txt"
 	Set $FileCopyTestSubDirectory$ = $HomeTestFiles$+"\subDirectory\CopyTestSubDirectory.txt"
 	
