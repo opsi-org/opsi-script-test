@@ -1,5 +1,14 @@
 [Changelog]
 
+opsi-script-test (4.12.12.2-3) unreleased; urgency=low
+
+[change] changes in registry test ALlNTUserDats. For more details see merge request !26
+[update] powershelltest.opsiscript: new tests with different powershell execution policy settings (testing environment 1,  2 and 3). Merge request !25
+[fix] several small fixes. Merge request !26 
+
+-- jan werner <j.werner@uib.de>  Mon 15 Jan 2024
+
+
 opsi-script-test (4.12.12.0-3) unreleased; urgency=low
 
 [refactoring] several changes in files test, constant test etc. to make the tests more consistent and robust:
