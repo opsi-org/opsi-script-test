@@ -68,3 +68,16 @@ endif
 [winbatch_check_environment]
 "%system%\cmd.exe" /c "if %opsi-script-test%==deleteme exit 42"
 
+[ShellScript_getRegistryValue_Classes_bitBywinst]
+reg load HKU\TempHive "C:\Users\Administrator\NTUSER.DAT"
+$value = Get-ItemProperty -Path Registry::HKU\TempHive\Software\Classes\opsi-script-test -Name bitByWinst
+reg unload HKU\TempHive
+echo $value.bitByWinst
+
+
+[ShellScript_getRegistryValue_User_bitBywinst]
+reg load HKU\TempHive "C:\Users\Administrator\NTUSER.DAT"
+$value = Get-ItemProperty -Path Registry::HKU\TempHive\SOFTWARE\opsi.org\opsi-script-test -Name bitByWinst
+reg unload HKU\TempHive
+echo $value.bitByWinst
+

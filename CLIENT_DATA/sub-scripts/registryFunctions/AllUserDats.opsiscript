@@ -1,3 +1,11 @@
+		
+		;NOTE: Do not use .DEFAULT because this is an alias for S-1-5-18, this SID is the user SYSTEM (SID: S-1-5-18)
+		;Thus HKEY_USERS\.DEFAULT is the same as HKEY_USERS\S-1-5-18
+		;https://devblogs.microsoft.com/oldnewthing/20070302-00/?p=27783
+		;https://helgeklein.com/blog/why-is-almost-everybody-wrong-about-hkudefault/
+		set $ProfileList$ = ShellCall("reg query HKU") 
+		;getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', 'Sysnative')
+		set $Key$ = takeFirstStringContaining($ProfileList$, 'HKEY_USERS\S-1-5-21')
 		if ($INST_SystemType$ = "64 Bit System")
 			set $regWriteValue$ = "64"
 			set $ConstTest$  = $regWriteValue$
@@ -8,7 +16,13 @@
 				comment "use old modifier /AllNtUserDats"
 				Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
 			endif
-			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+			if not ($Key$ = '')
+				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+			else
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				Shellcall('reg unload HKU\TestHive')
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -18,7 +32,13 @@
 			set $regWriteValue$ = "32"
 			set $ConstTest$  = $regWriteValue$
 			Registry_hkcu_opsi_org_test /AllNtUserDats
-			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+			if not ($Key$ = '')
+				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+			else
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				Shellcall('reg unload HKU\TestHive')
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -33,7 +53,13 @@
 			set $regWriteValue$ = "32"
 			set $ConstTest$  = $regWriteValue$
 			Registry_hkcu_opsi_org_test /AllNtUserDats
-			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+			if not ($Key$ = '')
+				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+			else
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				Shellcall('reg unload HKU\TestHive')
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -43,7 +69,13 @@
 			set $regWriteValue$ = "64"
 			set $ConstTest$  = $regWriteValue$
 			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
-			set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+			if not ($Key$ = '')
+				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+			else
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				Shellcall('reg unload HKU\TestHive')
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else
@@ -55,13 +87,13 @@
 				Registry_hkcu_opsi_org_deletekey /AllNtUserDats
 			endif
 		endif
-  	
+	
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
 		comment "FlushKey"
 		comment ">>not tested yet"
-  	
+	
 		comment ""
 		comment "-------------------------------------"
 		comment "Testing: "
@@ -71,7 +103,7 @@
 		else
 			comment "status is unknown"
 		endif
-  	
+	
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.7") >= "0"
 			if ($INST_SystemType$ = "64 Bit System")
 				set $regWriteValue$ = "64"
@@ -79,7 +111,13 @@
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
 				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
 				set $ConstTest$  = $regWriteValue$
-				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				if not ($Key$ = '')
+					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				else
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
+					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+					Shellcall('reg unload HKU\TestHive')
+				endif
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
@@ -90,7 +128,13 @@
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
 				DosInAnIcon_export_hkcu_complete_opsi_org_test
 				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
-				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				if not ($Key$ = '')
+					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				else
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
+					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+					Shellcall('reg unload HKU\TestHive')
+				endif
 				set $ConstTest$  = $regWriteValue$
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
@@ -107,7 +151,13 @@
 				set $regWriteValue$ = "32"
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
 				set $ConstTest$  = $regWriteValue$
-				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				if not ($Key$ = '')
+					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+				else
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
+					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
+					Shellcall('reg unload HKU\TestHive')
+				endif
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
@@ -117,35 +167,52 @@
 				set $regWriteValue$ = "64"
 				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
 				set $ConstTest$  = $regWriteValue$
-				set $CompValue$ = getRegistryValue ('HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				if not ($Key$ = '')
+					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				else
+					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
+					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+					Shellcall('reg unload HKU\TestHive')
+				endif
 				if ($ConstTest$ = $CompValue$)
 					comment "passed"
 				else
 					set $TestResult$ = "not o.k."
 					LogWarning "failed"
 				endif
-				DosInAnIcon_export_hkcu_complete_opsi_org_test
-				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
 				if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 					Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
 					Registry_hkcu_opsi_org_deletekey /AllNtUserDats
 				endif
 			endif
 		endif
-  	
+	
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.0.27") >= "0"
 			comment "Testing create registry key with /AllUsrClassDats"
-			set $ConstTest$ = ""
 			if ($INST_SystemType$ = "64 Bit System")
 				set $regWriteValue$ = "64"
-				set $CompValue$ = $regWriteValue$
-				Registry_hkcu_userclasses_createkey /AllUsrClassDats
-				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-script-test", "bitByWinst", "64bit")
+				set $ConstTest$ = $regWriteValue$
+				Registry_hkcu_userclasses_createkey /AllUsrClassDats /64bit
+				if not ($Key$ = '')
+					set $CompValue$ = getRegistryValue ($Key$ +"\Software\Classes\opsi-script-test", 'bitByWinst','64bit' )
+				else
+					Shellcall('reg load HKU\TestHive "C:\Users\Administrator\AppData\Local\Microsoft\Windows\UsrClass.dat"')
+					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test', 'bitByWinst','64bit' )
+					Shellcall('reg unload HKU\TestHive')
+				endif
+				Registry_hkcu_userclasses_delete_test /AllUsrClassDats /64bit
 			else
 				set $regWriteValue$ = "32"
-				set $CompValue$ = $regWriteValue$
+				set $ConstTest$ = $regWriteValue$
 				Registry_hkcu_userclasses_createkey /AllUsrClassDats
-				set $ConstTest$ = GetRegistryValue("HKEY_CURRENT_USER\Software\Classes\opsi-script-test", "bitByWinst", "32bit")
+				if not ($Key$ = '')
+					set $CompValue$ = getRegistryValue ($Key$ +"\Software\Classes\opsi-script-test", 'bitByWinst','32bit' )
+				else
+					Shellcall('reg load HKU\TestHive "C:\Users\Administrator\AppData\Local\Microsoft\Windows\UsrClass.dat"')
+					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test', 'bitByWinst','32bit' )
+					Shellcall('reg unload HKU\TestHive')
+				endif
+				Registry_hkcu_userclasses_delete_test /AllUsrClassDats
 			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
@@ -153,13 +220,18 @@
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			Registry_hkcu_userclasses_delete_test /AllUsrClassDats
 
 			comment "Testing delete registry key with /AllUsrClassDats"
-			Registry_hkcu_userclasses_create_test /AllUsrClassDats
 			set $ConstTest$ = ""
+			Registry_hkcu_userclasses_create_test /AllUsrClassDats
 			Registry_hkcu_userclasses_deletekey /AllUsrClassDats
-			set $CompValue$ = GetRegistrystringvalue("[HKEY_CURRENT_USER\Software\Classes\opsi-script-test\.a\b] bitByWinst")
+			if not ($Key$ = '')
+				set $CompValue$ = getRegistryValue ($Key$ +"\Software\Classes\opsi-script-test", 'bitByWinst','32bit' )
+			else
+				Shellcall('reg load HKU\TestHive "C:\Users\Administrator\AppData\Local\Microsoft\Windows\UsrClass.dat"')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\Software\Classes\opsi-script-test', 'bitByWinst','32bit' )
+				Shellcall('reg unload HKU\TestHive')
+			endif
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
 			else

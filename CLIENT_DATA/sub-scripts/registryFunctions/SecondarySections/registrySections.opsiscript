@@ -107,8 +107,7 @@ openkey [SOFTWARE\opsi.org\opsi-script-test]
 set "bitByWinst"="$regWriteValue$"
 
 [Registry_hkcu_opsi_org_deletekey]
-openkey [SOFTWARE\opsi.org\opsi-script-test\deleteme]
-deletekey [SOFTWARE\opsi.org\opsi-script-test\deleteme]
+deletekey [SOFTWARE\opsi.org\opsi-script-test]
 
 [Registry_hkcu_complete_opsi_org_test]
 openkey [HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test]

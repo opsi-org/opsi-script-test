@@ -200,7 +200,7 @@ DefVar $regWriteValue$
 ;File
 DefVar $FileCopyTest$
 DefVar $FileCopyTestSubDirectory$
-DefVar $DirectorySubDirectory
+DefVar $DirectorySubDirectory$
 
 ; comapre_to_python
 DefVar $result$
