@@ -116,5 +116,13 @@ if ($Flag_subregistry$ = "on") or ($MasterFlag$ = "on")
 	
 	sub_compareResult
 
+	comment ""
+	comment "-------------------------------------"
+	comment "Testing: "
+	comment "FlushKey"
+	comment ">>not tested yet"
+	comment "-------------------------------------"
+
+
 	set $subregistry$ = $SubResult$
 endif
