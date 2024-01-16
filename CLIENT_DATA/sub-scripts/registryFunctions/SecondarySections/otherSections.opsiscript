@@ -40,7 +40,9 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\opsi.org\opsi-script-test\test-4.0" /v "bit
 
 [DosInAnIcon_export_hkcu_complete_opsi_org_test]
 @echo off
-regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKEY_CURRENT_USER\SOFTWARE\opsi.org\opsi-script-test
+reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"
+regedit /e "$HomeTestFiles$\hkcu_complete_opsi_org_test.reg" HKU\TestHive\SOFTWARE\opsi.org\opsi-script-test
+reg unload HKU\TestHive
 
 
 [winbatch_hack_forbidden_key1]
