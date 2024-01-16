@@ -72,10 +72,10 @@
 			;load exported Registry Keys in Registry (should overwrite Keys/Values with the exported ones)
 			Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
 			if not ($Key$ = '')
-				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','TestValue' )
+				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			else
 				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
-				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','TestValue' )
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 				Shellcall('reg unload HKU\TestHive')
 			endif
 			set $ConstTest$  = $regWriteValue$
