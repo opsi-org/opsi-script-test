@@ -1,12 +1,18 @@
 		
+		comment ""
+		comment "----------------------------------------------------"
+		comment "Testing: AllNTUserDats/AllUserProfiles/AllUsrClasses"
+		comment "----------------------------------------------------"
+		
 		;NOTE: Do not use .DEFAULT because this is an alias for S-1-5-18, this SID is the user SYSTEM (SID: S-1-5-18)
 		;Thus HKEY_USERS\.DEFAULT is the same as HKEY_USERS\S-1-5-18
 		;https://devblogs.microsoft.com/oldnewthing/20070302-00/?p=27783
 		;https://helgeklein.com/blog/why-is-almost-everybody-wrong-about-hkudefault/
-		set $ProfileList$ = ShellCall("reg query HKU") 
 		;getRegistryKeyList('HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList', 'Sysnative')
+		set $ProfileList$ = ShellCall("reg query HKU") 	
 		set $Key$ = takeFirstStringContaining($ProfileList$, 'HKEY_USERS\S-1-5-21')
-		if ($INST_SystemType$ = "64 Bit System")
+		
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
 			set $regWriteValue$ = "64"
 			set $ConstTest$  = $regWriteValue$
 			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.10.0") >= "0"
@@ -45,14 +51,52 @@
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats
-			endif
-		else
-			set $regWriteValue$ = "32"
+			Registry_hkcu_opsi_org_deletekey /AllNtUserDats
+		endif
+
+	
+	
+		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
+			comment ""
+			comment "----------------------------------------------"
+		    comment "Testing export/import registry + AllNtUserDats"
+			comment "----------------------------------------------"
+			;Set "TestValue"(s) in Registry
+			set $regWriteValue$ = "TestValue"
 			set $ConstTest$  = $regWriteValue$
-			Registry_hkcu_opsi_org_test /AllNtUserDats
+			Registry_hkcu_complete_opsi_org_test /AllNtUserDats 
+			;Export Registry Keys 
+			DosInAnIcon_export_hkcu_complete_opsi_org_test
+			;Overwrite "TestValue"(s) with "Overwrite"
+			set $regWriteValue$ = "OverwriteValue"
+			Registry_hkcu_complete_opsi_org_test /AllNtUserDats
+			if FileExists($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg")
+				set $ConstTest$  = "TestValue"
+				;load exported Registry Keys in Registry (should overwrite Keys/Values with the exported ones)
+				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
+			else
+				set $ConstTest$  = "OverwriteValue"
+			endif
+
+			if not ($Key$ = '')
+				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst')
+			else
+				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst')
+				Shellcall('reg unload HKU\TestHive)
+			endif
+			
+			if ($ConstTest$ = $CompValue$)
+				comment "passed"
+			else
+				set $TestResult$ = "not o.k."
+				LogWarning "failed"
+			endif
+			Registry_hkcu_opsi_org_deletekey /AllNtUserDats
+
+			set $regWriteValue$ = "32"
+			Registry_hkcu_complete_opsi_org_test /AllNtUserDats
+			set $ConstTest$  = $regWriteValue$
 			if not ($Key$ = '')
 				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
 			else
@@ -67,8 +111,8 @@
 				LogWarning "failed"
 			endif
 			set $regWriteValue$ = "64"
+			Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
 			set $ConstTest$  = $regWriteValue$
-			Registry_hkcu_opsi_org_test /AllNtUserDats /64Bit
 			if not ($Key$ = '')
 				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
 			else
@@ -82,109 +126,7 @@
 				set $TestResult$ = "not o.k."
 				LogWarning "failed"
 			endif
-			if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-				Registry_hkcu_opsi_org_deletekey /AllNtUserDats
-			endif
-		endif
-	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		comment "FlushKey"
-		comment ">>not tested yet"
-	
-		comment ""
-		comment "-------------------------------------"
-		comment "Testing: "
-		comment "OpenKey"
-		if ($TestResult$ = "o.k.")
-			comment "not explicit tested | assumed passed"
-		else
-			comment "status is unknown"
-		endif
-	
-		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.1.7") >= "0"
-			if ($INST_SystemType$ = "64 Bit System")
-				set $regWriteValue$ = "64"
-				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
-				DosInAnIcon_export_hkcu_complete_opsi_org_test
-				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64Bit
-				set $ConstTest$  = $regWriteValue$
-				if not ($Key$ = '')
-					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
-				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
-					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
-					Shellcall('reg unload HKU\TestHive')
-				endif
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				set $regWriteValue$ = "32"
-				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
-				DosInAnIcon_export_hkcu_complete_opsi_org_test
-				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
-				if not ($Key$ = '')
-					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
-				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
-					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
-					Shellcall('reg unload HKU\TestHive')
-				endif
-				set $ConstTest$  = $regWriteValue$
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-
-				if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
-					Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-					Registry_hkcu_opsi_org_deletekey /AllNtUserDats
-				endif
-			else
-				set $regWriteValue$ = "32"
-				Registry_hkcu_complete_opsi_org_test /AllNtUserDats
-				set $ConstTest$  = $regWriteValue$
-				if not ($Key$ = '')
-					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
-				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
-					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','32bit' )
-					Shellcall('reg unload HKU\TestHive')
-				endif
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				set $regWriteValue$ = "64"
-				Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64Bit
-				set $ConstTest$  = $regWriteValue$
-				if not ($Key$ = '')
-					set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
-				else
-					Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
-					set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
-					Shellcall('reg unload HKU\TestHive')
-				endif
-				if ($ConstTest$ = $CompValue$)
-					comment "passed"
-				else
-					set $TestResult$ = "not o.k."
-					LogWarning "failed"
-				endif
-				if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.11.2.1") >= "0"
-					Registry_hkcu_opsi_org_deletekey /AllNtUserDats /64Bit
-					Registry_hkcu_opsi_org_deletekey /AllNtUserDats
-				endif
-			endif
+			Registry_hkcu_opsi_org_deletekey /AllNtUserDats
 		endif
 	
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%","4.12.0.27") >= "0"
