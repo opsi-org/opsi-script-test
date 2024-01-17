@@ -64,20 +64,20 @@
 			;Set "TestValue"(s) in Registry
 			set $regWriteValue$ = "TestValue"
 			set $ConstTest$  = $regWriteValue$
-			Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64bit
+			Registry_hkcu_complete_opsi_org_test /AllNtUserDats 
 			;Export Registry Keys 
 			DosInAnIcon_export_hkcu_complete_opsi_org_test
 			;Overwrite "TestValue"(s) with "Overwrite"
-			set $regWriteValue$ = "Overwrite"
-			Registry_hkcu_complete_opsi_org_test /AllNtUserDats /64bit
+			set $regWriteValue$ = "OverwriteValue"
+			Registry_hkcu_complete_opsi_org_test /AllNtUserDats
 			;load exported Registry Keys in Registry (should overwrite Keys/Values with the exported ones)
-			Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats /64bit
+			Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
 			if not ($Key$ = '')
-				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
+				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst')
 			else
 				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
-				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst','64bit' )
-				Shellcall('reg unload HKU\TestHive')
+				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst')
+				Shellcall('reg unload HKU\TestHive)
 			endif
 			
 			if ($ConstTest$ = $CompValue$)
