@@ -70,8 +70,14 @@
 			;Overwrite "TestValue"(s) with "Overwrite"
 			set $regWriteValue$ = "OverwriteValue"
 			Registry_hkcu_complete_opsi_org_test /AllNtUserDats
-			;load exported Registry Keys in Registry (should overwrite Keys/Values with the exported ones)
-			Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
+			if FileExists($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg")
+				set $ConstTest$  = "TestValue"
+				;load exported Registry Keys in Registry (should overwrite Keys/Values with the exported ones)
+				Registry loadunicodetextfile($HomeTestFiles$+"\hkcu_complete_opsi_org_test.reg") /regedit /AllNtUserDats
+			else
+				set $ConstTest$  = "OverwriteValue"
+			endif
+
 			if not ($Key$ = '')
 				set $CompValue$ = getRegistryValue ($Key$ +'\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst')
 			else
