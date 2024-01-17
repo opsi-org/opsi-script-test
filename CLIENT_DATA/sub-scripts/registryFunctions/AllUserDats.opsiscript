@@ -83,7 +83,7 @@
 			else
 				Shellcall('reg load HKU\TestHive "C:\Users\Default\NTUSER.DAT"')
 				set $CompValue$ = getRegistryValue ('HKEY_USERS\TestHive\SOFTWARE\opsi.org\opsi-script-test', 'bitByWinst')
-				Shellcall('reg unload HKU\TestHive)
+				Shellcall('reg unload HKU\TestHive')
 			endif
 			
 			if ($ConstTest$ = $CompValue$)
