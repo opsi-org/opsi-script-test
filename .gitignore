@@ -30,8 +30,8 @@ x86_64-win64/
 i386-linux/
 x86_64-linux/
 
-
-# Application bundle for Mac OS
+# Macos 
+.DS_Store
 *.app/
 
 #jedit
