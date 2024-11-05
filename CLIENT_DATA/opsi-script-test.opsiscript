@@ -1891,7 +1891,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 						set $CompValue$ = GetIpByName(takeString(0,shellCall("hostname"))+".uib.local")
 					endif
 					if ($CompValue$ = "127.0.0.1") or ($CompValue$ = "127.0.1.1")
-						set $CompValue$ = getMyIpByTarget(getMyIpByTarget("%opsiServer%"))
+						set $CompValue$ = getMyIpByTarget(GetIpByName("%opsiServer%"))
 					endif
 				endcase
 				case "macos"
@@ -1908,7 +1908,7 @@ if ($Flag_winst_string$ = "on") or ($MasterFlag$ = "on")
 					endif
 				endcase
 			endswitch
-			set $string1$ = "%opsiServer%"
+			set $string1$ = GetIpByName("%opsiServer%")
 			set $ConstTest$ = getMyIpByTarget($string1$)
 			if ($ConstTest$ = $CompValue$)
 				comment "passed"
