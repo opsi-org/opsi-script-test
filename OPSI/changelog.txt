@@ -1,6 +1,13 @@
 [Changelog]
 
-opsi-script-test (4.12.12.2-3) unreleased; urgency=low
+opsi-script-test (4.12.15.1-3) unreleased; urgency=low
+
+[fix] test for getMyIpByTarget in stringfunctions (commit a3ca9e9e1f5a841e3382848a5290282e70f41ac7)
+
+-- jan werner <j.werner@uib.de>  Tue 5 Nov 2024
+
+
+opsi-script-test (4.12.12.2-3) released; urgency=low
 
 [change] changes in registry test ALlNTUserDats. For more details see merge request !26
 [update] powershelltest.opsiscript: new tests with different powershell execution policy settings (testing environment 1,  2 and 3). Merge request !25
