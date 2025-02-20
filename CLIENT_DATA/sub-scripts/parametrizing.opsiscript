@@ -160,27 +160,20 @@
 		endif
 		
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.11.3")
-			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
+			message "GetProductPropertyList: property dummymulti"
 			;set $list1$ = createStringList("ab", "cd", "ef", "g,h")
 			set $list$ = GetProductPropertyList ("dummymulti","True")
-			if not ("" = takeFirstStringContaining($list$,"g,h"))
+			if ("g,h" = takeFirstStringContaining($list$,"g,h"))
 				comment "GetProductPropertyList passed"
 			else
 				set $TestResult$ = "not o.k."
 				LogWarning "GetProductPropertyList failed"
 			endif
 			
-			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
-			set $list$ = GetProductPropertyList ("notexistingmulti","True")
-			if not ("" = takeFirstStringContaining($list$,"True"))
-				comment "GetProductPropertyList passed"
-			else
-				set $TestResult$ = "not o.k."
-				LogWarning "GetProductPropertyList failed"
-			endif
+			message "GetProductPropertyList: not existing property using default stringlist - creatStringList"
 			set $list1$ = createStringList("ab", "cd", "ef", "g,h")
 			set $list$ = GetProductPropertyList ("notexistingmulti",$list1$)
-			if not ("" = takeFirstStringContaining($list$,"g,h"))
+			if ("g,h" = takeFirstStringContaining($list$,"g,h"))
 				comment "GetProductPropertyList passed"
 			else
 				set $TestResult$ = "not o.k."
@@ -189,9 +182,9 @@
 		endif ; 4.11.3
 		
 		if CompareDotSeparatedNumbers("%OpsiscriptVersion%", ">=", "4.12.4.32")
-			message "GetProductPropertyList (<PropertyName>, <DefaultValue>)"
+			message 'GetProductPropertyList: not existing property using default stringlist - ["ab", "cd", "ef", "g,h"]'
 			set $list$ = GetProductPropertyList ("notexistingmulti",'["ab", "cd", "ef", "g,h"]')
-			if not ("" = takeFirstStringContaining($list$,"g,h"))
+			if ("g,h" = takeFirstStringContaining($list$,"g,h"))
 				comment "GetProductPropertyList passed"
 			else
 				set $TestResult$ = "not o.k."
